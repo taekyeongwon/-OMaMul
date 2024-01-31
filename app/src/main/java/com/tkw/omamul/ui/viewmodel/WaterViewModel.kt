@@ -38,4 +38,10 @@ class WaterViewModel(
             _countLiveData.value = repository.getCount()
         }
     }
+
+    fun removeCount(obj: CountEntity) {
+        viewModelScope.launch {
+            repository.removeCount(obj)
+        }
+    }
 }

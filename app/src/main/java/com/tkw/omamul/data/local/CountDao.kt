@@ -10,5 +10,5 @@ interface CountDao {
     suspend fun query(): Int
     fun <T: RealmObject> queryStream(clazz: KClass<T>): Flow<ResultsChange<T>>?
     suspend fun addAsync()
-    suspend fun removeAsync()
+    suspend fun <T: RealmObject> removeAsync(obj: T)
 }

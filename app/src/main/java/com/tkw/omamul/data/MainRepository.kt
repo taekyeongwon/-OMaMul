@@ -7,4 +7,5 @@ interface MainRepository {
     suspend fun getCount(): Int
     fun getCountByFlow(): Flow<CountEntity>
     suspend fun addCount()
+    suspend fun removeCount(obj: CountEntity)
 }

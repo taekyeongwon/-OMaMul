@@ -7,4 +7,5 @@ interface MainDataSource {
     suspend fun getCountById(): Int
     fun getQueryByFlow(): Flow<CountEntity>
     suspend fun updateCount()
+    suspend fun deleteCount(obj: CountEntity)
 }

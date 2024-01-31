@@ -27,4 +27,8 @@ class LocalDataSource(private val countDao: CountDao): MainDataSource {
     override suspend fun updateCount() {
         countDao.addAsync()
     }
+
+    override suspend fun deleteCount(obj: CountEntity) {
+        countDao.removeAsync(obj)
+    }
 }

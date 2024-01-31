@@ -4,6 +4,7 @@ import android.util.Log
 import com.tkw.omamul.data.model.CountEntity
 import io.realm.kotlin.Realm
 import io.realm.kotlin.UpdatePolicy
+import io.realm.kotlin.delete
 import io.realm.kotlin.ext.asFlow
 import io.realm.kotlin.notifications.ResultsChange
 import io.realm.kotlin.types.RealmObject
@@ -36,7 +37,11 @@ class CountDaoImpl(private val realm: Realm): CountDao {
         }
     }
 
-    override suspend fun removeAsync() {
-        //위에 id를 auto increment로 하고 쌓이는거 확인 후 delete 처리
+    override suspend fun <T : RealmObject> removeAsync(obj: T) {
+        realm.write {
+            findLatest(obj)?.also {
+                delete(it)
+            }
+        }
     }
 }

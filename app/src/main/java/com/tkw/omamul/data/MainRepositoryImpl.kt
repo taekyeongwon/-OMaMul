@@ -18,4 +18,8 @@ class MainRepositoryImpl(
     override suspend fun addCount() {
         mainLocalDataSource.updateCount()
     }
+
+    override suspend fun removeCount(obj: CountEntity) {
+        mainLocalDataSource.deleteCount(obj)
+    }
 }
