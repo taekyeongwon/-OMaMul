@@ -1,5 +1,6 @@
 package com.tkw.omamul.common
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
@@ -18,8 +19,11 @@ val ViewModelFactory = object: ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
         val handle = extras.createSavedStateHandle()
 
-        val conf = RealmConfiguration.create(setOf(CountEntity::class))
+        val conf = RealmConfiguration.Builder(setOf(CountEntity::class))
+            .deleteRealmIfMigrationNeeded()
+            .build()
         val realm = Realm.open(conf)
+        Log.d("test", conf.path)
 
         return when(modelClass) {
             WaterViewModel::class.java -> WaterViewModel(

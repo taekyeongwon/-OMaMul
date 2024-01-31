@@ -1,32 +1,33 @@
 package com.tkw.omamul.data.local
 
+import android.util.Log
 import com.tkw.omamul.data.model.CountEntity
 import io.realm.kotlin.Realm
 import io.realm.kotlin.UpdatePolicy
+import io.realm.kotlin.ext.asFlow
 import io.realm.kotlin.notifications.ResultsChange
+import io.realm.kotlin.types.RealmObject
 import kotlinx.coroutines.flow.Flow
+import kotlin.reflect.KClass
 
 class CountDaoImpl(private val realm: Realm): CountDao {
     override suspend fun query(): Int {
-        return realm.query(CountEntity::class, "id == $0", 0).first().find()?.count ?: -1
+        return realm.query(CountEntity::class).find().lastOrNull()?.count ?: 0
     }
 
-    override suspend fun queryStream(): Flow<ResultsChange<CountEntity>>? {
-        return null
-        //쿼리 결과 계속 확인 가능한지 확인 필요
+    override fun <T: RealmObject> queryStream(clazz: KClass<T>): Flow<ResultsChange<T>> {
+        return realm.query(clazz).asFlow()
     }
 
     override suspend fun addAsync() {
         val query = query()
-        val count = if(query == -1) {
+        val count = if(query == 0) {
             CountEntity().apply {
-                id = 0
-                count = 0
+                count = 100
             }
         } else {
             CountEntity().apply {
-                id = 0
-                count = query.plus(1)
+                count = query.plus(100)
             }
         }
 

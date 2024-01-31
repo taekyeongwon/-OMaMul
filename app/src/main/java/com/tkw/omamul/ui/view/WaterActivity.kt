@@ -21,10 +21,13 @@ class WaterActivity : AppCompatActivity() {
             viewModel.addCount()
         }
 
-        viewModel.countLiveData.observe(this, Observer {
-            binding.tvCount.text = "$it"
+//        viewModel.countLiveData.observe(this, Observer {
+//            binding.tvCount.text = "$it"
+//        })
+        viewModel.countStreamLiveData.observe(this, Observer {
+            binding.tvCount.text = "${it.count}"
         })
 
-        viewModel.getCount()
+//        viewModel.getCount()
     }
 }

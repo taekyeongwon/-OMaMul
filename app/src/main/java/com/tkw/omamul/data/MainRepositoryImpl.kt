@@ -1,5 +1,8 @@
 package com.tkw.omamul.data
 
+import com.tkw.omamul.data.model.CountEntity
+import kotlinx.coroutines.flow.Flow
+
 class MainRepositoryImpl(
     private val mainLocalDataSource: MainDataSource,
     private val mainRemoteDataSource: MainDataSource?
@@ -8,7 +11,11 @@ class MainRepositoryImpl(
         return mainLocalDataSource.getCountById()
     }
 
+    override fun getCountByFlow(): Flow<CountEntity> {
+        return mainLocalDataSource.getQueryByFlow()
+    }
+
     override suspend fun addCount() {
-        mainLocalDataSource.upsertCount()
+        mainLocalDataSource.updateCount()
     }
 }
