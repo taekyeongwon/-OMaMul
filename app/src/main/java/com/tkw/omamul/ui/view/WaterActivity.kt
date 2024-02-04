@@ -4,16 +4,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
-import com.tkw.omamul.data.model.CountEntity
+import com.tkw.omamul.data.model.WaterEntity
 import com.tkw.omamul.databinding.ActivityWaterBinding
 import com.tkw.omamul.ui.viewmodel.WaterViewModel
 
 class WaterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWaterBinding
     private val viewModel: WaterViewModel by viewModels { ViewModelFactory }
-    private var countObject: CountEntity? = null
+    private var countObject: List<WaterEntity>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWaterBinding.inflate(layoutInflater)
@@ -24,15 +23,19 @@ class WaterActivity : AppCompatActivity() {
         }
 
         binding.btnRemove.setOnClickListener {
-            countObject?.let { viewModel.removeCount(it) }
+            countObject?.let { viewModel.removeCount(it.last()) }
         }
 
 //        viewModel.countLiveData.observe(this, Observer {
 //            binding.tvCount.text = "$it"
 //        })
         viewModel.countStreamLiveData.observe(this, Observer {
-            countObject = it
-            binding.tvCount.text = "${it.count}"
+            countObject = it.dayOfList
+            binding.tvCount.text = "${
+                it.dayOfList.sumOf { water ->
+                    water.amount
+                }
+            }"
         })
 
 //        viewModel.getCount()
