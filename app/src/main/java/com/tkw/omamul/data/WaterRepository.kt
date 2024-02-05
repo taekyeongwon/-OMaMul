@@ -5,8 +5,10 @@ import com.tkw.omamul.data.model.WaterEntity
 import kotlinx.coroutines.flow.Flow
 
 interface WaterRepository {
-    suspend fun getCountById(): Int
-    fun getQueryByFlow(): Flow<DayOfWaterEntity>
+    suspend fun getCount(): DayOfWaterEntity?
+    fun getCountByFlow(): Flow<DayOfWaterEntity>
+
+    suspend fun createCount()
     suspend fun updateCount()
     suspend fun deleteCount(obj: WaterEntity)
 }

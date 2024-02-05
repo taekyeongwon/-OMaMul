@@ -19,23 +19,24 @@ class WaterViewModel(
     private val _countLiveData = MutableLiveData<Int>()
     val countLiveData: LiveData<Int> get() = _countLiveData
 
-    val countStreamLiveData: LiveData<DayOfWaterEntity> = waterRepository.getQueryByFlow().asLiveData()
+    val countStreamLiveData: LiveData<DayOfWaterEntity> = waterRepository.getCountByFlow().asLiveData()
 
     init {
-//        getCount()
+        initCount()
     }
 
     fun addCount() {
         viewModelScope.launch {
             waterRepository.updateCount()
-//            val q = repository.getCount()
-//            _countLiveData.value = q
         }
     }
 
-    fun getCount() {
+    private fun initCount() {
         viewModelScope.launch {
-            _countLiveData.value = waterRepository.getCountById()
+            val count = waterRepository.getCount()
+            if(count == null) {
+                waterRepository.createCount()
+            }
         }
     }
 

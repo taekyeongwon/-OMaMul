@@ -23,7 +23,9 @@ class WaterActivity : AppCompatActivity() {
         }
 
         binding.btnRemove.setOnClickListener {
-            countObject?.let { viewModel.removeCount(it.last()) }
+            if(!countObject.isNullOrEmpty()) {
+                viewModel.removeCount(countObject!!.last())
+            }
         }
 
 //        viewModel.countLiveData.observe(this, Observer {
