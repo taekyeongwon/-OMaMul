@@ -1,4 +1,4 @@
-package com.tkw.omamul.ui.viewmodel
+package com.tkw.omamul.ui.water.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

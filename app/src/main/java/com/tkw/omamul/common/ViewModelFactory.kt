@@ -9,7 +9,7 @@ import com.tkw.omamul.data.local.WaterDaoImpl
 import com.tkw.omamul.data.local.WaterRepositoryImpl
 import com.tkw.omamul.data.model.DayOfWaterEntity
 import com.tkw.omamul.data.model.WaterEntity
-import com.tkw.omamul.ui.viewmodel.WaterViewModel
+import com.tkw.omamul.ui.water.main.WaterViewModel
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import java.lang.IllegalArgumentException

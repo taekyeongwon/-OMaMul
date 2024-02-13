@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/FirstStartFragment"
-        android:name="com.tkw.omamul.ui.view.FirstStartFragment"
+        android:name="com.tkw.omamul.ui.first.FirstStartFragment"
         tools:layout="@layout/fragment_first_start">
     </fragment>
 
     <fragment
         android:id="@+id/WaterFragment"
-        android:name="com.tkw.omamul.ui.view.WaterFragment"
+        android:name="com.tkw.omamul.ui.water.main.WaterFragment"
         tools:layout="@layout/fragment_water">
         <action
             android:id="@+id/action_waterIntakeFragment"
@@ -24,25 +24,25 @@
     </fragment>
     <fragment
         android:id="@+id/waterLogFragment"
-        android:name="com.tkw.omamul.ui.view.WaterLogFragment"
+        android:name="com.tkw.omamul.ui.water.main.WaterLogFragment"
         android:label="WaterLogFragment"
         tools:layout="@layout/fragment_water_log"/>
     <fragment
         android:id="@+id/settingFragment"
-        android:name="com.tkw.omamul.ui.view.SettingFragment"
+        android:name="com.tkw.omamul.ui.water.main.WaterSettingFragment"
         android:label="SettingFragment"
         tools:layout="@layout/fragment_setting"/>
 
     <fragment
         android:id="@+id/WaterIntakeFragment"
-        android:name="com.tkw.omamul.ui.view.WaterIntakeFragment"
+        android:name="com.tkw.omamul.ui.water.cup.CupManageFragment"
         tools:layout="@layout/fragment_water_intake">
 
     </fragment>
 
     <fragment
         android:id="@+id/WaterAlarmFragment"
-        android:name="com.tkw.omamul.ui.view.WaterIntakeFragment"
+        android:name="com.tkw.omamul.ui.water.cup.CupManageFragment"
         tools:layout="@layout/fragment_water_intake">
 
     </fragment>

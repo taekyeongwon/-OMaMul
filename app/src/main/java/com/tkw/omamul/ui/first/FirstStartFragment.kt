@@ -1,4 +1,4 @@
-package com.tkw.omamul.ui.view
+package com.tkw.omamul.ui.first
 
 import android.content.Context
 import android.os.Bundle

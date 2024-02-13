@@ -1,4 +1,4 @@
-package com.tkw.omamul.ui.view
+package com.tkw.omamul.ui.water
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
