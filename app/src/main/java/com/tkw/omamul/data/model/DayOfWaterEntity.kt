@@ -9,4 +9,10 @@ class DayOfWaterEntity: RealmObject {
     @PrimaryKey
     var date: String = ""
     var dayOfList: RealmList<WaterEntity> = realmListOf()
+
+    fun getTotalWaterAmount(): String {
+        return dayOfList.sumOf { water ->
+            water.amount
+        }.toString()
+    }
 }

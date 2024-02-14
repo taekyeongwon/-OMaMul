@@ -6,18 +6,18 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.viewbinding.ViewBinding
 
-abstract class BaseActivity<VB: ViewBinding, VM: BaseViewModel>
+abstract class BaseActivity<VB: ViewDataBinding, VM: BaseViewModel>
     (private val layoutId: Int): AppCompatActivity() {
 
     protected abstract val viewModel: VM
-    protected val dataBinding: VB by lazy {
-        DataBindingUtil.setContentView(this, layoutId)
-    }
+    protected lateinit var dataBinding: VB
 
     protected abstract val isSplash: Boolean
     protected abstract fun initView()
+    protected abstract fun bindViewModel(binder: VB)
     protected abstract fun initObserver()
     protected abstract fun initListener()
 
@@ -25,9 +25,17 @@ abstract class BaseActivity<VB: ViewBinding, VM: BaseViewModel>
         super.onCreate(savedInstanceState)
 
         if(isSplash) installSplashScreen()
-        initView()
+        initBaseView()
         initBaseObserver()
         initListener()
+    }
+
+    private fun initBaseView() {
+        dataBinding = DataBindingUtil.setContentView(this, layoutId)
+        dataBinding.lifecycleOwner = this
+        dataBinding.executePendingBindings()
+        bindViewModel(dataBinding)
+        initView()
     }
 
     private fun initBaseObserver() {

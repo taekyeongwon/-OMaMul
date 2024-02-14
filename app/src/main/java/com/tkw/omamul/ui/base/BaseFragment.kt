@@ -7,16 +7,18 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 
-abstract class BaseFragment<VB: ViewBinding, VM: BaseViewModel> //데이터 바인딩 시 ViewBinding -> ViewDataBinding
+abstract class BaseFragment<VB: ViewDataBinding, VM: BaseViewModel>
     (private val layoutId: Int): Fragment() {
 
     protected abstract val viewModel: VM
     private var _dataBinding: VB? = null
-    protected val dataBinding get() = _dataBinding
-
+    protected val dataBinding get() = _dataBinding!!
     protected abstract fun initView()
+    protected abstract fun bindViewModel(binder: VB)
     protected abstract fun initObserver()
     protected abstract fun initListener()
 
@@ -31,9 +33,8 @@ abstract class BaseFragment<VB: ViewBinding, VM: BaseViewModel> //데이터 바�
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initView()
+        initBaseView()
         initBaseObserver()
-        initObserver()
         initListener()
     }
 
@@ -47,11 +48,23 @@ abstract class BaseFragment<VB: ViewBinding, VM: BaseViewModel> //데이터 바�
         _dataBinding = null
     }
 
-    private fun initBaseObserver() {
-        //todo alert, progress observe
+    private fun initBaseView() {
+        dataBinding.lifecycleOwner = viewLifecycleOwner
+        dataBinding.executePendingBindings()
+        bindViewModel(dataBinding)
+        initView()
     }
 
-    protected fun nextFragment() {
-        //todo navigation 이동
+    private fun initBaseObserver() {
+        //todo alert, progress observe
+        initObserver()
+    }
+
+    protected fun nextFragment(action: NavDirections) {
+        findNavController().navigate(action)
+    }
+
+    protected fun nextFragment(fragmentId: Int) {
+        findNavController().navigate(fragmentId)
     }
 }
