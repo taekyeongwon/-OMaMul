@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/WaterFragment"
+        android:id="@+id/waterFragment"
         android:icon="@drawable/ic_launcher_foreground"
         android:title="홈"/>
     <item

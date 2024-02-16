@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/WaterIntakeFragment"
+        android:id="@+id/waterIntakeFragment"
         android:icon="@drawable/ic_launcher_foreground"
         android:title="섭취량 변경"/>
 
     <item
-        android:id="@+id/WaterAlarmFragment"
+        android:id="@+id/waterAlarmFragment"
         android:icon="@drawable/ic_launcher_foreground"
         android:title="알람 변경"/>
 </menu>

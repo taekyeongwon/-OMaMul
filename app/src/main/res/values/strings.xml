@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">OMaMul</string>
+    <string name="init_language_title">앱 내 사용 언어를 설정해주세요.</string>
+    <string name="lang_ko">한국어</string>
+    <string name="lang_en">English</string>
+    <string name="lang_jp">日本語</string>
+    <string name="lang_cn">简体中文</string>
+    <string name="next">다음</string>
+    <string name="complete">완료</string>
 </resources>
