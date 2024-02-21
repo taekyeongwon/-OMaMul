@@ -8,6 +8,7 @@ import androidx.navigation.ui.NavigationUI
 import com.tkw.omamul.MainApplication
 import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
+import com.tkw.omamul.core.util.C
 import com.tkw.omamul.databinding.ActivityWaterBinding
 import com.tkw.omamul.ui.base.BaseActivity
 
@@ -28,8 +29,7 @@ class WaterActivity : BaseActivity<ActivityWaterBinding, WaterViewModel>(R.layou
                 else View.GONE
         }
 
-        if(MainApplication.sharedPref?.getBoolean("test", false) == false) {
-            MainApplication.sharedPref?.edit()?.putBoolean("test", true)?.apply()
+        if(MainApplication.sharedPref?.getBoolean(C.FirstInstallFlag, false) == false) {
             navGraph.setStartDestination(R.id.initLanguageFragment)
         } else {
             navGraph.setStartDestination(R.id.waterFragment)

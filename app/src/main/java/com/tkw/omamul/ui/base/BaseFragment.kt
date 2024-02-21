@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
+import com.tkw.omamul.R
 
 abstract class BaseFragment<VB: ViewDataBinding, VM: BaseViewModel>
     (private val layoutId: Int): Fragment() {
@@ -66,5 +67,12 @@ abstract class BaseFragment<VB: ViewDataBinding, VM: BaseViewModel>
 
     protected fun nextFragment(fragmentId: Int) {
         findNavController().navigate(fragmentId)
+    }
+
+    protected fun setStartDestination(fragmentId: Int) {
+        val nav = findNavController()
+        val navGraph = nav.navInflater.inflate(R.navigation.nav_graph)
+        navGraph.setStartDestination(fragmentId)
+        nav.graph = navGraph
     }
 }

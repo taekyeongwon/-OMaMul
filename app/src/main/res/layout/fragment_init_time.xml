@@ -3,6 +3,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        xmlns:tools="http://schemas.android.com/tools"
         android:padding="16dp"
         xmlns:app="http://schemas.android.com/apk/res-auto">
         <TextView
@@ -10,9 +11,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1"
-            android:background="@drawable/circle_selected"
+            android:background="@drawable/circle_unselected"
             android:gravity="center"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -33,9 +34,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2"
-            android:background="@drawable/circle_unselected"
+            android:background="@drawable/circle_selected"
             android:gravity="center"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             app:layout_constraintLeft_toRightOf="@id/first_line"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintRight_toLeftOf="@id/second_line"/>
@@ -63,63 +64,60 @@
             app:layout_constraintRight_toRightOf="parent"/>
 
         <TextView
-            android:id="@+id/tv_language_title"
+            android:id="@+id/tv_time_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/init_language_title"
+            android:text="@string/init_time_title"
             android:textSize="20sp"
             android:layout_marginTop="20dp"
             app:layout_constraintTop_toBottomOf="@id/first_icon"
             app:layout_constraintLeft_toLeftOf="parent"/>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tv_time_subtitle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/cl_language"
+            android:text="@string/init_time_subtitle"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/tv_time_title"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_wakeup_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wakeup_time"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_time_subtitle"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+        <TextView
+            android:id="@+id/tv_wakeup_time"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
             android:background="@drawable/rounded_rect"
-            android:layout_marginTop="20dp"
-            android:padding="16dp"
-            app:layout_constraintTop_toBottomOf="@id/tv_language_title">
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:checkedButton="@id/rb_ko"
-                app:layout_constraintTop_toTopOf="parent">
-                <RadioButton
-                    android:id="@+id/rb_ko"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableRight="@drawable/radio_selector"
-                    android:button="@null"
-                    android:background="@android:color/transparent"
-                    android:text="@string/lang_ko"/>
-                <RadioButton
-                    android:id="@+id/rb_en"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableRight="@drawable/radio_selector"
-                    android:button="@null"
-                    android:background="@android:color/transparent"
-                    android:text="@string/lang_en"/>
-                <RadioButton
-                    android:id="@+id/rb_jp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableRight="@drawable/radio_selector"
-                    android:button="@null"
-                    android:background="@android:color/transparent"
-                    android:text="@string/lang_jp"/>
-                <RadioButton
-                    android:id="@+id/rb_cn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableRight="@drawable/radio_selector"
-                    android:button="@null"
-                    android:background="@android:color/transparent"
-                    android:text="@string/lang_cn"/>
-            </RadioGroup>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_marginTop="4dp"
+            android:textSize="20sp"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/tv_wakeup_title"
+            tools:text="00:00"/>
+
+        <TextView
+            android:id="@+id/tv_sleep_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sleep_time"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_wakeup_time"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+        <TextView
+            android:id="@+id/tv_sleep_time"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/rounded_rect"
+            android:layout_marginTop="4dp"
+            android:textSize="20sp"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/tv_sleep_title"
+            tools:text="00:00"/>
 
         <Button
             android:id="@+id/btn_next"
@@ -127,7 +125,5 @@
             android:layout_height="wrap_content"
             android:text="@string/next"
             app:layout_constraintBottom_toBottomOf="parent"/>
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

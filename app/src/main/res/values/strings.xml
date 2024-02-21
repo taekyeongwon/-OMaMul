@@ -7,4 +7,11 @@
     <string name="lang_cn">简体中文</string>
     <string name="next">다음</string>
     <string name="complete">완료</string>
+    <string name="init_time_title">기상/취침 시간을 설정해주세요.</string>
+    <string name="init_time_subtitle">설정한 시간 대에 알람을 수신하게 됩니다.</string>
+    <string name="wakeup_time">기상 시간</string>
+    <string name="sleep_time">취침 시간</string>
+    <string name="init_intake_title">목표 물의 양을 설정해주세요.</string>
+    <string name="init_intake_subtitle">매일 채울 물의 양을 설정합니다.</string>
+    <string name="intake_amount">일일 물 섭취량(ml)</string>
 </resources>

@@ -8,6 +8,27 @@
         android:id="@+id/initLanguageFragment"
         android:name="com.tkw.omamul.ui.init.InitLanguageFragment"
         tools:layout="@layout/fragment_init_language">
+        <action
+            android:id="@+id/action_initLanguageFragment_to_initTimeFragment"
+            app:destination="@id/initTimeFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/initTimeFragment"
+        android:name="com.tkw.omamul.ui.init.InitTimeFragment"
+        tools:layout="@layout/fragment_init_time">
+        <action
+            android:id="@+id/action_initTimeFragment_to_initIntakeFragment"
+            app:destination="@id/initIntakeFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/initIntakeFragment"
+        android:name="com.tkw.omamul.ui.init.InitIntakeFragment"
+        tools:layout="@layout/fragment_init_intake">
+        <action
+            android:id="@+id/action_initIntakeFragment_to_waterFragment"
+            app:destination="@id/waterFragment"/>
     </fragment>
 
     <fragment
