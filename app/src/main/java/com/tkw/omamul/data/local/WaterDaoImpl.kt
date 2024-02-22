@@ -1,16 +1,12 @@
 package com.tkw.omamul.data.local
 
-import com.tkw.omamul.core.util.DateUtils
+import com.tkw.omamul.core.util.DateTimeUtils
 import com.tkw.omamul.data.WaterDao
 import com.tkw.omamul.data.model.DayOfWaterEntity
 import com.tkw.omamul.data.model.WaterEntity
 import io.realm.kotlin.MutableRealm
 import io.realm.kotlin.Realm
-import io.realm.kotlin.ext.query
-import io.realm.kotlin.mongodb.ext.insert
 import io.realm.kotlin.notifications.ResultsChange
-import io.realm.kotlin.query.RealmResults
-import io.realm.kotlin.types.RealmObject
 import kotlinx.coroutines.flow.Flow
 import kotlin.reflect.KClass
 
@@ -37,7 +33,7 @@ class WaterDaoImpl(r: Realm): WaterDao {
             query?.dayOfList?.add(
                 WaterEntity().apply {
                     amount = 100
-                    date = DateUtils.getToday()
+                    date = DateTimeUtils.getToday()
                 }
             )
         }
