@@ -1,4 +1,4 @@
-package com.tkw.omamul.ui.water.main
+package com.tkw.omamul.ui.dialog
 
 class WaterIntakeDialog {
 }

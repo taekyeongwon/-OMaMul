@@ -1,6 +1,4 @@
-package com.tkw.omamul.ui.water.alarm
+package com.tkw.omamul.ui.dialog
 
-import com.tkw.omamul.ui.base.BaseBottomSheetDialog
-
-class AlarmRingtoneDialog{ //: BaseBottomSheetDialog {
+class AlarmRingtoneDialog {
 }
