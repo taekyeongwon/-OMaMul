@@ -34,5 +34,17 @@
             android:layout_height="wrap_content"
             android:text="제거"
             app:layout_constraintTop_toBottomOf="@id/btn_add"/>
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingLeft="100dp"
+            android:paddingRight="100dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:overScrollMode="never"
+            app:layout_constraintTop_toBottomOf="@id/btn_remove"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
