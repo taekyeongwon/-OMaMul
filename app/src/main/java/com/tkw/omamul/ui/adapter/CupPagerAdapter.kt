@@ -8,7 +8,7 @@ import com.tkw.omamul.data.model.CupEntity
 import com.tkw.omamul.databinding.ItemCupAddBinding
 import com.tkw.omamul.databinding.ItemCupBinding
 
-class CupPagerAdapter(private val addListener: OnAddListener)
+class CupPagerAdapter(private val onClick: (Int) -> Unit, private val onClickAdd: () -> Unit)
     : ListAdapter<CupEntity, ViewHolder>(DiffCallback()) {
     enum class ViewType(val viewType: Int) {
         CUP(0), ADD(1)
@@ -18,17 +18,23 @@ class CupPagerAdapter(private val addListener: OnAddListener)
         return when(ViewType.values()[viewType]) {
             ViewType.CUP -> {
                 val binding = ItemCupBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                CupViewHolder(binding)
+                CupViewHolder(binding, onClick)
             }
             ViewType.ADD -> {
                 val binding = ItemCupAddBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                AddViewHolder(binding, addListener)
+                AddViewHolder(binding, onClickAdd)
             }
         }
     }
 
+    override fun getItemCount(): Int {
+        return currentList.size + 1
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if(position < itemCount - 1) (holder as CupViewHolder).onBind(getItem(position))
+        if(holder is CupViewHolder) {
+            holder.onBind(getItem(position))
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -36,16 +42,21 @@ class CupPagerAdapter(private val addListener: OnAddListener)
         else ViewType.CUP.viewType
     }
 
-    class CupViewHolder(private val binding: ItemCupBinding): ViewHolder(binding.root) {
+    class CupViewHolder(private val binding: ItemCupBinding, listener: (Int) -> Unit): ViewHolder(binding.root) {
+        init {
+            binding.ivCup.setOnClickListener {
+                listener(adapterPosition)
+            }
+        }
         fun onBind(item: CupEntity) {
             binding.tvName.text = item.cupName
         }
     }
 
-    class AddViewHolder(binding: ItemCupAddBinding, listener: OnAddListener): ViewHolder(binding.root) {
+    class AddViewHolder(binding: ItemCupAddBinding, listener: () -> Unit): ViewHolder(binding.root) {
         init {
             binding.ivAdd.setOnClickListener {
-                listener.onClick()
+                listener()
             }
         }
     }
