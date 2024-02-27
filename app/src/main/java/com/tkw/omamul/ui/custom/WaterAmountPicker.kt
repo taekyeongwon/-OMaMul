@@ -14,18 +14,23 @@ class WaterAmountPicker
     private var interval = 0
 
     init {
-        context.theme.obtainStyledAttributes(attrs, R.styleable.WaterAmountPicker, 0, 0)
-            .apply {
-                try {
-                    minValue = getInt(R.styleable.WaterAmountPicker_minValue, 100)
-                    maxValue = getInt(R.styleable.WaterAmountPicker_maxValue, 3000)
-                    interval = getInt(R.styleable.WaterAmountPicker_interval, 5)
+        val typedArray = context.theme.obtainStyledAttributes(
+            attrs,
+            R.styleable.WaterAmountPicker,
+            0,
+            0
+        )
+        with(typedArray) {
+            try {
+                minValue = getInt(R.styleable.WaterAmountPicker_minValue, 100)
+                maxValue = getInt(R.styleable.WaterAmountPicker_maxValue, 3000)
+                interval = getInt(R.styleable.WaterAmountPicker_interval, 5)
 
-                    initNumberPicker()
-                } finally {
-                    recycle()
-                }
+                initNumberPicker()
+            } finally {
+                recycle()
             }
+        }
     }
 
     private fun initNumberPicker() {
