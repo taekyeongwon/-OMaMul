@@ -10,7 +10,9 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
+import com.tkw.omamul.data.model.WaterEntity
 import com.tkw.omamul.databinding.FragmentLogDayBinding
+import com.tkw.omamul.ui.adapter.DayListAdapter
 import com.tkw.omamul.ui.base.BaseFragment
 import com.tkw.omamul.ui.custom.CustomMarkerView
 import com.tkw.omamul.ui.custom.CustomYAxisRenderer
@@ -62,6 +64,24 @@ class LogDayFragment: BaseFragment<FragmentLogDayBinding, WaterViewModel>(R.layo
 
             animateY(1000)
         }
+        val dayAdapter = DayListAdapter()
+        dataBinding.rvDayList.apply {
+            adapter = dayAdapter
+        }
+        val list2 = arrayListOf(
+            WaterEntity().apply { amount = 100 },
+            WaterEntity().apply { amount = 200 },
+            WaterEntity().apply { amount = 300 },
+            WaterEntity().apply { amount = 400 },
+            WaterEntity().apply { amount = 500 },
+            WaterEntity().apply { amount = 600 },
+            WaterEntity().apply { amount = 700 },
+            WaterEntity().apply { amount = 800 },
+            WaterEntity().apply { amount = 900 },
+            WaterEntity().apply { amount = 1000 },
+            WaterEntity().apply { amount = 10 }
+        )
+        dayAdapter.submitList(list2)
     }
 
     override fun bindViewModel(binder: FragmentLogDayBinding) {
