@@ -1,6 +1,10 @@
 package com.tkw.omamul.ui.water.main
 
+import android.animation.ValueAnimator
 import android.graphics.Color
+import android.view.animation.LinearInterpolator
+import androidx.core.animation.addListener
+import androidx.core.animation.doOnRepeat
 import androidx.fragment.app.viewModels
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -10,6 +14,7 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
+import com.tkw.omamul.core.util.setValueAnimator
 import com.tkw.omamul.data.model.WaterEntity
 import com.tkw.omamul.databinding.FragmentLogDayBinding
 import com.tkw.omamul.ui.adapter.DayListAdapter
@@ -118,6 +123,8 @@ class LogDayFragment: BaseFragment<FragmentLogDayBinding, WaterViewModel>(R.layo
             },
         )
         dayAdapter.submitList(list2)
+
+        dataBinding.tvTotalAmount.setValueAnimator(1000)
     }
 
     override fun bindViewModel(binder: FragmentLogDayBinding) {
