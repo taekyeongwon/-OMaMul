@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.tkw.omamul.core.util.DateTimeUtils
 import com.tkw.omamul.data.model.WaterEntity
 import com.tkw.omamul.databinding.ItemDayAmountBinding
 
@@ -20,6 +21,7 @@ class DayListAdapter: ListAdapter<WaterEntity, DayListAdapter.DayAmountViewHolde
     class DayAmountViewHolder(private val binding: ItemDayAmountBinding): ViewHolder(binding.root) {
         fun onBind(item: WaterEntity) {
             binding.tvAmount.text = item.amount.toString()
+            binding.tvDate.text = DateTimeUtils.getFormattedTime(item.date)
         }
     }
 }

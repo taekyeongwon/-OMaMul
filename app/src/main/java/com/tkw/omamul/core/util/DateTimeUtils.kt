@@ -16,6 +16,19 @@ object DateTimeUtils {
         return current.format(formatter)
     }
 
+    fun getFormattedTime(date: String): String? {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+        val parsedDate = dateFormat.parse(date)
+        if(parsedDate != null) {
+            val calendar = Calendar.getInstance()
+            calendar.time = parsedDate
+            return getFormattedTime(
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE)
+            )
+        }
+        return null
+    }
     fun getFormattedTime(hour: Int, minute: Int): String {
         val sdf = SimpleDateFormat("a hh:mm", Locale.getDefault())
         return sdf.format(getCalendar(hour, minute).time)

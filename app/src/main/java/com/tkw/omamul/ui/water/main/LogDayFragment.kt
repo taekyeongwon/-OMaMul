@@ -16,6 +16,7 @@ import com.tkw.omamul.ui.adapter.DayListAdapter
 import com.tkw.omamul.ui.base.BaseFragment
 import com.tkw.omamul.ui.custom.CustomMarkerView
 import com.tkw.omamul.ui.custom.CustomYAxisRenderer
+import com.tkw.omamul.ui.custom.DividerDecoration
 import com.tkw.omamul.ui.custom.XAxisValueFormatter
 
 class LogDayFragment: BaseFragment<FragmentLogDayBinding, WaterViewModel>(R.layout.fragment_log_day) {
@@ -44,14 +45,18 @@ class LogDayFragment: BaseFragment<FragmentLogDayBinding, WaterViewModel>(R.layo
             description.isEnabled = false
             marker = CustomMarkerView(context, R.layout.custom_marker)
             axisRight.isEnabled = false
+            setExtraOffsets(10f, 100f, 20f, 10f)
             axisLeft.apply {
                 isEnabled = true
-                labelCount = 4
+                setLabelCount(5, true)
                 val yAxisRenderer = CustomYAxisRenderer(viewPortHandler, axisLeft, getTransformer(
                     YAxis.AxisDependency.LEFT))
                 yAxisRenderer.setUnit(getString(R.string.unit_water))
                 rendererLeftYAxis = yAxisRenderer
                 setDrawAxisLine(false)
+                axisMinimum = 0f
+                axisMaximum = 2500f
+                //todo maximum 계산해서 바뀔 수 있도록, 목표 물의 양 dash line으로 표시
             }
 
             xAxis.apply {
@@ -66,20 +71,51 @@ class LogDayFragment: BaseFragment<FragmentLogDayBinding, WaterViewModel>(R.layo
         }
         val dayAdapter = DayListAdapter()
         dataBinding.rvDayList.apply {
+            setHasFixedSize(true)
             adapter = dayAdapter
+            addItemDecoration(DividerDecoration(10f))
         }
         val list2 = arrayListOf(
-            WaterEntity().apply { amount = 100 },
-            WaterEntity().apply { amount = 200 },
-            WaterEntity().apply { amount = 300 },
-            WaterEntity().apply { amount = 400 },
-            WaterEntity().apply { amount = 500 },
-            WaterEntity().apply { amount = 600 },
-            WaterEntity().apply { amount = 700 },
-            WaterEntity().apply { amount = 800 },
-            WaterEntity().apply { amount = 900 },
-            WaterEntity().apply { amount = 1000 },
-            WaterEntity().apply { amount = 10 }
+            WaterEntity().apply {
+                amount = 100
+                date = "2024-03-05 01:00"
+            },
+            WaterEntity().apply {
+                amount = 100
+                date = "2024-03-05 02:00"
+            },
+            WaterEntity().apply {
+                amount = 100
+                date = "2024-03-05 05:00"
+            },
+            WaterEntity().apply {
+                amount = 100
+                date = "2024-03-05 10:00"
+            },
+            WaterEntity().apply {
+                amount = 100
+                date = "2024-03-05 12:00"
+            },
+            WaterEntity().apply {
+                amount = 100
+                date = "2024-03-05 15:00"
+            },
+            WaterEntity().apply {
+                amount = 100
+                date = "2024-03-05 17:00"
+            },
+            WaterEntity().apply {
+                amount = 100
+                date = "2024-03-05 18:00"
+            },
+            WaterEntity().apply {
+                amount = 100
+                date = "2024-03-05 19:30"
+            },
+            WaterEntity().apply {
+                amount = 100
+                date = "2024-03-05 23:10"
+            },
         )
         dayAdapter.submitList(list2)
     }
