@@ -19,4 +19,10 @@
     <string name="init_intake_subtitle">매일 채울 물의 양을 설정합니다.</string>
     <string name="intake_amount">일일 물 섭취량(ml)</string>
     <string name="unit_water">(ml)</string>
+    <string name="log_day_title">일</string>
+    <string name="log_week_title">주</string>
+    <string name="log_month_title">월</string>
+    <string name="total">총</string>
+    <string name="goal">목표</string>
+    <string name="record">기록</string>
 </resources>

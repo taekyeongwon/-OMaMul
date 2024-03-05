@@ -17,7 +17,11 @@ class WaterLogFragment: BaseFragment<FragmentWaterLogBinding, WaterViewModel>(R.
         with(dataBinding) {
             viewPager.adapter = ViewPagerAdapter(childFragmentManager, lifecycle)
             TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-                tab.text = "" + position
+                when(position) {
+                    0 -> tab.text = getString(R.string.log_day_title)
+                    1 -> tab.text = getString(R.string.log_week_title)
+                    else -> tab.text = getString(R.string.log_month_title)
+                }
             }.attach()
         }
     }
