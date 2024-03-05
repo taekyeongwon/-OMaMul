@@ -6,13 +6,13 @@
     <data>
         <variable
             name="viewModel"
-            type="com.tkw.omamul.ui.water.main.WaterViewModel" />
+            type="com.tkw.omamul.ui.view.water.main.WaterViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.water.main.WaterActivity">
+        tools:context=".ui.view.water.main.WaterActivity">
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
