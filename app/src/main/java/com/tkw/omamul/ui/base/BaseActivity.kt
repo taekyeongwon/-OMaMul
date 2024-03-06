@@ -25,17 +25,17 @@ abstract class BaseActivity<VB: ViewDataBinding, VM: BaseViewModel>
         super.onCreate(savedInstanceState)
 
         if(isSplash) installSplashScreen()
-        initBaseView()
+        initBinding()
+        initView()
         initBaseObserver()
         initListener()
     }
 
-    private fun initBaseView() {
+    private fun initBinding() {
         dataBinding = DataBindingUtil.setContentView(this, layoutId)
+        bindViewModel(dataBinding)
         dataBinding.lifecycleOwner = this
         dataBinding.executePendingBindings()
-        bindViewModel(dataBinding)
-        initView()
     }
 
     private fun initBaseObserver() {

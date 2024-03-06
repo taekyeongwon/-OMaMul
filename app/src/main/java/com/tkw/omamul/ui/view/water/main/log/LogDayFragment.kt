@@ -19,6 +19,7 @@ import com.tkw.omamul.ui.custom.CustomMarkerView
 import com.tkw.omamul.ui.custom.CustomYAxisRenderer
 import com.tkw.omamul.ui.custom.DividerDecoration
 import com.tkw.omamul.ui.custom.XAxisValueFormatter
+import com.tkw.omamul.ui.dialog.LogEditDialog
 import com.tkw.omamul.ui.view.water.main.WaterViewModel
 
 class LogDayFragment: BaseFragment<FragmentLogDayBinding, WaterViewModel>(R.layout.fragment_log_day) {
@@ -133,6 +134,9 @@ class LogDayFragment: BaseFragment<FragmentLogDayBinding, WaterViewModel>(R.layo
     }
 
     override fun initListener() {
-
+        dataBinding.ibDayAdd.setOnClickListener {
+            val dialog = LogEditDialog()
+            dialog.show(childFragmentManager, dialog.tag)
+        }
     }
 }

@@ -34,7 +34,8 @@ abstract class BaseFragment<VB: ViewDataBinding, VM: BaseViewModel>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initBaseView()
+        initBinding()
+        initView()
         initBaseObserver()
         initListener()
     }
@@ -49,11 +50,10 @@ abstract class BaseFragment<VB: ViewDataBinding, VM: BaseViewModel>
         _dataBinding = null
     }
 
-    private fun initBaseView() {
+    private fun initBinding() {
+        bindViewModel(dataBinding)
         dataBinding.lifecycleOwner = viewLifecycleOwner
         dataBinding.executePendingBindings()
-        bindViewModel(dataBinding)
-        initView()
     }
 
     private fun initBaseObserver() {
