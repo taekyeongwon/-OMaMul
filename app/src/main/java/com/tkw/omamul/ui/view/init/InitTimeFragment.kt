@@ -12,13 +12,13 @@ import com.tkw.omamul.common.ViewModelFactory
 import com.tkw.omamul.util.DateTimeUtils
 import com.tkw.omamul.databinding.FragmentInitTimeBinding
 import com.tkw.omamul.ui.dialog.OnResultListener
-import com.tkw.omamul.ui.dialog.AlarmTimeDialog
+import com.tkw.omamul.ui.dialog.AlarmTimeBottomDialog
 import com.tkw.omamul.util.autoCleared
 
 class InitTimeFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentInitTimeBinding>()
     private val viewModel: InitViewModel by viewModels { ViewModelFactory }
-    private lateinit var alarmTimeDialog: AlarmTimeDialog
+    private lateinit var alarmTimeDialog: AlarmTimeBottomDialog
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,7 +61,7 @@ class InitTimeFragment: Fragment() {
     }
 
     private fun initTimePicker(buttonFlag: Boolean) {
-        alarmTimeDialog = AlarmTimeDialog(
+        alarmTimeDialog = AlarmTimeBottomDialog(
             buttonFlag,
             DateTimeUtils.getTimeFromFormat(dataBinding.tvWakeupTime.text.toString())!!,
             DateTimeUtils.getTimeFromFormat(dataBinding.tvSleepTime.text.toString())!!

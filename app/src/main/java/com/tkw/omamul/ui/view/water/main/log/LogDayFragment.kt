@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
@@ -24,7 +23,7 @@ import com.tkw.omamul.ui.custom.CustomMarkerView
 import com.tkw.omamul.ui.custom.CustomYAxisRenderer
 import com.tkw.omamul.ui.custom.DividerDecoration
 import com.tkw.omamul.ui.custom.XAxisValueFormatter
-import com.tkw.omamul.ui.dialog.LogEditDialog
+import com.tkw.omamul.ui.dialog.LogEditBottomDialog
 import com.tkw.omamul.ui.view.water.main.WaterViewModel
 import com.tkw.omamul.util.autoCleared
 
@@ -158,7 +157,7 @@ class LogDayFragment: Fragment() {
 
     private fun initListener() {
         dataBinding.ibDayAdd.setOnClickListener {
-            val dialog = LogEditDialog()
+            val dialog = LogEditBottomDialog()
             dialog.show(childFragmentManager, dialog.tag)
         }
     }

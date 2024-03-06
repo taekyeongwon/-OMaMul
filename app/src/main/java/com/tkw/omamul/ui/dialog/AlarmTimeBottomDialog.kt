@@ -11,11 +11,11 @@ import com.tkw.omamul.util.DateTimeUtils
 import com.tkw.omamul.databinding.DialogTimepickerBinding
 import java.util.Calendar
 
-class AlarmTimeDialog(
+class AlarmTimeBottomDialog(
     private val buttonFlag: Boolean,
     private val selectedStart: Calendar,
     private val selectedEnd: Calendar
-    ) : BottomSheetDialogFragment() {
+    ) : BottomSheetDialogFragment(), BottomExpandDelegation by BottomExpandDelegationImpl() {
 
     private lateinit var dataBinding: DialogTimepickerBinding
     private var resultListener: OnResultListener<String>? = null
@@ -25,6 +25,7 @@ class AlarmTimeDialog(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        onSetBottomBehavior(dialog)
         dataBinding = DialogTimepickerBinding.inflate(layoutInflater, container, false)
         return dataBinding.root
     }

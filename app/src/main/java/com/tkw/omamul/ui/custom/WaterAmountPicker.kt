@@ -1,7 +1,10 @@
 package com.tkw.omamul.ui.custom
 
 import android.content.Context
+import android.text.InputType
 import android.util.AttributeSet
+import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.NumberPicker
 import com.tkw.omamul.R
 
@@ -40,6 +43,7 @@ class WaterAmountPicker
         value = values.size / 2
         displayedValues = values.toTypedArray()
         wrapSelectorWheel = false
+        setInputTypeNumber(this)
     }
 
     fun getIntervalDisplayedValues(interval: Int): ArrayList<String> {
@@ -54,5 +58,14 @@ class WaterAmountPicker
 
     fun getCurrentValue(): Int {
         return displayedValues[value].toInt()
+    }
+
+    private fun setInputTypeNumber(vg: ViewGroup) {
+        (0..vg.childCount).map { vg.getChildAt(it) }.forEach {
+            when (it) {
+                is ViewGroup -> setInputTypeNumber(it) // recurse
+                is EditText -> it.inputType = InputType.TYPE_CLASS_NUMBER
+            }
+        }
     }
 }
