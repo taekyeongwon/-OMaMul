@@ -24,6 +24,7 @@ import com.tkw.omamul.common.ViewModelFactory
 import com.tkw.omamul.data.model.CupEntity
 import com.tkw.omamul.data.model.WaterEntity
 import com.tkw.omamul.databinding.FragmentWaterBinding
+import com.tkw.omamul.ui.dialog.WaterIntakeDialog
 import com.tkw.omamul.ui.view.water.main.home.adapter.CupPagerAdapter
 import com.tkw.omamul.ui.view.water.main.home.adapter.SnapDecoration
 import com.tkw.omamul.ui.view.water.main.WaterViewModel
@@ -102,7 +103,16 @@ class WaterFragment: Fragment() {
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return menuItem.onNavDestinationSelected(findNavController())
+                return when(menuItem.itemId) {
+                    R.id.waterIntakeDialog -> {
+                        val dialog = WaterIntakeDialog()
+                        dialog.show(childFragmentManager, dialog.tag)
+                        true
+                    }
+                    else -> {
+                        menuItem.onNavDestinationSelected(findNavController())
+                    }
+                }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }

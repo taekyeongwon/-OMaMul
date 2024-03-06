@@ -35,9 +35,9 @@
         android:id="@+id/waterFragment"
         android:name="com.tkw.omamul.ui.view.water.main.home.WaterFragment"
         tools:layout="@layout/fragment_water">
-        <action
-            android:id="@+id/action_waterIntakeFragment"
-            app:destination="@id/waterIntakeFragment"/>
+<!--        <action-->
+<!--            android:id="@+id/action_waterIntakeFragment"-->
+<!--            app:destination="@id/waterIntakeFragment"/>-->
         <action
             android:id="@+id/action_waterAlarmFragment"
             app:destination="@id/waterAlarmFragment" />
@@ -53,20 +53,21 @@
         android:label="SettingFragment"
         tools:layout="@layout/fragment_setting"/>
 
-    <fragment
-        android:id="@+id/waterIntakeFragment"
-        android:name="com.tkw.omamul.ui.view.water.cup.CupManageFragment"
-        tools:layout="@layout/fragment_water_intake">
+<!--    <fragment-->
+<!--        android:id="@+id/waterIntakeFragment"-->
+<!--        android:name="com.tkw.omamul.ui.view.water.cup.CupManageFragment"-->
+<!--        tools:layout="@layout/fragment_water_intake">-->
 
-    </fragment>
+<!--    </fragment>-->
 
     <fragment
         android:id="@+id/waterAlarmFragment"
-        android:name="com.tkw.omamul.ui.view.water.cup.CupManageFragment"
-        tools:layout="@layout/fragment_water_intake">
+        android:name="com.tkw.omamul.ui.view.water.alarm.WaterAlarmFragment"
+        tools:layout="@layout/fragment_water_alarm">
 
     </fragment>
 
+    <!-- 컵 관리 화면 이동 추가 -->
 
 
 </navigation>

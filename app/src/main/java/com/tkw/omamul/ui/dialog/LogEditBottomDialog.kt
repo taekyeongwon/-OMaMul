@@ -18,7 +18,7 @@ class LogEditBottomDialog: BottomSheetDialogFragment(),
     private val viewModel: WaterViewModel by viewModels { ViewModelFactory }
 
     override fun getTheme(): Int {
-        return R.style.DialogStyle
+        return R.style.BottomDialogStyle
     }
 
     override fun onCreateView(

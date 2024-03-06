@@ -1,4 +1,6 @@
 package com.tkw.omamul.ui.view.water.alarm
 
-class WaterAlarmFragment {
+import androidx.fragment.app.Fragment
+
+class WaterAlarmFragment: Fragment() {
 }
