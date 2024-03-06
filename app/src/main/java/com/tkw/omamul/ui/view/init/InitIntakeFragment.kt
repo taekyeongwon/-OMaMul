@@ -10,9 +10,9 @@ import androidx.navigation.fragment.findNavController
 import com.tkw.omamul.MainApplication
 import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
-import com.tkw.omamul.util.C
+import com.tkw.omamul.common.C
 import com.tkw.omamul.databinding.FragmentInitIntakeBinding
-import com.tkw.omamul.util.autoCleared
+import com.tkw.omamul.common.autoCleared
 
 class InitIntakeFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentInitIntakeBinding>()

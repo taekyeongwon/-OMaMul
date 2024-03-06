@@ -15,7 +15,7 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
-import com.tkw.omamul.util.setValueAnimator
+import com.tkw.omamul.common.util.setValueAnimator
 import com.tkw.omamul.data.model.WaterEntity
 import com.tkw.omamul.databinding.FragmentLogDayBinding
 import com.tkw.omamul.ui.view.water.main.log.adapter.DayListAdapter
@@ -25,7 +25,7 @@ import com.tkw.omamul.ui.custom.DividerDecoration
 import com.tkw.omamul.ui.custom.XAxisValueFormatter
 import com.tkw.omamul.ui.dialog.LogEditBottomDialog
 import com.tkw.omamul.ui.view.water.main.WaterViewModel
-import com.tkw.omamul.util.autoCleared
+import com.tkw.omamul.common.autoCleared
 
 class LogDayFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentLogDayBinding>()

@@ -10,9 +10,9 @@ import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
 import com.tkw.omamul.databinding.DialogLogEditBinding
 import com.tkw.omamul.ui.view.water.main.WaterViewModel
-import com.tkw.omamul.util.BottomExpand
-import com.tkw.omamul.util.BottomExpandImpl
-import com.tkw.omamul.util.autoCleared
+import com.tkw.omamul.common.BottomExpand
+import com.tkw.omamul.common.BottomExpandImpl
+import com.tkw.omamul.common.autoCleared
 
 class LogEditBottomDialog: BottomSheetDialogFragment(), BottomExpand by BottomExpandImpl() {
     private var dataBinding by autoCleared<DialogLogEditBinding>()

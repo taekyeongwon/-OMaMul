@@ -20,7 +20,7 @@ import com.tkw.omamul.ui.custom.CustomMarkerView
 import com.tkw.omamul.ui.custom.CustomYAxisRenderer
 import com.tkw.omamul.ui.custom.XAxisValueFormatter
 import com.tkw.omamul.ui.view.water.main.WaterViewModel
-import com.tkw.omamul.util.autoCleared
+import com.tkw.omamul.common.autoCleared
 
 class LogWeekFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentLogWeekBinding>()

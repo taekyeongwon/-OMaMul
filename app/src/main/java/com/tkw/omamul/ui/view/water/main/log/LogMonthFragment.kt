@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
@@ -21,7 +20,7 @@ import com.tkw.omamul.ui.custom.CustomMarkerView
 import com.tkw.omamul.ui.custom.CustomYAxisRenderer
 import com.tkw.omamul.ui.custom.XAxisValueFormatter
 import com.tkw.omamul.ui.view.water.main.WaterViewModel
-import com.tkw.omamul.util.autoCleared
+import com.tkw.omamul.common.autoCleared
 
 class LogMonthFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentLogMonthBinding>()

@@ -9,7 +9,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.tkw.omamul.R
 import com.tkw.omamul.databinding.FragmentWaterLogBinding
 import com.tkw.omamul.ui.view.water.main.log.adapter.ViewPagerAdapter
-import com.tkw.omamul.util.autoCleared
+import com.tkw.omamul.common.autoCleared
 
 class WaterLogFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentWaterLogBinding>()

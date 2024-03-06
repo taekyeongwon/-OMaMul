@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
 import com.tkw.omamul.databinding.FragmentInitLanguageBinding
-import com.tkw.omamul.util.autoCleared
+import com.tkw.omamul.common.autoCleared
 
 class InitLanguageFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentInitLanguageBinding>()

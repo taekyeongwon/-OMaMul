@@ -1,4 +1,4 @@
-package com.tkw.omamul.util
+package com.tkw.omamul.common
 
 import android.app.Dialog
 import android.view.View

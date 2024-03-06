@@ -28,7 +28,7 @@ import com.tkw.omamul.ui.dialog.WaterIntakeDialog
 import com.tkw.omamul.ui.view.water.main.home.adapter.CupPagerAdapter
 import com.tkw.omamul.ui.view.water.main.home.adapter.SnapDecoration
 import com.tkw.omamul.ui.view.water.main.WaterViewModel
-import com.tkw.omamul.util.autoCleared
+import com.tkw.omamul.common.autoCleared
 
 
 class WaterFragment: Fragment() {

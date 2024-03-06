@@ -11,9 +11,9 @@ import androidx.fragment.app.activityViewModels
 import com.tkw.omamul.common.ViewModelFactory
 import com.tkw.omamul.databinding.DialogWaterIntakeBinding
 import com.tkw.omamul.ui.view.water.main.WaterViewModel
-import com.tkw.omamul.util.DialogResize
-import com.tkw.omamul.util.DialogResizeImpl
-import com.tkw.omamul.util.autoCleared
+import com.tkw.omamul.common.DialogResize
+import com.tkw.omamul.common.DialogResizeImpl
+import com.tkw.omamul.common.autoCleared
 
 class WaterIntakeDialog: DialogFragment(), DialogResize by DialogResizeImpl() {
     private var dataBinding by autoCleared<DialogWaterIntakeBinding>()

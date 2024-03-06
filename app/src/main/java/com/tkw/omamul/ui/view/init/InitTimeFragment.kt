@@ -9,11 +9,11 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
-import com.tkw.omamul.util.DateTimeUtils
+import com.tkw.omamul.common.util.DateTimeUtils
 import com.tkw.omamul.databinding.FragmentInitTimeBinding
 import com.tkw.omamul.ui.dialog.OnResultListener
 import com.tkw.omamul.ui.dialog.AlarmTimeBottomDialog
-import com.tkw.omamul.util.autoCleared
+import com.tkw.omamul.common.autoCleared
 
 class InitTimeFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentInitTimeBinding>()

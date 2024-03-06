@@ -12,7 +12,7 @@ import androidx.navigation.ui.NavigationUI
 import com.tkw.omamul.MainApplication
 import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
-import com.tkw.omamul.util.C
+import com.tkw.omamul.common.C
 import com.tkw.omamul.databinding.ActivityWaterBinding
 
 class WaterActivity : AppCompatActivity() {

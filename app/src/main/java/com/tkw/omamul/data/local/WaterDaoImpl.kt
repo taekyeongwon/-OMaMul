@@ -1,6 +1,6 @@
 package com.tkw.omamul.data.local
 
-import com.tkw.omamul.util.DateTimeUtils
+import com.tkw.omamul.common.util.DateTimeUtils
 import com.tkw.omamul.data.WaterDao
 import com.tkw.omamul.data.model.DayOfWaterEntity
 import com.tkw.omamul.data.model.WaterEntity
