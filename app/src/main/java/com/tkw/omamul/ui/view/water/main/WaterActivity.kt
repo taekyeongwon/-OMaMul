@@ -1,7 +1,11 @@
 package com.tkw.omamul.ui.view.water.main
 
+import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -10,24 +14,55 @@ import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
 import com.tkw.omamul.util.C
 import com.tkw.omamul.databinding.ActivityWaterBinding
-import com.tkw.omamul.ui.base.BaseActivity
 
-class WaterActivity : BaseActivity<ActivityWaterBinding, WaterViewModel>(R.layout.activity_water) {
+class WaterActivity : AppCompatActivity() {
+    private lateinit var dataBinding: ActivityWaterBinding
+    private val viewModel: WaterViewModel by viewModels { ViewModelFactory }
+    private val mainFragmentSet = setOf(
+        R.id.waterFragment,
+        R.id.waterLogFragment,
+        R.id.settingFragment
+    )
 
-    override val isSplash: Boolean = true
-    override val viewModel: WaterViewModel by viewModels { ViewModelFactory }
-    private val mainFragmentSet = setOf(R.id.waterFragment, R.id.waterLogFragment, R.id.settingFragment)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        installSplashScreen()
+        initBinding()
+        initView()
+    }
 
-    override fun initView() {
+    private fun initBinding() {
+        dataBinding = ActivityWaterBinding.inflate(layoutInflater)
+        dataBinding.run {
+            lifecycleOwner = this@WaterActivity
+            executePendingBindings()
+            viewModel = this@WaterActivity.viewModel
+        }
+    }
+
+    private fun initView() {
+        setContentView(dataBinding.root)
         setSupportActionBar(dataBinding.toolbar)
-        val nav = findNavController(R.id.fragment_container_view)
-        val navGraph = nav.navInflater.inflate(R.navigation.nav_graph)
+        initNavigate()
+//        viewModel.getCount()
+    }
 
-        nav.addOnDestinationChangedListener { _, destination, _ ->
+    private fun initNavigate() {
+        val navController = findNavController(R.id.fragment_container_view)
+        navController.addOnDestinationChangedListener { _, destination, _ ->
             dataBinding.bottomNav.visibility =
                 if(mainFragmentSet.contains(destination.id)) View.VISIBLE
                 else View.GONE
         }
+        setStartDestination(navController)
+
+        val appBarConfiguration = AppBarConfiguration(mainFragmentSet.plus(R.id.initLanguageFragment))
+        NavigationUI.setupWithNavController(dataBinding.toolbar, navController, appBarConfiguration)
+        NavigationUI.setupWithNavController(dataBinding.bottomNav, navController)
+    }
+
+    private fun setStartDestination(nav: NavController) {
+        val navGraph = nav.navInflater.inflate(R.navigation.nav_graph)
 
         if(MainApplication.sharedPref?.getBoolean(C.FirstInstallFlag, false) == false) {
             navGraph.setStartDestination(R.id.initLanguageFragment)
@@ -35,28 +70,5 @@ class WaterActivity : BaseActivity<ActivityWaterBinding, WaterViewModel>(R.layou
             navGraph.setStartDestination(R.id.waterFragment)
         }
         nav.graph = navGraph
-
-        NavigationUI.setupWithNavController(dataBinding.bottomNav, nav)
-        val appBarConfiguration = AppBarConfiguration(mainFragmentSet.plus(R.id.initLanguageFragment))
-        NavigationUI.setupWithNavController(dataBinding.toolbar, nav, appBarConfiguration)
-//        viewModel.getCount()
-    }
-
-    override fun bindViewModel(binder: ActivityWaterBinding) {
-        with(binder) {
-            viewModel = this@WaterActivity.viewModel
-        }
-    }
-
-    override fun initObserver() {
-
-    }
-
-    override fun initListener() {
-
-    }
-
-    private fun initNavigate() {
-
     }
 }
