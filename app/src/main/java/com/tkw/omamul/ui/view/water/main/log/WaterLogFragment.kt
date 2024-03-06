@@ -1,18 +1,34 @@
 package com.tkw.omamul.ui.view.water.main.log
 
-import androidx.fragment.app.viewModels
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.tkw.omamul.R
-import com.tkw.omamul.common.ViewModelFactory
 import com.tkw.omamul.databinding.FragmentWaterLogBinding
 import com.tkw.omamul.ui.view.water.main.log.adapter.ViewPagerAdapter
-import com.tkw.omamul.ui.base.BaseFragment
-import com.tkw.omamul.ui.view.water.main.WaterViewModel
+import com.tkw.omamul.util.autoCleared
 
-class WaterLogFragment: BaseFragment<FragmentWaterLogBinding, WaterViewModel>(R.layout.fragment_water_log) {
-    override val viewModel: WaterViewModel by viewModels { ViewModelFactory }
+class WaterLogFragment: Fragment() {
+    private var dataBinding by autoCleared<FragmentWaterLogBinding>()
 
-    override fun initView() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        dataBinding = FragmentWaterLogBinding.inflate(inflater, container, false)
+        return dataBinding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
+    }
+
+    fun initView() {
         with(dataBinding) {
             viewPager.adapter = ViewPagerAdapter(childFragmentManager, lifecycle)
             TabLayoutMediator(tabLayout, viewPager) { tab, position ->
@@ -23,17 +39,5 @@ class WaterLogFragment: BaseFragment<FragmentWaterLogBinding, WaterViewModel>(R.
                 }
             }.attach()
         }
-    }
-
-    override fun bindViewModel(binder: FragmentWaterLogBinding) {
-
-    }
-
-    override fun initObserver() {
-
-    }
-
-    override fun initListener() {
-
     }
 }

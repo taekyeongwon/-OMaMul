@@ -8,45 +8,28 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
 import com.tkw.omamul.databinding.FragmentInitLanguageBinding
-import com.tkw.omamul.ui.base.BaseFragment
+import com.tkw.omamul.util.autoCleared
 
-class InitLanguageFragment: BaseFragment<FragmentInitLanguageBinding, InitViewModel>(R.layout.fragment_init_language) {
-    override val viewModel: InitViewModel by viewModels { ViewModelFactory }
+class InitLanguageFragment: Fragment() {
+    private var dataBinding by autoCleared<FragmentInitLanguageBinding>()
+    private val viewModel: InitViewModel by viewModels { ViewModelFactory }
 
-    override fun initView() {
-
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        dataBinding = FragmentInitLanguageBinding.inflate(inflater, container, false)
+        return dataBinding.root
     }
 
-    override fun bindViewModel(binder: FragmentInitLanguageBinding) {
-
-    }
-
-    override fun initObserver() {
-
-    }
-
-    override fun initListener() {
-        dataBinding.btnNext.setOnClickListener {
-            nextFragment(R.id.initTimeFragment)
-        }
-        //        dataBinding.btnFirst.setOnClickListener { -> 마지막 initIntake에서 start 바꿔주기
-//            val startDestination = findNavController().graph.startDestinationId
-//            val navOptions = NavOptions.Builder()
-//                .setPopUpTo(startDestination, true)
-//                .build()
-//            findNavController().navigate(startDestination, null, navOptions)
-//        }
-    }
-
-    private val callback = object: OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initListener()
     }
 
     override fun onAttach(context: Context) {
@@ -57,5 +40,17 @@ class InitLanguageFragment: BaseFragment<FragmentInitLanguageBinding, InitViewMo
     override fun onDetach() {
         super.onDetach()
         callback.remove()
+    }
+
+    private fun initListener() {
+        dataBinding.btnNext.setOnClickListener {
+            findNavController().navigate(R.id.initTimeFragment)
+        }
+    }
+
+    private val callback = object: OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+
+        }
     }
 }

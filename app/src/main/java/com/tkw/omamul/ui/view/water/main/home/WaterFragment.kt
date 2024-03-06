@@ -1,12 +1,16 @@
 package com.tkw.omamul.ui.view.water.main.home
 
+import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
@@ -22,33 +26,53 @@ import com.tkw.omamul.data.model.WaterEntity
 import com.tkw.omamul.databinding.FragmentWaterBinding
 import com.tkw.omamul.ui.view.water.main.home.adapter.CupPagerAdapter
 import com.tkw.omamul.ui.view.water.main.home.adapter.SnapDecoration
-import com.tkw.omamul.ui.base.BaseFragment
 import com.tkw.omamul.ui.view.water.main.WaterViewModel
+import com.tkw.omamul.util.autoCleared
 
 
-class WaterFragment: BaseFragment<FragmentWaterBinding, WaterViewModel>(R.layout.fragment_water) {
-    override val viewModel: WaterViewModel by activityViewModels { ViewModelFactory }
+class WaterFragment: Fragment() {
+    private var dataBinding by autoCleared<FragmentWaterBinding>()
+    private val viewModel: WaterViewModel by activityViewModels { ViewModelFactory }
     private var countObject: List<WaterEntity>? = null
     private lateinit var cupPagerAdapter: CupPagerAdapter
     private lateinit var snapHelper: PagerSnapHelper
 
     private var i = 0
 
-    override fun initView() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        dataBinding = FragmentWaterBinding.inflate(inflater, container, false)
+        return dataBinding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initBinding()
+        initView()
+        initObserver()
+        initListener()
+    }
+
+    private fun initBinding() {
+        dataBinding.run {
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = this@WaterFragment.viewModel
+            executePendingBindings()
+        }
+    }
+
+    private fun initView() {
         snapHelper = PagerSnapHelper()
         cupPagerAdapter = CupPagerAdapter(clickScrollListener, addListener)
         initItemMenu()
         initGlobalLayout()
     }
 
-    override fun bindViewModel(binder: FragmentWaterBinding) {
-        with(binder) {
-            viewModel = this@WaterFragment.viewModel
-        }
-    }
-
-    override fun initObserver() {
-        viewModel.countStreamLiveData.observe(this, Observer {
+    private fun initObserver() {
+        viewModel.countStreamLiveData.observe(viewLifecycleOwner, Observer {
             countObject = it.dayOfList
 //            dataBinding.tvCount.text = "${
 //                it.dayOfList.sumOf { water ->
@@ -58,7 +82,7 @@ class WaterFragment: BaseFragment<FragmentWaterBinding, WaterViewModel>(R.layout
         })
     }
 
-    override fun initListener() {
+    private fun initListener() {
         dataBinding.btnAdd.setOnClickListener {
             viewModel.addCount()
         }

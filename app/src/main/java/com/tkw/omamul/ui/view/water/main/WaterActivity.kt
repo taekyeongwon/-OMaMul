@@ -35,8 +35,8 @@ class WaterActivity : AppCompatActivity() {
         dataBinding = ActivityWaterBinding.inflate(layoutInflater)
         dataBinding.run {
             lifecycleOwner = this@WaterActivity
-            executePendingBindings()
             viewModel = this@WaterActivity.viewModel
+            executePendingBindings()
         }
     }
 

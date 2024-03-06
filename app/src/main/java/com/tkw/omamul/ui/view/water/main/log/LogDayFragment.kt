@@ -1,6 +1,12 @@
 package com.tkw.omamul.ui.view.water.main.log
 
 import android.graphics.Color
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -14,18 +20,43 @@ import com.tkw.omamul.util.setValueAnimator
 import com.tkw.omamul.data.model.WaterEntity
 import com.tkw.omamul.databinding.FragmentLogDayBinding
 import com.tkw.omamul.ui.view.water.main.log.adapter.DayListAdapter
-import com.tkw.omamul.ui.base.BaseFragment
 import com.tkw.omamul.ui.custom.CustomMarkerView
 import com.tkw.omamul.ui.custom.CustomYAxisRenderer
 import com.tkw.omamul.ui.custom.DividerDecoration
 import com.tkw.omamul.ui.custom.XAxisValueFormatter
 import com.tkw.omamul.ui.dialog.LogEditDialog
 import com.tkw.omamul.ui.view.water.main.WaterViewModel
+import com.tkw.omamul.util.autoCleared
 
-class LogDayFragment: BaseFragment<FragmentLogDayBinding, WaterViewModel>(R.layout.fragment_log_day) {
-    override val viewModel: WaterViewModel by viewModels { ViewModelFactory }
+class LogDayFragment: Fragment() {
+    private var dataBinding by autoCleared<FragmentLogDayBinding>()
+    private val viewModel: WaterViewModel by activityViewModels { ViewModelFactory }
 
-    override fun initView() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        dataBinding = FragmentLogDayBinding.inflate(inflater, container, false)
+        return dataBinding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initBinding()
+        initView()
+        initListener()
+    }
+
+    private fun initBinding() {
+        dataBinding.run {
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = this@LogDayFragment.viewModel
+            executePendingBindings()
+        }
+    }
+
+    private fun initView() {
         val list = ArrayList<BarEntry>()
         list.add(BarEntry(0f, 100f))
         list.add(BarEntry(2f, 200f))
@@ -125,15 +156,7 @@ class LogDayFragment: BaseFragment<FragmentLogDayBinding, WaterViewModel>(R.layo
         dataBinding.tvTotalAmount.setValueAnimator(1000)
     }
 
-    override fun bindViewModel(binder: FragmentLogDayBinding) {
-
-    }
-
-    override fun initObserver() {
-
-    }
-
-    override fun initListener() {
+    private fun initListener() {
         dataBinding.ibDayAdd.setOnClickListener {
             val dialog = LogEditDialog()
             dialog.show(childFragmentManager, dialog.tag)

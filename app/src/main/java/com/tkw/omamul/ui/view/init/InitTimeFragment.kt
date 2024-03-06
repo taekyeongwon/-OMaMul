@@ -1,32 +1,46 @@
 package com.tkw.omamul.ui.view.init
 
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
 import com.tkw.omamul.util.DateTimeUtils
 import com.tkw.omamul.databinding.FragmentInitTimeBinding
-import com.tkw.omamul.ui.base.BaseFragment
 import com.tkw.omamul.ui.dialog.OnResultListener
 import com.tkw.omamul.ui.dialog.AlarmTimeDialog
+import com.tkw.omamul.util.autoCleared
 
-class InitTimeFragment: BaseFragment<FragmentInitTimeBinding, InitViewModel>(R.layout.fragment_init_time) {
-    override val viewModel: InitViewModel by viewModels { ViewModelFactory }
+class InitTimeFragment: Fragment() {
+    private var dataBinding by autoCleared<FragmentInitTimeBinding>()
+    private val viewModel: InitViewModel by viewModels { ViewModelFactory }
     private lateinit var alarmTimeDialog: AlarmTimeDialog
 
-    override fun initView() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        dataBinding = FragmentInitTimeBinding.inflate(inflater, container, false)
+        return dataBinding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
+        initListener()
+    }
+
+    private fun initView() {
         setDefaultTime()
         initTimePicker(true)
     }
 
-    override fun bindViewModel(binder: FragmentInitTimeBinding) {
-
-    }
-
-    override fun initObserver() {
-
-    }
-
-    override fun initListener() {
+    private fun initListener() {
         dataBinding.tvWakeupTime.setOnClickListener {
             initTimePicker(true)
             showTimePicker()
@@ -37,7 +51,7 @@ class InitTimeFragment: BaseFragment<FragmentInitTimeBinding, InitViewModel>(R.l
         }
 
         dataBinding.btnNext.setOnClickListener {
-            nextFragment(R.id.initIntakeFragment)
+            findNavController().navigate(R.id.initIntakeFragment)
         }
     }
 
