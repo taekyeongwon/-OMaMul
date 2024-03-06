@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.tkw.omamul.base.BaseViewModel
 import com.tkw.omamul.data.WaterRepository
 import com.tkw.omamul.data.model.DayOfWaterEntity
 import com.tkw.omamul.data.model.WaterEntity
-import com.tkw.omamul.ui.base.BaseViewModel
 import kotlinx.coroutines.launch
 
 class WaterViewModel(

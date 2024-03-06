@@ -1,6 +1,5 @@
-package com.tkw.omamul.ui.base
+package com.tkw.omamul.base
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,16 +18,16 @@ open class BaseViewModel: ViewModel() {
     private val _progressFlag = SingleLiveEvent<Boolean>()
     val progressFlag: LiveData<Boolean> get() = _progressFlag
 
-    protected fun launch(
-        context: CoroutineContext = EmptyCoroutineContext,
-        block: suspend CoroutineScope.() -> Unit
-    ): Job = viewModelScope.launch(context + CoroutineExceptionHandler { _, throwable ->
-        throwable.printStackTrace()
-    }) {
-        block()
-    }
-
     protected fun showAlert(msg: String) {
         _alertFlag.value = msg
     }
+}
+
+fun ViewModel.launch(
+    context: CoroutineContext = EmptyCoroutineContext,
+    block: suspend CoroutineScope.() -> Unit
+): Job = viewModelScope.launch(context + CoroutineExceptionHandler { _, throwable ->
+    throwable.printStackTrace()
+}) {
+    block()
 }
