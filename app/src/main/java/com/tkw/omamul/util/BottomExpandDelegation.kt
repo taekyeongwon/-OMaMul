@@ -1,15 +1,15 @@
-package com.tkw.omamul.ui.dialog
+package com.tkw.omamul.util
 
 import android.app.Dialog
 import android.view.View
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
-interface BottomExpandDelegation {
+interface BottomExpand {
     fun onSetBottomBehavior(dialog: Dialog?)
 }
 
-class BottomExpandDelegationImpl: BottomExpandDelegation {
+class BottomExpandImpl: BottomExpand {
     override fun onSetBottomBehavior(dialog: Dialog?) {
         dialog?.setOnShowListener {
             val d = it as BottomSheetDialog

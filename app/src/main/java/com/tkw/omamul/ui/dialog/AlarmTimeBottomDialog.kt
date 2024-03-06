@@ -9,13 +9,15 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tkw.omamul.R
 import com.tkw.omamul.util.DateTimeUtils
 import com.tkw.omamul.databinding.DialogTimepickerBinding
+import com.tkw.omamul.util.BottomExpand
+import com.tkw.omamul.util.BottomExpandImpl
 import java.util.Calendar
 
 class AlarmTimeBottomDialog(
     private val buttonFlag: Boolean,
     private val selectedStart: Calendar,
     private val selectedEnd: Calendar
-    ) : BottomSheetDialogFragment(), BottomExpandDelegation by BottomExpandDelegationImpl() {
+    ) : BottomSheetDialogFragment(), BottomExpand by BottomExpandImpl() {
 
     private lateinit var dataBinding: DialogTimepickerBinding
     private var resultListener: OnResultListener<String>? = null

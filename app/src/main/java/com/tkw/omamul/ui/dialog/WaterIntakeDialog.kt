@@ -11,10 +11,11 @@ import androidx.fragment.app.activityViewModels
 import com.tkw.omamul.common.ViewModelFactory
 import com.tkw.omamul.databinding.DialogWaterIntakeBinding
 import com.tkw.omamul.ui.view.water.main.WaterViewModel
+import com.tkw.omamul.util.DialogResize
+import com.tkw.omamul.util.DialogResizeImpl
 import com.tkw.omamul.util.autoCleared
-import com.tkw.omamul.util.dialogFragmentResize
 
-class WaterIntakeDialog: DialogFragment() {
+class WaterIntakeDialog: DialogFragment(), DialogResize by DialogResizeImpl() {
     private var dataBinding by autoCleared<DialogWaterIntakeBinding>()
     private val viewModel: WaterViewModel by activityViewModels { ViewModelFactory }
 
@@ -24,16 +25,16 @@ class WaterIntakeDialog: DialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         dataBinding = DialogWaterIntakeBinding.inflate(inflater, container, false)
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         return dataBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
     override fun onResume() {
         super.onResume()
-        context?.dialogFragmentResize(this, 0.9f)
+        onResize(this, 0.9f)
     }
 }
