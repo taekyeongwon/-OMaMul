@@ -142,7 +142,7 @@ class WaterFragment: Fragment() {
         val lastPosition = cupPagerAdapter.itemCount - 1
         val touchedView: View? = dataBinding.rvList.layoutManager!!.findViewByPosition(lastPosition)
         if(touchedView != null && isSnapped(touchedView)) {
-            addItem()
+            findNavController().navigate(R.id.cupManageFragment)
         } else {
             scrollToPosition(dataBinding.rvList, lastPosition)
         }

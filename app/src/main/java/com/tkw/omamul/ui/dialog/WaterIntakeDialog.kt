@@ -31,10 +31,22 @@ class WaterIntakeDialog: DialogFragment(), DialogResize by DialogResizeImpl() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initListener()
     }
 
     override fun onResume() {
         super.onResume()
         onResize(this, 0.9f)
+    }
+
+    private fun initListener() {
+        dataBinding.btnCancel.setOnClickListener {
+            dismiss()
+        }
+
+        dataBinding.btnSave.setOnClickListener {
+            //todo 데이터 저장하고 dismiss 시 해당 데이터 보여지도록 해야 함.
+            dismiss()
+        }
     }
 }

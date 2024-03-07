@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:wap="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <TextView
         android:id="@+id/first_icon"
         android:layout_width="wrap_content"
@@ -99,9 +98,9 @@
             android:layout_width="wrap_content"
             android:layout_height="150dp"
             android:selectionDividerHeight="0dp"
-            wap:minValue="100"
-            wap:maxValue="3000"
-            wap:interval="5"
+            app:minValue="100"
+            app:maxValue="3000"
+            app:interval="5"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>

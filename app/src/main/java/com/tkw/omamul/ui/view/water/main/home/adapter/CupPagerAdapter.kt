@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.tkw.omamul.common.C
 import com.tkw.omamul.data.model.CupEntity
 import com.tkw.omamul.databinding.ItemCupAddBinding
 import com.tkw.omamul.databinding.ItemCupBinding
@@ -11,17 +12,14 @@ import com.tkw.omamul.common.DiffCallback
 
 class CupPagerAdapter(private val onClick: (Int) -> Unit, private val onClickAdd: () -> Unit)
     : ListAdapter<CupEntity, ViewHolder>(DiffCallback()) {
-    enum class ViewType(val viewType: Int) {
-        CUP(0), ADD(1)
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return when(ViewType.values()[viewType]) {
-            ViewType.CUP -> {
+        return when(C.ViewType.values()[viewType]) {
+            C.ViewType.CUP -> {
                 val binding = ItemCupBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 CupViewHolder(binding, onClick)
             }
-            ViewType.ADD -> {
+            C.ViewType.ADD -> {
                 val binding = ItemCupAddBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 AddViewHolder(binding, onClickAdd)
             }
@@ -39,8 +37,8 @@ class CupPagerAdapter(private val onClick: (Int) -> Unit, private val onClickAdd
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if(position == itemCount - 1) ViewType.ADD.viewType
-        else ViewType.CUP.viewType
+        return if(position == itemCount - 1) C.ViewType.ADD.viewType
+        else C.ViewType.CUP.viewType
     }
 
     class CupViewHolder(private val binding: ItemCupBinding, listener: (Int) -> Unit): ViewHolder(binding.root) {
