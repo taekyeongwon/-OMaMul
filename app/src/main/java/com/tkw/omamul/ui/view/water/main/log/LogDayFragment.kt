@@ -7,22 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.utils.ColorTemplate
-import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
-import com.tkw.omamul.common.util.setValueAnimator
+import com.tkw.omamul.common.util.animateByMaxValue
 import com.tkw.omamul.data.model.WaterEntity
 import com.tkw.omamul.databinding.FragmentLogDayBinding
 import com.tkw.omamul.ui.view.water.main.log.adapter.DayListAdapter
-import com.tkw.omamul.ui.custom.CustomMarkerView
-import com.tkw.omamul.ui.custom.CustomYAxisRenderer
 import com.tkw.omamul.ui.custom.DividerDecoration
-import com.tkw.omamul.ui.custom.XAxisValueFormatter
 import com.tkw.omamul.ui.dialog.LogEditBottomDialog
 import com.tkw.omamul.ui.view.water.main.WaterViewModel
 import com.tkw.omamul.common.autoCleared
@@ -57,51 +51,18 @@ class LogDayFragment: Fragment() {
 
     private fun initView() {
         val list = ArrayList<BarEntry>()
-        list.add(BarEntry(0f, 100f))
-        list.add(BarEntry(2f, 200f))
-        list.add(BarEntry(4f, 300f))
-
-        val barDataSet = BarDataSet(list, "").apply {
-            color = ColorTemplate.getHoloBlue()
-            valueTextColor = Color.BLACK
-            valueTextSize = 16f
-            setDrawValues(false)
+        with(dataBinding.barChart) {
+            list.add(parsingChartData(0f, 100f))
+            list.add(parsingChartData(2f, 200f))
+            list.add(parsingChartData(4f, 300f))
         }
 
-        val barData = BarData(barDataSet)
         dataBinding.barChart.apply {
-            data = barData
-            setPinchZoom(false)
-            setScaleEnabled(false)
-            isDoubleTapToZoomEnabled = false
-            legend.isEnabled = false
-            description.isEnabled = false
-            marker = CustomMarkerView(context, R.layout.custom_marker)
-            axisRight.isEnabled = false
-            setExtraOffsets(10f, 100f, 20f, 10f)
-            axisLeft.apply {
-                isEnabled = true
-                setLabelCount(5, true)
-                val yAxisRenderer = CustomYAxisRenderer(viewPortHandler, axisLeft, getTransformer(
-                    YAxis.AxisDependency.LEFT))
-                yAxisRenderer.setUnit(getString(R.string.unit_water))
-                rendererLeftYAxis = yAxisRenderer
-                setDrawAxisLine(false)
-                axisMinimum = 0f
-                axisMaximum = 2500f
-                //todo maximum 계산해서 바뀔 수 있도록, 목표 물의 양 dash line으로 표시
-            }
-
-            xAxis.apply {
-                isEnabled = true
-                position = XAxis.XAxisPosition.BOTTOM
-                axisMaximum = 24f
-                valueFormatter = XAxisValueFormatter()
-                setDrawGridLines(false)
-            }
-
-            animateY(1000)
+            setLimit(2000f) //todo 현재 설정된 목표 물의 양으로 변경 필요
+            setXMinMax(0f, 24f)
+            setChartData(list)
         }
+
         val dayAdapter = DayListAdapter()
         dataBinding.rvDayList.apply {
             setHasFixedSize(true)
@@ -152,7 +113,7 @@ class LogDayFragment: Fragment() {
         )
         dayAdapter.submitList(list2)
 
-        dataBinding.tvTotalAmount.setValueAnimator(1000)
+        dataBinding.tvTotalAmount.animateByMaxValue(1000)
     }
 
     private fun initListener() {

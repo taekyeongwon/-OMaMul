@@ -4,13 +4,13 @@ import android.animation.ValueAnimator
 import android.view.animation.LinearInterpolator
 import android.widget.TextView
 
-fun TextView.setValueAnimator(maxValue: Int) {
+fun TextView.animateByMaxValue(maxValue: Int) {
     ValueAnimator.ofInt(0, maxValue).apply {
         duration = 1000
         interpolator = LinearInterpolator()
         addUpdateListener {
             val value = it.animatedValue
-            this@setValueAnimator.text = value.toString()
+            this@animateByMaxValue.text = value.toString()
         }
         start()
     }
