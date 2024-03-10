@@ -11,6 +11,7 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.utils.ColorTemplate
+import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
 import com.tkw.omamul.common.util.animateByMaxValue
 import com.tkw.omamul.data.model.WaterEntity
@@ -55,11 +56,9 @@ class LogDayFragment: Fragment() {
             list.add(parsingChartData(0f, 100f))
             list.add(parsingChartData(2f, 200f))
             list.add(parsingChartData(4f, 300f))
-        }
-
-        dataBinding.barChart.apply {
+            list.add(parsingChartData(24f, 0f))
             setLimit(2000f) //todo 현재 설정된 목표 물의 양으로 변경 필요
-            setXMinMax(0f, 24f)
+            setUnit(getString(R.string.unit_hour), getString(R.string.unit_ml))
             setChartData(list)
         }
 

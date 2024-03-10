@@ -51,47 +51,14 @@ class LogWeekFragment: Fragment() {
 
     private fun initView() {
         val list = ArrayList<BarEntry>()
-        list.add(BarEntry(0f, 100f))
-        list.add(BarEntry(2f, 200f))
-        list.add(BarEntry(4f, 300f))
-        list.add(BarEntry(6f, 400f))
-
-        val barDataSet = BarDataSet(list, "").apply {
-            color = ColorTemplate.getHoloBlue()
-            valueTextColor = Color.BLACK
-            valueTextSize = 16f
-            setDrawValues(false)
-        }
-
-        val barData = BarData(barDataSet)
-        dataBinding.barChart.apply {
-            data = barData
-            setPinchZoom(false)
-            setScaleEnabled(false)
-            isDoubleTapToZoomEnabled = false
-            legend.isEnabled = false
-            description.isEnabled = false
-            marker = CustomMarkerView(context, R.layout.custom_marker)
-            axisRight.isEnabled = false
-            axisLeft.apply {
-                isEnabled = true
-                labelCount = 4
-                val yAxisRenderer = CustomYAxisRenderer(viewPortHandler, axisLeft, getTransformer(
-                    YAxis.AxisDependency.LEFT))
-                yAxisRenderer.setUnit(getString(R.string.unit_water))
-                rendererLeftYAxis = yAxisRenderer
-                setDrawAxisLine(false)
-            }
-
-            xAxis.apply {
-                isEnabled = true
-                position = XAxis.XAxisPosition.BOTTOM
-                axisMaximum = 24f
-                valueFormatter = XAxisValueFormatter()
-                setDrawGridLines(false)
-            }
-
-            animateY(1000)
+        with(dataBinding.barChart) {
+            list.add(parsingChartData(1f, 0.1f))
+            list.add(parsingChartData(2f, 0.2f))
+            list.add(parsingChartData(3f, 0.3f))
+            list.add(parsingChartData(7f, 0.4f))
+            setLimit(2f) //todo 현재 설정된 목표 물의 양으로 변경 필요
+            setUnit(getString(R.string.unit_day), getString(R.string.unit_liter))
+            setChartData(list)
         }
     }
 }
