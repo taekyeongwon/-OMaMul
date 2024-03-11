@@ -11,12 +11,13 @@ import com.tkw.omamul.common.util.DateTimeUtils
 import com.tkw.omamul.databinding.DialogTimepickerBinding
 import com.tkw.omamul.common.BottomExpand
 import com.tkw.omamul.common.BottomExpandImpl
+import java.time.LocalTime
 import java.util.Calendar
 
 class AlarmTimeBottomDialog(
     private val buttonFlag: Boolean,
-    private val selectedStart: Calendar,
-    private val selectedEnd: Calendar
+    private val selectedStart: LocalTime,
+    private val selectedEnd: LocalTime
     ) : BottomSheetDialogFragment(), BottomExpand by BottomExpandImpl() {
 
     private lateinit var dataBinding: DialogTimepickerBinding
@@ -39,10 +40,10 @@ class AlarmTimeBottomDialog(
     }
 
     private fun initView() {
-        val startHour = selectedStart.get(Calendar.HOUR_OF_DAY)
-        val startMin = selectedStart.get(Calendar.MINUTE)
-        val endHour = selectedEnd.get(Calendar.HOUR_OF_DAY)
-        val endMin = selectedEnd.get(Calendar.MINUTE)
+        val startHour = selectedStart.hour
+        val startMin = selectedStart.minute
+        val endHour = selectedEnd.hour
+        val endMin = selectedEnd.minute
         initTimePicker(startHour, startMin, endHour, endMin)
 
         dataBinding.rgSelector.setOnCheckedChangeListener(onCheckedChangeListener)
@@ -76,20 +77,6 @@ class AlarmTimeBottomDialog(
     private fun setRadioChecked(flag: Boolean) {
         if(flag) dataBinding.rgSelector.check(R.id.rb_start)
         else dataBinding.rgSelector.check(R.id.rb_end)
-    }
-
-    private fun validateCheck(): Boolean {  //새벽에 기상하는 경우 취침시간이 더 빠를 수 있으므로 사용 x
-        val startCalendar = Calendar.getInstance()
-        startCalendar.clear()
-        startCalendar.set(Calendar.HOUR_OF_DAY, dataBinding.tpStart.hour)
-        startCalendar.set(Calendar.MINUTE, dataBinding.tpStart.minute)
-
-        val endCalendar = Calendar.getInstance()
-        endCalendar.clear()
-        endCalendar.set(Calendar.HOUR_OF_DAY, dataBinding.tpEnd.hour)
-        endCalendar.set(Calendar.MINUTE, dataBinding.tpEnd.minute)
-
-        return startCalendar.after(endCalendar)
     }
 
     private fun sendSelectTime() {

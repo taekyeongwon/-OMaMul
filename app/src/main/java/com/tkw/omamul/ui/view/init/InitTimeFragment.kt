@@ -63,8 +63,8 @@ class InitTimeFragment: Fragment() {
     private fun initTimePicker(buttonFlag: Boolean) {
         alarmTimeDialog = AlarmTimeBottomDialog(
             buttonFlag,
-            DateTimeUtils.getTimeFromFormat(dataBinding.tvWakeupTime.text.toString())!!,
-            DateTimeUtils.getTimeFromFormat(dataBinding.tvSleepTime.text.toString())!!
+            DateTimeUtils.getTimeFromFormat(dataBinding.tvWakeupTime.text.toString()),
+            DateTimeUtils.getTimeFromFormat(dataBinding.tvSleepTime.text.toString())
         )
         alarmTimeDialog.setResultListener(resultListener)
     }
