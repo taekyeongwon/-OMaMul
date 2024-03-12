@@ -3,21 +3,22 @@ package com.tkw.omamul.ui.custom
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
-import android.util.Log
-import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.DataSet
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.tkw.omamul.R
 
-class CustomBarChart
-    @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0)
-    : BarChart(context, attrs, defStyle) {
+class CustomLineChart
+@JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0)
+    : LineChart(context, attrs, defStyle) {
     private var limit: Float = 0f
     private lateinit var yAxisRenderer: CustomYAxisRenderer
 
@@ -57,6 +58,8 @@ class CustomBarChart
                 YAxis.AxisDependency.LEFT))
             setXAxisRenderer(xAxisRenderer)
             labelCount = 7
+            axisMinimum = 0f
+            axisMaximum = 24f
         }
     }
 
@@ -88,31 +91,21 @@ class CustomBarChart
         this.marker = markerView
     }
 
-    fun parsingChartData(x: Float, y: Float): BarEntry {
-        return BarEntry(x, y)
-    }
+    fun parsingChartData(x: Int, y: Int): Entry = Entry(x.toFloat(), y.toFloat())
 
-    fun setChartData(list: List<BarEntry>) {
-        val sortedList = list.sortedBy { it.x }
-        val barDataSet = BarDataSet(sortedList, "").apply {
+    fun setChartData(list: List<Entry>) {
+        val lineDataSet = LineDataSet(list, "").apply {
+            lineWidth = 4f
+            circleRadius = 5f
             color = ColorTemplate.getHoloBlue()
+            setCircleColors(ColorTemplate.getHoloBlue())
             valueTextColor = Color.BLACK
             valueTextSize = 16f
             setDrawValues(false)
         }
-        data = BarData(barDataSet)
-        data.barWidth = 0.5f
+        data = LineData(lineDataSet)
         calculateYMaximum()
-//        invalidate()
     }
-
-    /**
-     * 일 차트인 경우 0 ~ 24
-     * 주 차트인 경우 선택한 주의 날짜 ex) 1 ~ 7
-     * 월 차트인 경우 1 ~ 31
-     */
-    fun getDefaultBarEntryList(min: Float, max: Float): ArrayList<BarEntry> =
-        arrayListOf(BarEntry(min, 0f), BarEntry(max, 0f))
 
     private fun calculateYMaximum() {
         val maxAmount = data.yMax

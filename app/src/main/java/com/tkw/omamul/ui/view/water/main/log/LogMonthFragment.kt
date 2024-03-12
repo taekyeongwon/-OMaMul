@@ -61,6 +61,7 @@ class LogMonthFragment: Fragment() {
             list.add((parsingChartData(31f, 0f)))
             setLimit(2f)
             setUnit(getString(R.string.unit_day), getString(R.string.unit_liter))
+            setMarker(CustomMarkerView(context, R.layout.custom_marker, context.getString(R.string.unit_liter)))
             setChartData(list)
         }
     }

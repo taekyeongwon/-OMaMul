@@ -58,6 +58,7 @@ class LogWeekFragment: Fragment() {
             list.add(parsingChartData(7f, 0.4f))
             setLimit(2f) //todo 현재 설정된 목표 물의 양으로 변경 필요
             setUnit(getString(R.string.unit_day), getString(R.string.unit_liter))
+            setMarker(CustomMarkerView(context, R.layout.custom_marker, context.getString(R.string.unit_liter)))
             setChartData(list)
         }
     }

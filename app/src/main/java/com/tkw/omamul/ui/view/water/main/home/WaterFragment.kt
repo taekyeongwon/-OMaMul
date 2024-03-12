@@ -74,7 +74,7 @@ class WaterFragment: Fragment() {
 
     private fun initObserver() {
         viewModel.countStreamLiveData.observe(viewLifecycleOwner) {
-            countObject = it.getSortedList()
+            countObject = it.dayOfList
         }
     }
 

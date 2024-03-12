@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.github.mikephil.charting.data.Entry
 import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
 import com.tkw.omamul.common.util.animateByMaxValue
@@ -15,6 +16,8 @@ import com.tkw.omamul.ui.custom.DividerDecoration
 import com.tkw.omamul.ui.dialog.LogEditBottomDialog
 import com.tkw.omamul.ui.view.water.main.WaterViewModel
 import com.tkw.omamul.common.autoCleared
+import com.tkw.omamul.data.model.WaterEntity
+import com.tkw.omamul.ui.custom.CustomMarkerView
 
 class LogDayFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentLogDayBinding>()
@@ -48,27 +51,26 @@ class LogDayFragment: Fragment() {
 
     private fun initView() {
         dataBinding.rvDayList.run {
-                setHasFixedSize(true)
+            setHasFixedSize(true)
             adapter = dayAdapter
             addItemDecoration(DividerDecoration(10f))
         }
-        dataBinding.tvTotalAmount.animateByMaxValue(1000)
+
     }
 
     private fun initObserver() {
         viewModel.countStreamLiveData.observe(viewLifecycleOwner) { data ->
-            with(dataBinding.barChart) {
-                val entryList = getDefaultBarEntryList(0f, 24f)
-                val result = data.dayOfList.map {
-                    parsingChartData(it.getHourFromDate().toFloat(), it.amount.toFloat())
+            with(dataBinding) {
+                val result = data.getAccumulatedAmount().map {
+                    barChart.parsingChartData(it.key, it.value)
                 }
-                entryList.addAll(result)
-
-                setLimit(2000f) //todo 현재 설정된 목표 물의 양으로 변경 필요
-                setUnit(getString(R.string.unit_hour), getString(R.string.unit_ml))
-                setChartData(entryList)
+                barChart.setLimit(2000f) //todo 현재 설정된 목표 물의 양으로 변경 필요
+                barChart.setUnit(getString(R.string.unit_hour), getString(R.string.unit_ml))
+                barChart.setMarker(CustomMarkerView(requireContext(), R.layout.custom_marker, requireContext().getString(R.string.unit_ml)))
+                barChart.setChartData(result)
+                tvTotalAmount.animateByMaxValue(result.last().y.toInt())
             }
-            dayAdapter.submitList(data.getSortedList())
+            dayAdapter.submitList(data.dayOfList)
         }
     }
 
