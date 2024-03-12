@@ -9,6 +9,7 @@ import com.tkw.omamul.base.BaseViewModel
 import com.tkw.omamul.data.WaterRepository
 import com.tkw.omamul.data.model.DayOfWaterEntity
 import com.tkw.omamul.data.model.WaterEntity
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class WaterViewModel(
@@ -21,22 +22,10 @@ class WaterViewModel(
 
     val countStreamLiveData: LiveData<DayOfWaterEntity> = waterRepository.getCountByFlow().asLiveData()
 
-    init {
-        initCount()
-    }
 
     fun addCount() {
         viewModelScope.launch {
             waterRepository.updateCount()
-        }
-    }
-
-    private fun initCount() {
-        viewModelScope.launch {
-            val count = waterRepository.getCount()
-            if(count == null) {
-                waterRepository.createCount()
-            }
         }
     }
 

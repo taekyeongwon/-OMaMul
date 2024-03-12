@@ -17,7 +17,7 @@ class WaterRepositoryImpl(private val waterDao: WaterDao): WaterRepository {
             countFlow.collect {
                 val count = it.list.firstOrNull()
                 if(count == null) {
-                    updateCount()
+                    createCount()
                 } else {
                     this.emit(count)
                 }
