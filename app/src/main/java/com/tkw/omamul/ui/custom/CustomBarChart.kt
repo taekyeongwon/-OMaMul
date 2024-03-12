@@ -94,7 +94,8 @@ class CustomBarChart
     }
 
     fun setChartData(list: List<BarEntry>) {
-        val barDataSet = BarDataSet(list, "").apply {
+        val sortedList = list.sortedBy { it.x }
+        val barDataSet = BarDataSet(sortedList, "").apply {
             color = ColorTemplate.getHoloBlue()
             valueTextColor = Color.BLACK
             valueTextSize = 16f
@@ -109,14 +110,10 @@ class CustomBarChart
     /**
      * 일 차트인 경우 0 ~ 24
      * 주 차트인 경우 선택한 주의 날짜 ex) 1 ~ 7
-     * 월 차트인 경우 1 ~ 30(31) 달에 맞춰서 설정
+     * 월 차트인 경우 1 ~ 31
      */
-//    fun setXMinMax(min: Float, max: Float) {
-//        xAxis.apply {
-//            axisMinimum = min
-//            axisMaximum = max
-//        }
-//    }
+    fun getDefaultBarEntryList(min: Float, max: Float): ArrayList<BarEntry> =
+        arrayListOf(BarEntry(min, 0f), BarEntry(max, 0f))
 
     private fun calculateYMaximum() {
         val maxAmount = data.yMax

@@ -73,14 +73,9 @@ class WaterFragment: Fragment() {
     }
 
     private fun initObserver() {
-        viewModel.countStreamLiveData.observe(viewLifecycleOwner, Observer {
-            countObject = it.dayOfList
-//            dataBinding.tvCount.text = "${
-//                it.dayOfList.sumOf { water ->
-//                    water.amount
-//                }
-//            }"
-        })
+        viewModel.countStreamLiveData.observe(viewLifecycleOwner) {
+            countObject = it.getSortedList()
+        }
     }
 
     private fun initListener() {

@@ -15,4 +15,6 @@ class DayOfWaterEntity: RealmObject {
             water.amount
         }.toString()
     }
+
+    fun getSortedList() = dayOfList.sortedBy { it.getHourFromDate() }
 }

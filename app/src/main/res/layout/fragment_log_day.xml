@@ -123,9 +123,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_day_list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/rounded_rect"
-                android:fitsSystemWindows="true"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>

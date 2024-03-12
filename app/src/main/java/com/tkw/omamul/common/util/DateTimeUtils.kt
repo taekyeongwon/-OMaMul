@@ -26,6 +26,11 @@ object DateTimeUtils {
         return LocalTime.of(hour, minute).format(formatter)
     }
 
+    fun getTimeFromFullFormat(formatted: String): LocalTime {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        return LocalTime.parse(formatted, formatter)
+    }
+
     fun getTimeFromFormat(formatted: String): LocalTime {
         val formatter = DateTimeFormatter.ofPattern("a hh:mm")
         return LocalTime.parse(formatted, formatter)
