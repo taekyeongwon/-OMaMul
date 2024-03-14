@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.github.mikephil.charting.data.Entry
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
 import com.tkw.omamul.common.util.animateByMaxValue
@@ -51,6 +51,7 @@ class LogDayFragment: Fragment() {
     private fun initView() {
         dataBinding.rvDayList.run {
             setHasFixedSize(true)
+            dayAdapter.registerAdapterDataObserver(emptyRecyclerObserver)
             adapter = dayAdapter
             addItemDecoration(DividerDecoration(10f))
         }
@@ -70,6 +71,7 @@ class LogDayFragment: Fragment() {
                 tvTotalAmount.animateByMaxValue(result.lastOrNull()?.y?.toInt() ?: 0)
             }
             dayAdapter.submitList(data.sortedList())
+            emptyRecyclerObserver.onChanged()
         }
     }
 
@@ -77,6 +79,18 @@ class LogDayFragment: Fragment() {
         dataBinding.ibDayAdd.setOnClickListener {
             val dialog = LogEditBottomDialog()
             dialog.show(childFragmentManager, dialog.tag)
+        }
+    }
+
+    private val emptyRecyclerObserver = object : AdapterDataObserver() {
+        override fun onChanged() {
+            if(dayAdapter.itemCount == 0) {
+                dataBinding.nvEmptyView.visibility = View.VISIBLE
+                dataBinding.rvDayList.visibility = View.GONE
+            } else {
+                dataBinding.nvEmptyView.visibility = View.GONE
+                dataBinding.rvDayList.visibility = View.VISIBLE
+            }
         }
     }
 }
