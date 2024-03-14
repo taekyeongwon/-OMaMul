@@ -1,4 +1,4 @@
-package com.tkw.omamul.ui.custom
+package com.tkw.omamul.ui.custom.chart
 
 import android.content.Context
 import android.graphics.Canvas
@@ -10,14 +10,14 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.tkw.omamul.R
 
 //일, 주, 월 별 커스텀 마커 클래스 만들기.
-class CustomMarkerView(context: Context?, layoutResource: Int, private val unit: String)
+class DayMarkerView(context: Context?, layoutResource: Int)
     : MarkerView(context, layoutResource) {
 
-    private val tvContent: TextView = findViewById(R.id.test_marker_view)
+    private val tvAmount: TextView = findViewById(R.id.tv_amount)
 
     // draw override를 사용해 marker의 위치 조정 (bar의 상단 중앙)
     override fun draw(canvas: Canvas) {
-        canvas.translate(-(width / 2).toFloat(), -height.toFloat() )
+        canvas.translate(-(width / 2).toFloat(), -height.toFloat() - 16f)
         super.draw(canvas)
     }
 
@@ -28,21 +28,12 @@ class CustomMarkerView(context: Context?, layoutResource: Int, private val unit:
         val lineDataSet: LineDataSet? = chartView?.data?.dataSets?.get(0) as? LineDataSet
         lineDataSet?.let {
             val index = it.getEntryIndex(e)
-            if(index > 0) {
+            if(index > 0) { //선택 된 엔트리의 이전 인덱스 y값 가져오기
                 prevY = it.getEntryForIndex(index - 1).y
             }
         }
-        //세팅된 유닛이 ml -> 그대로, L -> 1000곱해서 ml
-        val milliLiterUnit = context.getString(R.string.unit_ml)
-        val literUnit = context.getString(R.string.unit_liter)
-        when(unit) {
-            milliLiterUnit -> {
-                tvContent.text = String.format("+%.0f", y - prevY).plus(milliLiterUnit)
-            }
-            literUnit -> {
-                tvContent.text = String.format("+%.0f", (y - prevY) * 1000).plus(milliLiterUnit)
-            }
-        }
+        val milliLiterUnit = context.getString(R.string.unit_ml_no_bracket)
+        tvAmount.text = String.format("+%.0f", y - prevY).plus(milliLiterUnit)
 
         super.refreshContent(e, highlight)
     }

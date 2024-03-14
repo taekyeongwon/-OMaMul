@@ -1,26 +1,19 @@
 package com.tkw.omamul.ui.view.water.main.log
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.utils.ColorTemplate
 import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
 import com.tkw.omamul.databinding.FragmentLogWeekBinding
-import com.tkw.omamul.ui.custom.CustomMarkerView
-import com.tkw.omamul.ui.custom.CustomYAxisRenderer
-import com.tkw.omamul.ui.custom.XAxisValueFormatter
+import com.tkw.omamul.ui.custom.chart.DayMarkerView
 import com.tkw.omamul.ui.view.water.main.WaterViewModel
 import com.tkw.omamul.common.autoCleared
+import com.tkw.omamul.ui.custom.chart.WeekMarkerView
 
 class LogWeekFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentLogWeekBinding>()
@@ -58,7 +51,7 @@ class LogWeekFragment: Fragment() {
             list.add(parsingChartData(7f, 0.4f))
             setLimit(2f) //todo 현재 설정된 목표 물의 양으로 변경 필요
             setUnit(getString(R.string.unit_day), getString(R.string.unit_liter))
-            setMarker(CustomMarkerView(context, R.layout.custom_marker, context.getString(R.string.unit_liter)))
+            setMarker(WeekMarkerView(context, R.layout.custom_marker))
             setChartData(list)
         }
     }

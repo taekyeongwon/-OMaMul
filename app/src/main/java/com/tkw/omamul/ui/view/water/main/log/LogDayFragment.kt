@@ -16,8 +16,7 @@ import com.tkw.omamul.ui.custom.DividerDecoration
 import com.tkw.omamul.ui.dialog.LogEditBottomDialog
 import com.tkw.omamul.ui.view.water.main.WaterViewModel
 import com.tkw.omamul.common.autoCleared
-import com.tkw.omamul.data.model.WaterEntity
-import com.tkw.omamul.ui.custom.CustomMarkerView
+import com.tkw.omamul.ui.custom.chart.DayMarkerView
 
 class LogDayFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentLogDayBinding>()
@@ -66,11 +65,11 @@ class LogDayFragment: Fragment() {
                 }
                 barChart.setLimit(2000f) //todo 현재 설정된 목표 물의 양으로 변경 필요
                 barChart.setUnit(getString(R.string.unit_hour), getString(R.string.unit_ml))
-                barChart.setMarker(CustomMarkerView(requireContext(), R.layout.custom_marker, requireContext().getString(R.string.unit_ml)))
+                barChart.setMarker(DayMarkerView(requireContext(), R.layout.custom_marker))
                 barChart.setChartData(result)
-                tvTotalAmount.animateByMaxValue(result.last().y.toInt())
+                tvTotalAmount.animateByMaxValue(result.lastOrNull()?.y?.toInt() ?: 0)
             }
-            dayAdapter.submitList(data.dayOfList)
+            dayAdapter.submitList(data.sortedList())
         }
     }
 

@@ -19,7 +19,9 @@
     <string name="init_intake_subtitle">매일 채울 물의 양을 설정합니다.</string>
     <string name="intake_amount">일일 물 섭취량(ml)</string>
     <string name="unit_ml">(ml)</string>
+    <string name="unit_ml_no_bracket">ml</string>
     <string name="unit_liter">(L)</string>
+    <string name="unit_l_no_bracket">L</string>
     <string name="unit_hour">(h)</string>
     <string name="unit_day">(d)</string>
     <string name="log_day_title">일</string>
@@ -35,4 +37,5 @@
     <string name="cup_image">컵 이미지</string>
     <string name="add">추가하기</string>
     <string name="modify">수정하기</string>
+    <string name="empty_day_list">물 섭취 기록이 없습니다.</string>
 </resources>

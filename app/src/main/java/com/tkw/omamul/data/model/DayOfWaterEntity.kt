@@ -12,16 +12,21 @@ class DayOfWaterEntity: RealmObject {
     var date: String = ""
     var dayOfList: RealmList<WaterEntity> = realmListOf()
 
+    @Ignore
+    //nano초로 정렬된 리스트 가져올 때 사용.
+    var sortedList: () -> List<WaterEntity> = {
+        dayOfList.sortedBy { it.getNanoOfDate() }
+    }
+
     fun getTotalWaterAmount(): String {
         return dayOfList.sumOf { water ->
             water.amount
         }.toString()
     }
 
-//    fun getSortedList() = dayOfList.sortedBy { it.getHourFromDate() }   //추가할 때 데이터 정렬해서 넣기? 꺼낼 때 정렬?
-
+    //date값을 key로 해당 시간대의 누적 합 계산
     fun getAccumulatedAmount(): Map<Int, Int> {
-        val sortedMap = dayOfList.groupBy { it.getHourFromDate() }
+        val sortedMap = sortedList().groupBy { it.getHourFromDate() }
         val resultMap = linkedMapOf<Int, Int>()
         var acc = 0
         for((k, v) in sortedMap) {

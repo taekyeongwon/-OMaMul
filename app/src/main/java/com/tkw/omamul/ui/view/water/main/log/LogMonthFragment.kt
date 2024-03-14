@@ -1,29 +1,19 @@
 package com.tkw.omamul.ui.view.water.main.log
 
-import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.utils.ColorTemplate
 import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
 import com.tkw.omamul.databinding.FragmentLogMonthBinding
-import com.tkw.omamul.ui.custom.CustomMarkerView
-import com.tkw.omamul.ui.custom.CustomYAxisRenderer
-import com.tkw.omamul.ui.custom.XAxisValueFormatter
+import com.tkw.omamul.ui.custom.chart.DayMarkerView
 import com.tkw.omamul.ui.view.water.main.WaterViewModel
 import com.tkw.omamul.common.autoCleared
-import com.tkw.omamul.ui.custom.CustomXAxisRenderer
+import com.tkw.omamul.ui.custom.chart.MonthMarkerView
 
 class LogMonthFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentLogMonthBinding>()
@@ -61,7 +51,7 @@ class LogMonthFragment: Fragment() {
             list.add((parsingChartData(31f, 0f)))
             setLimit(2f)
             setUnit(getString(R.string.unit_day), getString(R.string.unit_liter))
-            setMarker(CustomMarkerView(context, R.layout.custom_marker, context.getString(R.string.unit_liter)))
+            setMarker(MonthMarkerView(context, R.layout.custom_marker_month))
             setChartData(list)
         }
     }

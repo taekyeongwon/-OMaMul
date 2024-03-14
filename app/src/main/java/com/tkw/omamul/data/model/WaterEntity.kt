@@ -14,4 +14,8 @@ class WaterEntity: EmbeddedRealmObject {
     fun getHourFromDate(): Int {
         return DateTimeUtils.getTimeFromFullFormat(date).hour
     }
+
+    fun getNanoOfDate(): Long {
+        return DateTimeUtils.getTimeFromFullFormat(date).toNanoOfDay()
+    }
 }

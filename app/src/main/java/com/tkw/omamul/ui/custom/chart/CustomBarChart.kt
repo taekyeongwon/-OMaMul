@@ -1,9 +1,8 @@
-package com.tkw.omamul.ui.custom
+package com.tkw.omamul.ui.custom.chart
 
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
-import android.util.Log
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.MarkerView

@@ -1,4 +1,4 @@
-package com.tkw.omamul.ui.custom
+package com.tkw.omamul.ui.custom.chart
 
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.renderer.XAxisRenderer

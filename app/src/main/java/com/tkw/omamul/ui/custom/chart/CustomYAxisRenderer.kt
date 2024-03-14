@@ -1,4 +1,4 @@
-package com.tkw.omamul.ui.custom
+package com.tkw.omamul.ui.custom.chart
 
 import android.graphics.Canvas
 import com.github.mikephil.charting.components.YAxis
