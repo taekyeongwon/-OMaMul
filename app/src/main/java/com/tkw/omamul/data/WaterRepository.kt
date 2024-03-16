@@ -9,6 +9,7 @@ interface WaterRepository {
     fun getCountByFlow(): Flow<DayOfWaterEntity>
 
     suspend fun createCount()
-    suspend fun updateCount()
+    suspend fun addCount(newObj: WaterEntity)
     suspend fun deleteCount(obj: WaterEntity)
+    suspend fun updateAmount(origin: WaterEntity, target: WaterEntity)
 }

@@ -9,17 +9,31 @@ import com.tkw.omamul.data.model.WaterEntity
 import com.tkw.omamul.databinding.ItemDayAmountBinding
 import com.tkw.omamul.common.DiffCallback
 
-class DayListAdapter: ListAdapter<WaterEntity, DayListAdapter.DayAmountViewHolder>(DiffCallback()) {
+class DayListAdapter(
+    private val editListener: (Int) -> Unit,
+    private val deleteListener: (Int) -> Unit
+)
+    : ListAdapter<WaterEntity, DayListAdapter.DayAmountViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DayAmountViewHolder {
         val binding = ItemDayAmountBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return DayAmountViewHolder(binding)
+        return DayAmountViewHolder(binding, editListener, deleteListener)
     }
 
     override fun onBindViewHolder(holder: DayAmountViewHolder, position: Int) {
         holder.onBind(getItem(position))
     }
 
-    class DayAmountViewHolder(private val binding: ItemDayAmountBinding): ViewHolder(binding.root) {
+    class DayAmountViewHolder(
+        private val binding: ItemDayAmountBinding,
+        private val editListener: (Int) -> Unit,
+        private val deleteListener: (Int) -> Unit
+        ): ViewHolder(binding.root) {
+        init {
+            with(binding) {
+                ibEdit.setOnClickListener { editListener(adapterPosition) }
+                ibDelete.setOnClickListener { deleteListener(adapterPosition) }
+            }
+        }
         fun onBind(item: WaterEntity) {
             binding.tvAmount.text = item.amount.toString()
             binding.tvDate.text = DateTimeUtils.getFormattedTime(item.date)

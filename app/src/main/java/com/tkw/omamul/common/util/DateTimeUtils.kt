@@ -1,5 +1,6 @@
 package com.tkw.omamul.common.util
 
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -20,9 +21,16 @@ object DateTimeUtils {
         )
     }
 
+    fun getFullFormatFromTime(hour: Int, minute: Int): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        return LocalDateTime.of(
+            LocalDate.now(),
+            LocalTime.of(hour, minute)
+        ).format(formatter)
+    }
+
     fun getFormattedTime(hour: Int, minute: Int): String {
         val formatter = DateTimeFormatter.ofPattern("a hh:mm")
-        LocalTime.of(hour, minute).format(formatter)
         return LocalTime.of(hour, minute).format(formatter)
     }
 
@@ -30,6 +38,8 @@ object DateTimeUtils {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         return LocalTime.parse(formatted, formatter)
     }
+
+
 
     fun getTimeFromFormat(formatted: String): LocalTime {
         val formatter = DateTimeFormatter.ofPattern("a hh:mm")

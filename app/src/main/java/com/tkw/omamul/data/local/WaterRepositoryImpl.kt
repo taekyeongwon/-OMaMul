@@ -31,7 +31,10 @@ class WaterRepositoryImpl(private val waterDao: WaterDao): WaterRepository {
         })
     }
 
-    override suspend fun updateCount() = waterDao.addCount()
+    override suspend fun addCount(newObj: WaterEntity) = waterDao.addCount(newObj)
 
     override suspend fun deleteCount(obj: WaterEntity) = waterDao.removeCount(obj)
+
+    override suspend fun updateAmount(origin: WaterEntity, target: WaterEntity)
+    = waterDao.updateAmount(origin, target)
 }

@@ -16,13 +16,13 @@ import com.tkw.omamul.ui.custom.DividerDecoration
 import com.tkw.omamul.ui.dialog.LogEditBottomDialog
 import com.tkw.omamul.ui.view.water.main.WaterViewModel
 import com.tkw.omamul.common.autoCleared
+import com.tkw.omamul.data.model.WaterEntity
 import com.tkw.omamul.ui.custom.chart.DayMarkerView
 
 class LogDayFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentLogDayBinding>()
     private val viewModel: WaterViewModel by activityViewModels { ViewModelFactory }
-    private val dayAdapter = DayListAdapter()
-
+    private lateinit var dayAdapter: DayListAdapter
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -50,7 +50,7 @@ class LogDayFragment: Fragment() {
 
     private fun initView() {
         dataBinding.rvDayList.run {
-            setHasFixedSize(true)
+            dayAdapter = DayListAdapter(dayAmountEditListener, dayAmountDeleteListener)
             dayAdapter.registerAdapterDataObserver(emptyRecyclerObserver)
             adapter = dayAdapter
             addItemDecoration(DividerDecoration(10f))
@@ -80,6 +80,17 @@ class LogDayFragment: Fragment() {
             val dialog = LogEditBottomDialog()
             dialog.show(childFragmentManager, dialog.tag)
         }
+    }
+
+    private val dayAmountEditListener: (Int) -> Unit = { position ->
+        val item: WaterEntity = dayAdapter.currentList[position]
+        val dialog = LogEditBottomDialog(item)
+        dialog.show(childFragmentManager, dialog.tag)
+    }
+
+    private val dayAmountDeleteListener: (Int) -> Unit = { position ->
+        val item: WaterEntity = dayAdapter.currentList[position]
+        viewModel.removeCount(item)
     }
 
     private val emptyRecyclerObserver = object : AdapterDataObserver() {

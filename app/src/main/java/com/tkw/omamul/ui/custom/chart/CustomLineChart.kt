@@ -24,7 +24,7 @@ class CustomLineChart
         initDefault()
         initXAxis()
         initYAxis()
-        animateY(1000)
+
     }
 
     private fun initDefault() {
@@ -103,6 +103,7 @@ class CustomLineChart
         }
         data = LineData(lineDataSet)
         calculateYMaximum()
+        animateY(1000)
     }
 
     private fun calculateYMaximum() {

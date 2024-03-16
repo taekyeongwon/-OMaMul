@@ -10,6 +10,7 @@ import kotlin.reflect.KClass
 interface WaterDao: RealmDao<DayOfWaterEntity> {
     suspend fun getCount(): DayOfWaterEntity?
     fun getCountFlow(): Flow<ResultsChange<DayOfWaterEntity>>
-    suspend fun addCount()
+    suspend fun addCount(newObj: WaterEntity)
     suspend fun removeCount(obj: WaterEntity)
+    suspend fun updateAmount(origin: WaterEntity, target: WaterEntity)
 }

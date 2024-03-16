@@ -29,6 +29,7 @@ import com.tkw.omamul.ui.view.water.main.home.adapter.CupPagerAdapter
 import com.tkw.omamul.ui.view.water.main.home.adapter.SnapDecoration
 import com.tkw.omamul.ui.view.water.main.WaterViewModel
 import com.tkw.omamul.common.autoCleared
+import com.tkw.omamul.common.util.DateTimeUtils
 
 
 class WaterFragment: Fragment() {
@@ -80,7 +81,7 @@ class WaterFragment: Fragment() {
 
     private fun initListener() {
         dataBinding.btnAdd.setOnClickListener {
-            viewModel.addCount()
+            viewModel.addCount(100, DateTimeUtils.getToday())
         }
 
         dataBinding.btnRemove.setOnClickListener {

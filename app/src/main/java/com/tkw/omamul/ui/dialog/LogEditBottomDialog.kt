@@ -13,8 +13,12 @@ import com.tkw.omamul.ui.view.water.main.WaterViewModel
 import com.tkw.omamul.common.BottomExpand
 import com.tkw.omamul.common.BottomExpandImpl
 import com.tkw.omamul.common.autoCleared
+import com.tkw.omamul.common.util.DateTimeUtils
+import com.tkw.omamul.data.model.WaterEntity
 
-class LogEditBottomDialog: BottomSheetDialogFragment(), BottomExpand by BottomExpandImpl() {
+class LogEditBottomDialog(
+    private val selectedItem: WaterEntity = WaterEntity()
+): BottomSheetDialogFragment(), BottomExpand by BottomExpandImpl() {
     private var dataBinding by autoCleared<DialogLogEditBinding>()
     private val viewModel: WaterViewModel by viewModels { ViewModelFactory }
 
@@ -43,7 +47,12 @@ class LogEditBottomDialog: BottomSheetDialogFragment(), BottomExpand by BottomEx
         }
 
         dataBinding.btnSave.setOnClickListener {
-            //todo 데이터 저장하고 dismiss 시 해당 데이터 보여지도록 해야 함.
+            val amount = dataBinding.etWaterAmount.text.toString().toInt()
+            val date = DateTimeUtils.getFullFormatFromTime(
+                dataBinding.tpDate.hour,
+                dataBinding.tpDate.minute
+            )
+            viewModel.updateAmount(selectedItem, amount, date)
             dismiss()
         }
     }

@@ -1,6 +1,5 @@
 package com.tkw.omamul.data.local
 
-import com.tkw.omamul.common.util.DateTimeUtils
 import com.tkw.omamul.data.WaterDao
 import com.tkw.omamul.data.model.DayOfWaterEntity
 import com.tkw.omamul.data.model.WaterEntity
@@ -27,15 +26,10 @@ class WaterDaoImpl(r: Realm): WaterDao {
         return this.stream(this.findBy("date == $0", testDate))
     }
 
-    override suspend fun addCount() {
+    override suspend fun addCount(newObj: WaterEntity) {
         realm.write {
             val query = countByDate()
-            query?.dayOfList?.add(
-                WaterEntity().apply {
-                    amount = 100
-                    date = DateTimeUtils.getToday()
-                }
-            )
+            query?.dayOfList?.add(newObj)
         }
     }
 
@@ -43,6 +37,15 @@ class WaterDaoImpl(r: Realm): WaterDao {
         realm.write {
             val query = countByDate()
             query?.dayOfList?.remove(obj)
+        }
+    }
+
+    override suspend fun updateAmount(origin: WaterEntity, target: WaterEntity) {
+        realm.write {
+            findLatest(origin)?.apply {
+                amount = target.amount
+                date = target.date
+            }
         }
     }
 }
