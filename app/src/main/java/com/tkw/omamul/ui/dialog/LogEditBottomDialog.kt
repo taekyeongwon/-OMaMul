@@ -38,7 +38,20 @@ class LogEditBottomDialog(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
         initListener()
+    }
+
+    private fun initView() {
+        if(selectedItem.date.isNotEmpty()) {
+            with(dataBinding) {
+                etWaterAmount.setText(selectedItem.amount.toString())
+                tpDate.hour =
+                    DateTimeUtils.getTimeFromFullFormat(selectedItem.date).hour
+                tpDate.minute =
+                    DateTimeUtils.getTimeFromFullFormat(selectedItem.date).minute
+            }
+        }
     }
 
     private fun initListener() {
