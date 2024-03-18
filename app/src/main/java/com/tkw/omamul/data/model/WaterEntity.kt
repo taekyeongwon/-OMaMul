@@ -11,8 +11,9 @@ class WaterEntity: EmbeddedRealmObject {
     var date: String = ""
     var amount: Int = 0
 
-    fun getHourFromDate(): Int {
-        return DateTimeUtils.getTimeFromFullFormat(date).hour
+    fun toMap() = Water().apply {
+        date = this@WaterEntity.date
+        amount = this@WaterEntity.amount
     }
 
     fun getNanoOfDate(): Long {

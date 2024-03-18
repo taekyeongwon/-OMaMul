@@ -16,7 +16,7 @@ import com.tkw.omamul.ui.custom.DividerDecoration
 import com.tkw.omamul.ui.dialog.LogEditBottomDialog
 import com.tkw.omamul.ui.view.water.main.WaterViewModel
 import com.tkw.omamul.common.autoCleared
-import com.tkw.omamul.data.model.WaterEntity
+import com.tkw.omamul.data.model.Water
 import com.tkw.omamul.ui.custom.chart.DayMarkerView
 
 class LogDayFragment: Fragment() {
@@ -60,8 +60,9 @@ class LogDayFragment: Fragment() {
 
     private fun initObserver() {
         viewModel.countStreamLiveData.observe(viewLifecycleOwner) { data ->
+            val dayOfWater = data.toMap()
             with(dataBinding) {
-                val result = data.getAccumulatedAmount().map {
+                val result = dayOfWater.getAccumulatedAmount().map {
                     barChart.parsingChartData(it.key, it.value)
                 }
                 barChart.setLimit(2000f) //todo 현재 설정된 목표 물의 양으로 변경 필요
@@ -70,7 +71,7 @@ class LogDayFragment: Fragment() {
                 barChart.setChartData(result)
                 tvTotalAmount.animateByMaxValue(result.lastOrNull()?.y?.toInt() ?: 0)
             }
-            dayAdapter.submitList(data.sortedList())
+            dayAdapter.submitList(dayOfWater.dayOfList)
             emptyRecyclerObserver.onChanged()
         }
     }
@@ -83,13 +84,13 @@ class LogDayFragment: Fragment() {
     }
 
     private val dayAmountEditListener: (Int) -> Unit = { position ->
-        val item: WaterEntity = dayAdapter.currentList[position]
+        val item: Water = dayAdapter.currentList[position]
         val dialog = LogEditBottomDialog(item)
         dialog.show(childFragmentManager, dialog.tag)
     }
 
     private val dayAmountDeleteListener: (Int) -> Unit = { position ->
-        val item: WaterEntity = dayAdapter.currentList[position]
+        val item: Water = dayAdapter.currentList[position]
         viewModel.removeCount(item)
     }
 

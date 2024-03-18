@@ -5,15 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.tkw.omamul.common.util.DateTimeUtils
-import com.tkw.omamul.data.model.WaterEntity
+import com.tkw.omamul.data.model.Water
 import com.tkw.omamul.databinding.ItemDayAmountBinding
-import com.tkw.omamul.common.DiffCallback
 
 class DayListAdapter(
     private val editListener: (Int) -> Unit,
     private val deleteListener: (Int) -> Unit
 )
-    : ListAdapter<WaterEntity, DayListAdapter.DayAmountViewHolder>(DiffCallback()) {
+    : ListAdapter<Water, DayListAdapter.DayAmountViewHolder>(WaterDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DayAmountViewHolder {
         val binding = ItemDayAmountBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return DayAmountViewHolder(binding, editListener, deleteListener)
@@ -34,7 +33,7 @@ class DayListAdapter(
                 ibDelete.setOnClickListener { deleteListener(adapterPosition) }
             }
         }
-        fun onBind(item: WaterEntity) {
+        fun onBind(item: Water) {
             binding.tvAmount.text = item.amount.toString()
             binding.tvDate.text = DateTimeUtils.getFormattedTime(item.date)
         }

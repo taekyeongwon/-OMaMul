@@ -13,7 +13,6 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,8 +20,6 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
-import com.tkw.omamul.data.model.CupEntity
-import com.tkw.omamul.data.model.WaterEntity
 import com.tkw.omamul.databinding.FragmentWaterBinding
 import com.tkw.omamul.ui.dialog.WaterIntakeDialog
 import com.tkw.omamul.ui.view.water.main.home.adapter.CupPagerAdapter
@@ -30,12 +27,13 @@ import com.tkw.omamul.ui.view.water.main.home.adapter.SnapDecoration
 import com.tkw.omamul.ui.view.water.main.WaterViewModel
 import com.tkw.omamul.common.autoCleared
 import com.tkw.omamul.common.util.DateTimeUtils
+import com.tkw.omamul.data.model.Water
 
 
 class WaterFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentWaterBinding>()
     private val viewModel: WaterViewModel by activityViewModels { ViewModelFactory }
-    private var countObject: List<WaterEntity>? = null
+    private var countObject: List<Water>? = null
     private lateinit var cupPagerAdapter: CupPagerAdapter
     private lateinit var snapHelper: PagerSnapHelper
 
@@ -75,7 +73,7 @@ class WaterFragment: Fragment() {
 
     private fun initObserver() {
         viewModel.countStreamLiveData.observe(viewLifecycleOwner) {
-            countObject = it.dayOfList
+            countObject = it.toMap().dayOfList
         }
     }
 
@@ -144,14 +142,14 @@ class WaterFragment: Fragment() {
         }
     }
 
-    private fun addItem() {
-        val item = CupEntity().apply {
-            cupName = "test" + i++
-        }
-        val currentList = cupPagerAdapter.currentList.toMutableList()
-        currentList.add(item)
-        cupPagerAdapter.submitList(currentList) { snapFirstItemAdded() }
-    }
+//    private fun addItem() {
+//        val item = CupEntity().apply {
+//            cupName = "test" + i++
+//        }
+//        val currentList = cupPagerAdapter.currentList.toMutableList()
+//        currentList.add(item)
+//        cupPagerAdapter.submitList(currentList) { snapFirstItemAdded() }
+//    }
 
     private fun scrollToPosition(rv: RecyclerView, position: Int) {
         val touchedView: View? = rv.layoutManager!!.findViewByPosition(position)
