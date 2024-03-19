@@ -67,6 +67,11 @@ class WaterFragment: Fragment() {
     private fun initView() {
         snapHelper = PagerSnapHelper()
         cupPagerAdapter = CupPagerAdapter(clickScrollListener, addListener)
+        dataBinding.rvList.apply {
+            adapter = cupPagerAdapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            snapHelper.attachToRecyclerView(this)
+        }
         initItemMenu()
         initGlobalLayout()
     }
@@ -74,6 +79,10 @@ class WaterFragment: Fragment() {
     private fun initObserver() {
         viewModel.countStreamLiveData.observe(viewLifecycleOwner) {
             countObject = it.toMap().dayOfList
+        }
+
+        viewModel.cupListLiveData.observe(viewLifecycleOwner) {
+            cupPagerAdapter.submitList(it) //{ snapFirstItemAdded() }
         }
     }
 
@@ -117,12 +126,7 @@ class WaterFragment: Fragment() {
                 override fun onGlobalLayout() {
                     it.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
-                    dataBinding.rvList.apply {
-                        adapter = cupPagerAdapter
-                        layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                        snapHelper.attachToRecyclerView(this)
-                        addItemDecoration(SnapDecoration(dataBinding.root.width))
-                    }
+                    dataBinding.rvList.addItemDecoration(SnapDecoration(dataBinding.root.width))
                 }
             })
         }
@@ -136,20 +140,13 @@ class WaterFragment: Fragment() {
         val lastPosition = cupPagerAdapter.itemCount - 1
         val touchedView: View? = dataBinding.rvList.layoutManager!!.findViewByPosition(lastPosition)
         if(touchedView != null && isSnapped(touchedView)) {
+            //add버튼 선택했고, snap된 상태면 관리화면 이동
             findNavController().navigate(R.id.cupManageFragment)
         } else {
+            //snap되지 않은 상태면 맨 마지막으로 스크롤
             scrollToPosition(dataBinding.rvList, lastPosition)
         }
     }
-
-//    private fun addItem() {
-//        val item = CupEntity().apply {
-//            cupName = "test" + i++
-//        }
-//        val currentList = cupPagerAdapter.currentList.toMutableList()
-//        currentList.add(item)
-//        cupPagerAdapter.submitList(currentList) { snapFirstItemAdded() }
-//    }
 
     private fun scrollToPosition(rv: RecyclerView, position: Int) {
         val touchedView: View? = rv.layoutManager!!.findViewByPosition(position)
@@ -157,7 +154,7 @@ class WaterFragment: Fragment() {
             val itemWidth = touchedView.measuredWidth
             val centerView = snapHelper.findSnapView(rv.layoutManager)
             val centerPosition = rv.getChildAdapterPosition(centerView!!)
-
+            //클릭한 포지션에서 현재 snap된 포지션의 차이 증감분 만큼 이동
             rv.smoothScrollBy((position - centerPosition) * itemWidth, 0)
         }
 
@@ -168,9 +165,8 @@ class WaterFragment: Fragment() {
         return view === centerView
     }
 
-    private fun snapFirstItemAdded() {
-        if(cupPagerAdapter.itemCount == 2) {
-            scrollToPosition(dataBinding.rvList, 0)
-        }
+    private fun snapFirstItemAdded() {  //todo 화면 진입 시 시점 문제로 적용 안됨. 추후 수정 필요
+        if(cupPagerAdapter.itemCount > 0)
+            scrollToPosition(dataBinding.rvList, cupPagerAdapter.itemCount - 1)
     }
 }
