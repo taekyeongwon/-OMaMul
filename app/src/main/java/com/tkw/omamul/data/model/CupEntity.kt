@@ -10,4 +10,5 @@ class CupEntity: RealmObject {
     var cupName: String = ""
     var cupAmount: Int = 0
 
+    fun toMap(): Cup = Cup(cupId, cupName, cupAmount)
 }

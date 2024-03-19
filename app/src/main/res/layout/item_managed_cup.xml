@@ -6,7 +6,7 @@
     <data>
         <variable
             name="cup"
-            type="com.tkw.omamul.data.model.CupEntity" />
+            type="com.tkw.omamul.data.model.Cup" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

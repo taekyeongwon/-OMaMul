@@ -16,7 +16,7 @@ import com.tkw.omamul.ui.view.water.main.WaterViewModel
 
 class CupManageFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentCupManageBinding>()
-    private val viewModel: WaterViewModel by viewModels { ViewModelFactory }
+    private val viewModel: CupViewModel by viewModels { ViewModelFactory }
     private lateinit var cupListAdapter: CupListAdapter
 
     override fun onCreateView(
@@ -31,12 +31,19 @@ class CupManageFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+        initObserver()
         initListener()
     }
 
     private fun initView() {
         cupListAdapter = CupListAdapter(editListener, deleteListener, addListener)
         dataBinding.rvCupList.adapter = cupListAdapter
+    }
+
+    private fun initObserver() {
+        viewModel.cupListLiveData.observe(viewLifecycleOwner) {
+            cupListAdapter.submitList(it)
+        }
     }
 
     private fun initListener() {

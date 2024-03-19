@@ -5,16 +5,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.tkw.omamul.common.C
-import com.tkw.omamul.common.DiffCallback
-import com.tkw.omamul.data.model.CupEntity
+import com.tkw.omamul.data.model.Cup
 import com.tkw.omamul.databinding.ItemManagedCupAddBinding
 import com.tkw.omamul.databinding.ItemManagedCupBinding
+import com.tkw.omamul.ui.view.water.main.home.adapter.CupDiffCallback
 
 class CupListAdapter(
     private val editListener: (Int) -> Unit,
     private val deleteListener: (Int) -> Unit,
     private val addListener: () -> Unit
-): ListAdapter<CupEntity, ViewHolder>(DiffCallback()) {
+): ListAdapter<Cup, ViewHolder>(CupDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return when(C.ViewType.values()[viewType]) {
@@ -62,7 +62,7 @@ class CupListAdapter(
             }
         }
 
-        fun onBind(data: CupEntity) {
+        fun onBind(data: Cup) {
             binding.cup = data
         }
     }

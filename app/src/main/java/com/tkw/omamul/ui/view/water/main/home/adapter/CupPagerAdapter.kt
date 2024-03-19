@@ -5,13 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.tkw.omamul.common.C
-import com.tkw.omamul.data.model.CupEntity
+import com.tkw.omamul.data.model.Cup
 import com.tkw.omamul.databinding.ItemCupAddBinding
 import com.tkw.omamul.databinding.ItemCupBinding
-import com.tkw.omamul.common.DiffCallback
 
 class CupPagerAdapter(private val onClick: (Int) -> Unit, private val onClickAdd: () -> Unit)
-    : ListAdapter<CupEntity, ViewHolder>(DiffCallback()) {
+    : ListAdapter<Cup, ViewHolder>(CupDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return when(C.ViewType.values()[viewType]) {
@@ -47,7 +46,7 @@ class CupPagerAdapter(private val onClick: (Int) -> Unit, private val onClickAdd
                 listener(adapterPosition)
             }
         }
-        fun onBind(item: CupEntity) {
+        fun onBind(item: Cup) {
             binding.tvName.text = item.cupName
         }
     }
