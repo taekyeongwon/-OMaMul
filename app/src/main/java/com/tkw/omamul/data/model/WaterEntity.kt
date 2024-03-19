@@ -11,10 +11,10 @@ class WaterEntity: EmbeddedRealmObject {
     var date: String = ""
     var amount: Int = 0
 
-    fun toMap() = Water().apply {
-        date = this@WaterEntity.date
+    fun toMap() = Water(
+        date = this@WaterEntity.date,
         amount = this@WaterEntity.amount
-    }
+    )
 
     fun getNanoOfDate(): Long {
         return DateTimeUtils.getTimeFromFullFormat(date).toNanoOfDay()

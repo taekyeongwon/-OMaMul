@@ -4,8 +4,8 @@ import com.tkw.omamul.common.util.DateTimeUtils
 import io.realm.kotlin.ext.toRealmList
 
 data class DayOfWater(
-    var date: String,
-    var dayOfList: List<Water>
+    val date: String,
+    val dayOfList: List<Water>
 ) {
     fun getTotalWaterAmount(): String {
         return dayOfList.sumOf { water ->
@@ -27,8 +27,8 @@ data class DayOfWater(
 }
 
 data class Water(
-    var date: String = "",
-    var amount: Int = 0
+    val date: String = "",
+    val amount: Int = 0
 ) {
 
     fun getHourFromDate(): Int {
