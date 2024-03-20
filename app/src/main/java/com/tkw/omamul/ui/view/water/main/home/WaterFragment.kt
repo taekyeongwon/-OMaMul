@@ -153,10 +153,21 @@ class WaterFragment: Fragment() {
     private fun scrollToPosition(position: Int, smoothFlag: Boolean) {
         cupPagerScrollPosition = position
         dataBinding.vpList.setCurrentItem(position, smoothFlag)
+        if(!smoothFlag) {
+            dataBinding.vpList.run {
+                //PageTransformer의 transformPage 메서드가 제대로 발생하지 않았을 때 호출
+                post { requestTransform() }
+            }
+        }
     }
 
+    /**
+     * PageTransformer에서 page 포지션 이동이 적용되어 있고,
+     * setCurrentItem(smoothFlag = false)를 호출하는 경우
+     * 항목이 2~3개 일 때 살짝 스크롤 하고 나면 뷰가 그려지는 현상 발생
+     */
     private fun snapSavedPosition() {
         if(cupPagerAdapter.itemCount > 1)
-            scrollToPosition(cupPagerScrollPosition, true)
+            scrollToPosition(cupPagerScrollPosition, false)
     }
 }
