@@ -9,7 +9,10 @@ import com.tkw.omamul.data.model.Cup
 import com.tkw.omamul.databinding.ItemCupAddBinding
 import com.tkw.omamul.databinding.ItemCupBinding
 
-class CupPagerAdapter(private val onClick: (Int) -> Unit, private val onClickAdd: () -> Unit)
+class CupPagerAdapter(
+    private val onClick: (Int) -> Unit,
+    private val onClickAdd: () -> Unit
+)
     : ListAdapter<Cup, ViewHolder>(CupDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
