@@ -1,4 +1,4 @@
-package com.tkw.omamul.ui.view.water.main
+package com.tkw.omamul.ui.view.water
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle

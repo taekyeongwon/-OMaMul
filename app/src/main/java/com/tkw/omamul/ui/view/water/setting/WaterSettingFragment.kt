@@ -1,4 +1,4 @@
-package com.tkw.omamul.ui.view.water.main.setting
+package com.tkw.omamul.ui.view.water.setting
 
 import android.os.Bundle
 import android.view.LayoutInflater

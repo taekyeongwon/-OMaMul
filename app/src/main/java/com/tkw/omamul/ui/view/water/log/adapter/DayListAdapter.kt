@@ -1,4 +1,4 @@
-package com.tkw.omamul.ui.view.water.main.log.adapter
+package com.tkw.omamul.ui.view.water.log.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

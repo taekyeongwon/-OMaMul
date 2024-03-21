@@ -1,4 +1,4 @@
-package com.tkw.omamul.ui.view.water.main.log.adapter
+package com.tkw.omamul.ui.view.water.log.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.tkw.omamul.data.model.Water

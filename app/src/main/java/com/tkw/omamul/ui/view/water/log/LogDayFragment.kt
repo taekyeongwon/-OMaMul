@@ -1,4 +1,4 @@
-package com.tkw.omamul.ui.view.water.main.log
+package com.tkw.omamul.ui.view.water.log
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,10 +11,10 @@ import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
 import com.tkw.omamul.common.util.animateByMaxValue
 import com.tkw.omamul.databinding.FragmentLogDayBinding
-import com.tkw.omamul.ui.view.water.main.log.adapter.DayListAdapter
+import com.tkw.omamul.ui.view.water.log.adapter.DayListAdapter
 import com.tkw.omamul.ui.custom.DividerDecoration
 import com.tkw.omamul.ui.dialog.LogEditBottomDialog
-import com.tkw.omamul.ui.view.water.main.WaterViewModel
+import com.tkw.omamul.ui.view.water.WaterViewModel
 import com.tkw.omamul.common.autoCleared
 import com.tkw.omamul.data.model.Water
 import com.tkw.omamul.ui.custom.chart.DayMarkerView

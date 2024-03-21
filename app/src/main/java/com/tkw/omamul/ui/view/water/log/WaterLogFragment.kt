@@ -1,4 +1,4 @@
-package com.tkw.omamul.ui.view.water.main.log
+package com.tkw.omamul.ui.view.water.log
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.tkw.omamul.R
 import com.tkw.omamul.databinding.FragmentWaterLogBinding
-import com.tkw.omamul.ui.view.water.main.log.adapter.ViewPagerAdapter
+import com.tkw.omamul.ui.view.water.log.adapter.ViewPagerAdapter
 import com.tkw.omamul.common.autoCleared
 
 class WaterLogFragment: Fragment() {

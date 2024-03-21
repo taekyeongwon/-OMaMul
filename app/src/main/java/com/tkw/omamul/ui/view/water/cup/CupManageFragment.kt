@@ -12,7 +12,6 @@ import com.tkw.omamul.common.ViewModelFactory
 import com.tkw.omamul.common.autoCleared
 import com.tkw.omamul.databinding.FragmentCupManageBinding
 import com.tkw.omamul.ui.view.water.cup.adapter.CupListAdapter
-import com.tkw.omamul.ui.view.water.main.WaterViewModel
 
 class CupManageFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentCupManageBinding>()

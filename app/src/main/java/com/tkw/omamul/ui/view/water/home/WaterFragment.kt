@@ -1,4 +1,4 @@
-package com.tkw.omamul.ui.view.water.main.home
+package com.tkw.omamul.ui.view.water.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -19,8 +19,8 @@ import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
 import com.tkw.omamul.databinding.FragmentWaterBinding
 import com.tkw.omamul.ui.dialog.WaterIntakeDialog
-import com.tkw.omamul.ui.view.water.main.home.adapter.CupPagerAdapter
-import com.tkw.omamul.ui.view.water.main.WaterViewModel
+import com.tkw.omamul.ui.view.water.home.adapter.CupPagerAdapter
+import com.tkw.omamul.ui.view.water.WaterViewModel
 import com.tkw.omamul.common.autoCleared
 import com.tkw.omamul.common.util.DateTimeUtils
 import com.tkw.omamul.common.util.DimenUtils

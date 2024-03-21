@@ -1,4 +1,4 @@
-package com.tkw.omamul.ui.view.water.main.home.adapter
+package com.tkw.omamul.ui.view.water.home.adapter
 
 import android.graphics.Rect
 import android.view.View

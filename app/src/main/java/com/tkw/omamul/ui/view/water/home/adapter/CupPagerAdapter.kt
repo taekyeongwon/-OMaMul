@@ -1,4 +1,4 @@
-package com.tkw.omamul.ui.view.water.main.home.adapter
+package com.tkw.omamul.ui.view.water.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,6 +8,7 @@ import com.tkw.omamul.common.C
 import com.tkw.omamul.data.model.Cup
 import com.tkw.omamul.databinding.ItemCupAddBinding
 import com.tkw.omamul.databinding.ItemCupBinding
+import com.tkw.omamul.ui.view.water.cup.adapter.CupDiffCallback
 
 class CupPagerAdapter(
     private val onClick: (Int) -> Unit,

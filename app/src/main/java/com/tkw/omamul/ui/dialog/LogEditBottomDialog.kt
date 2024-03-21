@@ -9,7 +9,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
 import com.tkw.omamul.databinding.DialogLogEditBinding
-import com.tkw.omamul.ui.view.water.main.WaterViewModel
+import com.tkw.omamul.ui.view.water.WaterViewModel
 import com.tkw.omamul.common.BottomExpand
 import com.tkw.omamul.common.BottomExpandImpl
 import com.tkw.omamul.common.autoCleared

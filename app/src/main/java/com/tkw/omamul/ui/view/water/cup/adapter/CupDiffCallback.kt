@@ -1,4 +1,4 @@
-package com.tkw.omamul.ui.view.water.main.home.adapter
+package com.tkw.omamul.ui.view.water.cup.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.tkw.omamul.data.model.Cup

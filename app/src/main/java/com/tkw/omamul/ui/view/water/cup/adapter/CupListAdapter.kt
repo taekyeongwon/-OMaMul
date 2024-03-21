@@ -8,7 +8,6 @@ import com.tkw.omamul.common.C
 import com.tkw.omamul.data.model.Cup
 import com.tkw.omamul.databinding.ItemManagedCupAddBinding
 import com.tkw.omamul.databinding.ItemManagedCupBinding
-import com.tkw.omamul.ui.view.water.main.home.adapter.CupDiffCallback
 
 class CupListAdapter(
     private val editListener: (Int) -> Unit,

@@ -33,7 +33,7 @@
 
     <fragment
         android:id="@+id/waterFragment"
-        android:name="com.tkw.omamul.ui.view.water.main.home.WaterFragment"
+        android:name="com.tkw.omamul.ui.view.water.home.WaterFragment"
         tools:layout="@layout/fragment_water">
 <!--        <action-->
 <!--            android:id="@+id/action_waterIntakeFragment"-->
@@ -48,12 +48,12 @@
     </fragment>
     <fragment
         android:id="@+id/waterLogFragment"
-        android:name="com.tkw.omamul.ui.view.water.main.log.WaterLogFragment"
+        android:name="com.tkw.omamul.ui.view.water.log.WaterLogFragment"
         android:label="WaterLogFragment"
         tools:layout="@layout/fragment_water_log"/>
     <fragment
         android:id="@+id/settingFragment"
-        android:name="com.tkw.omamul.ui.view.water.main.setting.WaterSettingFragment"
+        android:name="com.tkw.omamul.ui.view.water.setting.WaterSettingFragment"
         android:label="SettingFragment"
         tools:layout="@layout/fragment_setting"/>
 
