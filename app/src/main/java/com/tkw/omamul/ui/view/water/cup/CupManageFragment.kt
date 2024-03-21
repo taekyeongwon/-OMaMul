@@ -11,6 +11,7 @@ import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
 import com.tkw.omamul.common.autoCleared
 import com.tkw.omamul.databinding.FragmentCupManageBinding
+import com.tkw.omamul.ui.custom.DividerDecoration
 import com.tkw.omamul.ui.view.water.cup.adapter.CupListAdapter
 
 class CupManageFragment: Fragment() {
@@ -35,8 +36,11 @@ class CupManageFragment: Fragment() {
     }
 
     private fun initView() {
-        cupListAdapter = CupListAdapter(editListener, deleteListener, addListener)
-        dataBinding.rvCupList.adapter = cupListAdapter
+        cupListAdapter = CupListAdapter(editListener, deleteListener)
+        dataBinding.rvCupList.apply {
+            adapter = cupListAdapter
+            addItemDecoration(DividerDecoration(10f))
+        }
     }
 
     private fun initObserver() {
@@ -46,7 +50,9 @@ class CupManageFragment: Fragment() {
     }
 
     private fun initListener() {
-
+        dataBinding.btnNext.setOnClickListener {
+            findNavController().navigate(R.id.cupCreateFragment)
+        }
     }
 
     private val editListener: (Int) -> Unit = { position ->
@@ -55,9 +61,5 @@ class CupManageFragment: Fragment() {
 
     private val deleteListener: (Int) -> Unit = { position ->
 
-    }
-
-    private val addListener: () -> Unit = {
-        findNavController().navigate(R.id.cupCreateFragment)
     }
 }

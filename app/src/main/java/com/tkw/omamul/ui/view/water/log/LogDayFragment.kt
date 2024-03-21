@@ -49,13 +49,12 @@ class LogDayFragment: Fragment() {
     }
 
     private fun initView() {
-        dataBinding.rvDayList.run {
-            dayAdapter = DayListAdapter(dayAmountEditListener, dayAmountDeleteListener)
-            dayAdapter.registerAdapterDataObserver(emptyRecyclerObserver)
+        dayAdapter = DayListAdapter(dayAmountEditListener, dayAmountDeleteListener)
+        dayAdapter.registerAdapterDataObserver(emptyRecyclerObserver)
+        dataBinding.rvDayList.apply {
             adapter = dayAdapter
             addItemDecoration(DividerDecoration(10f))
         }
-
     }
 
     private fun initObserver() {

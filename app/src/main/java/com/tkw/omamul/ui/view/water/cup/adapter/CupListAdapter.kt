@@ -4,49 +4,25 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.tkw.omamul.common.C
 import com.tkw.omamul.data.model.Cup
-import com.tkw.omamul.databinding.ItemManagedCupAddBinding
 import com.tkw.omamul.databinding.ItemManagedCupBinding
 
 class CupListAdapter(
     private val editListener: (Int) -> Unit,
-    private val deleteListener: (Int) -> Unit,
-    private val addListener: () -> Unit
-): ListAdapter<Cup, ViewHolder>(CupDiffCallback()) {
+    private val deleteListener: (Int) -> Unit
+): ListAdapter<Cup, CupListAdapter.CupListViewHolder>(CupDiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return when(C.ViewType.values()[viewType]) {
-            C.ViewType.CUP -> {
-                val binding = ItemManagedCupBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
-                CupListViewHolder(binding, editListener, deleteListener)
-            }
-            C.ViewType.ADD -> {
-                val binding = ItemManagedCupAddBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
-                AddViewHolder(binding, addListener)
-            }
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CupListViewHolder {
+        val binding = ItemManagedCupBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return CupListViewHolder(binding, editListener, deleteListener)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if(holder is CupListViewHolder) holder.onBind(getItem(position))
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return if(position == itemCount - 1) C.ViewType.ADD.viewType
-        else C.ViewType.CUP.viewType
-    }
-
-    override fun getItemCount(): Int {
-        return currentList.size + 1
+    override fun onBindViewHolder(holder: CupListViewHolder, position: Int) {
+        holder.onBind(getItem(position))
     }
 
     class CupListViewHolder(
@@ -63,15 +39,6 @@ class CupListAdapter(
 
         fun onBind(data: Cup) {
             binding.cup = data
-        }
-    }
-
-    class AddViewHolder(
-        binding: ItemManagedCupAddBinding,
-        addListener: () -> Unit
-    ): ViewHolder(binding.root) {
-        init {
-            binding.tvCupListAdd.setOnClickListener { addListener() }
         }
     }
 }
