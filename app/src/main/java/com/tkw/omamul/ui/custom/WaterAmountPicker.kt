@@ -38,26 +38,39 @@ class WaterAmountPicker
 
     private fun initNumberPicker() {
         val values = getIntervalDisplayedValues(interval)
+        displayedValues = values.toTypedArray()
         setMinValue(0)
         setMaxValue(values.size - 1)
-        value = values.size / 2
-        displayedValues = values.toTypedArray()
+        value = (maxValue - minValue) / 2
         wrapSelectorWheel = false
         setInputTypeNumber(this)
     }
 
+    /**
+     * xml에서 value값 안 줬다면 최대~최소값의 평균 값으로 initNumberPicker에서 기본값 설정.
+     * xml에서 value값 줬다면 해당 값으로 설정
+     *
+     * displayedValues를 설정함으로써 value에 값을 set하면 해당 값이 배열의 인덱스로 들어가게 됨.
+     * 직접 값을 세팅 해주기 위해 재정의.
+     */
+    override fun setValue(value: Int) {
+        val newValue = (value - minValue) / interval
+        super.setValue(newValue)
+    }
+
+    //인덱스 값이 아닌 displayedValue 값 리턴
+//    override fun getValue(): Int {
+//        return displayedValues[super.getValue()].toInt()
+//    }
+
     fun getIntervalDisplayedValues(interval: Int): ArrayList<String> {
-        val displayedArray = arrayListOf(minValue.toString())
+        val displayedArray = arrayListOf<String>()
         val index = (maxValue - minValue) / interval
-        for(i in 1 .. index) {
+        for(i in 0 .. index) {
             val value = minValue + (i * interval)
             displayedArray.add(value.toString())
         }
         return displayedArray
-    }
-
-    fun getCurrentValue(): Int {
-        return displayedValues[value].toInt()
     }
 
     private fun setInputTypeNumber(vg: ViewGroup) {
