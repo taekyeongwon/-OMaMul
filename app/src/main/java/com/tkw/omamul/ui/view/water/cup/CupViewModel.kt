@@ -15,7 +15,8 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 
 class CupViewModel(
-    private val cupRepository: CupRepository
+    private val cupRepository: CupRepository,
+    private val params: Cup
 ): BaseViewModel() {
 
     private val cupListFlow: StateFlow<List<CupEntity>> =
