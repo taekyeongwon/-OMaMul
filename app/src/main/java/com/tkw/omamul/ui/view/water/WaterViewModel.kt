@@ -1,6 +1,7 @@
 package com.tkw.omamul.ui.view.water
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -35,6 +36,9 @@ class WaterViewModel(
             started = SharingStarted.WhileSubscribed(5000),
             scope = viewModelScope
         )
+
+    //컵 관리 화면 이동 후 돌아왔을 때 위치 저장용
+    val cupPagerScrollPosition = MutableLiveData(0)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val cupListLiveData: LiveData<List<Cup>> =

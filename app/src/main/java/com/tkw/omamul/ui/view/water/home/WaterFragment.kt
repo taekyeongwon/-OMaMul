@@ -33,9 +33,6 @@ class WaterFragment: Fragment() {
     private var countObject: List<Water>? = null
     private lateinit var cupPagerAdapter: CupPagerAdapter
 
-    //컵 관리 화면 이동 후 돌아왔을 때 위치 저장용
-    private var cupPagerScrollPosition: Int = 0
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -151,7 +148,7 @@ class WaterFragment: Fragment() {
     }
 
     private fun scrollToPosition(position: Int, smoothFlag: Boolean) {
-        cupPagerScrollPosition = position
+        viewModel.cupPagerScrollPosition.value = position
         dataBinding.vpList.setCurrentItem(position, smoothFlag)
         if(!smoothFlag) {
             dataBinding.vpList.run {
@@ -167,7 +164,9 @@ class WaterFragment: Fragment() {
      * 항목이 2~3개 일 때 살짝 스크롤 하고 나면 뷰가 그려지는 현상 발생
      */
     private fun snapSavedPosition() {
-        if(cupPagerAdapter.itemCount > 1)
-            scrollToPosition(cupPagerScrollPosition, false)
+        if(cupPagerAdapter.itemCount > 1) {
+            val savedPosition = viewModel.cupPagerScrollPosition.value ?: 0
+            scrollToPosition(savedPosition, false)
+        }
     }
 }
