@@ -4,6 +4,7 @@ import com.tkw.omamul.data.model.CupEntity
 import kotlinx.coroutines.flow.Flow
 
 interface CupRepository {
+    fun getCupById(id: Int): CupEntity?
     fun getCupList(): Flow<List<CupEntity>>
     suspend fun insertCup(obj: CupEntity)
     suspend fun updateCup(obj: CupEntity)

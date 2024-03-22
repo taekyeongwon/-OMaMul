@@ -62,6 +62,7 @@ class CupManageFragment: Fragment() {
     }
 
     private val deleteListener: (Int) -> Unit = { position ->
-
+        val currentItem = cupListAdapter.currentList[position]
+        viewModel.deleteCup(currentItem.cupId)
     }
 }

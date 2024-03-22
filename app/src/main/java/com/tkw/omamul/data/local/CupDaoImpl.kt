@@ -11,6 +11,10 @@ class CupDaoImpl(r: Realm): CupDao {
     override val realm: Realm = r
     override val clazz: KClass<CupEntity> = CupEntity::class
 
+    override fun getCup(id: Int): CupEntity? {
+        return this.findByOne("cupId == $0", id)
+    }
+
     override fun getCupListFlow(): Flow<ResultsChange<CupEntity>> {
         return this.stream(this.findAll())
     }

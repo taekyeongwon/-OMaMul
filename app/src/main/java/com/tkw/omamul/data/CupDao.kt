@@ -5,6 +5,7 @@ import io.realm.kotlin.notifications.ResultsChange
 import kotlinx.coroutines.flow.Flow
 
 interface CupDao: RealmDao<CupEntity> {
+    fun getCup(id: Int): CupEntity?
     fun getCupListFlow(): Flow<ResultsChange<CupEntity>>
     suspend fun insertCup(obj: CupEntity)
     suspend fun updateCup(obj: CupEntity)

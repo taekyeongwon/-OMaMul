@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class CupRepositoryImpl(private val cupDao: CupDao): CupRepository {
+    override fun getCupById(id: Int): CupEntity? = cupDao.getCup(id)
+
     override fun getCupList(): Flow<List<CupEntity>> {
         val cupFlow = cupDao.getCupListFlow()
         return flow {

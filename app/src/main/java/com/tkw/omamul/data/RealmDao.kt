@@ -13,11 +13,11 @@ interface RealmDao<T: RealmObject> {
     val realm: Realm
     val clazz: KClass<T>
 
-    fun findBy(query: String, vararg args: String): RealmResults<T> {
+    fun findBy(query: String, vararg args: Any): RealmResults<T> {
         return realm.query(clazz, query, *args).find()
     }
 
-    fun findByOne(query: String, vararg args: String): T? {
+    fun findByOne(query: String, vararg args: Any): T? {
         return realm.query(clazz, query, *args).first().find()
     }
 
