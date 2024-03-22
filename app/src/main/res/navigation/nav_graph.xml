@@ -81,6 +81,11 @@
         android:name="com.tkw.omamul.ui.view.water.cup.CupCreateFragment"
         tools:layout="@layout/fragment_cup_create">
 
+
+        <argument
+            android:name="cupArgument"
+            app:argType="com.tkw.omamul.data.model.Cup"
+            app:nullable="true"/>
     </fragment>
 
 

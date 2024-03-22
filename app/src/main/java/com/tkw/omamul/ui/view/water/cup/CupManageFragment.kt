@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.tkw.omamul.R
 import com.tkw.omamul.common.ViewModelFactory
 import com.tkw.omamul.common.autoCleared
 import com.tkw.omamul.databinding.FragmentCupManageBinding
@@ -51,12 +50,15 @@ class CupManageFragment: Fragment() {
 
     private fun initListener() {
         dataBinding.btnNext.setOnClickListener {
-            findNavController().navigate(R.id.cupCreateFragment)
+            findNavController().navigate(CupManageFragmentDirections
+                .actionCupManageFragmentToCupCreateFragment(null))
         }
     }
 
     private val editListener: (Int) -> Unit = { position ->
-
+        val currentItem = cupListAdapter.currentList[position]
+        findNavController().navigate(CupManageFragmentDirections
+            .actionCupManageFragmentToCupCreateFragment(currentItem))
     }
 
     private val deleteListener: (Int) -> Unit = { position ->
