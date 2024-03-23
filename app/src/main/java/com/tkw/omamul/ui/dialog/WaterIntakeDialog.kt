@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import com.tkw.omamul.common.ViewModelFactory
+import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.databinding.DialogWaterIntakeBinding
 import com.tkw.omamul.ui.view.water.WaterViewModel
 import com.tkw.omamul.common.DialogResize
@@ -17,7 +17,7 @@ import com.tkw.omamul.common.autoCleared
 
 class WaterIntakeDialog: DialogFragment(), DialogResize by DialogResizeImpl() {
     private var dataBinding by autoCleared<DialogWaterIntakeBinding>()
-    private val viewModel: WaterViewModel by activityViewModels { ViewModelFactory }
+    private val viewModel: WaterViewModel by activityViewModels { getViewModelFactory(null) }
 
     override fun onCreateView(
         inflater: LayoutInflater,

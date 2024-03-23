@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.tkw.omamul.R
-import com.tkw.omamul.common.ViewModelFactory
 import com.tkw.omamul.common.autoCleared
 import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.data.model.Cup

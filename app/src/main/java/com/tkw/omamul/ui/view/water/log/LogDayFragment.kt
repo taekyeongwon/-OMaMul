@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import com.tkw.omamul.R
-import com.tkw.omamul.common.ViewModelFactory
+import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.common.util.animateByMaxValue
 import com.tkw.omamul.databinding.FragmentLogDayBinding
 import com.tkw.omamul.ui.view.water.log.adapter.DayListAdapter
@@ -21,7 +21,7 @@ import com.tkw.omamul.ui.custom.chart.DayMarkerView
 
 class LogDayFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentLogDayBinding>()
-    private val viewModel: WaterViewModel by activityViewModels { ViewModelFactory }
+    private val viewModel: WaterViewModel by activityViewModels { getViewModelFactory(null) }
     private lateinit var dayAdapter: DayListAdapter
     override fun onCreateView(
         inflater: LayoutInflater,

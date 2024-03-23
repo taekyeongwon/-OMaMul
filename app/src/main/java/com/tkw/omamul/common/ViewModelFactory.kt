@@ -53,36 +53,3 @@ fun <V: Parcelable> getViewModelFactory(params: V?) = object: ViewModelProvider.
         } as T
     }
 }
-
-
-val ViewModelFactory = object: ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-        val handle = extras.createSavedStateHandle()
-
-        val conf = RealmConfiguration.Builder(setOf(
-            DayOfWaterEntity::class,
-            WaterEntity::class,
-            CupEntity::class
-        ))
-            .deleteRealmIfMigrationNeeded()
-            .build()
-        val realm = Realm.open(conf)
-        Log.d("test", conf.path)
-
-        return when(modelClass) {
-            WaterViewModel::class.java -> WaterViewModel(
-                WaterRepositoryImpl(WaterDaoImpl(realm)),
-                CupRepositoryImpl(CupDaoImpl(realm)),
-                handle
-            )
-            InitViewModel::class.java -> InitViewModel(
-                WaterRepositoryImpl(WaterDaoImpl(realm))
-            )
-            CupViewModel::class.java -> CupViewModel(
-                CupRepositoryImpl(CupDaoImpl(realm)),
-                Cup()
-            )
-            else -> throw IllegalArgumentException("Unknown Class")
-        } as T
-    }
-}

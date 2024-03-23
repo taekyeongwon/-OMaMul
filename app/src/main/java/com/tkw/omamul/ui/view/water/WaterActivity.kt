@@ -11,13 +11,13 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.tkw.omamul.MainApplication
 import com.tkw.omamul.R
-import com.tkw.omamul.common.ViewModelFactory
+import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.common.C
 import com.tkw.omamul.databinding.ActivityWaterBinding
 
 class WaterActivity : AppCompatActivity() {
     private lateinit var dataBinding: ActivityWaterBinding
-    private val viewModel: WaterViewModel by viewModels { ViewModelFactory }
+    private val viewModel: WaterViewModel by viewModels { getViewModelFactory(null) }
     private val mainFragmentSet = setOf(
         R.id.waterFragment,
         R.id.waterLogFragment,

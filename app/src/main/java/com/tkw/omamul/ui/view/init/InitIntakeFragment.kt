@@ -9,14 +9,14 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.tkw.omamul.MainApplication
 import com.tkw.omamul.R
-import com.tkw.omamul.common.ViewModelFactory
+import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.common.C
 import com.tkw.omamul.databinding.FragmentInitIntakeBinding
 import com.tkw.omamul.common.autoCleared
 
 class InitIntakeFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentInitIntakeBinding>()
-    private val viewModel: InitViewModel by viewModels { ViewModelFactory }
+    private val viewModel: InitViewModel by viewModels { getViewModelFactory(null) }
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -16,7 +16,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import com.tkw.omamul.R
-import com.tkw.omamul.common.ViewModelFactory
+import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.databinding.FragmentWaterBinding
 import com.tkw.omamul.ui.dialog.WaterIntakeDialog
 import com.tkw.omamul.ui.view.water.home.adapter.CupPagerAdapter
@@ -29,7 +29,7 @@ import com.tkw.omamul.data.model.Water
 
 class WaterFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentWaterBinding>()
-    private val viewModel: WaterViewModel by activityViewModels { ViewModelFactory }
+    private val viewModel: WaterViewModel by activityViewModels { getViewModelFactory(null) }
     private var countObject: List<Water>? = null
     private lateinit var cupPagerAdapter: CupPagerAdapter
 

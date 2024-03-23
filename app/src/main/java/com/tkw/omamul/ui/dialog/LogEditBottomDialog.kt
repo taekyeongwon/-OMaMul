@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tkw.omamul.R
-import com.tkw.omamul.common.ViewModelFactory
+import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.databinding.DialogLogEditBinding
 import com.tkw.omamul.ui.view.water.WaterViewModel
 import com.tkw.omamul.common.BottomExpand
@@ -20,7 +20,7 @@ class LogEditBottomDialog(
     private val selectedItem: Water = Water()
 ): BottomSheetDialogFragment(), BottomExpand by BottomExpandImpl() {
     private var dataBinding by autoCleared<DialogLogEditBinding>()
-    private val viewModel: WaterViewModel by activityViewModels { ViewModelFactory }
+    private val viewModel: WaterViewModel by activityViewModels { getViewModelFactory(null) }
 
     override fun getTheme(): Int {
         return R.style.BottomDialogStyle
