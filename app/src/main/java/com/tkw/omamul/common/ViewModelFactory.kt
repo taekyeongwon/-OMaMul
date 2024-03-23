@@ -31,7 +31,7 @@ fun <V: Parcelable> getViewModelFactory(params: V?) = object: ViewModelProvider.
             WaterEntity::class,
             CupEntity::class
         ))
-//            .deleteRealmIfMigrationNeeded()
+            .deleteRealmIfMigrationNeeded()
             .build()
         val realm = Realm.open(conf)
         Log.d("test", conf.path)
@@ -64,7 +64,7 @@ val ViewModelFactory = object: ViewModelProvider.Factory {
             WaterEntity::class,
             CupEntity::class
         ))
-//            .deleteRealmIfMigrationNeeded()
+            .deleteRealmIfMigrationNeeded()
             .build()
         val realm = Realm.open(conf)
         Log.d("test", conf.path)

@@ -13,6 +13,12 @@ object DateTimeUtils {
         return current.format(formatter)
     }
 
+    fun getTodayDate(): String {
+        val current = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        return current.format(formatter)
+    }
+
     fun getFormattedTime(date: String): String {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         return getFormattedTime(
@@ -21,10 +27,10 @@ object DateTimeUtils {
         )
     }
 
-    fun getFullFormatFromTime(hour: Int, minute: Int): String {
+    fun getFullFormatFromTime(dateTime: String, hour: Int, minute: Int): String {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         return LocalDateTime.of(
-            LocalDate.now(),
+            getDateFromFullFormat(dateTime),
             LocalTime.of(hour, minute)
         ).format(formatter)
     }
@@ -34,12 +40,15 @@ object DateTimeUtils {
         return LocalTime.of(hour, minute).format(formatter)
     }
 
+    fun getDateFromFullFormat(formatted: String): LocalDate {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        return LocalDate.parse(formatted, formatter)
+    }
+
     fun getTimeFromFullFormat(formatted: String): LocalTime {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         return LocalTime.parse(formatted, formatter)
     }
-
-
 
     fun getTimeFromFormat(formatted: String): LocalTime {
         val formatter = DateTimeFormatter.ofPattern("a hh:mm")

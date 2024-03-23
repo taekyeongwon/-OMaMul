@@ -8,16 +8,19 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class WaterRepositoryImpl(private val waterDao: WaterDao): WaterRepository {
-    private val testDate = "20240205"
-    override suspend fun getCount(): DayOfWaterEntity? = waterDao.getCount()
+    override suspend fun getDayEntity(date: String): DayOfWaterEntity? =
+        waterDao.getDayOfWater(date)
 
-    override fun getCountByFlow(): Flow<DayOfWaterEntity> {
-        val countFlow = waterDao.getCountFlow()
+    override suspend fun getWater(date: String, time: String): WaterEntity? =
+        waterDao.getWater(date, time)
+
+    override fun getAmountByFlow(date: String): Flow<DayOfWaterEntity> {
+        val countFlow = waterDao.getAmountFlow(date)
         return flow {
             countFlow.collect {
                 val count = it.list.firstOrNull()
                 if(count == null) {
-                    createCount()
+                    createAmount(date)
                 } else {
                     this.emit(count)
                 }
@@ -25,15 +28,17 @@ class WaterRepositoryImpl(private val waterDao: WaterDao): WaterRepository {
         }
     }
 
-    override suspend fun createCount() {
+    override suspend fun createAmount(date: String) {
         waterDao.insert(DayOfWaterEntity().apply {
-            date = testDate
+            this.date = date
         })
     }
 
-    override suspend fun addCount(newObj: WaterEntity) = waterDao.addCount(newObj)
+    override suspend fun addAmount(date: String, newObj: WaterEntity) =
+        waterDao.addAmount(date, newObj)
 
-    override suspend fun deleteCount(obj: WaterEntity) = waterDao.removeCount(obj)
+    override suspend fun deleteAmount(date: String, obj: WaterEntity) =
+        waterDao.removeAmount(date, obj)
 
     override suspend fun updateAmount(origin: WaterEntity, target: WaterEntity)
     = waterDao.updateAmount(origin, target)

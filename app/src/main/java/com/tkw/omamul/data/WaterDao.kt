@@ -8,9 +8,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlin.reflect.KClass
 
 interface WaterDao: RealmDao<DayOfWaterEntity> {
-    suspend fun getCount(): DayOfWaterEntity?
-    fun getCountFlow(): Flow<ResultsChange<DayOfWaterEntity>>
-    suspend fun addCount(newObj: WaterEntity)
-    suspend fun removeCount(obj: WaterEntity)
+    suspend fun getDayOfWater(date: String): DayOfWaterEntity?
+    suspend fun getWater(date: String, time: String): WaterEntity?
+    fun getAmountFlow(date: String): Flow<ResultsChange<DayOfWaterEntity>>
+    suspend fun addAmount(date: String, newObj: WaterEntity)
+    suspend fun removeAmount(date: String, obj: WaterEntity)
     suspend fun updateAmount(origin: WaterEntity, target: WaterEntity)
 }

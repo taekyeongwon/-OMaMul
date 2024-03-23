@@ -64,8 +64,8 @@ class WaterFragment: Fragment() {
     }
 
     private fun initObserver() {
-        viewModel.countStreamLiveData.observe(viewLifecycleOwner) {
-            countObject = it.toMap().dayOfList
+        viewModel.amountLiveData.observe(viewLifecycleOwner) {
+            countObject = it.dayOfList
         }
 
         viewModel.cupListLiveData.observe(viewLifecycleOwner) {

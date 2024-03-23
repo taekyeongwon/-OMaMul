@@ -35,7 +35,7 @@ class DayListAdapter(
         }
         fun onBind(item: Water) {
             binding.tvAmount.text = item.amount.toString()
-            binding.tvDate.text = DateTimeUtils.getFormattedTime(item.date)
+            binding.tvDate.text = DateTimeUtils.getFormattedTime(item.dateTime)
         }
     }
 }

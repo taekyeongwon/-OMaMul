@@ -1,7 +1,6 @@
 package com.tkw.omamul.data.model
 
 import com.tkw.omamul.common.util.DateTimeUtils
-import io.realm.kotlin.ext.toRealmList
 
 data class DayOfWater(
     val date: String,
@@ -27,11 +26,11 @@ data class DayOfWater(
 }
 
 data class Water(
-    val date: String = "",
+    val dateTime: String = "",
     val amount: Int = 0
 ) {
 
     fun getHourFromDate(): Int {
-        return DateTimeUtils.getTimeFromFullFormat(date).hour
+        return DateTimeUtils.getTimeFromFullFormat(dateTime).hour
     }
 }

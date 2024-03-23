@@ -43,13 +43,13 @@ class LogEditBottomDialog(
     }
 
     private fun initView() {
-        if(selectedItem.date.isNotEmpty()) {
+        if(selectedItem.dateTime.isNotEmpty()) {
             with(dataBinding) {
                 etWaterAmount.setText(selectedItem.amount.toString())
                 tpDate.hour =
-                    DateTimeUtils.getTimeFromFullFormat(selectedItem.date).hour
+                    DateTimeUtils.getTimeFromFullFormat(selectedItem.dateTime).hour
                 tpDate.minute =
-                    DateTimeUtils.getTimeFromFullFormat(selectedItem.date).minute
+                    DateTimeUtils.getTimeFromFullFormat(selectedItem.dateTime).minute
             }
         }
     }
@@ -62,6 +62,7 @@ class LogEditBottomDialog(
         dataBinding.btnSave.setOnClickListener {
             val amount = dataBinding.etWaterAmount.text.toString().toInt()
             val date = DateTimeUtils.getFullFormatFromTime(
+                selectedItem.dateTime,
                 dataBinding.tpDate.hour,
                 dataBinding.tpDate.minute
             )

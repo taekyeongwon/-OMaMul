@@ -58,8 +58,7 @@ class LogDayFragment: Fragment() {
     }
 
     private fun initObserver() {
-        viewModel.countStreamLiveData.observe(viewLifecycleOwner) { data ->
-            val dayOfWater = data.toMap()
+        viewModel.amountLiveData.observe(viewLifecycleOwner) { dayOfWater ->
             with(dataBinding) {
                 val result = dayOfWater.getAccumulatedAmount().map {
                     barChart.parsingChartData(it.key, it.value)

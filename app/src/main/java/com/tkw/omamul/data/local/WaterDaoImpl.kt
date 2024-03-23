@@ -13,29 +13,32 @@ class WaterDaoImpl(r: Realm): WaterDao {
     override val realm: Realm = r
     override val clazz: KClass<DayOfWaterEntity> = DayOfWaterEntity::class
 
-    private val testDate = "20240205"
-    override suspend fun getCount(): DayOfWaterEntity? {
-        return this.findByOne("date == $0", testDate)
+    private val amountByDate: MutableRealm.(String) -> DayOfWaterEntity? = {
+        this.query(clazz, "date == $0", it).first().find()
     }
 
-    private val countByDate: MutableRealm.() -> DayOfWaterEntity? = {
-        this.query(clazz, "date == $0", testDate).first().find()
+    override suspend fun getDayOfWater(date: String): DayOfWaterEntity? {
+        return this.findByOne("date == $0", date)
     }
 
-    override fun getCountFlow(): Flow<ResultsChange<DayOfWaterEntity>> {
-        return this.stream(this.findBy("date == $0", testDate))
+    override suspend fun getWater(date: String, time: String): WaterEntity? {
+        return this.findByOne("date == $0", date)?.dayOfList?.find { it.dateTime == time }
     }
 
-    override suspend fun addCount(newObj: WaterEntity) {
+    override fun getAmountFlow(date: String): Flow<ResultsChange<DayOfWaterEntity>> {
+        return this.stream(this.findBy("date == $0", date))
+    }
+
+    override suspend fun addAmount(date: String, newObj: WaterEntity) {
         realm.write {
-            val query = countByDate()
+            val query = amountByDate(date)
             query?.dayOfList?.add(newObj)
         }
     }
 
-    override suspend fun removeCount(obj: WaterEntity) {
+    override suspend fun removeAmount(date: String, obj: WaterEntity) {
         realm.write {
-            val query = countByDate()
+            val query = amountByDate(date)
             query?.dayOfList?.remove(obj)
         }
     }
@@ -44,7 +47,7 @@ class WaterDaoImpl(r: Realm): WaterDao {
         realm.write {
             findLatest(origin)?.apply {
                 amount = target.amount
-                date = target.date
+                dateTime = target.dateTime
             }
         }
     }
