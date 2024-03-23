@@ -59,9 +59,9 @@ class WaterAmountPicker
     }
 
     //인덱스 값이 아닌 displayedValue 값 리턴
-//    override fun getValue(): Int {
-//        return displayedValues[super.getValue()].toInt()
-//    }
+    fun getCurrentValue(): Int {
+        return displayedValues[super.getValue()].toInt()
+    }
 
     fun getIntervalDisplayedValues(interval: Int): ArrayList<String> {
         val displayedArray = arrayListOf<String>()
