@@ -27,7 +27,7 @@ class WaterDaoImpl(r: Realm): WaterDao {
     }
 
     override suspend fun getWater(date: String, time: String): WaterEntity? {
-        return this.findByOne("date == $0", date)?.dayOfList?.find { it.dateTime == time }
+        return this.findByOne("date == $0", date)?.dayOfList?.findLast { it.dateTime == time }
     }
 
     override fun getAmountFlow(date: String): Flow<ResultsChange<DayOfWaterEntity>> {

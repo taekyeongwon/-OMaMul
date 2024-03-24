@@ -80,7 +80,11 @@ class WaterFragment: Fragment() {
 
     private fun initListener() {
         dataBinding.btnAdd.setOnClickListener {
-            viewModel.addCount(100, DateTimeUtils.getToday())
+            val currentPosition = dataBinding.vpList.currentItem
+            if(currentPosition < cupPagerAdapter.itemCount - 1) {
+                val currentCup = cupPagerAdapter.currentList[currentPosition]
+                viewModel.addCount(currentCup.cupAmount, DateTimeUtils.getToday())
+            }
         }
 
         dataBinding.btnRemove.setOnClickListener {
