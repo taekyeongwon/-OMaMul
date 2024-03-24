@@ -16,6 +16,7 @@ import com.tkw.omamul.ui.custom.DividerDecoration
 import com.tkw.omamul.ui.dialog.LogEditBottomDialog
 import com.tkw.omamul.ui.view.water.WaterViewModel
 import com.tkw.omamul.common.autoCleared
+import com.tkw.omamul.data.model.DayOfWater
 import com.tkw.omamul.data.model.Water
 import com.tkw.omamul.ui.custom.chart.DayMarkerView
 
@@ -23,6 +24,9 @@ class LogDayFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentLogDayBinding>()
     private val viewModel: WaterViewModel by activityViewModels { getViewModelFactory(null) }
     private lateinit var dayAdapter: DayListAdapter
+    private var dayOfWaterList = listOf<DayOfWater>()
+    private var currentDate = ""
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,6 +62,14 @@ class LogDayFragment: Fragment() {
     }
 
     private fun initObserver() {
+        viewModel.dateLiveData.observe(viewLifecycleOwner) {
+            currentDate = it
+        }
+
+        viewModel.allDayOfWaterLiveData.observe(viewLifecycleOwner) {
+            dayOfWaterList = it
+        }
+
         viewModel.amountLiveData.observe(viewLifecycleOwner) { dayOfWater ->
             with(dataBinding) {
                 val result = dayOfWater.getAccumulatedAmount().map {
@@ -78,6 +90,18 @@ class LogDayFragment: Fragment() {
         dataBinding.ibDayAdd.setOnClickListener {
             val dialog = LogEditBottomDialog()
             dialog.show(childFragmentManager, dialog.tag)
+        }
+
+        dataBinding.ibDayLeft.setOnClickListener {
+            val currentIndex = dayOfWaterList.indexOfLast { it.date == currentDate }
+            if(currentIndex > 0)
+                viewModel.setDate(dayOfWaterList[currentIndex - 1].date)
+        }
+
+        dataBinding.ibDayRight.setOnClickListener {
+            val currentIndex = dayOfWaterList.indexOfLast { it.date == currentDate }
+            if(currentIndex < dayOfWaterList.size - 1)
+                viewModel.setDate(dayOfWaterList[currentIndex + 1].date)
         }
     }
 

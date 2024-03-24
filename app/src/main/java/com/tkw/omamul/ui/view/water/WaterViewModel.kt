@@ -13,6 +13,7 @@ import com.tkw.omamul.data.WaterRepository
 import com.tkw.omamul.data.model.Cup
 import com.tkw.omamul.data.model.CupEntity
 import com.tkw.omamul.data.model.DayOfWater
+import com.tkw.omamul.data.model.DayOfWaterEntity
 import com.tkw.omamul.data.model.Water
 import com.tkw.omamul.data.model.WaterEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,13 +32,24 @@ class WaterViewModel(
     private val savedStateHandle: SavedStateHandle
 ): BaseViewModel() {
 
-    private val amountFlow = MutableStateFlow(DateTimeUtils.getTodayDate())
+    //현재 날짜
+    private val dateStringFlow = MutableStateFlow(DateTimeUtils.getTodayDate())
+    val dateLiveData = dateStringFlow.asLiveData()
 
+    //현재 날짜로 조회한 DayOfWater
     @OptIn(ExperimentalCoroutinesApi::class)
-    val amountLiveData: LiveData<DayOfWater> = amountFlow.flatMapLatest { date ->
+    val amountLiveData: LiveData<DayOfWater> = dateStringFlow.flatMapLatest { date ->
         waterRepository.getAmountByFlow(date).map { it.toMap() }
     }.asLiveData()
 
+    //전체 DayOfWater 리스트
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val allDayOfWaterLiveData: LiveData<List<DayOfWater>> =
+        waterRepository.getAllDayEntity().mapLatest { list ->
+            list.map { it.toMap() }
+        }.asLiveData()
+
+    //메인화면에 표시할 컵 리스트
     private val cupListFlow: StateFlow<List<CupEntity>> =
         cupRepository.getCupList().stateIn(
             initialValue = arrayListOf(),
@@ -58,7 +70,7 @@ class WaterViewModel(
 
     //date값 변경에 따라 flow에서 새로운 DayOfWater 객체 collect하기 위한 메서드
     fun setDate(date: String) {
-        amountFlow.value = date
+        dateStringFlow.value = date
     }
 
     fun addCount(amount: Int, date: String) {
@@ -67,15 +79,15 @@ class WaterViewModel(
                 this.amount = amount
                 this.dateTime = date
             }
-            waterRepository.addAmount(amountFlow.value, entity)
+            waterRepository.addAmount(dateStringFlow.value, entity)
         }
     }
 
     fun removeCount(obj: Water) {
         viewModelScope.launch {
-            val current = waterRepository.getWater(amountFlow.value, obj.dateTime)
+            val current = waterRepository.getWater(dateStringFlow.value, obj.dateTime)
             if(current != null) {
-                waterRepository.deleteAmount(amountFlow.value, current)
+                waterRepository.deleteAmount(dateStringFlow.value, current)
             }
         }
     }
@@ -87,11 +99,11 @@ class WaterViewModel(
                 this.dateTime = date
             }
             //Water 객체의 date와 같은 WaterEntity 객체 가져오기
-            val current = waterRepository.getWater(amountFlow.value, origin.dateTime)
+            val current = waterRepository.getWater(dateStringFlow.value, origin.dateTime)
             if(current != null) { //수정하려는 객체가 리스트에 있으면 업데이트
                 waterRepository.updateAmount(current, target)
             } else {                //없으면 추가
-                waterRepository.addAmount(amountFlow.value, target)
+                waterRepository.addAmount(dateStringFlow.value, target)
             }
         }
     }

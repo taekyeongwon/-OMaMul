@@ -6,6 +6,7 @@ import com.tkw.omamul.data.model.WaterEntity
 import io.realm.kotlin.MutableRealm
 import io.realm.kotlin.Realm
 import io.realm.kotlin.notifications.ResultsChange
+import io.realm.kotlin.query.RealmResults
 import kotlinx.coroutines.flow.Flow
 import kotlin.reflect.KClass
 
@@ -19,6 +20,10 @@ class WaterDaoImpl(r: Realm): WaterDao {
 
     override suspend fun getDayOfWater(date: String): DayOfWaterEntity? {
         return this.findByOne("date == $0", date)
+    }
+
+    override fun getAllDayOfWater(): Flow<ResultsChange<DayOfWaterEntity>> {
+        return this.stream(this.findAll())
     }
 
     override suspend fun getWater(date: String, time: String): WaterEntity? {

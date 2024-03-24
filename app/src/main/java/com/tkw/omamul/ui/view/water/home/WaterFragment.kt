@@ -64,6 +64,9 @@ class WaterFragment: Fragment() {
     }
 
     private fun initObserver() {
+        //홈 화면은 오늘 날짜의 데이터만 보여주도록 여기서 세팅
+        viewModel.setDate(DateTimeUtils.getTodayDate())
+
         viewModel.amountLiveData.observe(viewLifecycleOwner) {
             countObject = it.dayOfList
         }

@@ -1,5 +1,7 @@
 package com.tkw.omamul.ui.view.water
 
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -13,6 +15,8 @@ import com.tkw.omamul.MainApplication
 import com.tkw.omamul.R
 import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.common.C
+import com.tkw.omamul.common.DateChangeReceiver
+import com.tkw.omamul.common.util.DateTimeUtils
 import com.tkw.omamul.databinding.ActivityWaterBinding
 
 class WaterActivity : AppCompatActivity() {
@@ -24,11 +28,26 @@ class WaterActivity : AppCompatActivity() {
         R.id.settingFragment
     )
 
+    private val broadcastReceiver = DateChangeReceiver {
+        viewModel.setDate(DateTimeUtils.getTodayDate())
+    }
+    private val receiveFilter = IntentFilter(Intent.ACTION_DATE_CHANGED)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
         initBinding()
         initView()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        registerReceiver(broadcastReceiver, receiveFilter)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(broadcastReceiver)
     }
 
     private fun initBinding() {
