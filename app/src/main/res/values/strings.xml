@@ -33,6 +33,7 @@
     <string name="goal">목표</string>
     <string name="record">기록</string>
     <string name="cup_list_title">컵 목록</string>
+    <string name="cup_list_reorder">순서 변경</string>
     <string name="cup_list_add">+ 새 컵 추가하기</string>
     <string name="cup_alias">컵 이름</string>
     <string name="cup_alias_hint">컵 이름을 설정해주세요.</string>

@@ -7,16 +7,21 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
+import com.tkw.omamul.common.ItemTouchHelperCallback
+import com.tkw.omamul.common.OnItemDragStop
 import com.tkw.omamul.common.autoCleared
 import com.tkw.omamul.common.getViewModelFactory
+import com.tkw.omamul.data.model.Draggable
 import com.tkw.omamul.databinding.FragmentCupManageBinding
 import com.tkw.omamul.ui.custom.DividerDecoration
 import com.tkw.omamul.ui.view.water.cup.adapter.CupListAdapter
 
-class CupManageFragment: Fragment() {
+class CupManageFragment: Fragment(), OnItemDragStop {
     private var dataBinding by autoCleared<FragmentCupManageBinding>()
     private val viewModel: CupViewModel by viewModels { getViewModelFactory(null) }
     private lateinit var cupListAdapter: CupListAdapter
+    private lateinit var itemTouchHelper: ItemTouchHelper
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,10 +40,13 @@ class CupManageFragment: Fragment() {
     }
 
     private fun initView() {
-        cupListAdapter = CupListAdapter(editListener, deleteListener)
+        cupListAdapter = CupListAdapter(adapterEditListener, adapterDeleteListener, this)
+        itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(cupListAdapter))
+
         dataBinding.rvCupList.apply {
             adapter = cupListAdapter
             addItemDecoration(DividerDecoration(10f))
+            itemTouchHelper.attachToRecyclerView(this)
         }
     }
 
@@ -55,13 +63,17 @@ class CupManageFragment: Fragment() {
         }
     }
 
-    private val editListener: (Int) -> Unit = { position ->
+    override fun onStopDrag(list: List<Draggable>) {
+
+    }
+
+    private val adapterEditListener: (Int) -> Unit = { position ->
         val currentItem = cupListAdapter.currentList[position]
         findNavController().navigate(CupManageFragmentDirections
             .actionCupManageFragmentToCupCreateFragment(currentItem))
     }
 
-    private val deleteListener: (Int) -> Unit = { position ->
+    private val adapterDeleteListener: (Int) -> Unit = { position ->
         val currentItem = cupListAdapter.currentList[position]
         viewModel.deleteCup(currentItem.cupId)
     }
