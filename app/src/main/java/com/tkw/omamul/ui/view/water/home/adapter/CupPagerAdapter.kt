@@ -17,12 +17,12 @@ class CupPagerAdapter(
     : ListAdapter<Cup, ViewHolder>(CupDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return when(C.ViewType.values()[viewType]) {
-            C.ViewType.CUP -> {
+        return when(C.CupViewType.values()[viewType]) {
+            C.CupViewType.CUP -> {
                 val binding = ItemCupBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 CupViewHolder(binding, onClick)
             }
-            C.ViewType.ADD -> {
+            C.CupViewType.ADD -> {
                 val binding = ItemCupAddBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 AddViewHolder(binding, onClickAdd)
             }
@@ -40,8 +40,8 @@ class CupPagerAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if(position == itemCount - 1) C.ViewType.ADD.viewType
-        else C.ViewType.CUP.viewType
+        return if(position == itemCount - 1) C.CupViewType.ADD.viewType
+        else C.CupViewType.CUP.viewType
     }
 
     class CupViewHolder(private val binding: ItemCupBinding, listener: (Int) -> Unit): ViewHolder(binding.root) {

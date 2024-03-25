@@ -73,6 +73,13 @@
         <action
             android:id="@+id/action_cupManageFragment_to_cupCreateFragment"
             app:destination="@id/cupCreateFragment" />
+        <action
+            android:id="@+id/action_cupManageFragment_to_cupListEditFragment"
+            app:destination="@id/cupListEditFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
 
     <!-- 컵 추가/수정 화면 -->
@@ -86,6 +93,14 @@
             android:name="cupArgument"
             app:argType="com.tkw.omamul.data.model.Cup"
             app:nullable="true"/>
+    </fragment>
+
+    <!-- 컵 리스트 수정 화면 -->
+    <fragment
+        android:id="@+id/cupListEditFragment"
+        android:name="com.tkw.omamul.ui.view.water.cup.CupListEditFragment"
+        tools:layout="@layout/fragment_cup_list_edit">
+
     </fragment>
 
 

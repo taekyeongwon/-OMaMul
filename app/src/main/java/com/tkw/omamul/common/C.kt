@@ -2,7 +2,11 @@ package com.tkw.omamul.common
 
 object C {
     val FirstInstallFlag = "firstInstallFlag"
-    enum class ViewType(val viewType: Int) {
+    enum class CupViewType(val viewType: Int) {
         CUP(0), ADD(1)
+    }
+
+    enum class CupListViewType(val viewType: Int) {
+        NORMAL(0), DRAG(1)
     }
 }

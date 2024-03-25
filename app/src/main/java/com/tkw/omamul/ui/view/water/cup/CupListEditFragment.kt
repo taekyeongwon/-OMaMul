@@ -6,21 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.tkw.omamul.R
 import com.tkw.omamul.common.ItemTouchHelperCallback
 import com.tkw.omamul.common.OnItemDrag
 import com.tkw.omamul.common.autoCleared
 import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.data.model.Draggable
-import com.tkw.omamul.databinding.FragmentCupManageBinding
+import com.tkw.omamul.databinding.FragmentCupListEditBinding
 import com.tkw.omamul.ui.custom.DividerDecoration
 import com.tkw.omamul.ui.view.water.cup.adapter.CupListAdapter
 
-class CupManageFragment: Fragment() {
-    private var dataBinding by autoCleared<FragmentCupManageBinding>()
+class CupListEditFragment: Fragment() {
+    private var dataBinding by autoCleared<FragmentCupListEditBinding>()
     private val viewModel: CupViewModel by viewModels { getViewModelFactory(null) }
     private lateinit var cupListAdapter: CupListAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
@@ -30,7 +28,7 @@ class CupManageFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dataBinding = FragmentCupManageBinding.inflate(inflater, container, false)
+        dataBinding = FragmentCupListEditBinding.inflate(inflater, container, false)
         return dataBinding.root
     }
 
@@ -42,17 +40,17 @@ class CupManageFragment: Fragment() {
     }
 
     private fun initView() {
-        cupListAdapter = CupListAdapter(
-            adapterEditListener,
-            adapterDeleteListener,
-            object : OnItemDrag {
-                override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {}
-                override fun onStopDrag(list: List<Draggable>) {
-
-                }
+        cupListAdapter = CupListAdapter(dragListener = object : OnItemDrag {
+            override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
+                itemTouchHelper.startDrag(viewHolder)
             }
-        )
-        itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(cupListAdapter, true))
+
+            override fun onStopDrag(list: List<Draggable>) {
+
+            }
+        })
+        cupListAdapter.setDraggable(true)
+        itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(cupListAdapter, false))
 
         dataBinding.rvCupList.apply {
             adapter = cupListAdapter
@@ -68,25 +66,8 @@ class CupManageFragment: Fragment() {
     }
 
     private fun initListener() {
-        dataBinding.btnNext.setOnClickListener {
-            findNavController().navigate(CupManageFragmentDirections
-                .actionCupManageFragmentToCupCreateFragment(null))
+        dataBinding.btnComplete.setOnClickListener {
+
         }
-
-        dataBinding.btnReorder.setOnClickListener {
-            findNavController().navigate(CupManageFragmentDirections
-                .actionCupManageFragmentToCupListEditFragment())
-        }
-    }
-
-    private val adapterEditListener: (Int) -> Unit = { position ->
-        val currentItem = cupListAdapter.currentList[position]
-        findNavController().navigate(CupManageFragmentDirections
-            .actionCupManageFragmentToCupCreateFragment(currentItem))
-    }
-
-    private val adapterDeleteListener: (Int) -> Unit = { position ->
-        val currentItem = cupListAdapter.currentList[position]
-        viewModel.deleteCup(currentItem.cupId)
     }
 }

@@ -7,7 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
  * 참조 : https://yuar.tistory.com/entry/RecyclerView-Drag-Drop
  */
 class ItemTouchHelperCallback(
-    private val moveListener: ItemMoveListener
+    private val moveListener: ItemMoveListener,
+    private val longClickEnabled: Boolean
 ): ItemTouchHelper.Callback() {
 
     override fun getMovementFlags(
@@ -40,5 +41,9 @@ class ItemTouchHelperCallback(
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         //옆으로 스와프해서 지울 수 있도록
+    }
+
+    override fun isLongPressDragEnabled(): Boolean {
+        return longClickEnabled
     }
 }
