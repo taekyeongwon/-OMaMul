@@ -1,13 +1,22 @@
 package com.tkw.omamul.data
 
 import com.tkw.omamul.data.model.CupEntity
+import com.tkw.omamul.data.model.CupListEntity
 import io.realm.kotlin.notifications.ResultsChange
 import kotlinx.coroutines.flow.Flow
 
-interface CupDao: RealmDao<CupEntity> {
-    fun getCup(id: Int): CupEntity?
-    fun getCupListFlow(): Flow<ResultsChange<CupEntity>>
+interface CupDao: RealmDao<CupListEntity> {
+    fun getCup(id: String): CupEntity?
+
+    fun getCupListFlow(): Flow<ResultsChange<CupListEntity>>
+
+    suspend fun createList()
+
     suspend fun insertCup(obj: CupEntity)
-    suspend fun updateCup(obj: CupEntity)
+
+    suspend fun updateCup(origin: CupEntity, target: CupEntity)
+
+    suspend fun updateAll(list: List<CupEntity>)
+
     suspend fun deleteCup(obj: CupEntity)
 }

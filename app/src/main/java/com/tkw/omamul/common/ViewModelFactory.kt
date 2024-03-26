@@ -12,6 +12,7 @@ import com.tkw.omamul.data.local.WaterDaoImpl
 import com.tkw.omamul.data.local.WaterRepositoryImpl
 import com.tkw.omamul.data.model.Cup
 import com.tkw.omamul.data.model.CupEntity
+import com.tkw.omamul.data.model.CupListEntity
 import com.tkw.omamul.data.model.DayOfWaterEntity
 import com.tkw.omamul.data.model.WaterEntity
 import com.tkw.omamul.ui.view.init.InitViewModel
@@ -29,6 +30,7 @@ fun <V: Parcelable> getViewModelFactory(params: V?) = object: ViewModelProvider.
         val conf = RealmConfiguration.Builder(setOf(
             DayOfWaterEntity::class,
             WaterEntity::class,
+            CupListEntity::class,
             CupEntity::class
         ))
             .deleteRealmIfMigrationNeeded()

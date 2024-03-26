@@ -12,6 +12,7 @@ import com.tkw.omamul.common.SingleLiveEvent
 import com.tkw.omamul.data.CupRepository
 import com.tkw.omamul.data.model.Cup
 import com.tkw.omamul.data.model.CupEntity
+import com.tkw.omamul.data.model.CupListEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -23,9 +24,9 @@ class CupViewModel(
     private val params: Cup
 ): BaseViewModel() {
 
-    private val cupListFlow: StateFlow<List<CupEntity>> =
+    private val cupListFlow: StateFlow<CupListEntity> =
         cupRepository.getCupList().stateIn(
-            initialValue = arrayListOf(),
+            initialValue = CupListEntity(),
             started = SharingStarted.WhileSubscribed(5000),
             scope = viewModelScope
         )
@@ -33,9 +34,7 @@ class CupViewModel(
     @OptIn(ExperimentalCoroutinesApi::class)
     val cupListLiveData: LiveData<List<Cup>> =
         cupListFlow.mapLatest {
-            it.map { cup ->
-                cup.toMap()
-            }
+            it.toMap().cupList
         }.asLiveData()
 
     //cup create fragment에서 관찰할 변수
@@ -54,8 +53,8 @@ class CupViewModel(
     val toastEvent: LiveData<AppError> = _toastEvent
 
     init {
-        //cupId가 default -1이면 추가 모드, 그 외 수정 모드
-        _createMode.value = params.cupId == -1
+        //createMode true면 추가 모드, 그 외 수정 모드
+        _createMode.value = params.createMode
     }
 
     fun insertCup() {
@@ -64,14 +63,7 @@ class CupViewModel(
             return
         }
         launch {
-            var newCupId = 0
-            val currentList = cupListFlow.value
-            if(currentList.isNotEmpty()) {
-                newCupId = currentList.last().cupId.plus(1)
-            }
-
             val target = CupEntity().apply {
-                cupId = newCupId
                 cupName = cupNameLiveData.value!!
                 cupAmount = cupAmountLiveData.value!!
             }
@@ -87,16 +79,18 @@ class CupViewModel(
         }
         launch {
             val target = CupEntity().apply {
-                cupId = params.cupId
                 cupName = cupNameLiveData.value!!
                 cupAmount = cupAmountLiveData.value!!
             }
-            cupRepository.updateCup(target)
-            _nextEvent.call()
+            val current = cupRepository.getCupById(params.cupId)
+            if(current != null) {
+                cupRepository.updateCup(current, target)
+                _nextEvent.call()
+            }
         }
     }
 
-    fun deleteCup(cupId: Int) {
+    fun deleteCup(cupId: String) {
         launch {
             val target = cupRepository.getCupById(cupId)
             if(target != null) {
@@ -107,4 +101,14 @@ class CupViewModel(
     }
 
     private fun validateCheck(): Boolean = cupNameLiveData.value!!.isNotBlank()
+
+    fun updateAll(list: List<Cup>) {
+        launch {
+            val mappedList = list.map {
+                it.toMapEntity()
+            }
+            cupRepository.updateAll(mappedList)
+            _nextEvent.call()
+        }
+    }
 }

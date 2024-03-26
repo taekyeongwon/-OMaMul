@@ -25,8 +25,8 @@ interface RealmDao<T: RealmObject> {
         return realm.query(clazz).find()
     }
 
-    fun findLast(): T? {
-        return realm.query(clazz).find().lastOrNull()
+    fun findFirst(): T? {
+        return realm.query(clazz).first().find()
     }
 
     fun stream(query: RealmResults<T>): Flow<ResultsChange<T>> {

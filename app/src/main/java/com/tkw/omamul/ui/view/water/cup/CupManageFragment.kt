@@ -9,12 +9,11 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.tkw.omamul.R
 import com.tkw.omamul.common.ItemTouchHelperCallback
 import com.tkw.omamul.common.OnItemDrag
 import com.tkw.omamul.common.autoCleared
 import com.tkw.omamul.common.getViewModelFactory
-import com.tkw.omamul.data.model.Draggable
+import com.tkw.omamul.data.model.Cup
 import com.tkw.omamul.databinding.FragmentCupManageBinding
 import com.tkw.omamul.ui.custom.DividerDecoration
 import com.tkw.omamul.ui.view.water.cup.adapter.CupListAdapter
@@ -47,8 +46,8 @@ class CupManageFragment: Fragment() {
             adapterDeleteListener,
             object : OnItemDrag {
                 override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {}
-                override fun onStopDrag(list: List<Draggable>) {
-
+                override fun onStopDrag(list: List<Cup>) {
+                    viewModel.updateAll(list)
                 }
             }
         )
@@ -81,6 +80,7 @@ class CupManageFragment: Fragment() {
 
     private val adapterEditListener: (Int) -> Unit = { position ->
         val currentItem = cupListAdapter.currentList[position]
+            .apply { this.createMode = false}
         findNavController().navigate(CupManageFragmentDirections
             .actionCupManageFragmentToCupCreateFragment(currentItem))
     }

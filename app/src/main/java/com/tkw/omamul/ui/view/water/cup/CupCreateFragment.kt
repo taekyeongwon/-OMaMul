@@ -21,7 +21,6 @@ class CupCreateFragment: Fragment() {
         val cupArgs: CupCreateFragmentArgs by navArgs()
         getViewModelFactory(cupArgs.cupArgument)
     }
-    private var cupList: List<Cup> = arrayListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,10 +43,6 @@ class CupCreateFragment: Fragment() {
     }
 
     private fun initObserver() {
-        viewModel.cupListLiveData.observe(viewLifecycleOwner) {
-            cupList = it
-        }
-
         viewModel.createMode.observe(viewLifecycleOwner) {
             viewModel.buttonName.value =
                 if(it) getString(R.string.add)

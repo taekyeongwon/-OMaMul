@@ -6,12 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.tkw.omamul.common.ItemTouchHelperCallback
 import com.tkw.omamul.common.OnItemDrag
 import com.tkw.omamul.common.autoCleared
 import com.tkw.omamul.common.getViewModelFactory
+import com.tkw.omamul.data.model.Cup
 import com.tkw.omamul.data.model.Draggable
 import com.tkw.omamul.databinding.FragmentCupListEditBinding
 import com.tkw.omamul.ui.custom.DividerDecoration
@@ -22,6 +24,7 @@ class CupListEditFragment: Fragment() {
     private val viewModel: CupViewModel by viewModels { getViewModelFactory(null) }
     private lateinit var cupListAdapter: CupListAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
+    private val saveCupList: ArrayList<Cup> = arrayListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,8 +48,9 @@ class CupListEditFragment: Fragment() {
                 itemTouchHelper.startDrag(viewHolder)
             }
 
-            override fun onStopDrag(list: List<Draggable>) {
-
+            override fun onStopDrag(list: List<Cup>) {
+                saveCupList.clear()
+                saveCupList.addAll(list)
             }
         })
         cupListAdapter.setDraggable(true)
@@ -61,13 +65,20 @@ class CupListEditFragment: Fragment() {
 
     private fun initObserver() {
         viewModel.cupListLiveData.observe(viewLifecycleOwner) {
+            saveCupList.addAll(it)
             cupListAdapter.submitList(it)
+        }
+
+        viewModel.nextEvent.observe(viewLifecycleOwner) {
+            findNavController().navigateUp()
         }
     }
 
     private fun initListener() {
         dataBinding.btnComplete.setOnClickListener {
-
+            if(saveCupList.isNotEmpty()) {
+                viewModel.updateAll(saveCupList)
+            }
         }
     }
 }
