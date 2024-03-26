@@ -18,7 +18,7 @@ class CupDaoImpl(r: Realm): CupDao {
     override val clazz: KClass<CupListEntity> = CupListEntity::class
 
     private val getCupList: MutableRealm.() -> CupListEntity? = {
-        this.query(clazz).first().find()
+        this.query(clazz, "cupId == $0", Cup.DEFAULT_CUP_ID).first().find()
     }
 
     override fun getCup(id: String): CupEntity? {
@@ -26,9 +26,7 @@ class CupDaoImpl(r: Realm): CupDao {
     }
 
     override fun getCupListFlow(): Flow<ResultsChange<CupListEntity>> {
-        val test = this.findAll()
-        val cupListId = this.findFirst()?.cupId ?: ""
-        return this.stream(this.findBy("cupId == $0", cupListId))
+        return this.stream(this.findBy("cupId == $0", Cup.DEFAULT_CUP_ID))
     }
 
     override suspend fun createList() {

@@ -14,6 +14,7 @@ data class Cup(
 ): Parcelable, Draggable {
     companion object {
         const val DEFAULT_CUP_AMOUNT = 1000
+        const val DEFAULT_CUP_ID = "default_cup_id"
     }
 
     fun toMapEntity() = CupEntity().apply {

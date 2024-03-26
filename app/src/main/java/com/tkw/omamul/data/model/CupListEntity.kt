@@ -7,7 +7,7 @@ import io.realm.kotlin.types.annotations.PrimaryKey
 
 class CupListEntity: RealmObject {
     @PrimaryKey
-    var cupId: String = "default"
+    var cupId: String = Cup.DEFAULT_CUP_ID
     var cupList: RealmList<CupEntity> = realmListOf()
 
     fun toMap() = CupList(
