@@ -27,11 +27,19 @@ object DateTimeUtils {
         )
     }
 
-    fun getFullFormatFromTime(dateTime: String, hour: Int, minute: Int): String {
+    fun getFullFormatFromDateTime(dateTime: String, hour: Int, minute: Int): String {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         return LocalDateTime.of(
             getDateFromFullFormat(dateTime),
             LocalTime.of(hour, minute)
+        ).format(formatter)
+    }
+
+    fun getFullFormatFromDate(date: String): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        return LocalDateTime.of(
+            getDateFromFormat(date),
+            LocalTime.of(0, 0)
         ).format(formatter)
     }
 
@@ -42,6 +50,11 @@ object DateTimeUtils {
 
     fun getDateFromFullFormat(formatted: String): LocalDate {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        return LocalDate.parse(formatted, formatter)
+    }
+
+    fun getDateFromFormat(formatted: String): LocalDate {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         return LocalDate.parse(formatted, formatter)
     }
 

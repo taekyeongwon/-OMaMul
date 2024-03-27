@@ -17,7 +17,7 @@ import com.tkw.omamul.common.util.DateTimeUtils
 import com.tkw.omamul.data.model.Water
 
 class LogEditBottomDialog(
-    private val selectedItem: Water = Water()
+    private val selectedItem: Water? = null
 ): BottomSheetDialogFragment(), BottomExpand by BottomExpandImpl() {
     private var dataBinding by autoCleared<DialogLogEditBinding>()
     private val viewModel: WaterViewModel by activityViewModels { getViewModelFactory(null) }
@@ -43,7 +43,7 @@ class LogEditBottomDialog(
     }
 
     private fun initView() {
-        if(selectedItem.dateTime.isNotEmpty()) {
+        if(selectedItem != null) {
             with(dataBinding) {
                 etWaterAmount.setText(selectedItem.amount.toString())
                 tpDate.hour =
@@ -61,13 +61,23 @@ class LogEditBottomDialog(
 
         dataBinding.btnSave.setOnClickListener {
             val amount = dataBinding.etWaterAmount.text.toString().toInt()
-            val date = DateTimeUtils.getFullFormatFromTime(
-                selectedItem.dateTime,
+            val fullDateFormat = DateTimeUtils.getFullFormatFromDateTime(
+                getSelectedDateTime(),
                 dataBinding.tpDate.hour,
                 dataBinding.tpDate.minute
             )
-            viewModel.updateAmount(selectedItem, amount, date)
+            if(selectedItem != null) {
+                viewModel.updateAmount(selectedItem, amount, fullDateFormat)
+            } else {
+                viewModel.addCount(amount, fullDateFormat)
+            }
+
             dismiss()
         }
+    }
+
+    private fun getSelectedDateTime(): String {
+        return selectedItem?.dateTime
+            ?: DateTimeUtils.getFullFormatFromDate(viewModel.dateLiveData.value!!)
     }
 }
