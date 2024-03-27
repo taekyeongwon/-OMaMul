@@ -51,21 +51,9 @@ class WaterViewModel(
 
     //메인화면에 표시할 컵 리스트
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val cupListFlow: StateFlow<CupList> =
-        cupRepository.getCupList().flatMapLatest {
-            flow {
-                emit(it.toMap())
-            }
-        }.stateIn(
-            initialValue = CupList(),
-            started = SharingStarted.WhileSubscribed(5000),
-            scope = viewModelScope
-        )
-
-    @OptIn(ExperimentalCoroutinesApi::class)
     val cupListLiveData: LiveData<List<Cup>> =
-        cupListFlow.mapLatest {
-            it.cupList
+        cupRepository.getCupList().mapLatest {
+            it.toMap().cupList
         }.asLiveData()
 
     //컵 관리 화면 이동 후 돌아왔을 때 위치 저장용

@@ -50,6 +50,11 @@ class WaterFragment: Fragment() {
         initListener()
     }
 
+    override fun onPause() {
+        super.onPause()
+        viewModel.cupPagerScrollPosition.value = dataBinding.vpList.currentItem
+    }
+
     private fun initBinding() {
         dataBinding.run {
             lifecycleOwner = viewLifecycleOwner
@@ -155,7 +160,6 @@ class WaterFragment: Fragment() {
     }
 
     private fun scrollToPosition(position: Int, smoothFlag: Boolean) {
-        viewModel.cupPagerScrollPosition.value = position
         dataBinding.vpList.setCurrentItem(position, smoothFlag)
         if(!smoothFlag) {
             dataBinding.vpList.run {

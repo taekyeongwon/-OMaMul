@@ -28,21 +28,9 @@ class CupViewModel(
 ): BaseViewModel() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val cupListFlow: StateFlow<CupList> =
-        cupRepository.getCupList().flatMapLatest {
-            flow {  //CupListEntity를 CupList로 mapping한 새로운 flow
-                emit(it.toMap())
-            }
-        }.stateIn(  //Flow<CupList>를 StateFlow<CupList>로 변환
-            initialValue = CupList(),
-            started = SharingStarted.WhileSubscribed(5000),
-            scope = viewModelScope
-        )
-
-    @OptIn(ExperimentalCoroutinesApi::class)
     val cupListLiveData: LiveData<List<Cup>> =
-        cupListFlow.mapLatest {
-            it.cupList  //Flow<CupList> -> Flow<List<Cup>>으로 최신값 매핑
+        cupRepository.getCupList().mapLatest {
+            it.toMap().cupList  //Flow<CupListEntity> -> Flow<List<Cup>>으로 최신값 매핑
         }.asLiveData()
 
     //cup create fragment에서 관찰할 변수

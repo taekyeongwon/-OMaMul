@@ -54,7 +54,6 @@ class LogDayFragment: Fragment() {
 
     private fun initView() {
         dayAdapter = DayListAdapter(dayAmountEditListener, dayAmountDeleteListener)
-        dayAdapter.registerAdapterDataObserver(emptyRecyclerObserver)
         dataBinding.rvDayList.apply {
             adapter = dayAdapter
             addItemDecoration(DividerDecoration(10f))
@@ -81,8 +80,9 @@ class LogDayFragment: Fragment() {
                 barChart.setChartData(result)
                 tvTotalAmount.animateByMaxValue(result.lastOrNull()?.y?.toInt() ?: 0)
             }
-            dayAdapter.submitList(dayOfWater.dayOfList)
-            emptyRecyclerObserver.onChanged()
+            dayAdapter.submitList(dayOfWater.dayOfList) {
+                dataChanged()
+            }
         }
     }
 
@@ -116,15 +116,13 @@ class LogDayFragment: Fragment() {
         viewModel.removeCount(item)
     }
 
-    private val emptyRecyclerObserver = object : AdapterDataObserver() {
-        override fun onChanged() {
-            if(dayAdapter.itemCount == 0) {
-                dataBinding.nvEmptyView.visibility = View.VISIBLE
-                dataBinding.rvDayList.visibility = View.GONE
-            } else {
-                dataBinding.nvEmptyView.visibility = View.GONE
-                dataBinding.rvDayList.visibility = View.VISIBLE
-            }
+    private fun dataChanged() {
+        if(dayAdapter.itemCount == 0) {
+            dataBinding.nvEmptyView.visibility = View.VISIBLE
+            dataBinding.rvDayList.visibility = View.GONE
+        } else {
+            dataBinding.nvEmptyView.visibility = View.GONE
+            dataBinding.rvDayList.visibility = View.VISIBLE
         }
     }
 }

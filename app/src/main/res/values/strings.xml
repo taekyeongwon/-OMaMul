@@ -43,4 +43,5 @@
     <string name="add">추가하기</string>
     <string name="modify">수정하기</string>
     <string name="empty_day_list">물 섭취 기록이 없습니다.</string>
+    <string name="empty_cup_list">컵을 추가해 주세요.</string>
 </resources>

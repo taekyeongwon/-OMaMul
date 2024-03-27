@@ -62,7 +62,9 @@ class CupManageFragment: Fragment() {
 
     private fun initObserver() {
         viewModel.cupListLiveData.observe(viewLifecycleOwner) {
-            cupListAdapter.submitList(it)
+            cupListAdapter.submitList(it) {
+                dataChanged()
+            }
         }
     }
 
@@ -88,5 +90,17 @@ class CupManageFragment: Fragment() {
     private val adapterDeleteListener: (Int) -> Unit = { position ->
         val currentItem = cupListAdapter.currentList[position]
         viewModel.deleteCup(currentItem.cupId)
+    }
+
+    private fun dataChanged() {
+        if(cupListAdapter.itemCount == 0) {
+            dataBinding.btnReorder.visibility = View.GONE
+            dataBinding.rvCupList.visibility = View.GONE
+            dataBinding.tvEmptyCup.visibility = View.VISIBLE
+        } else {
+            dataBinding.btnReorder.visibility = View.VISIBLE
+            dataBinding.rvCupList.visibility = View.VISIBLE
+            dataBinding.tvEmptyCup.visibility = View.GONE
+        }
     }
 }
