@@ -35,8 +35,19 @@ class ItemTouchHelperCallback(
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
         super.onSelectedChanged(viewHolder, actionState)
         when(actionState) {
-            ItemTouchHelper.ACTION_STATE_IDLE -> moveListener.onStopDrag()
+            //https://velog.io/@chris_seed/AndroidKotlin-RecyclerView%EC%9D%98-%EB%AA%A8%EB%93%A0%EA%B2%83-%EA%B8%B0%EB%B3%B8-%EC%82%AC%EC%9A%A9%EB%B2%95
+            ItemTouchHelper.ACTION_STATE_DRAG -> {
+                viewHolder?.itemView?.alpha = 0.5f
+            }
+            ItemTouchHelper.ACTION_STATE_IDLE -> {
+                moveListener.onStopDrag()
+            }
         }
+    }
+
+    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+        super.clearView(recyclerView, viewHolder)
+        viewHolder.itemView.alpha = 1f
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
