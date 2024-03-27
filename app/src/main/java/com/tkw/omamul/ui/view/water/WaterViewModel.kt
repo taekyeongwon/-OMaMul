@@ -11,11 +11,8 @@ import com.tkw.omamul.common.util.DateTimeUtils
 import com.tkw.omamul.data.CupRepository
 import com.tkw.omamul.data.WaterRepository
 import com.tkw.omamul.data.model.Cup
-import com.tkw.omamul.data.model.CupEntity
-import com.tkw.omamul.data.model.CupList
 import com.tkw.omamul.data.model.CupListEntity
 import com.tkw.omamul.data.model.DayOfWater
-import com.tkw.omamul.data.model.DayOfWaterEntity
 import com.tkw.omamul.data.model.Water
 import com.tkw.omamul.data.model.WaterEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi

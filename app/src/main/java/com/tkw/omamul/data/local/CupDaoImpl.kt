@@ -3,6 +3,7 @@ package com.tkw.omamul.data.local
 import com.tkw.omamul.data.CupDao
 import com.tkw.omamul.data.model.Cup
 import com.tkw.omamul.data.model.CupEntity
+import com.tkw.omamul.data.model.CupEntityRequest
 import com.tkw.omamul.data.model.CupListEntity
 import io.realm.kotlin.MutableRealm
 import io.realm.kotlin.Realm
@@ -22,7 +23,7 @@ class CupDaoImpl(r: Realm): CupDao {
     }
 
     override fun getCup(id: String): CupEntity? {
-        return this.findFirst()?.cupList?.find { it.cupId.toHexString() == id }
+        return this.findFirst()?.cupList?.find { it.cupId == id }
     }
 
     override fun getCupListFlow(): Flow<ResultsChange<CupListEntity>> {
@@ -33,31 +34,33 @@ class CupDaoImpl(r: Realm): CupDao {
         this.upsert(CupListEntity())
     }
 
-    override suspend fun insertCup(obj: CupEntity) {
+    override suspend fun insertCup(obj: CupEntityRequest) {
         realm.write {
-            getCupList()?.cupList?.add(obj)
+            getCupList()?.cupList?.add(obj.toMapEntity())
         }
     }
 
-    override suspend fun updateCup(origin: CupEntity, target: CupEntity) {
+    override suspend fun updateCup(cupId: String, target: CupEntityRequest) {
         realm.write {
-            findLatest(origin)?.apply {
+            val origin = getCup(cupId)
+            findLatest(origin!!)?.apply {
                 cupName = target.cupName
                 cupAmount = target.cupAmount
             }
         }
     }
 
-    override suspend fun updateAll(list: List<CupEntity>) {
+    override suspend fun updateAll(list: List<CupEntityRequest>) {
         realm.write {
             getCupList()?.cupList?.clear()
-            getCupList()?.cupList?.addAll(list)
+            getCupList()?.cupList?.addAll(list.map { it.toMapEntity() })
         }
     }
 
-    override suspend fun deleteCup(obj: CupEntity) {
+    override suspend fun deleteCup(cupId: String) {
         realm.write {
-            getCupList()?.cupList?.remove(obj)
+            val cup = getCup(cupId)
+            getCupList()?.cupList?.remove(cup)
         }
     }
 }

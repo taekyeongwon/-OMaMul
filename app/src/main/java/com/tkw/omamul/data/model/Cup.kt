@@ -1,9 +1,7 @@
 package com.tkw.omamul.data.model
 
 import android.os.Parcelable
-import io.realm.kotlin.types.MutableRealmInt
 import kotlinx.parcelize.Parcelize
-import org.mongodb.kbson.ObjectId
 
 @Parcelize
 data class Cup(
@@ -17,11 +15,11 @@ data class Cup(
         const val DEFAULT_CUP_ID = "default_cup_id"
     }
 
-    fun toMapEntity() = CupEntity().apply {
-        cupId = ObjectId(this@Cup.cupId)
-        cupName = this@Cup.cupName
+    fun toMapRequest() = CupEntityRequest(
+        cupId = this@Cup.cupId,
+        cupName = this@Cup.cupName,
         cupAmount = this@Cup.cupAmount
-    }
+    )
 }
 
 data class CupList(
