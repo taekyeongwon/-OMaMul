@@ -23,8 +23,8 @@ data class Cup(
 }
 
 data class CupList(
-    val cupId: String,
-    val cupList: List<Cup>
+    val cupId: String = Cup.DEFAULT_CUP_ID,
+    val cupList: List<Cup> = listOf()
 )
 
 //Draggable 상속한 클래스는 리스트에서 drag 가능

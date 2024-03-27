@@ -11,7 +11,7 @@ import com.tkw.omamul.common.util.DateTimeUtils
 import com.tkw.omamul.data.CupRepository
 import com.tkw.omamul.data.WaterRepository
 import com.tkw.omamul.data.model.Cup
-import com.tkw.omamul.data.model.CupListEntity
+import com.tkw.omamul.data.model.CupList
 import com.tkw.omamul.data.model.DayOfWater
 import com.tkw.omamul.data.model.Water
 import com.tkw.omamul.data.model.WaterEntity
@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
@@ -49,9 +50,14 @@ class WaterViewModel(
         }.asLiveData()
 
     //메인화면에 표시할 컵 리스트
-    private val cupListFlow: StateFlow<CupListEntity> =
-        cupRepository.getCupList().stateIn(
-            initialValue = CupListEntity(),
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val cupListFlow: StateFlow<CupList> =
+        cupRepository.getCupList().flatMapLatest {
+            flow {
+                emit(it.toMap())
+            }
+        }.stateIn(
+            initialValue = CupList(),
             started = SharingStarted.WhileSubscribed(5000),
             scope = viewModelScope
         )
@@ -59,7 +65,7 @@ class WaterViewModel(
     @OptIn(ExperimentalCoroutinesApi::class)
     val cupListLiveData: LiveData<List<Cup>> =
         cupListFlow.mapLatest {
-            it.toMap().cupList
+            it.cupList
         }.asLiveData()
 
     //컵 관리 화면 이동 후 돌아왔을 때 위치 저장용
