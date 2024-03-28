@@ -1,26 +1,16 @@
 package com.tkw.omamul.ui.view.water.cup
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
 import com.tkw.omamul.base.AppError
 import com.tkw.omamul.base.BaseViewModel
 import com.tkw.omamul.base.launch
 import com.tkw.omamul.common.SingleLiveEvent
 import com.tkw.omamul.data.CupRepository
 import com.tkw.omamul.data.model.Cup
-import com.tkw.omamul.data.model.CupEntityRequest
-import com.tkw.omamul.data.model.CupList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapLatest
-import kotlinx.coroutines.flow.stateIn
-import org.mongodb.kbson.ObjectId
 
 class CupViewModel(
     private val cupRepository: CupRepository,
@@ -59,12 +49,9 @@ class CupViewModel(
             return
         }
         launch {
-            val target = CupEntityRequest(
-                cupId = ObjectId.invoke().toHexString(),
-                cupName = cupNameLiveData.value!!,
-                cupAmount = cupAmountLiveData.value!!
-            )
-            cupRepository.insertCup(target)
+            val cupName = cupNameLiveData.value!!
+            val cupAmount = cupAmountLiveData.value!!
+            cupRepository.insertCup(cupName, cupAmount)
             _nextEvent.call()
         }
     }
@@ -75,12 +62,9 @@ class CupViewModel(
             return
         }
         launch {
-            val target = CupEntityRequest(
-                cupId = params.cupId,
-                cupName = cupNameLiveData.value!!,
-                cupAmount = cupAmountLiveData.value!!
-            )
-            cupRepository.updateCup(params.cupId, target)
+            val cupName = cupNameLiveData.value!!
+            val cupAmount = cupAmountLiveData.value!!
+            cupRepository.updateCup(params.cupId, cupName, cupAmount)
             _nextEvent.call()
         }
     }
@@ -95,11 +79,8 @@ class CupViewModel(
 
     fun updateAll(list: List<Cup>) {
         launch {
-            val mappedList = list.map {
-                it.toMapRequest()
-            }
             runCatching {   //cancelException도 동일하게 onFailure타므로 주의
-                cupRepository.updateAll(mappedList)
+                cupRepository.updateAll(list)
             }.onSuccess {
                 _nextEvent.call()
             }.onFailure {   //CoroutineExceptionHandler에서 잡히도록 throw

@@ -3,15 +3,11 @@ package com.tkw.omamul.data.local
 import com.tkw.omamul.data.CupDao
 import com.tkw.omamul.data.model.Cup
 import com.tkw.omamul.data.model.CupEntity
-import com.tkw.omamul.data.model.CupEntityRequest
 import com.tkw.omamul.data.model.CupListEntity
 import io.realm.kotlin.MutableRealm
 import io.realm.kotlin.Realm
-import io.realm.kotlin.ext.toRealmList
-import io.realm.kotlin.mongodb.ext.insert
 import io.realm.kotlin.notifications.ResultsChange
 import kotlinx.coroutines.flow.Flow
-import org.mongodb.kbson.ObjectId
 import kotlin.reflect.KClass
 
 class CupDaoImpl(r: Realm): CupDao {
@@ -34,15 +30,15 @@ class CupDaoImpl(r: Realm): CupDao {
         this.upsert(CupListEntity())
     }
 
-    override suspend fun insertCup(obj: CupEntityRequest) {
+    override suspend fun insertCup(obj: CupEntity) {
         realm.write {
-            getCupList()?.cupList?.add(obj.toMapEntity())
+            getCupList()?.cupList?.add(obj)
         }
     }
 
-    override suspend fun updateCup(cupId: String, target: CupEntityRequest) {
+    override suspend fun updateCup(target: CupEntity) {
         realm.write {
-            val origin = getCup(cupId)
+            val origin = getCup(target.cupId)
             findLatest(origin!!)?.apply {
                 cupName = target.cupName
                 cupAmount = target.cupAmount
@@ -50,10 +46,10 @@ class CupDaoImpl(r: Realm): CupDao {
         }
     }
 
-    override suspend fun updateAll(list: List<CupEntityRequest>) {
+    override suspend fun updateAll(list: List<CupEntity>) {
         realm.write {
             getCupList()?.cupList?.clear()
-            getCupList()?.cupList?.addAll(list.map { it.toMapEntity() })
+            getCupList()?.cupList?.addAll(list)
         }
     }
 

@@ -15,11 +15,11 @@ data class Cup(
         const val DEFAULT_CUP_ID = "default_cup_id"
     }
 
-    fun toMapRequest() = CupEntityRequest(
-        cupId = this@Cup.cupId,
-        cupName = this@Cup.cupName,
+    fun toMapEntity() = CupEntity().apply {
+        cupId = this@Cup.cupId
+        cupName = this@Cup.cupName
         cupAmount = this@Cup.cupAmount
-    )
+    }
 }
 
 data class CupList(
