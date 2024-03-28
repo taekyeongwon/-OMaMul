@@ -56,7 +56,6 @@ class CupManageFragment: Fragment() {
         dataBinding.rvCupList.apply {
             adapter = cupListAdapter
             addItemDecoration(DividerDecoration(10f))
-            itemTouchHelper.attachToRecyclerView(this)
         }
     }
 
@@ -64,6 +63,7 @@ class CupManageFragment: Fragment() {
         viewModel.cupListLiveData.observe(viewLifecycleOwner) {
             cupListAdapter.submitList(it) {
                 dataChanged()
+                manageItemTouchHelper()
             }
         }
     }
@@ -94,13 +94,22 @@ class CupManageFragment: Fragment() {
 
     private fun dataChanged() {
         if(cupListAdapter.itemCount == 0) {
-            dataBinding.btnReorder.visibility = View.GONE
             dataBinding.rvCupList.visibility = View.GONE
             dataBinding.tvEmptyCup.visibility = View.VISIBLE
         } else {
-            dataBinding.btnReorder.visibility = View.VISIBLE
             dataBinding.rvCupList.visibility = View.VISIBLE
             dataBinding.tvEmptyCup.visibility = View.GONE
+        }
+        dataBinding.btnReorder.visibility =
+            if(cupListAdapter.itemCount > 1) View.VISIBLE
+            else View.GONE
+    }
+
+    private fun manageItemTouchHelper() {
+        if(cupListAdapter.itemCount > 1) {
+            itemTouchHelper.attachToRecyclerView(dataBinding.rvCupList)
+        } else {
+            itemTouchHelper.attachToRecyclerView(null)
         }
     }
 }
