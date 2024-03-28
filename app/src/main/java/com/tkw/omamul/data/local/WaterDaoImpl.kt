@@ -6,7 +6,6 @@ import com.tkw.omamul.data.model.WaterEntity
 import io.realm.kotlin.MutableRealm
 import io.realm.kotlin.Realm
 import io.realm.kotlin.notifications.ResultsChange
-import io.realm.kotlin.query.RealmResults
 import kotlinx.coroutines.flow.Flow
 import kotlin.reflect.KClass
 
@@ -18,7 +17,7 @@ class WaterDaoImpl(r: Realm): WaterDao {
         this.query(clazz, "date == $0", it).first().find()
     }
 
-    override suspend fun getDayOfWater(date: String): DayOfWaterEntity? {
+    override fun getDayOfWater(date: String): DayOfWaterEntity? {
         return this.findByOne("date == $0", date)
     }
 
@@ -26,8 +25,8 @@ class WaterDaoImpl(r: Realm): WaterDao {
         return this.stream(this.findAll())
     }
 
-    override suspend fun getWater(date: String, time: String): WaterEntity? {
-        return this.findByOne("date == $0", date)?.dayOfList?.findLast { it.dateTime == time }
+    override fun getWater(date: String, dateTime: String): WaterEntity? {
+        return this.findByOne("date == $0", date)?.dayOfList?.findLast { it.dateTime == dateTime }
     }
 
     override fun getAmountFlow(date: String): Flow<ResultsChange<DayOfWaterEntity>> {
@@ -41,16 +40,22 @@ class WaterDaoImpl(r: Realm): WaterDao {
         }
     }
 
-    override suspend fun removeAmount(date: String, obj: WaterEntity) {
+    override suspend fun removeAmount(selectedDate: String, dateTime: String) {
         realm.write {
-            val query = amountByDate(date)
-            query?.dayOfList?.remove(obj)
+            val water = getWater(selectedDate, dateTime)
+            val query = amountByDate(selectedDate)
+            query?.dayOfList?.remove(water)
         }
     }
 
-    override suspend fun updateAmount(origin: WaterEntity, target: WaterEntity) {
+    override suspend fun updateAmount(
+        selectedDate: String,
+        origin: WaterEntity,
+        target: WaterEntity
+    ) {
         realm.write {
-            findLatest(origin)?.apply {
+            val originWater = getWater(selectedDate, origin.dateTime)
+            findLatest(originWater!!)?.apply {
                 amount = target.amount
                 dateTime = target.dateTime
             }

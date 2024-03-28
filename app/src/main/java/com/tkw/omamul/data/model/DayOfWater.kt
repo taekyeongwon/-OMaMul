@@ -29,8 +29,12 @@ data class Water(
     val dateTime: String = "",
     val amount: Int = 0
 ) {
-
     fun getHourFromDate(): Int {
         return DateTimeUtils.getTimeFromFullFormat(dateTime).hour
+    }
+
+    fun toMapEntity() = WaterEntity().apply {
+        dateTime = this@Water.dateTime
+        amount = this@Water.amount
     }
 }
