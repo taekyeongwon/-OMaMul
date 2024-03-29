@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.tkw.omamul.MainApplication
 import com.tkw.omamul.R
@@ -13,6 +14,7 @@ import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.common.C
 import com.tkw.omamul.databinding.FragmentInitIntakeBinding
 import com.tkw.omamul.common.autoCleared
+import kotlinx.coroutines.launch
 
 class InitIntakeFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentInitIntakeBinding>()
@@ -29,14 +31,30 @@ class InitIntakeFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initObserver()
         initListener()
+    }
+
+    private fun initObserver() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.sideEffect.collect {
+                when(it) {
+                    InitSideEffect.CompleteIntake -> {
+                        MainApplication.sharedPref?.edit()?.putBoolean(C.FirstInstallFlag, true)?.apply()
+                        findNavController().navigate(R.id.waterFragment)
+                        setStartDestination(R.id.waterFragment) //프래그먼트 이동 전에 호출하면 cannot be found from the current destination 에러 발생
+                    }
+                }
+            }
+        }
+
     }
 
     private fun initListener() {
         dataBinding.btnNext.setOnClickListener {
-            MainApplication.sharedPref?.edit()?.putBoolean(C.FirstInstallFlag, true)?.apply()
-            findNavController().navigate(R.id.waterFragment)
-            setStartDestination(R.id.waterFragment) //프래그먼트 이동 전에 호출하면 cannot be found from the current destination 에러 발생
+            lifecycleScope.launch {
+                viewModel.setEvent(InitEvent.SaveIntake(1000))
+            }
         }
     }
 
