@@ -37,9 +37,15 @@ class InitIntakeFragment: Fragment() {
 
     private fun initObserver() {
         lifecycleScope.launchWhenStarted {
+            viewModel.state.collect {
+
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
             viewModel.sideEffect.collect {
                 when(it) {
-                    InitSideEffect.CompleteIntake -> {
+                    InitContract.SideEffect.OnMoveNext -> {
                         MainApplication.sharedPref?.edit()?.putBoolean(C.FirstInstallFlag, true)?.apply()
                         findNavController().navigate(R.id.waterFragment)
                         setStartDestination(R.id.waterFragment) //프래그먼트 이동 전에 호출하면 cannot be found from the current destination 에러 발생
@@ -53,7 +59,7 @@ class InitIntakeFragment: Fragment() {
     private fun initListener() {
         dataBinding.btnNext.setOnClickListener {
             lifecycleScope.launch {
-                viewModel.setEvent(InitEvent.SaveIntake(1000))
+                viewModel.setEvent(InitContract.Event.SaveIntake(100))
             }
         }
     }
