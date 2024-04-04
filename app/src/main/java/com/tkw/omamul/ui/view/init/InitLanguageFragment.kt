@@ -8,11 +8,13 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.tkw.omamul.R
 import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.databinding.FragmentInitLanguageBinding
 import com.tkw.omamul.common.autoCleared
+import kotlinx.coroutines.launch
 
 class InitLanguageFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentInitLanguageBinding>()
@@ -29,6 +31,7 @@ class InitLanguageFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initObserver()
         initListener()
     }
 
@@ -42,9 +45,35 @@ class InitLanguageFragment: Fragment() {
         callback.remove()
     }
 
+    private fun initObserver() {
+        lifecycleScope.launch {
+            viewModel.state.collect {
+
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.sideEffect.collect {
+                when(it) {
+                    InitContract.SideEffect.OnMoveNext -> {
+                        findNavController().navigate(R.id.initTimeFragment)
+                    }
+                }
+            }
+        }
+
+    }
+
     private fun initListener() {
         dataBinding.btnNext.setOnClickListener {
-            findNavController().navigate(R.id.initTimeFragment)
+            val lang = when(dataBinding.rgLanguage.checkedRadioButtonId) {
+                R.id.rb_ko -> "ko"
+                R.id.rb_en -> "en"
+                R.id.rb_jp -> "jp"
+                R.id.rb_cn -> "cn"
+                else -> ""
+            }
+            viewModel.setEvent(InitContract.Event.SaveLanguage(lang))
         }
     }
 

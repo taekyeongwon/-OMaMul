@@ -36,13 +36,13 @@ class InitIntakeFragment: Fragment() {
     }
 
     private fun initObserver() {
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launch {
             viewModel.state.collect {
 
             }
         }
 
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launch {
             viewModel.sideEffect.collect {
                 when(it) {
                     InitContract.SideEffect.OnMoveNext -> {
@@ -58,9 +58,8 @@ class InitIntakeFragment: Fragment() {
 
     private fun initListener() {
         dataBinding.btnNext.setOnClickListener {
-            lifecycleScope.launch {
-                viewModel.setEvent(InitContract.Event.SaveIntake(100))
-            }
+            val amount = dataBinding.npAmount.getCurrentValue()
+            viewModel.setEvent(InitContract.Event.SaveIntake(amount))
         }
     }
 

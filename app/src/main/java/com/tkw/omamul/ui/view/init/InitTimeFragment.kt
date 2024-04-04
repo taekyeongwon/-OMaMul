@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.tkw.omamul.R
 import com.tkw.omamul.common.getViewModelFactory
@@ -14,6 +15,7 @@ import com.tkw.omamul.databinding.FragmentInitTimeBinding
 import com.tkw.omamul.ui.dialog.OnResultListener
 import com.tkw.omamul.ui.dialog.AlarmTimeBottomDialog
 import com.tkw.omamul.common.autoCleared
+import kotlinx.coroutines.launch
 
 class InitTimeFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentInitTimeBinding>()
@@ -32,6 +34,7 @@ class InitTimeFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+        initObserver()
         initListener()
     }
 
@@ -40,18 +43,40 @@ class InitTimeFragment: Fragment() {
         initTimePicker(true)
     }
 
+    private fun initObserver() {
+        lifecycleScope.launch {
+            viewModel.state.collect {
+                if(it is InitContract.State.InitTimePicker) {
+                    initTimePicker(it.flag)
+                    showTimePicker()
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.sideEffect.collect {
+                when(it) {
+                    InitContract.SideEffect.OnMoveNext -> {
+                        findNavController().navigate(R.id.initIntakeFragment)
+                    }
+                }
+            }
+        }
+
+    }
+
     private fun initListener() {
         dataBinding.tvWakeupTime.setOnClickListener {
-            initTimePicker(true)
-            showTimePicker()
+            viewModel.setEvent(InitContract.Event.ClickWakeUpTimePicker)
         }
         dataBinding.tvSleepTime.setOnClickListener {
-            initTimePicker(false)
-            showTimePicker()
+            viewModel.setEvent(InitContract.Event.ClickSleepTimePicker)
         }
 
         dataBinding.btnNext.setOnClickListener {
-            findNavController().navigate(R.id.initIntakeFragment)
+            val wakeTime = dataBinding.tvWakeupTime.text.toString()
+            val sleepTime = dataBinding.tvSleepTime.text.toString()
+            viewModel.setEvent(InitContract.Event.SaveTime(wakeTime, sleepTime))
         }
     }
 

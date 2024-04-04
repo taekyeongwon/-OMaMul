@@ -19,7 +19,8 @@ abstract class IntentBaseViewModel
     private val _event = MutableSharedFlow<E>()
     val event = _event.asSharedFlow()
 
-    private val _state = MutableStateFlow(InitContract.State())
+    private val _state: MutableStateFlow<InitContract.State> =
+        MutableStateFlow(InitContract.State.Loading(false))
     val state = _state.asStateFlow()
 
     private val _sideEffect = Channel<SE>()

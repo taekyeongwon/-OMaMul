@@ -12,17 +12,41 @@ class InitViewModel(
 
     override fun handleEvent(event: InitContract.Event) {
         when(event) {
-            is InitContract.Event.SaveLanguage -> {}
-            is InitContract.Event.SaveTime -> {}
+            is InitContract.Event.SaveLanguage -> saveLanguage()
+            is InitContract.Event.SaveTime -> saveTime(event.wakeTime, event.sleepTime)
             is InitContract.Event.SaveIntake -> saveIntake()
+            is InitContract.Event.ClickWakeUpTimePicker -> clickTimePicker(true)
+            is InitContract.Event.ClickSleepTimePicker -> clickTimePicker(false)
+        }
+    }
+
+    private fun saveLanguage() {
+        save {
+
+        }
+    }
+
+    private fun saveTime(wakeTime: String, sleepTime: String) {
+        save {
+
         }
     }
 
     private fun saveIntake() {
+        save {
+
+        }
+    }
+
+    private fun clickTimePicker(flag: Boolean) {
+        setState { InitContract.State.InitTimePicker(flag) }
+    }
+
+    private fun save(block: suspend() -> Unit) {
         viewModelScope.launch {
-            setState { copy(isLoading = true) }
-            //저장
-            setState { copy(isLoading = false) }
+            setState { InitContract.State.Loading(true) }
+            block()
+            setState { InitContract.State.Loading(false) }
             setSideEffect { InitContract.SideEffect.OnMoveNext }
         }
     }
