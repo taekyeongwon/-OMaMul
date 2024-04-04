@@ -10,7 +10,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.databinding.DialogWaterIntakeBinding
-import com.tkw.omamul.ui.view.water.WaterViewModel
+import com.tkw.omamul.ui.view.water.home.WaterViewModel
 import com.tkw.omamul.common.DialogResize
 import com.tkw.omamul.common.DialogResizeImpl
 import com.tkw.omamul.common.autoCleared

@@ -18,6 +18,7 @@ import com.tkw.omamul.common.C
 import com.tkw.omamul.common.DateChangeReceiver
 import com.tkw.omamul.common.util.DateTimeUtils
 import com.tkw.omamul.databinding.ActivityWaterBinding
+import com.tkw.omamul.ui.view.water.home.WaterViewModel
 
 class WaterActivity : AppCompatActivity() {
     private lateinit var dataBinding: ActivityWaterBinding

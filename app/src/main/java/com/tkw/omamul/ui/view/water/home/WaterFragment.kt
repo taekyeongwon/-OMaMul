@@ -20,7 +20,6 @@ import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.databinding.FragmentWaterBinding
 import com.tkw.omamul.ui.dialog.WaterIntakeDialog
 import com.tkw.omamul.ui.view.water.home.adapter.CupPagerAdapter
-import com.tkw.omamul.ui.view.water.WaterViewModel
 import com.tkw.omamul.common.autoCleared
 import com.tkw.omamul.common.util.DateTimeUtils
 import com.tkw.omamul.common.util.DimenUtils

@@ -17,7 +17,7 @@ import com.tkw.omamul.data.model.DayOfWaterEntity
 import com.tkw.omamul.data.model.WaterEntity
 import com.tkw.omamul.ui.view.init.InitViewModel
 import com.tkw.omamul.ui.view.water.cup.CupViewModel
-import com.tkw.omamul.ui.view.water.WaterViewModel
+import com.tkw.omamul.ui.view.water.home.WaterViewModel
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import java.lang.IllegalArgumentException
