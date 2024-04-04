@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import com.tkw.omamul.R
 import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.common.util.animateByMaxValue
@@ -14,7 +13,7 @@ import com.tkw.omamul.databinding.FragmentLogDayBinding
 import com.tkw.omamul.ui.view.water.log.adapter.DayListAdapter
 import com.tkw.omamul.ui.custom.DividerDecoration
 import com.tkw.omamul.ui.dialog.LogEditBottomDialog
-import com.tkw.omamul.ui.view.water.WaterViewModel
+import com.tkw.omamul.ui.view.water.home.WaterViewModel
 import com.tkw.omamul.common.autoCleared
 import com.tkw.omamul.data.model.DayOfWater
 import com.tkw.omamul.data.model.Water
@@ -22,7 +21,7 @@ import com.tkw.omamul.ui.custom.chart.DayMarkerView
 
 class LogDayFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentLogDayBinding>()
-    private val viewModel: WaterViewModel by activityViewModels { getViewModelFactory(null) }
+    private val viewModel: LogViewModel by activityViewModels { getViewModelFactory(null) }
     private lateinit var dayAdapter: DayListAdapter
     private var dayOfWaterList = listOf<DayOfWater>()
     private var currentDate = ""
@@ -93,7 +92,7 @@ class LogDayFragment: Fragment() {
         }
 
         dataBinding.ibDayLeft.setOnClickListener {
-            val currentIndex = dayOfWaterList.indexOfLast { it.date == currentDate }
+            val currentIndex = dayOfWaterList.indexOfLast { it.date == currentDate }    //만약 currentDate가 받아오는데 오래 걸리는 작업이라면?
             if(currentIndex > 0)
                 viewModel.setDate(dayOfWaterList[currentIndex - 1].date)
         }

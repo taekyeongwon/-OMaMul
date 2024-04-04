@@ -7,7 +7,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.tkw.omamul.ui.view.water.WaterViewModel" />
+            type="com.tkw.omamul.ui.view.water.log.LogViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

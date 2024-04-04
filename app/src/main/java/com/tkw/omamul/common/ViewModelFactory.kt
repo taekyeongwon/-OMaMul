@@ -18,6 +18,7 @@ import com.tkw.omamul.data.model.WaterEntity
 import com.tkw.omamul.ui.view.init.InitViewModel
 import com.tkw.omamul.ui.view.water.cup.CupViewModel
 import com.tkw.omamul.ui.view.water.home.WaterViewModel
+import com.tkw.omamul.ui.view.water.log.LogViewModel
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import java.lang.IllegalArgumentException
@@ -50,6 +51,9 @@ fun <V: Parcelable> getViewModelFactory(params: V?) = object: ViewModelProvider.
             CupViewModel::class.java -> CupViewModel(
                 CupRepositoryImpl(CupDaoImpl(realm)),
                 params as? Cup ?: Cup()
+            )
+            LogViewModel::class.java -> LogViewModel(
+                WaterRepositoryImpl(WaterDaoImpl(realm))
             )
             else -> throw IllegalArgumentException("Unknown Class")
         } as T

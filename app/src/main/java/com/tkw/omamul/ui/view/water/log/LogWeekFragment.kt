@@ -5,18 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.github.mikephil.charting.data.BarEntry
 import com.tkw.omamul.R
 import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.databinding.FragmentLogWeekBinding
-import com.tkw.omamul.ui.view.water.WaterViewModel
+import com.tkw.omamul.ui.view.water.home.WaterViewModel
 import com.tkw.omamul.common.autoCleared
 import com.tkw.omamul.ui.custom.chart.WeekMarkerView
 
 class LogWeekFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentLogWeekBinding>()
-    private val viewModel: WaterViewModel by viewModels { getViewModelFactory(null) }
+    private val viewModel: LogViewModel by activityViewModels { getViewModelFactory(null) }
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -10,13 +10,13 @@ import com.github.mikephil.charting.data.BarEntry
 import com.tkw.omamul.R
 import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.databinding.FragmentLogMonthBinding
-import com.tkw.omamul.ui.view.water.WaterViewModel
+import com.tkw.omamul.ui.view.water.home.WaterViewModel
 import com.tkw.omamul.common.autoCleared
 import com.tkw.omamul.ui.custom.chart.MonthMarkerView
 
 class LogMonthFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentLogMonthBinding>()
-    private val viewModel: WaterViewModel by activityViewModels { getViewModelFactory(null) }
+    private val viewModel: LogViewModel by activityViewModels { getViewModelFactory(null) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
