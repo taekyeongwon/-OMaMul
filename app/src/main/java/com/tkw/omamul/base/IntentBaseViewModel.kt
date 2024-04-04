@@ -15,12 +15,13 @@ import kotlinx.coroutines.launch
 
 abstract class IntentBaseViewModel
 <E: IEvent, S: IState, SE: ISideEffect>: ViewModel() {
+    private val initialState : S by lazy { createInitialState() }
+    abstract fun createInitialState() : S
 
     private val _event = MutableSharedFlow<E>()
     val event = _event.asSharedFlow()
 
-    private val _state: MutableStateFlow<InitContract.State> =
-        MutableStateFlow(InitContract.State.Loading(false))
+    private val _state: MutableStateFlow<S> = MutableStateFlow(initialState)
     val state = _state.asStateFlow()
 
     private val _sideEffect = Channel<SE>()
@@ -45,7 +46,7 @@ abstract class IntentBaseViewModel
         viewModelScope.launch { _event.emit(newEvent) }
     }
 
-    protected fun setState(fold: InitContract.State.() -> InitContract.State) {
+    protected fun setState(fold: S.() -> S) {
         val newState = state.value.fold()
         _state.value = newState
     }

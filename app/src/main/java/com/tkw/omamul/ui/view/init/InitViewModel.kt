@@ -9,6 +9,9 @@ class InitViewModel(
     private val waterRepository: WaterRepository
 ): IntentBaseViewModel
 <InitContract.Event, InitContract.State, InitContract.SideEffect>() {
+    override fun createInitialState(): InitContract.State {
+        return InitContract.State.Loading(false)
+    }
 
     override fun handleEvent(event: InitContract.Event) {
         when(event) {
