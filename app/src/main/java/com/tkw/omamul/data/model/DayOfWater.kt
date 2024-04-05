@@ -38,3 +38,9 @@ data class Water(
         amount = this@Water.amount
     }
 }
+
+data class DayOfWaterList(
+    val list: List<DayOfWater>
+) {
+
+}

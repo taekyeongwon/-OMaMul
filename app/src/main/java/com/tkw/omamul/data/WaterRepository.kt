@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface WaterRepository {
 
+    fun getAmount(date: String): DayOfWaterEntity?
+
     fun getAllDayEntity(): Flow<List<DayOfWaterEntity>>
 
     fun getAmountByFlow(date: String): Flow<DayOfWaterEntity>

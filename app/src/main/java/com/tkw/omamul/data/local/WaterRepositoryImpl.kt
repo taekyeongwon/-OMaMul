@@ -9,6 +9,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class WaterRepositoryImpl(private val waterDao: WaterDao): WaterRepository {
+    override fun getAmount(date: String): DayOfWaterEntity? {
+        return waterDao.getDayOfWater(date)
+    }
 
     override fun getAllDayEntity(): Flow<List<DayOfWaterEntity>> {
         val allDayOfWater = waterDao.getAllDayOfWater()
