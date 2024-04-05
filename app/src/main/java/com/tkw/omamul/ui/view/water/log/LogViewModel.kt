@@ -1,6 +1,5 @@
 package com.tkw.omamul.ui.view.water.log
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.tkw.omamul.base.IntentBaseViewModel
@@ -29,6 +28,20 @@ class LogViewModel(
     private val dateStringFlow = MutableStateFlow(DateTimeUtils.getTodayDate())
     val dateLiveData = dateStringFlow.asLiveData()
 
+    //현재 날짜로 조회한 DayOfWater
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val amountLiveData: Flow<DayOfWater> = dateStringFlow.flatMapLatest { date ->
+        waterRepository.getAmountByFlow(date).map { it.toMap() }
+    }
+
+    init {
+        viewModelScope.launch {
+            amountLiveData.collect {
+                setEvent(LogContract.Event.GetDayAmount(LogContract.Move.INIT))
+            }
+        }
+    }
+
     //전체 DayOfWater 리스트
     @OptIn(ExperimentalCoroutinesApi::class)
     private val allDayOfWaterLiveData: StateFlow<DayOfWaterList> =
@@ -53,8 +66,8 @@ class LogViewModel(
             is LogContract.Event.GetDayAmount -> getDayAmount(event.move)
             is LogContract.Event.GetWeekAmount -> getWeekAmount(event.move)
             is LogContract.Event.GetMonthAmount -> getMonthAmount(event.move)
-            LogContract.Event.AddDayAmount -> addDayAmount()
-            is LogContract.Event.EditDayAmount -> editDayAmount()
+            LogContract.Event.ShowAddDialog -> showAddDialog()
+            is LogContract.Event.ShowEditDialog -> showEditDialog(event.water)
             is LogContract.Event.RemoveDayAmount -> removeDayAmount(event.water)
         }
     }
@@ -99,12 +112,12 @@ class LogViewModel(
 
     }
 
-    private fun addDayAmount() {
-        setSideEffect { LogContract.SideEffect.ShowEditDialog(false) }
+    private fun showAddDialog() {
+        setSideEffect { LogContract.SideEffect.ShowEditDialog(null) }
     }
 
-    private fun editDayAmount() {
-        setSideEffect { LogContract.SideEffect.ShowEditDialog(true) }
+    private fun showEditDialog(item: Water) {
+        setSideEffect { LogContract.SideEffect.ShowEditDialog(item) }
     }
 
     private fun removeDayAmount(water: Water) {
