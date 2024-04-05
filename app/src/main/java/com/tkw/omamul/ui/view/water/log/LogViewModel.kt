@@ -3,6 +3,7 @@ package com.tkw.omamul.ui.view.water.log
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.tkw.omamul.base.IntentBaseViewModel
+import com.tkw.omamul.base.launch
 import com.tkw.omamul.common.util.DateTimeUtils
 import com.tkw.omamul.data.WaterRepository
 import com.tkw.omamul.data.model.DayOfWater
@@ -35,7 +36,7 @@ class LogViewModel(
     }
 
     init {
-        viewModelScope.launch {
+        launch {
             amountLiveData.collect {
                 setEvent(LogContract.Event.GetDayAmount(LogContract.Move.INIT))
             }
@@ -73,7 +74,7 @@ class LogViewModel(
     }
 
     private fun getDayAmount(move: LogContract.Move) {
-        viewModelScope.launch {
+        launch {
             when(move) {
                 LogContract.Move.LEFT -> {
                     val currentIndex = getCurrentDateWaterIndex()
@@ -121,7 +122,7 @@ class LogViewModel(
     }
 
     private fun removeDayAmount(water: Water) {
-        viewModelScope.launch {
+        launch {
             waterRepository.deleteAmount(dateStringFlow.value, water.dateTime)
         }
     }
@@ -130,5 +131,18 @@ class LogViewModel(
     private fun getCurrentDateWaterIndex(): Int {
         return allDayOfWaterLiveData.value.list
             .indexOfLast { it.date == dateStringFlow.value }
+    }
+
+    //LogEditBottomDialog에서 사용할 메서드
+    fun addAmount(amount: Int, date: String) {
+        launch {
+            waterRepository.addAmount(dateStringFlow.value, amount, date)
+        }
+    }
+
+    fun updateAmount(origin: Water, amount: Int, date: String) {
+        launch {
+            waterRepository.updateAmount(dateStringFlow.value, origin, amount, date)
+        }
     }
 }

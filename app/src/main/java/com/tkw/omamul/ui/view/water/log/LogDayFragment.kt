@@ -103,8 +103,6 @@ class LogDayFragment: Fragment() {
 
     private fun initListener() {
         dataBinding.ibDayAdd.setOnClickListener {
-            val dialog = LogEditBottomDialog()
-            dialog.show(childFragmentManager, dialog.tag)
             viewModel.setEvent(LogContract.Event.ShowAddDialog)
         }
 

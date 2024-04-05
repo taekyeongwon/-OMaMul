@@ -9,18 +9,18 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tkw.omamul.R
 import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.databinding.DialogLogEditBinding
-import com.tkw.omamul.ui.view.water.home.WaterViewModel
 import com.tkw.omamul.common.BottomExpand
 import com.tkw.omamul.common.BottomExpandImpl
 import com.tkw.omamul.common.autoCleared
 import com.tkw.omamul.common.util.DateTimeUtils
 import com.tkw.omamul.data.model.Water
+import com.tkw.omamul.ui.view.water.log.LogViewModel
 
 class LogEditBottomDialog(
     private val selectedItem: Water? = null
 ): BottomSheetDialogFragment(), BottomExpand by BottomExpandImpl() {
     private var dataBinding by autoCleared<DialogLogEditBinding>()
-    private val viewModel: WaterViewModel by activityViewModels { getViewModelFactory(null) }
+    private val viewModel: LogViewModel by activityViewModels { getViewModelFactory(null) }
 
     override fun getTheme(): Int {
         return R.style.BottomDialogStyle
@@ -69,7 +69,7 @@ class LogEditBottomDialog(
             if(selectedItem != null) {
                 viewModel.updateAmount(selectedItem, amount, fullDateFormat)
             } else {
-                viewModel.addCount(amount, fullDateFormat)
+                viewModel.addAmount(amount, fullDateFormat)
             }
 
             dismiss()

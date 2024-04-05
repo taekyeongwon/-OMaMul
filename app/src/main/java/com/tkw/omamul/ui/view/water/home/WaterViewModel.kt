@@ -26,20 +26,12 @@ class WaterViewModel(
 
     //현재 날짜
     private val dateStringFlow = MutableStateFlow(DateTimeUtils.getTodayDate())
-    val dateLiveData = dateStringFlow.asLiveData()
 
     //현재 날짜로 조회한 DayOfWater
     @OptIn(ExperimentalCoroutinesApi::class)
     val amountLiveData: LiveData<DayOfWater> = dateStringFlow.flatMapLatest { date ->
         waterRepository.getAmountByFlow(date).map { it.toMap() }
     }.asLiveData()
-
-    //전체 DayOfWater 리스트
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val allDayOfWaterLiveData: LiveData<List<DayOfWater>> =
-        waterRepository.getAllDayEntity().mapLatest { list ->
-            list.map { it.toMap() }
-        }.asLiveData()
 
     //메인화면에 표시할 컵 리스트
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -65,12 +57,6 @@ class WaterViewModel(
     fun removeCount(obj: Water) {
         launch {
             waterRepository.deleteAmount(dateStringFlow.value, obj.dateTime)
-        }
-    }
-
-    fun updateAmount(origin: Water, amount: Int, date: String) {
-        launch {
-            waterRepository.updateAmount(dateStringFlow.value, origin, amount, date)
         }
     }
 }
