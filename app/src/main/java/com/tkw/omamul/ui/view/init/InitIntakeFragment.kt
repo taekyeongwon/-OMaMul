@@ -36,13 +36,13 @@ class InitIntakeFragment: Fragment() {
     }
 
     private fun initObserver() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.state.collect {
 
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.sideEffect.collect {
                 when(it) {
                     InitContract.SideEffect.OnMoveNext -> {

@@ -59,11 +59,12 @@ class LogDayFragment: Fragment() {
             adapter = dayAdapter
             addItemDecoration(DividerDecoration(10f))
         }
+        viewModel.setEvent(LogContract.Event.GetDayAmount(LogContract.Move.INIT))
     }
 
     private fun initObserver() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(State.RESUMED) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(State.STARTED) {
                 viewModel.state.collect {
                     when(it) {
                         is LogContract.State.Complete -> {
@@ -84,7 +85,7 @@ class LogDayFragment: Fragment() {
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.sideEffect.collect {
                 when(it) {
                     is LogContract.SideEffect.ShowEditDialog -> {

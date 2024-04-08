@@ -44,7 +44,7 @@ class InitTimeFragment: Fragment() {
     }
 
     private fun initObserver() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.state.collect {
                 if(it is InitContract.State.InitTimePicker) {
                     initTimePicker(it.flag)
@@ -53,7 +53,7 @@ class InitTimeFragment: Fragment() {
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.sideEffect.collect {
                 when(it) {
                     InitContract.SideEffect.OnMoveNext -> {
