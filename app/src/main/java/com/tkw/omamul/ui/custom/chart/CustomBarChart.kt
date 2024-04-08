@@ -70,6 +70,7 @@ class CustomBarChart
 
     fun setLimit(limit: Float) {
         this.limit = limit
+        axisLeft.removeAllLimitLines()
         axisLeft.addLimitLine(LimitLine(limit).apply {
             lineWidth = 1f
             enableDashedLine(10f, 10f, 0f)
