@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 class LogViewModel(
     private val waterRepository: WaterRepository
@@ -31,13 +30,13 @@ class LogViewModel(
 
     //현재 날짜로 조회한 DayOfWater
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val amountLiveData: Flow<DayOfWater> = dateStringFlow.flatMapLatest { date ->
+    private val dayAmountFlow: Flow<DayOfWater> = dateStringFlow.flatMapLatest { date ->
         waterRepository.getAmountByFlow(date).map { it.toMap() }
     }
 
     init {
         launch {
-            amountLiveData.collect {
+            dayAmountFlow.collect {
                 setEvent(LogContract.Event.GetDayAmount(LogContract.Move.INIT))
             }
         }
@@ -55,8 +54,6 @@ class LogViewModel(
             started = SharingStarted.Eagerly,
             scope = viewModelScope
         )
-
-    private val currentDayOfWaterList: List<DayOfWater> = allDayOfWaterLiveData.value.list
 
     override fun createInitialState(): LogContract.State {
         return LogContract.State.Loading(false)
@@ -78,18 +75,16 @@ class LogViewModel(
             when(move) {
                 LogContract.Move.LEFT -> {
                     val currentIndex = getCurrentDateWaterIndex()
-                    if(currentIndex > 0) {
+                    if(currentIndex > 0 && getCurrentDayOfWaterList().isNotEmpty()) {
                         //현재 세팅된 날짜 이전의 날짜 값으로 세팅
-                        dateStringFlow.value = currentDayOfWaterList[currentIndex - 1].date
-                        setEvent(LogContract.Event.GetDayAmount(LogContract.Move.INIT))
+                        dateStringFlow.value = getCurrentDayOfWaterList()[currentIndex - 1].date
                     }
                 }
                 LogContract.Move.RIGHT -> {
                     val currentIndex = getCurrentDateWaterIndex()
-                    if(currentIndex < currentDayOfWaterList.size - 1) {
+                    if(currentIndex < getCurrentDayOfWaterList().size - 1) {
                         //현재 세팅된 날짜보다 앞의 날짜 값으로 세팅
-                        dateStringFlow.value = currentDayOfWaterList[currentIndex - 1].date
-                        setEvent(LogContract.Event.GetDayAmount(LogContract.Move.INIT))
+                        dateStringFlow.value = getCurrentDayOfWaterList()[currentIndex + 1].date
                     }
                 }
                 LogContract.Move.INIT -> {
@@ -127,9 +122,11 @@ class LogViewModel(
         }
     }
 
+    private fun getCurrentDayOfWaterList(): List<DayOfWater> = allDayOfWaterLiveData.value.list
+
     //List<DayOfWater>에서 현재 세팅된 날짜랑 같은 마지막 DayOfWater의 인덱스
     private fun getCurrentDateWaterIndex(): Int {
-        return allDayOfWaterLiveData.value.list
+        return getCurrentDayOfWaterList()
             .indexOfLast { it.date == dateStringFlow.value }
     }
 
