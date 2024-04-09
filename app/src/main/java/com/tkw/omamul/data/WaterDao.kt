@@ -11,6 +11,8 @@ interface WaterDao: RealmDao<DayOfWaterEntity> {
     fun getAllDayOfWater(): Flow<ResultsChange<DayOfWaterEntity>>
     fun getWater(date: String, dateTime: String): WaterEntity?
     fun getAmountFlow(date: String): Flow<ResultsChange<DayOfWaterEntity>>
+    fun getAmountWeekFlow(start: String, end: String): Flow<ResultsChange<DayOfWaterEntity>>
+    fun getAmountMonthFlow(start: String, end: String): Flow<ResultsChange<DayOfWaterEntity>>
     suspend fun addAmount(date: String, newObj: WaterEntity)
     suspend fun removeAmount(selectedDate: String, dateTime: String)
     suspend fun updateAmount(selectedDate: String, origin: WaterEntity, target: WaterEntity)

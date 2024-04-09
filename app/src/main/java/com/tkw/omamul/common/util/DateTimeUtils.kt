@@ -1,8 +1,11 @@
 package com.tkw.omamul.common.util
 
+import androidx.core.util.toRange
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.Month
 import java.time.format.DateTimeFormatter
 
 object DateTimeUtils {
@@ -66,5 +69,21 @@ object DateTimeUtils {
     fun getTimeFromFormat(formatted: String): LocalTime {
         val formatter = DateTimeFormatter.ofPattern("a hh:mm")
         return LocalTime.parse(formatted, formatter)
+    }
+
+    fun getWeekDates(date: String): Pair<String, String> {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val localDate = getDateFromFormat(date)
+        val startOfWeek = localDate.with(DayOfWeek.MONDAY).format(formatter)
+        val endOfWeek = localDate.with(DayOfWeek.SUNDAY).format(formatter)
+        return startOfWeek to endOfWeek
+    }
+
+    fun getMonthDates(date: String): Pair<String, String> {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val localDate = getDateFromFormat(date)
+        val startOfMonth = localDate.withDayOfMonth(1).format(formatter)
+        val endOfMonth = localDate.withDayOfMonth(localDate.lengthOfMonth()).format(formatter)
+        return startOfMonth to endOfMonth
     }
 }
