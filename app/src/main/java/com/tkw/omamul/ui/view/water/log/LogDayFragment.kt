@@ -7,9 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle.State
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.tkw.omamul.R
 import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.common.util.animateByMaxValue
@@ -59,27 +57,27 @@ class LogDayFragment: Fragment() {
             adapter = dayAdapter
             addItemDecoration(DividerDecoration(10f))
         }
-        viewModel.setEvent(LogContract.Event.GetDayAmount(LogContract.Move.INIT))
+        viewModel.setEvent(LogContract.Event.DayAmountEvent(LogContract.Move.INIT))
     }
 
     private fun initObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(State.STARTED) {
-                viewModel.state.collect {
-                    when(it) {
-                        is LogContract.State.Complete -> {
+            viewModel.state.collect {
+                when(it) {
+                    is LogContract.State.Complete -> {
+                        if(it.unit == LogContract.DateUnit.DAY) {
                             val dayOfWater = it.data.list[0]
                             setChartData(dayOfWater)
                             dayAdapter.submitList(dayOfWater.dayOfList) {
                                 dataChanged()
                             }
                         }
-                        LogContract.State.Error -> {
-                            Log.d("LogDayFragment", "error")
-                        }
-                        is LogContract.State.Loading -> {
-                            Log.d("LogDayFragment", "onProgress ${it.flag}")
-                        }
+                    }
+                    LogContract.State.Error -> {
+                        Log.d("LogDayFragment", "error")
+                    }
+                    is LogContract.State.Loading -> {
+                        Log.d("LogDayFragment", "onProgress ${it.flag}")
                     }
                 }
             }
@@ -108,11 +106,11 @@ class LogDayFragment: Fragment() {
         }
 
         dataBinding.ibDayLeft.setOnClickListener {
-            viewModel.setEvent(LogContract.Event.GetDayAmount(LogContract.Move.LEFT))
+            viewModel.setEvent(LogContract.Event.DayAmountEvent(LogContract.Move.LEFT))
         }
 
         dataBinding.ibDayRight.setOnClickListener {
-            viewModel.setEvent(LogContract.Event.GetDayAmount(LogContract.Move.RIGHT))
+            viewModel.setEvent(LogContract.Event.DayAmountEvent(LogContract.Move.RIGHT))
         }
     }
 

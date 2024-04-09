@@ -8,9 +8,9 @@ import com.tkw.omamul.data.model.Water
 
 class LogContract {
     sealed class Event: IEvent {
-        class GetDayAmount(val move: Move): Event()
-        class GetWeekAmount(val move: Move): Event()
-        class GetMonthAmount(val move: Move): Event()
+        class DayAmountEvent(val move: Move): Event()
+        class WeekAmountEvent(val move: Move): Event()
+        class MonthAmountEvent(val move: Move): Event()
         object ShowAddDialog: Event()
         class ShowEditDialog(val water: Water): Event()
         class RemoveDayAmount(val water: Water): Event()
@@ -22,11 +22,15 @@ class LogContract {
 
     sealed class State: IState {
         data class Loading(val flag: Boolean): State()
-        data class Complete(val data: DayOfWaterList): State()
+        data class Complete(val data: DayOfWaterList, val unit: DateUnit): State()
         object Error: State()
     }
 
     enum class Move {
         LEFT, RIGHT, INIT
+    }
+
+    enum class DateUnit {
+        DAY, WEEK, MONTH
     }
 }

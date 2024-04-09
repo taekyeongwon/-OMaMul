@@ -51,6 +51,11 @@ object DateTimeUtils {
         return LocalTime.of(hour, minute).format(formatter)
     }
 
+    fun getFormattedDate(date: LocalDate): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        return date.format(formatter)
+    }
+
     fun getDateFromFullFormat(formatted: String): LocalDate {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         return LocalDate.parse(formatted, formatter)
@@ -85,5 +90,15 @@ object DateTimeUtils {
         val startOfMonth = localDate.withDayOfMonth(1).format(formatter)
         val endOfMonth = localDate.withDayOfMonth(localDate.lengthOfMonth()).format(formatter)
         return startOfMonth to endOfMonth
+    }
+
+    fun minusWeek(date: String): String {
+        val day = getDateFromFormat(date).minusWeeks(1)
+        return getFormattedDate(day)
+    }
+
+    fun plusWeek(date: String): String {
+        val day = getDateFromFormat(date).plusWeeks(1)
+        return getFormattedDate(day)
     }
 }

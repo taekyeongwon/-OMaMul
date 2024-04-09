@@ -1,17 +1,21 @@
 package com.tkw.omamul.ui.view.water.log
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.github.mikephil.charting.data.BarEntry
+import androidx.lifecycle.lifecycleScope
 import com.tkw.omamul.R
 import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.databinding.FragmentLogWeekBinding
 import com.tkw.omamul.common.autoCleared
+import com.tkw.omamul.common.util.animateByMaxValue
+import com.tkw.omamul.data.model.DayOfWater
 import com.tkw.omamul.ui.custom.chart.WeekMarkerView
+import kotlinx.coroutines.launch
 
 class LogWeekFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentLogWeekBinding>()
@@ -30,6 +34,8 @@ class LogWeekFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initBinding()
         initView()
+        initObserver()
+        initListener()
     }
 
     private fun initBinding() {
@@ -41,16 +47,48 @@ class LogWeekFragment: Fragment() {
     }
 
     private fun initView() {
-        val list = ArrayList<BarEntry>()
-        with(dataBinding.barChart) {
-            list.add(parsingChartData(1f, 0.1f))
-            list.add(parsingChartData(2f, 0.2f))
-            list.add(parsingChartData(3f, 0.3f))
-            list.add(parsingChartData(7f, 0.4f))
-            setLimit(2f) //todo 현재 설정된 목표 물의 양으로 변경 필요
-            setUnit(getString(R.string.unit_day), getString(R.string.unit_liter))
-            setMarker(WeekMarkerView(context, R.layout.custom_marker))
-            setChartData(list)
+        viewModel.setEvent(LogContract.Event.WeekAmountEvent(LogContract.Move.INIT))
+    }
+
+    private fun initObserver() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.state.collect {
+                when(it) {
+                    is LogContract.State.Complete -> {
+                        if(it.unit == LogContract.DateUnit.WEEK) {
+                            val dayOfWaterList = it.data.list
+                            setChartData(dayOfWaterList)
+                        }
+                    }
+                    LogContract.State.Error -> {
+                        Log.d("LogDayFragment", "error")
+                    }
+                    is LogContract.State.Loading -> {
+                        Log.d("LogDayFragment", "onProgress ${it.flag}")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun initListener() {
+
+    }
+
+    private fun setChartData(list: List<DayOfWater>) {
+        with(dataBinding) {
+            val result = list.map {
+                barChart.parsingChartData(
+                    it.date.split("-").last().toFloat(),
+                    it.getTotalWaterAmount().toFloat()
+                )
+            }
+
+            barChart.setLimit(2f) //todo 현재 설정된 목표 물의 양으로 변경 필요
+            barChart.setUnit(getString(R.string.unit_day), getString(R.string.unit_liter))
+            barChart.setMarker(WeekMarkerView(context, R.layout.custom_marker))
+            barChart.setChartData(result)
+            tvTotalAmount.animateByMaxValue(result.lastOrNull()?.y?.toInt() ?: 0)
         }
     }
 }
