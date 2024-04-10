@@ -6,10 +6,10 @@ data class DayOfWater(
     val date: String,
     val dayOfList: List<Water>
 ) {
-    fun getTotalWaterAmount(): String {
+    fun getTotalWaterAmount(): Int {
         return dayOfList.sumOf { water ->
             water.amount
-        }.toString()
+        }
     }
 
     //hour값을 key로 해당 시간대의 누적 합 계산

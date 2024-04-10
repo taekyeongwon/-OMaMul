@@ -24,7 +24,6 @@ class CustomLineChart
         initDefault()
         initXAxis()
         initYAxis()
-
     }
 
     private fun initDefault() {
@@ -56,8 +55,6 @@ class CustomLineChart
                 YAxis.AxisDependency.LEFT))
             setXAxisRenderer(xAxisRenderer)
             labelCount = 7
-            axisMinimum = 0f
-            axisMaximum = 24f
         }
     }
 
@@ -105,6 +102,20 @@ class CustomLineChart
         data = LineData(lineDataSet)
         calculateYMaximum()
         animateY(1000)
+    }
+
+    /**
+     * 일 차트인 경우 0 ~ 24
+     * 주 차트인 경우 선택한 주의 날짜 ex) 1 ~ 7
+     * 월 차트인 경우 1 ~ 31
+     *
+     * 양쪽 끝이 바 가운데 위치하도록 0.5씩 증감
+     */
+    fun setXMinMax(min: Float, max: Float) {
+        xAxis.apply {
+            axisMinimum = min - 0.5f
+            axisMaximum = max + 0.5f
+        }
     }
 
     private fun calculateYMaximum() {

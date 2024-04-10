@@ -7,11 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.tkw.omamul.R
 import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.databinding.FragmentLogWeekBinding
 import com.tkw.omamul.common.autoCleared
+import com.tkw.omamul.common.util.DateTimeUtils
 import com.tkw.omamul.common.util.animateByMaxValue
 import com.tkw.omamul.data.model.DayOfWater
 import com.tkw.omamul.ui.custom.chart.WeekMarkerView
@@ -47,7 +50,11 @@ class LogWeekFragment: Fragment() {
     }
 
     private fun initView() {
-        viewModel.setEvent(LogContract.Event.WeekAmountEvent(LogContract.Move.INIT))
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                viewModel.setEvent(LogContract.Event.WeekAmountEvent(LogContract.Move.INIT))
+            }
+        }
     }
 
     private fun initObserver() {
@@ -72,7 +79,13 @@ class LogWeekFragment: Fragment() {
     }
 
     private fun initListener() {
+        dataBinding.ibDayLeft.setOnClickListener {
+            viewModel.setEvent(LogContract.Event.WeekAmountEvent(LogContract.Move.LEFT))
+        }
 
+        dataBinding.ibDayRight.setOnClickListener {
+            viewModel.setEvent(LogContract.Event.WeekAmountEvent(LogContract.Move.RIGHT))
+        }
     }
 
     private fun setChartData(list: List<DayOfWater>) {
@@ -80,7 +93,14 @@ class LogWeekFragment: Fragment() {
             val result = list.map {
                 barChart.parsingChartData(
                     it.date.split("-").last().toFloat(),
-                    it.getTotalWaterAmount().toFloat()
+                    it.getTotalWaterAmount().toFloat() / 1000
+                )
+            }
+            if(list.isNotEmpty()) {
+                val week = DateTimeUtils.getWeekDates(list[0].date)
+                barChart.setXMinMax(
+                    week.first.split("-").last().toFloat(),
+                    week.second.split("-").last().toFloat()
                 )
             }
 
@@ -88,7 +108,7 @@ class LogWeekFragment: Fragment() {
             barChart.setUnit(getString(R.string.unit_day), getString(R.string.unit_liter))
             barChart.setMarker(WeekMarkerView(context, R.layout.custom_marker))
             barChart.setChartData(result)
-            tvTotalAmount.animateByMaxValue(result.lastOrNull()?.y?.toInt() ?: 0)
+            tvTotalAmount.animateByMaxValue(list.sumOf { it.getTotalWaterAmount() } / 1000)
         }
     }
 }
