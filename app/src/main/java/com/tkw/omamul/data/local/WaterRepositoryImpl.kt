@@ -19,7 +19,12 @@ class WaterRepositoryImpl(private val waterDao: WaterDao): WaterRepository {
         val allDayOfWater = waterDao.getAllDayOfWater()
         return flow {
             allDayOfWater.collect {
-                emit(it.list)
+                //마신 물이 있거나 오늘 날짜인 경우만 차트에 표시하기 위해 필터링
+                val list = it.list.filter { entity ->
+                    entity.dayOfList.isNotEmpty() ||
+                            entity.date == DateTimeUtils.getTodayDate()
+                }
+                emit(list)
             }
         }
     }
