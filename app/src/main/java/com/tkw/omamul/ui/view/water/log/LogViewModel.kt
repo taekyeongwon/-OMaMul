@@ -27,6 +27,10 @@ class LogViewModel(
     private val dateStringFlow = MutableStateFlow(DateTimeUtils.getTodayDate())
     val dateLiveData = dateStringFlow.asLiveData()
 
+    //주간 날짜
+    private val weekStringFlow = MutableStateFlow(dateStringFlow.value)
+    val weekLiveData = weekStringFlow.asLiveData()
+
     //전체 DayOfWater 리스트
     @OptIn(ExperimentalCoroutinesApi::class)
     private val allDayOfWaterLiveData: StateFlow<DayOfWaterList> =
@@ -97,16 +101,16 @@ class LogViewModel(
         launch {
             when(move) {
                 LogContract.Move.LEFT -> {
-                    val minusWeekDate = DateTimeUtils.minusWeek(dateStringFlow.value)
+                    val minusWeekDate = DateTimeUtils.minusWeek(weekStringFlow.value)
                     if(getCurrentWeekWaterIndex(minusWeekDate) != -1) {
-                        dateStringFlow.value = minusWeekDate
+                        weekStringFlow.value = minusWeekDate
                         getWeekAmount()
                     }
                 }
                 LogContract.Move.RIGHT -> {
-                    val plusWeekDate = DateTimeUtils.plusWeek(dateStringFlow.value)
+                    val plusWeekDate = DateTimeUtils.plusWeek(weekStringFlow.value)
                     if(getCurrentWeekWaterIndex(plusWeekDate) != -1) {
-                        dateStringFlow.value = plusWeekDate
+                        weekStringFlow.value = plusWeekDate
                         getWeekAmount()
                     }
                 }
@@ -119,7 +123,7 @@ class LogViewModel(
 
     //현재 날짜에 해당하는 주의 월요일 ~ 일요일까지의 DayOfWater 리스트
     private suspend fun getWeekAmount() {
-        waterRepository.getAmountWeekByFlow(dateStringFlow.value).map { list ->
+        waterRepository.getAmountWeekByFlow(weekStringFlow.value).map { list ->
             DayOfWaterList(
                 list.map {
                     it.toMap()
