@@ -64,17 +64,17 @@ class LogViewModel(
             when(move) {
                 LogContract.Move.LEFT -> {
                     val currentIndex = getCurrentDateWaterIndex()
-                    if(currentIndex > 0 && getCurrentDayOfWaterList().isNotEmpty()) {
+                    if(currentIndex > 0) {
                         //현재 세팅된 날짜 이전의 날짜 값으로 세팅
-                        dateStringFlow.value = getCurrentDayOfWaterList()[currentIndex - 1].date
+                        dateStringFlow.value = getCurrentDayOfWaterList().list[currentIndex - 1].date
                         getDayAmount()
                     }
                 }
                 LogContract.Move.RIGHT -> {
                     val currentIndex = getCurrentDateWaterIndex()
-                    if(currentIndex < getCurrentDayOfWaterList().size - 1) {
+                    if(currentIndex < getCurrentDayOfWaterList().list.size - 1) {
                         //현재 세팅된 날짜보다 앞의 날짜 값으로 세팅
-                        dateStringFlow.value = getCurrentDayOfWaterList()[currentIndex + 1].date
+                        dateStringFlow.value = getCurrentDayOfWaterList().list[currentIndex + 1].date
                         getDayAmount()
                     }
                 }
@@ -101,16 +101,22 @@ class LogViewModel(
         launch {
             when(move) {
                 LogContract.Move.LEFT -> {
-                    val minusWeekDate = DateTimeUtils.minusWeek(weekStringFlow.value)
-                    if(getCurrentWeekWaterIndex(minusWeekDate) != -1) {
-                        weekStringFlow.value = minusWeekDate
+                    val currentIndex = getCurrentWeekIndex()
+                    if(currentIndex > 0) {
+                        weekStringFlow.value =
+                            getCurrentDayOfWaterList()
+                                .getWeekArray()[currentIndex - 1]
+                                .first
                         getWeekAmount()
                     }
                 }
                 LogContract.Move.RIGHT -> {
-                    val plusWeekDate = DateTimeUtils.plusWeek(weekStringFlow.value)
-                    if(getCurrentWeekWaterIndex(plusWeekDate) != -1) {
-                        weekStringFlow.value = plusWeekDate
+                    val currentIndex = getCurrentWeekIndex()
+                    if(currentIndex < getCurrentDayOfWaterList().getWeekArray().size - 1) {
+                        weekStringFlow.value =
+                            getCurrentDayOfWaterList()
+                                .getWeekArray()[currentIndex + 1]
+                                .first
                         getWeekAmount()
                     }
                 }
@@ -158,18 +164,18 @@ class LogViewModel(
         }
     }
 
-    private fun getCurrentDayOfWaterList(): List<DayOfWater> = allDayOfWaterLiveData.value.list
+    private fun getCurrentDayOfWaterList(): DayOfWaterList = allDayOfWaterLiveData.value
 
     //List<DayOfWater>에서 현재 세팅된 날짜랑 같은 마지막 DayOfWater의 인덱스
     private fun getCurrentDateWaterIndex(): Int {
-        return getCurrentDayOfWaterList()
+        return getCurrentDayOfWaterList().list
             .indexOfLast { it.date == dateStringFlow.value }
     }
 
-    private fun getCurrentWeekWaterIndex(date: String): Int {
-        val week = DateTimeUtils.getWeekDates(date)
-        return getCurrentDayOfWaterList().indexOfFirst {
-            week.first <= it.date && it.date <= week.second
+    private fun getCurrentWeekIndex(): Int {
+        return getCurrentDayOfWaterList().getWeekArray().indexOfFirst {
+            it.first <= weekStringFlow.value
+                    && weekStringFlow.value <= it.second
         }
     }
 

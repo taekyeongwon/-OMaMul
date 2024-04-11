@@ -92,13 +92,15 @@ object DateTimeUtils {
         return startOfMonth to endOfMonth
     }
 
-    fun minusWeek(date: String): String {
-        val day = getDateFromFormat(date).minusWeeks(1)
+    fun addWeek(date: String, add: Long): String {
+        val day = if(add > 0) getDateFromFormat(date).plusWeeks(add)
+        else getDateFromFormat(date).minusWeeks(add)
         return getFormattedDate(day)
     }
 
-    fun plusWeek(date: String): String {
-        val day = getDateFromFormat(date).plusWeeks(1)
+    fun addMonth(date: String, add: Long): String {
+        val day = if(add > 0) getDateFromFormat(date).plusMonths(add)
+        else getDateFromFormat(date).minusMonths(add)
         return getFormattedDate(day)
     }
 }

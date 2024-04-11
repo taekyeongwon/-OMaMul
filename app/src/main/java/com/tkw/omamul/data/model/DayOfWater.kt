@@ -42,5 +42,11 @@ data class Water(
 data class DayOfWaterList(
     val list: List<DayOfWater>
 ) {
-
+    fun getWeekArray(): Array<Pair<String, String>> {
+        val set = LinkedHashSet<Pair<String, String>>()
+        list.forEach {
+            set.add(DateTimeUtils.getWeekDates(it.date))
+        }
+        return set.toArray(arrayOf())
+    }
 }
