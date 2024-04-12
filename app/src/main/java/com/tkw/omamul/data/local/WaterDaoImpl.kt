@@ -33,8 +33,8 @@ class WaterDaoImpl(r: Realm): WaterDao {
         return this.stream(this.findBy("date == $0", date))
     }
 
-    override fun getAmountFlowDuring(start: String, end: String): Flow<ResultsChange<DayOfWaterEntity>> {
-        return this.stream(this.findBy("$0 <= date AND date <= $1", start, end))
+    override fun getAmountDuring(start: String, end: String): List<DayOfWaterEntity> {
+        return this.findBy("$0 <= date AND date <= $1", start, end)
     }
 
     override suspend fun addAmount(date: String, newObj: WaterEntity) {

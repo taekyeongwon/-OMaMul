@@ -57,7 +57,7 @@ class LogDayFragment: Fragment() {
             adapter = dayAdapter
             addItemDecoration(DividerDecoration(10f))
         }
-        dataBinding.barChart.setChartData(arrayListOf())    //최초 호출 시 차트 여백 적용해 주기 위해 빈값으로 data set
+        initChart()
         viewModel.setEvent(LogContract.Event.DayAmountEvent(LogContract.Move.INIT))
     }
 
@@ -125,15 +125,22 @@ class LogDayFragment: Fragment() {
         viewModel.setEvent(LogContract.Event.RemoveDayAmount(item))
     }
 
+    private fun initChart() {
+        with(dataBinding) {
+            barChart.setXMinMax(0f, 24f)
+            barChart.setLimit(2000f) //todo 현재 설정된 목표 물의 양으로 변경 필요
+            barChart.setUnit(getString(R.string.unit_hour), getString(R.string.unit_ml))
+            barChart.setMarker(DayMarkerView(requireContext(), R.layout.custom_marker))
+            barChart.setChartData(arrayListOf())    //최초 호출 시 차트 여백 적용해 주기 위해 빈값으로 data set
+        }
+    }
+
     private fun setChartData(dayOfWater: DayOfWater) {
         with(dataBinding) {
             val result = dayOfWater.getAccumulatedAmount().map {
                 barChart.parsingChartData(it.key, it.value)
             }
-            barChart.setXMinMax(0f, 24f)
-            barChart.setLimit(2000f) //todo 현재 설정된 목표 물의 양으로 변경 필요
-            barChart.setUnit(getString(R.string.unit_hour), getString(R.string.unit_ml))
-            barChart.setMarker(DayMarkerView(requireContext(), R.layout.custom_marker))
+
             barChart.setChartData(result)
             tvTotalAmount.animateByMaxValue(result.lastOrNull()?.y?.toInt() ?: 0)
         }

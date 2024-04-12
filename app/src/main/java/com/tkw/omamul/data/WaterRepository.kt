@@ -12,9 +12,9 @@ interface WaterRepository {
 
     fun getAmountByFlow(date: String): Flow<DayOfWaterEntity>
 
-    fun getAmountWeekByFlow(date: String): Flow<List<DayOfWaterEntity>>
+    fun getAmountWeekBy(date: String): List<DayOfWaterEntity>
 
-    fun getAmountMonthByFlow(date: String): Flow<List<DayOfWaterEntity>>
+    fun getAmountMonthBy(date: String): List<DayOfWaterEntity>
 
     suspend fun createAmount(date: String)
 

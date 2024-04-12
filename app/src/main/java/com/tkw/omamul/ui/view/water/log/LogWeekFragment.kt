@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 class LogWeekFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentLogWeekBinding>()
-    private val viewModel: LogViewModel by activityViewModels { getViewModelFactory(null) }
+    private val viewModel: LogViewModel by viewModels { getViewModelFactory(null) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,6 +50,7 @@ class LogWeekFragment: Fragment() {
     }
 
     private fun initView() {
+        initChart()
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 viewModel.setEvent(LogContract.Event.WeekAmountEvent(LogContract.Move.INIT))
@@ -88,6 +89,14 @@ class LogWeekFragment: Fragment() {
         }
     }
 
+    private fun initChart() {
+        with(dataBinding) {
+            barChart.setLimit(2f) //todo 현재 설정된 목표 물의 양으로 변경 필요
+            barChart.setUnit(getString(R.string.unit_day), getString(R.string.unit_liter))
+            barChart.setMarker(WeekMarkerView(context, R.layout.custom_marker))
+        }
+    }
+
     private fun setChartData(list: List<DayOfWater>) {
         with(dataBinding) {
             val result = list.map {
@@ -104,9 +113,6 @@ class LogWeekFragment: Fragment() {
                 )
             }
 
-            barChart.setLimit(2f) //todo 현재 설정된 목표 물의 양으로 변경 필요
-            barChart.setUnit(getString(R.string.unit_day), getString(R.string.unit_liter))
-            barChart.setMarker(WeekMarkerView(context, R.layout.custom_marker))
             barChart.setChartData(result)
             tvTotalAmount.animateByMaxValue(list.sumOf { it.getTotalWaterAmount() } / 1000f)
         }
