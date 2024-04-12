@@ -7,7 +7,6 @@ import com.tkw.omamul.data.model.DayOfWaterEntity
 import com.tkw.omamul.data.model.Water
 import com.tkw.omamul.data.model.WaterEntity
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 
 class WaterRepositoryImpl(private val waterDao: WaterDao): WaterRepository {
@@ -45,7 +44,7 @@ class WaterRepositoryImpl(private val waterDao: WaterDao): WaterRepository {
 
     override fun getAmountWeekByFlow(date: String): Flow<List<DayOfWaterEntity>> {
         val week = DateTimeUtils.getWeekDates(date)
-        val amountFlow = waterDao.getAmountWeekFlow(week.first, week.second)
+        val amountFlow = waterDao.getAmountFlowDuring(week.first, week.second)
         return flow {
             amountFlow.collect {
                 emit(it.list)
@@ -54,7 +53,13 @@ class WaterRepositoryImpl(private val waterDao: WaterDao): WaterRepository {
     }
 
     override fun getAmountMonthByFlow(date: String): Flow<List<DayOfWaterEntity>> {
-        return flow {}
+        val month = DateTimeUtils.getMonthDates(date)
+        val amountFlow = waterDao.getAmountFlowDuring(month.first, month.second)
+        return flow {
+            amountFlow.collect {
+                emit(it.list)
+            }
+        }
     }
 
     override suspend fun createAmount(date: String) {

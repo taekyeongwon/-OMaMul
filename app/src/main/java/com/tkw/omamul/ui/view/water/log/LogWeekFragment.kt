@@ -108,7 +108,7 @@ class LogWeekFragment: Fragment() {
             barChart.setUnit(getString(R.string.unit_day), getString(R.string.unit_liter))
             barChart.setMarker(WeekMarkerView(context, R.layout.custom_marker))
             barChart.setChartData(result)
-            tvTotalAmount.animateByMaxValue(list.sumOf { it.getTotalWaterAmount() } / 1000)
+            tvTotalAmount.animateByMaxValue(list.sumOf { it.getTotalWaterAmount() } / 1000f)
         }
     }
 }

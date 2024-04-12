@@ -10,7 +10,19 @@ fun TextView.animateByMaxValue(maxValue: Int) {
         interpolator = LinearInterpolator()
         addUpdateListener {
             val value = it.animatedValue
-            this@animateByMaxValue.text = value.toString()
+            this@animateByMaxValue.text = String.format("%dmL", value)
+        }
+        start()
+    }
+}
+
+fun TextView.animateByMaxValue(maxValue: Float) {
+    ValueAnimator.ofFloat(0f, maxValue).apply {
+        duration = 1000
+        interpolator = LinearInterpolator()
+        addUpdateListener {
+            val value = it.animatedValue
+            this@animateByMaxValue.text = String.format("%.1fL", value)
         }
         start()
     }

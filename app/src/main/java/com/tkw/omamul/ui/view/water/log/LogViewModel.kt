@@ -31,6 +31,10 @@ class LogViewModel(
     private val weekStringFlow = MutableStateFlow(dateStringFlow.value)
     val weekLiveData = weekStringFlow.asLiveData()
 
+    //월간 날짜
+    private val monthStringFlow = MutableStateFlow(dateStringFlow.value)
+    val monthLiveData = monthStringFlow.asLiveData()
+
     //전체 DayOfWater 리스트
     @OptIn(ExperimentalCoroutinesApi::class)
     private val allDayOfWaterLiveData: StateFlow<DayOfWaterList> =
@@ -147,7 +151,51 @@ class LogViewModel(
     }
 
     private fun monthAmountEvent(move: LogContract.Move) {
+        launch {
+            when(move) {
+                LogContract.Move.LEFT -> {
+                    val currentIndex = getCurrentMonthIndex()
+                    if(currentIndex > 0) {
+                        monthStringFlow.value =
+                            getCurrentDayOfWaterList()
+                                .getWeekArray()[currentIndex - 1]
+                                .first
+                        getMonthAmount()
+                    }
+                }
+                LogContract.Move.RIGHT -> {
+                    val currentIndex = getCurrentMonthIndex()
+                    if(currentIndex < getCurrentDayOfWaterList().getMonthArray().size - 1) {
+                        monthStringFlow.value =
+                            getCurrentDayOfWaterList()
+                                .getWeekArray()[currentIndex + 1]
+                                .first
+                        getMonthAmount()
+                    }
+                }
+                LogContract.Move.INIT -> {
+                    getMonthAmount()
+                }
+            }
+        }
+    }
 
+    private suspend fun getMonthAmount() {
+        waterRepository.getAmountMonthByFlow(monthStringFlow.value).map { list ->
+            DayOfWaterList(
+                list.map {
+                    it.toMap()
+                }
+            )
+        }.catch {
+            setState { LogContract.State.Error }
+        }.collect {
+            if(it.list.isNotEmpty()) {
+                setState { LogContract.State.Complete(it, LogContract.DateUnit.MONTH) }
+            } else {
+                setState { LogContract.State.Error }
+            }
+        }
     }
 
     private fun showAddDialog() {
@@ -176,6 +224,13 @@ class LogViewModel(
         return getCurrentDayOfWaterList().getWeekArray().indexOfFirst {
             it.first <= weekStringFlow.value
                     && weekStringFlow.value <= it.second
+        }
+    }
+
+    private fun getCurrentMonthIndex(): Int {
+        return getCurrentDayOfWaterList().getMonthArray().indexOfFirst {
+            it.first <= monthStringFlow.value
+                    && monthStringFlow.value <= it.second
         }
     }
 

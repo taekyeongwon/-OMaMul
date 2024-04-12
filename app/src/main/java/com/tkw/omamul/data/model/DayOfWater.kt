@@ -49,4 +49,12 @@ data class DayOfWaterList(
         }
         return set.toArray(arrayOf())
     }
+
+    fun getMonthArray(): Array<Pair<String, String>> {
+        val set = LinkedHashSet<Pair<String, String>>()
+        list.forEach {
+            set.add(DateTimeUtils.getMonthDates(it.date))
+        }
+        return set.toArray(arrayOf())
+    }
 }

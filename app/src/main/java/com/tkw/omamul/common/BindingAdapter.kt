@@ -43,4 +43,12 @@ object BindingAdapter {
             view.text = "${week.first} - ${week.second}"
         }
     }
+
+    @JvmStatic
+    @BindingAdapter("monthDays")
+    fun setMonthDays(view: TextView, value: String?) {
+        if(value != null) {
+            view.text = value.substring(0, 7)
+        }
+    }
 }
