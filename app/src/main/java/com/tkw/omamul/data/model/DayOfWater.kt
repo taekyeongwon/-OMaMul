@@ -42,15 +42,27 @@ data class Water(
 data class DayOfWaterList(
     val list: List<DayOfWater>
 ) {
-    fun getWeekArray(): Array<Pair<String, String>> {
+    fun getArray(transformer: DayTransformer): Array<Pair<String, String>> {
+        return transformer.onTransform(list)
+    }
+}
+
+interface DayTransformer {
+    fun onTransform(list: List<DayOfWater>): Array<Pair<String, String>>
+}
+
+class WeekLog: DayTransformer {
+    override fun onTransform(list: List<DayOfWater>): Array<Pair<String, String>> {
         val set = LinkedHashSet<Pair<String, String>>()
         list.forEach {
             set.add(DateTimeUtils.getWeekDates(it.date))
         }
         return set.toArray(arrayOf())
     }
+}
 
-    fun getMonthArray(): Array<Pair<String, String>> {
+class MonthLog: DayTransformer {
+    override fun onTransform(list: List<DayOfWater>): Array<Pair<String, String>> {
         val set = LinkedHashSet<Pair<String, String>>()
         list.forEach {
             set.add(DateTimeUtils.getMonthDates(it.date))

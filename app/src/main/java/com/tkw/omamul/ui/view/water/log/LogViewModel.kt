@@ -7,7 +7,9 @@ import com.tkw.omamul.base.launch
 import com.tkw.omamul.common.util.DateTimeUtils
 import com.tkw.omamul.data.WaterRepository
 import com.tkw.omamul.data.model.DayOfWaterList
+import com.tkw.omamul.data.model.MonthLog
 import com.tkw.omamul.data.model.Water
+import com.tkw.omamul.data.model.WeekLog
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,6 +53,9 @@ class LogViewModel(
             started = SharingStarted.Eagerly,
             scope = viewModelScope
         )
+
+    private val week = WeekLog()
+    private val month = MonthLog()
 
     init {
         launch {
@@ -118,16 +123,16 @@ class LogViewModel(
                     if(currentIndex > 0) {
                         weekShareFlow.emit(
                             getCurrentDayOfWaterList()
-                                .getWeekArray()[currentIndex - 1]
+                                .getArray(week)[currentIndex - 1]
                                 .first)
                     }
                 }
                 LogContract.Move.RIGHT -> {
                     val currentIndex = getCurrentWeekIndex()
-                    if(currentIndex < getCurrentDayOfWaterList().getWeekArray().size - 1) {
+                    if(currentIndex < getCurrentDayOfWaterList().getArray(week).size - 1) {
                         weekShareFlow.emit(
                             getCurrentDayOfWaterList()
-                                .getWeekArray()[currentIndex + 1]
+                                .getArray(week)[currentIndex + 1]
                                 .first)
                     }
                 }
@@ -146,16 +151,16 @@ class LogViewModel(
                     if(currentIndex > 0) {
                         monthShareFlow.emit(
                             getCurrentDayOfWaterList()
-                                .getWeekArray()[currentIndex - 1]
+                                .getArray(month)[currentIndex - 1]
                                 .first)
                     }
                 }
                 LogContract.Move.RIGHT -> {
                     val currentIndex = getCurrentMonthIndex()
-                    if(currentIndex < getCurrentDayOfWaterList().getMonthArray().size - 1) {
+                    if(currentIndex < getCurrentDayOfWaterList().getArray(month).size - 1) {
                         monthShareFlow.emit(
                             getCurrentDayOfWaterList()
-                                .getWeekArray()[currentIndex + 1]
+                                .getArray(month)[currentIndex + 1]
                                 .first)
                     }
                 }
@@ -231,7 +236,7 @@ class LogViewModel(
 
     private fun getCurrentWeekIndex(): Int {
         val date = weekLiveData.value ?: ""
-        return getCurrentDayOfWaterList().getWeekArray().indexOfFirst {
+        return getCurrentDayOfWaterList().getArray(week).indexOfFirst {
             it.first <= date
                     && date <= it.second
         }
@@ -239,7 +244,7 @@ class LogViewModel(
 
     private fun getCurrentMonthIndex(): Int {
         val date = monthLiveData.value ?: ""
-        return getCurrentDayOfWaterList().getMonthArray().indexOfFirst {
+        return getCurrentDayOfWaterList().getArray(month).indexOfFirst {
             it.first <= date
                     && date <= it.second
         }
