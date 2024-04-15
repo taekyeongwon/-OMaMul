@@ -1,22 +1,21 @@
 package com.tkw.omamul.ui.view.water.log
 
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.tkw.omamul.base.IntentBaseViewModel
 import com.tkw.omamul.base.launch
 import com.tkw.omamul.common.util.DateTimeUtils
 import com.tkw.omamul.data.WaterRepository
+import com.tkw.omamul.data.model.DayOfWater
 import com.tkw.omamul.data.model.DayOfWaterList
 import com.tkw.omamul.data.model.MonthLog
 import com.tkw.omamul.data.model.Water
 import com.tkw.omamul.data.model.WeekLog
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 
@@ -25,25 +24,16 @@ class LogViewModel(
 ): IntentBaseViewModel
 <LogContract.Event, LogContract.State, LogContract.SideEffect>() {
 
-    //현재 날짜
-    private val dateStateFlow = MutableStateFlow(DateTimeUtils.getTodayDate())
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private val dateAmountFlow = dateStateFlow.flatMapLatest { date ->
-        waterRepository.getAmountByFlow(date).map { it.toMap() }
-    }
-    val dateLiveData = dateStateFlow.asLiveData()
+    private val week = WeekLog()
+    private val month = MonthLog()
 
-    //주간 날짜
-    private val weekShareFlow = MutableSharedFlow<String>()
-    val weekLiveData = weekShareFlow.asLiveData()
-
-    //월간 날짜
-    private val monthShareFlow = MutableSharedFlow<String>()
-    val monthLiveData = monthShareFlow.asLiveData()
+    val dateLiveData = MutableStateFlow(DateTimeUtils.getTodayDate())
+    val weekLiveData = MutableStateFlow(DateTimeUtils.getTodayDate())
+    val monthLiveData = MutableStateFlow(DateTimeUtils.getTodayDate())
 
     //전체 DayOfWater 리스트
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val allDayOfWaterLiveData: StateFlow<DayOfWaterList> =
+    private val dayFlow: StateFlow<DayOfWaterList> =
         waterRepository.getAllDayEntity().mapLatest { list ->
             DayOfWaterList(
                 list.map { it.toMap() }
@@ -54,24 +44,42 @@ class LogViewModel(
             scope = viewModelScope
         )
 
-    private val week = WeekLog()
-    private val month = MonthLog()
+    //전체 리스트에서 주별 단위로 묶은 리스트 StateFlow
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val weekFlow: StateFlow<List<Pair<String, DayOfWaterList>>> = dayFlow.flatMapLatest {
+        flow {
+            emit(it.getArray(week))
+        }
+    }.stateIn(
+        initialValue = listOf(
+            Pair(DateTimeUtils.getWeekDates(DateTimeUtils.getTodayDate()).first,
+                DayOfWaterList(arrayListOf())
+            )
+        ),
+        started = SharingStarted.Eagerly,
+        scope = viewModelScope
+    )
+
+    //전체 리스트에서 월별 단위로 묶은 리스트 StateFlow
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val monthFlow: StateFlow<List<Pair<String, DayOfWaterList>>> = dayFlow.flatMapLatest {
+        flow {
+            emit(it.getArray(month))
+        }
+    }.stateIn(
+        initialValue = listOf(
+            Pair(DateTimeUtils.getMonthDates(DateTimeUtils.getTodayDate()).first,
+                DayOfWaterList(arrayListOf()))
+        ),
+        started = SharingStarted.Eagerly,
+        scope = viewModelScope
+    )
 
     init {
         launch {
-            dateAmountFlow.collect {
-                val list = DayOfWaterList(arrayListOf(it))
-                setState { LogContract.State.Complete(list, LogContract.DateUnit.DAY) }
-            }
-        }
-        launch {
-            weekShareFlow.collect {
-                getWeekAmount(it)
-            }
-        }
-        launch {
-            monthShareFlow.collect {
-                getMonthAmount(it)
+            //일 탭 기록 추가/수정/삭제 발생 시 갱신
+            dayFlow.collect {
+                setEvent(LogContract.Event.DayAmountEvent(LogContract.Move.INIT))
             }
         }
     }
@@ -98,18 +106,29 @@ class LogViewModel(
                     val currentIndex = getCurrentDateWaterIndex()
                     if(currentIndex > 0) {
                         //현재 세팅된 날짜 이전의 날짜 값으로 세팅
-                        dateStateFlow.value = (getCurrentDayOfWaterList().list[currentIndex - 1].date)
+                        val prev = dayFlow.value.list[currentIndex - 1]
+                        getDayAmount(prev)
                     }
                 }
                 LogContract.Move.RIGHT -> {
                     val currentIndex = getCurrentDateWaterIndex()
-                    if(currentIndex < getCurrentDayOfWaterList().list.size - 1) {
+                    if(currentIndex < dayFlow.value.list.size - 1) {
                         //현재 세팅된 날짜보다 앞의 날짜 값으로 세팅
-                        dateStateFlow.value = (getCurrentDayOfWaterList().list[currentIndex + 1].date)
+                        val next = dayFlow.value.list[currentIndex + 1]
+                        getDayAmount(next)
                     }
                 }
                 LogContract.Move.INIT -> {
-                    dateStateFlow.value = (DateTimeUtils.getTodayDate())
+                    val currentIndex = getCurrentDateWaterIndex()
+                    val current = if(currentIndex != -1) {
+                        dayFlow.value.list[currentIndex]
+                    } else {
+                        DayOfWater(
+                            DateTimeUtils.getTodayDate(),
+                            arrayListOf()
+                        )
+                    }
+                    getDayAmount(current)
                 }
             }
         }
@@ -121,23 +140,25 @@ class LogViewModel(
                 LogContract.Move.LEFT -> {
                     val currentIndex = getCurrentWeekIndex()
                     if(currentIndex > 0) {
-                        weekShareFlow.emit(
-                            getCurrentDayOfWaterList()
-                                .getArray(week)[currentIndex - 1]
-                                .first)
+                        val prev = weekFlow.value[currentIndex - 1]
+                        getWeekAmount(prev)
                     }
                 }
                 LogContract.Move.RIGHT -> {
                     val currentIndex = getCurrentWeekIndex()
-                    if(currentIndex < getCurrentDayOfWaterList().getArray(week).size - 1) {
-                        weekShareFlow.emit(
-                            getCurrentDayOfWaterList()
-                                .getArray(week)[currentIndex + 1]
-                                .first)
+                    if(currentIndex < weekFlow.value.size - 1) {
+                        val next = weekFlow.value[currentIndex + 1]
+                        getWeekAmount(next)
                     }
                 }
                 LogContract.Move.INIT -> {
-                    weekShareFlow.emit(DateTimeUtils.getTodayDate())
+                    val currentIndex = getCurrentWeekIndex()
+                    val current = if(currentIndex != -1) {
+                        weekFlow.value[currentIndex]
+                    } else {
+                        Pair(DateTimeUtils.getTodayDate(), DayOfWaterList(arrayListOf()))
+                    }
+                    getWeekAmount(current)
                 }
             }
         }
@@ -149,67 +170,49 @@ class LogViewModel(
                 LogContract.Move.LEFT -> {
                     val currentIndex = getCurrentMonthIndex()
                     if(currentIndex > 0) {
-                        monthShareFlow.emit(
-                            getCurrentDayOfWaterList()
-                                .getArray(month)[currentIndex - 1]
-                                .first)
+                        val prev = monthFlow.value[currentIndex - 1]
+                        getMonthAmount(prev)
                     }
                 }
                 LogContract.Move.RIGHT -> {
                     val currentIndex = getCurrentMonthIndex()
-                    if(currentIndex < getCurrentDayOfWaterList().getArray(month).size - 1) {
-                        monthShareFlow.emit(
-                            getCurrentDayOfWaterList()
-                                .getArray(month)[currentIndex + 1]
-                                .first)
+                    if(currentIndex < monthFlow.value.size - 1) {
+                        val next = monthFlow.value[currentIndex + 1]
+                        getMonthAmount(next)
                     }
                 }
                 LogContract.Move.INIT -> {
-                    monthShareFlow.emit(DateTimeUtils.getTodayDate())
+                    val currentIndex = getCurrentMonthIndex()
+                    val current = if(currentIndex != -1) {
+                        monthFlow.value[currentIndex]
+                    } else {
+                        Pair(DateTimeUtils.getTodayDate(), DayOfWaterList(arrayListOf()))
+                    }
+                    getMonthAmount(current)
                 }
             }
         }
     }
 
-    //현재 날짜로 조회한 DayOfWater
-//    private suspend fun getDayAmount(date: String) {
-//        val dayAmount = waterRepository.getAmount(date)
-//        if(dayAmount != null) {
-//            val list = DayOfWaterList(arrayListOf(dayAmount.toMap()))
-//            setState { LogContract.State.Complete(list, LogContract.DateUnit.DAY) }
-//        } else {
-//            waterRepository.createAmount(date)
-//        }
-//    }
-
-    //현재 날짜에 해당하는 주의 월요일 ~ 일요일까지의 DayOfWater 리스트
-    private fun getWeekAmount(date: String) {
-        val result = waterRepository.getAmountWeekBy(date)
-        val weekAmount = DayOfWaterList(
-            result.map {
-                it.toMap()
-            }
-        )
-        if(weekAmount.list.isNotEmpty()) {
-            setState { LogContract.State.Complete(weekAmount, LogContract.DateUnit.WEEK) }
-        } else {
-            setState { LogContract.State.Error }
-        }
+    //현재 선택된 일자로 업데이트
+    private fun getDayAmount(water: DayOfWater) {
+        dateLiveData.value = water.date
+        val result = DayOfWaterList(arrayListOf(water))
+        setState { LogContract.State.Complete(result, LogContract.DateUnit.DAY) }
     }
 
-    //현재 날짜에 해당하는 월의 1일 ~ 30일(31일) 까지의 DayOfWater 리스트
-    private fun getMonthAmount(date: String) {
-        val result = waterRepository.getAmountMonthBy(date)
-        val monthAmount = DayOfWaterList(
-            result.map {
-                it.toMap()
-            }
-        )
-        if(monthAmount.list.isNotEmpty()) {
-            setState { LogContract.State.Complete(monthAmount, LogContract.DateUnit.MONTH) }
-        } else {
-            setState { LogContract.State.Error }
-        }
+    //현재 선택된 날짜의 주간 데이터로 업데이트
+    private fun getWeekAmount(pair: Pair<String, DayOfWaterList>) {
+        weekLiveData.value = pair.first
+        val result = pair.second
+        setState { LogContract.State.Complete(result, LogContract.DateUnit.WEEK) }
+    }
+
+    //현재 선택된 날짜의 월간 데이터로 업데이트
+    private fun getMonthAmount(pair: Pair<String, DayOfWaterList>) {
+        monthLiveData.value = pair.first
+        val result = pair.second
+        setState { LogContract.State.Complete(result, LogContract.DateUnit.MONTH) }
     }
 
     private fun showAddDialog() {
@@ -222,44 +225,45 @@ class LogViewModel(
 
     private fun removeDayAmount(water: Water) {
         launch {
-            waterRepository.deleteAmount(dateStateFlow.value, water.dateTime)
+            waterRepository.deleteAmount(dateLiveData.value, water.dateTime)
         }
     }
 
-    private fun getCurrentDayOfWaterList(): DayOfWaterList = allDayOfWaterLiveData.value
-
-    //List<DayOfWater>에서 현재 세팅된 날짜랑 같은 마지막 DayOfWater의 인덱스
+    //전체 데이터에서 현재 세팅된 날짜랑 같은 마지막 DayOfWater의 인덱스
     private fun getCurrentDateWaterIndex(): Int {
-        return getCurrentDayOfWaterList().list
-            .indexOfLast { it.date == dateStateFlow.value }
+        return dayFlow.value.list
+            .indexOfLast { it.date == dateLiveData.value }
     }
 
+    //주간 데이터 리스트에서 주간 시작일(yyyy-MM-dd)과 동일한 주의 인덱스
     private fun getCurrentWeekIndex(): Int {
-        val date = weekLiveData.value ?: ""
-        return getCurrentDayOfWaterList().getArray(week).indexOfFirst {
-            it.first <= date
-                    && date <= it.second
+        val date = weekLiveData.value
+        val startWeekDate = DateTimeUtils.getWeekDates(date).first
+        return weekFlow.value.indexOfFirst {
+            it.first == startWeekDate
         }
     }
 
+    //월간 데이터 리스트에서 월간 시작일(yyyy-MM-dd)과 동일한 월의 인덱스
     private fun getCurrentMonthIndex(): Int {
-        val date = monthLiveData.value ?: ""
-        return getCurrentDayOfWaterList().getArray(month).indexOfFirst {
-            it.first <= date
-                    && date <= it.second
+        val date = monthLiveData.value
+        val startMonthDate = DateTimeUtils.getMonthDates(date).first
+        return monthFlow.value.indexOfFirst {
+            it.first == startMonthDate
         }
     }
 
     //LogEditBottomDialog에서 사용할 메서드
     fun addAmount(amount: Int, date: String) {
         launch {
-            waterRepository.addAmount(dateStateFlow.value, amount, date)
+            waterRepository.addAmount(dateLiveData.value, amount, date)
         }
     }
 
     fun updateAmount(origin: Water, amount: Int, date: String) {
         launch {
-            waterRepository.updateAmount(dateStateFlow.value, origin, amount, date)
+            waterRepository.updateAmount(dateLiveData.value, origin, amount, date)
         }
     }
+    //end
 }

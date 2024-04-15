@@ -42,31 +42,40 @@ data class Water(
 data class DayOfWaterList(
     val list: List<DayOfWater>
 ) {
-    fun getArray(transformer: DayTransformer): Array<Pair<String, String>> {
+    fun getArray(transformer: DayTransformer): List<Pair<String, DayOfWaterList>> {
         return transformer.onTransform(list)
     }
 }
 
 interface DayTransformer {
-    fun onTransform(list: List<DayOfWater>): Array<Pair<String, String>>
+    //key값이 같은 날짜끼리 묶은 리스트 값 반환
+    fun onTransform(list: List<DayOfWater>): List<Pair<String, DayOfWaterList>>
 }
 
 class WeekLog: DayTransformer {
-    override fun onTransform(list: List<DayOfWater>): Array<Pair<String, String>> {
-        val set = LinkedHashSet<Pair<String, String>>()
-        list.forEach {
-            set.add(DateTimeUtils.getWeekDates(it.date))
+    override fun onTransform(list: List<DayOfWater>): List<Pair<String, DayOfWaterList>> {
+        val map = LinkedHashMap<String, DayOfWaterList>()
+        val sortedMap = list.groupBy {
+            DateTimeUtils.getWeekDates(it.date).first
         }
-        return set.toArray(arrayOf())
+        for((k, v) in sortedMap) {
+            map[k] = DayOfWaterList(v)
+        }
+
+        return map.toList()
     }
 }
 
 class MonthLog: DayTransformer {
-    override fun onTransform(list: List<DayOfWater>): Array<Pair<String, String>> {
-        val set = LinkedHashSet<Pair<String, String>>()
-        list.forEach {
-            set.add(DateTimeUtils.getMonthDates(it.date))
+    override fun onTransform(list: List<DayOfWater>): List<Pair<String, DayOfWaterList>> {
+        val map = LinkedHashMap<String, DayOfWaterList>()
+        val sortedMap = list.groupBy {
+            DateTimeUtils.getMonthDates(it.date).first
         }
-        return set.toArray(arrayOf())
+        for((k, v) in sortedMap) {
+            map[k] = DayOfWaterList(v)
+        }
+
+        return map.toList()
     }
 }
