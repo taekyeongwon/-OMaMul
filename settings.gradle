@@ -15,3 +15,18 @@ dependencyResolutionManagement {
 }
 rootProject.name = "OMaMul"
 include ':app'
+include ':core'
+include ':core:data'
+include ':core:database'
+include ':core:domain'
+include ':core:ui'
+include ':core:model'
+include ':feature-water'
+include ':feature-common'
+include ':feature-common:init'
+include ':feature-common:setting'
+include ':feature-water:alarm'
+include ':feature-water:cup'
+include ':feature-water:home'
+include ':feature-water:record'
+include ':feature-water:setting'
