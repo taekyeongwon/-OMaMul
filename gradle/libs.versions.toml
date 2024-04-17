@@ -1,0 +1,70 @@
+[versions]
+core-ktx = "1.8.0"
+appcompat = "1.5.1"
+material = "1.5.0"
+constraintlayout = "2.1.4"
+junit = "4.13.2"
+ext-junit = "1.1.5"
+espresso-core = "3.5.1"
+navigation-fragment-ktx = "2.5.3"
+navigation-ui-ktx = "2.5.3"
+core-splashscreen = "1.0.0"
+
+activity-ktx = "1.6.1"
+fragment-ktx = "1.5.5"
+lifecycle-livedata-ktx = "2.4.0"
+
+retrofit = "2.9.0"
+converter-gson = "2.9.0"
+okhttp = "4.9.2"
+logging-interceptor = "4.9.2"
+
+realm-library-base = "1.11.0"
+realm-library-sync = "1.11.0"
+
+mp-android-chart = "v3.1.0"
+
+android-application = "8.0.2"
+android-library = "8.0.2"
+jetbrains-kotlin-android = "1.8.20"
+jetbrains-kotlin-jvm = "1.8.20"
+navigation-safeargs = "2.5.3"
+realm-kotlin = "1.11.0"
+
+[libraries]
+androidx-core = {module="androidx.core:core-ktx", version.ref="core-ktx"}
+androidx-appcompat = {module="androidx.appcompat:appcompat", version.ref="appcompat"}
+android-material = {module="com.google.android.material:material", version.ref="material"}
+androidx-constraintlayout = {module="androidx.constraintlayout:constraintlayout", version.ref="constraintlayout"}
+junit = {module="junit:junit", version.ref="junit"}
+androidx-test-junit = {module="androidx.test.ext:junit", version.ref="ext-junit"}
+androidx-test-espresso = {module="androidx.test.espresso:espresso-core", version.ref="espresso-core"}
+
+androidx-navigation-fragment = {module="androidx.navigation:navigation-fragment-ktx", version.ref="navigation-fragment-ktx"}
+androidx-navigation-ui = {module="androidx.navigation:navigation-ui-ktx", version.ref="navigation-ui-ktx"}
+androidx-splash = {module="androidx.core:core-splashscreen", version.ref="core-splashscreen"}
+
+androidx-activity-ktx = {module="androidx.activity:activity-ktx", version.ref="activity-ktx"}
+androidx-fragment-ktx = {module="androidx.fragment:fragment-ktx", version.ref="fragment-ktx"}
+androidx-lifecycle-livedata = {module="androidx.lifecycle:lifecycle-livedata-ktx", version.ref="lifecycle-livedata-ktx"}
+
+retrofit2-retrofit = {module="com.squareup.retrofit2:retrofit", version.ref="retrofit"}
+retrofit2-converter-gson = {module="com.squareup.retrofit2:converter-gson", version.ref="converter-gson"}
+okhttp3-okhttp = {module="com.squareup.okhttp3:okhttp", version.ref="okhttp"}
+okhttp3-logging-interceptor = {module="com.squareup.okhttp3:logging-interceptor", version.ref="logging-interceptor"}
+
+realm-kotlin-library-base = {module="io.realm.kotlin:library-base", version.ref="realm-library-base"}
+realm-kotlin-library-sync = {module="io.realm.kotlin:library-sync", version.ref="realm-library-sync"}
+
+android-chart = {module="com.github.PhilJay:MPAndroidChart", version.ref="mp-android-chart"}
+
+[plugins]
+android-application = { id="com.android.application", version.ref="android-application"}
+android-library = {id="com.android.library", version.ref="android-library"}
+jetbrains-kotlin-android = {id="org.jetbrains.kotlin.android", version.ref="jetbrains-kotlin-android"}
+jetbrains-kotlin-jvm = {id="org.jetbrains.kotlin.jvm", version.ref="jetbrains-kotlin-jvm"}
+navigation-safeargs = {id="androidx.navigation.safeargs.kotlin", version.ref="navigation-safeargs"}
+realm-kotlin = {id="io.realm.kotlin", version.ref="realm-kotlin"}
+
+[bundles]
+retrofit = ['retrofit2-retrofit', 'retrofit2-converter-gson', 'okhttp3-okhttp', 'okhttp3-logging-interceptor']
