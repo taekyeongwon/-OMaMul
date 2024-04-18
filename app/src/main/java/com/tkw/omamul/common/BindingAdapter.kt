@@ -4,7 +4,7 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
-import com.tkw.omamul.common.util.DateTimeUtils
+import com.tkw.common.util.DateTimeUtils
 import com.tkw.omamul.ui.custom.WaterAmountPicker
 
 object BindingAdapter {

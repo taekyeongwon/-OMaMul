@@ -14,9 +14,9 @@ import androidx.navigation.ui.NavigationUI
 import com.tkw.omamul.MainApplication
 import com.tkw.omamul.R
 import com.tkw.omamul.common.getViewModelFactory
-import com.tkw.omamul.common.C
-import com.tkw.omamul.common.DateChangeReceiver
-import com.tkw.omamul.common.util.DateTimeUtils
+import com.tkw.common.C
+import com.tkw.common.DateChangeReceiver
+import com.tkw.common.util.DateTimeUtils
 import com.tkw.omamul.databinding.ActivityWaterBinding
 import com.tkw.omamul.ui.view.water.home.WaterViewModel
 

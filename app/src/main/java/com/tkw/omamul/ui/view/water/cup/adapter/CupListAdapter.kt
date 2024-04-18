@@ -6,9 +6,9 @@ import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.tkw.omamul.common.C
-import com.tkw.omamul.common.ItemMoveListener
-import com.tkw.omamul.common.OnItemDrag
+import com.tkw.common.C
+import com.tkw.common.ItemMoveListener
+import com.tkw.common.OnItemDrag
 import com.tkw.model.Cup
 import com.tkw.omamul.databinding.ItemCupListEditBinding
 import com.tkw.omamul.databinding.ItemManagedCupBinding
@@ -16,7 +16,7 @@ import com.tkw.omamul.databinding.ItemManagedCupBinding
 class CupListAdapter(
     private val editListener: (Int) -> Unit = {},
     private val deleteListener: (Int) -> Unit = {},
-    private val dragListener: OnItemDrag? = null
+    private val dragListener: OnItemDrag<Cup>? = null
 ): ListAdapter<Cup, RecyclerView.ViewHolder>(CupDiffCallback()),
     ItemMoveListener {
 
@@ -91,7 +91,7 @@ class CupListAdapter(
     @SuppressLint("ClickableViewAccessibility")
     class CupListEditViewHolder(
         val binding: ItemCupListEditBinding,
-        dragListener: OnItemDrag?
+        dragListener: OnItemDrag<Cup>?
     ): RecyclerView.ViewHolder(binding.root) {
         init {
             with(binding) {

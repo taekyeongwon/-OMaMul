@@ -11,9 +11,9 @@ import androidx.navigation.fragment.findNavController
 import com.tkw.omamul.MainApplication
 import com.tkw.omamul.R
 import com.tkw.omamul.common.getViewModelFactory
-import com.tkw.omamul.common.C
+import com.tkw.common.C
 import com.tkw.omamul.databinding.FragmentInitIntakeBinding
-import com.tkw.omamul.common.autoCleared
+import com.tkw.common.autoCleared
 import kotlinx.coroutines.launch
 
 class InitIntakeFragment: Fragment() {

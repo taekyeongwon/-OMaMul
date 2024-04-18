@@ -1,4 +1,4 @@
-package com.tkw.omamul.common
+package com.tkw.common
 
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver

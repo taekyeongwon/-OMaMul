@@ -9,9 +9,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.tkw.omamul.common.ItemTouchHelperCallback
-import com.tkw.omamul.common.OnItemDrag
-import com.tkw.omamul.common.autoCleared
+import com.tkw.common.ItemTouchHelperCallback
+import com.tkw.common.OnItemDrag
+import com.tkw.common.autoCleared
 import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.model.Cup
 import com.tkw.omamul.databinding.FragmentCupListEditBinding
@@ -42,7 +42,7 @@ class CupListEditFragment: Fragment() {
     }
 
     private fun initView() {
-        cupListAdapter = CupListAdapter(dragListener = object : OnItemDrag {
+        cupListAdapter = CupListAdapter(dragListener = object : OnItemDrag<Cup> {
             override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
                 itemTouchHelper.startDrag(viewHolder)
             }

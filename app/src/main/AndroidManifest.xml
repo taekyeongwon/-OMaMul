@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".common.DateChangeReceiver"
+        <receiver android:name="com.tkw.common.DateChangeReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.DATE_CHANGED" />

@@ -9,10 +9,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tkw.omamul.R
 import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.databinding.DialogLogEditBinding
-import com.tkw.omamul.common.BottomExpand
-import com.tkw.omamul.common.BottomExpandImpl
-import com.tkw.omamul.common.autoCleared
-import com.tkw.omamul.common.util.DateTimeUtils
+import com.tkw.common.BottomExpand
+import com.tkw.common.BottomExpandImpl
+import com.tkw.common.autoCleared
+import com.tkw.common.util.DateTimeUtils
 import com.tkw.model.Water
 import com.tkw.omamul.ui.view.water.log.LogViewModel
 

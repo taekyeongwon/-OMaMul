@@ -1,6 +1,6 @@
 package com.tkw.model
 
-import com.tkw.omamul.common.util.DateTimeUtils
+import com.tkw.common.util.DateTimeUtils
 import io.realm.kotlin.types.EmbeddedRealmObject
 
 class WaterEntity: EmbeddedRealmObject {

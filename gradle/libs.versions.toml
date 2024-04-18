@@ -24,8 +24,8 @@ realm-library-sync = "1.11.0"
 
 mp-android-chart = "v3.1.0"
 
-android-application = "8.0.2"
-android-library = "8.0.2"
+android-application = "8.1.1"
+android-library = "8.1.1"
 jetbrains-kotlin-android = "1.8.20"
 jetbrains-kotlin-jvm = "1.8.20"
 navigation-safeargs = "2.5.3"

@@ -6,7 +6,7 @@ import androidx.lifecycle.asLiveData
 import com.tkw.omamul.base.AppError
 import com.tkw.omamul.base.BaseViewModel
 import com.tkw.omamul.base.launch
-import com.tkw.omamul.common.SingleLiveEvent
+import com.tkw.common.SingleLiveEvent
 import com.tkw.omamul.data.CupRepository
 import com.tkw.model.Cup
 import kotlinx.coroutines.ExperimentalCoroutinesApi

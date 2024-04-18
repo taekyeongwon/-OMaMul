@@ -3,7 +3,7 @@ package com.tkw.omamul.ui.view.water.log
 import androidx.lifecycle.viewModelScope
 import com.tkw.omamul.base.IntentBaseViewModel
 import com.tkw.omamul.base.launch
-import com.tkw.omamul.common.util.DateTimeUtils
+import com.tkw.common.util.DateTimeUtils
 import com.tkw.omamul.data.WaterRepository
 import com.tkw.model.DayOfWater
 import com.tkw.model.DayOfWaterList
@@ -52,7 +52,8 @@ class LogViewModel(
         }
     }.stateIn(
         initialValue = listOf(
-            Pair(DateTimeUtils.getWeekDates(DateTimeUtils.getTodayDate()).first,
+            Pair(
+                DateTimeUtils.getWeekDates(DateTimeUtils.getTodayDate()).first,
                 DayOfWaterList(arrayListOf())
             )
         ),
@@ -68,7 +69,8 @@ class LogViewModel(
         }
     }.stateIn(
         initialValue = listOf(
-            Pair(DateTimeUtils.getMonthDates(DateTimeUtils.getTodayDate()).first,
+            Pair(
+                DateTimeUtils.getMonthDates(DateTimeUtils.getTodayDate()).first,
                 DayOfWaterList(arrayListOf()))
         ),
         started = SharingStarted.Eagerly,

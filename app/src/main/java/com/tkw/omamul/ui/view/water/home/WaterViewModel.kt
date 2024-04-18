@@ -6,7 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.asLiveData
 import com.tkw.omamul.base.BaseViewModel
 import com.tkw.omamul.base.launch
-import com.tkw.omamul.common.util.DateTimeUtils
+import com.tkw.common.util.DateTimeUtils
 import com.tkw.omamul.data.CupRepository
 import com.tkw.omamul.data.WaterRepository
 import com.tkw.model.Cup
