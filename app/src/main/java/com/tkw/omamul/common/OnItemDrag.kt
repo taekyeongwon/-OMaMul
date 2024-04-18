@@ -1,7 +1,7 @@
 package com.tkw.omamul.common
 
 import androidx.recyclerview.widget.RecyclerView
-import com.tkw.omamul.data.model.Cup
+import com.tkw.model.Cup
 
 interface OnItemDrag {
     //adapter -> ItemTouchHelper에 이벤트 전달

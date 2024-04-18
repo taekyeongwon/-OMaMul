@@ -1,4 +1,4 @@
-package com.tkw.omamul.data.model
+package com.tkw.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

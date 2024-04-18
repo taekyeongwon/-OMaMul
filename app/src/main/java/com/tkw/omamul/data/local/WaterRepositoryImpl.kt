@@ -3,9 +3,9 @@ package com.tkw.omamul.data.local
 import com.tkw.omamul.common.util.DateTimeUtils
 import com.tkw.omamul.data.WaterDao
 import com.tkw.omamul.data.WaterRepository
-import com.tkw.omamul.data.model.DayOfWaterEntity
-import com.tkw.omamul.data.model.Water
-import com.tkw.omamul.data.model.WaterEntity
+import com.tkw.model.DayOfWaterEntity
+import com.tkw.model.Water
+import com.tkw.model.WaterEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

@@ -23,7 +23,7 @@ import com.tkw.omamul.ui.view.water.home.adapter.CupPagerAdapter
 import com.tkw.omamul.common.autoCleared
 import com.tkw.omamul.common.util.DateTimeUtils
 import com.tkw.omamul.common.util.DimenUtils
-import com.tkw.omamul.data.model.Water
+import com.tkw.model.Water
 
 
 class WaterFragment: Fragment() {

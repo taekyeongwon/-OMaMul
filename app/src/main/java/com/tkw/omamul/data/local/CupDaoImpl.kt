@@ -1,9 +1,9 @@
 package com.tkw.omamul.data.local
 
 import com.tkw.omamul.data.CupDao
-import com.tkw.omamul.data.model.Cup
-import com.tkw.omamul.data.model.CupEntity
-import com.tkw.omamul.data.model.CupListEntity
+import com.tkw.model.Cup
+import com.tkw.model.CupEntity
+import com.tkw.model.CupListEntity
 import io.realm.kotlin.MutableRealm
 import io.realm.kotlin.Realm
 import io.realm.kotlin.notifications.ResultsChange

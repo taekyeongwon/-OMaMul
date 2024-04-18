@@ -13,8 +13,7 @@ import com.tkw.omamul.common.ItemTouchHelperCallback
 import com.tkw.omamul.common.OnItemDrag
 import com.tkw.omamul.common.autoCleared
 import com.tkw.omamul.common.getViewModelFactory
-import com.tkw.omamul.data.model.Cup
-import com.tkw.omamul.data.model.Draggable
+import com.tkw.model.Cup
 import com.tkw.omamul.databinding.FragmentCupListEditBinding
 import com.tkw.omamul.ui.custom.DividerDecoration
 import com.tkw.omamul.ui.view.water.cup.adapter.CupListAdapter

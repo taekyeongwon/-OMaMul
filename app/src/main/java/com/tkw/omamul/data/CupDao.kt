@@ -1,7 +1,7 @@
 package com.tkw.omamul.data
 
-import com.tkw.omamul.data.model.CupEntity
-import com.tkw.omamul.data.model.CupListEntity
+import com.tkw.model.CupEntity
+import com.tkw.model.CupListEntity
 import io.realm.kotlin.notifications.ResultsChange
 import kotlinx.coroutines.flow.Flow
 

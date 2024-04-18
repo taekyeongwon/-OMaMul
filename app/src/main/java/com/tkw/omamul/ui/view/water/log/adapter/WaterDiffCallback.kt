@@ -1,7 +1,7 @@
 package com.tkw.omamul.ui.view.water.log.adapter
 
 import androidx.recyclerview.widget.DiffUtil
-import com.tkw.omamul.data.model.Water
+import com.tkw.model.Water
 
 class WaterDiffCallback: DiffUtil.ItemCallback<Water>() {
     //이전 어댑터와 바뀌는 어댑터의 아이템이 동일한지 확인.

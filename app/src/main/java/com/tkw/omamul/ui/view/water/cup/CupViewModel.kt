@@ -8,7 +8,7 @@ import com.tkw.omamul.base.BaseViewModel
 import com.tkw.omamul.base.launch
 import com.tkw.omamul.common.SingleLiveEvent
 import com.tkw.omamul.data.CupRepository
-import com.tkw.omamul.data.model.Cup
+import com.tkw.model.Cup
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.mapLatest
 

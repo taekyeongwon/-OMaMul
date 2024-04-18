@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle.State
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -17,7 +16,7 @@ import com.tkw.omamul.databinding.FragmentLogMonthBinding
 import com.tkw.omamul.common.autoCleared
 import com.tkw.omamul.common.util.DateTimeUtils
 import com.tkw.omamul.common.util.animateByMaxValue
-import com.tkw.omamul.data.model.DayOfWater
+import com.tkw.model.DayOfWater
 import com.tkw.omamul.ui.custom.chart.MonthMarkerView
 import kotlinx.coroutines.launch
 

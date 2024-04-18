@@ -1,4 +1,4 @@
-package com.tkw.omamul.data.model
+package com.tkw.model
 
 import io.realm.kotlin.types.EmbeddedRealmObject
 import org.mongodb.kbson.ObjectId

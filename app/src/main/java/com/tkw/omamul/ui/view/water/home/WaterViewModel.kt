@@ -9,9 +9,9 @@ import com.tkw.omamul.base.launch
 import com.tkw.omamul.common.util.DateTimeUtils
 import com.tkw.omamul.data.CupRepository
 import com.tkw.omamul.data.WaterRepository
-import com.tkw.omamul.data.model.Cup
-import com.tkw.omamul.data.model.DayOfWater
-import com.tkw.omamul.data.model.Water
+import com.tkw.model.Cup
+import com.tkw.model.DayOfWater
+import com.tkw.model.Water
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest

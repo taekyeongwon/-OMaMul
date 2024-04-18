@@ -1,7 +1,7 @@
 package com.tkw.omamul.data
 
-import com.tkw.omamul.data.model.DayOfWaterEntity
-import com.tkw.omamul.data.model.Water
+import com.tkw.model.DayOfWaterEntity
+import com.tkw.model.Water
 import kotlinx.coroutines.flow.Flow
 
 interface WaterRepository {

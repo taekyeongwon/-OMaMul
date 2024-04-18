@@ -1,7 +1,7 @@
 package com.tkw.omamul.data
 
-import com.tkw.omamul.data.model.DayOfWaterEntity
-import com.tkw.omamul.data.model.WaterEntity
+import com.tkw.model.DayOfWaterEntity
+import com.tkw.model.WaterEntity
 import io.realm.kotlin.notifications.ResultsChange
 import kotlinx.coroutines.flow.Flow
 

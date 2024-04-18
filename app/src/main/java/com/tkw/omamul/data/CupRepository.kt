@@ -1,8 +1,8 @@
 package com.tkw.omamul.data
 
-import com.tkw.omamul.data.model.Cup
-import com.tkw.omamul.data.model.CupEntity
-import com.tkw.omamul.data.model.CupListEntity
+import com.tkw.model.Cup
+import com.tkw.model.CupEntity
+import com.tkw.model.CupListEntity
 import kotlinx.coroutines.flow.Flow
 
 interface CupRepository {

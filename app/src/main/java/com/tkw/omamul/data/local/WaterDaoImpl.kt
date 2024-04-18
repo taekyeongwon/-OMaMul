@@ -1,8 +1,8 @@
 package com.tkw.omamul.data.local
 
 import com.tkw.omamul.data.WaterDao
-import com.tkw.omamul.data.model.DayOfWaterEntity
-import com.tkw.omamul.data.model.WaterEntity
+import com.tkw.model.DayOfWaterEntity
+import com.tkw.model.WaterEntity
 import io.realm.kotlin.MutableRealm
 import io.realm.kotlin.Realm
 import io.realm.kotlin.notifications.ResultsChange

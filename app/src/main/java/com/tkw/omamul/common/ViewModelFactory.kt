@@ -10,11 +10,11 @@ import com.tkw.omamul.data.local.CupDaoImpl
 import com.tkw.omamul.data.local.CupRepositoryImpl
 import com.tkw.omamul.data.local.WaterDaoImpl
 import com.tkw.omamul.data.local.WaterRepositoryImpl
-import com.tkw.omamul.data.model.Cup
-import com.tkw.omamul.data.model.CupEntity
-import com.tkw.omamul.data.model.CupListEntity
-import com.tkw.omamul.data.model.DayOfWaterEntity
-import com.tkw.omamul.data.model.WaterEntity
+import com.tkw.model.Cup
+import com.tkw.model.CupEntity
+import com.tkw.model.CupListEntity
+import com.tkw.model.DayOfWaterEntity
+import com.tkw.model.WaterEntity
 import com.tkw.omamul.ui.view.init.InitViewModel
 import com.tkw.omamul.ui.view.water.cup.CupViewModel
 import com.tkw.omamul.ui.view.water.home.WaterViewModel

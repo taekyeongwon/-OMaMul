@@ -5,11 +5,11 @@ import com.tkw.omamul.base.IntentBaseViewModel
 import com.tkw.omamul.base.launch
 import com.tkw.omamul.common.util.DateTimeUtils
 import com.tkw.omamul.data.WaterRepository
-import com.tkw.omamul.data.model.DayOfWater
-import com.tkw.omamul.data.model.DayOfWaterList
-import com.tkw.omamul.data.model.MonthLog
-import com.tkw.omamul.data.model.Water
-import com.tkw.omamul.data.model.WeekLog
+import com.tkw.model.DayOfWater
+import com.tkw.model.DayOfWaterList
+import com.tkw.model.MonthLog
+import com.tkw.model.Water
+import com.tkw.model.WeekLog
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

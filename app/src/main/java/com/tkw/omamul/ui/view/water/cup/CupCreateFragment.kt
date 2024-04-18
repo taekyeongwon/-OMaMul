@@ -12,7 +12,6 @@ import androidx.navigation.fragment.navArgs
 import com.tkw.omamul.R
 import com.tkw.omamul.common.autoCleared
 import com.tkw.omamul.common.getViewModelFactory
-import com.tkw.omamul.data.model.Cup
 import com.tkw.omamul.databinding.FragmentCupCreateBinding
 
 class CupCreateFragment: Fragment() {

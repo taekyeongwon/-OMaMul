@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.tkw.omamul.common.util.DateTimeUtils
-import com.tkw.omamul.data.model.Water
+import com.tkw.model.Water
 import com.tkw.omamul.databinding.ItemDayAmountBinding
 
 class DayListAdapter(

@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.tkw.omamul.common.C
-import com.tkw.omamul.data.model.Cup
+import com.tkw.model.Cup
 import com.tkw.omamul.databinding.ItemCupAddBinding
 import com.tkw.omamul.databinding.ItemCupBinding
 import com.tkw.omamul.ui.view.water.cup.adapter.CupDiffCallback

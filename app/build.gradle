@@ -1,8 +1,8 @@
 plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'androidx.navigation.safeargs.kotlin'
-    id 'io.realm.kotlin'
+    alias libs.plugins.android.application
+    alias libs.plugins.jetbrains.kotlin.android
+    alias libs.plugins.navigation.safeargs
+    alias libs.plugins.realm.kotlin
     id 'kotlin-parcelize'
     id 'kotlin-kapt'
 }
@@ -43,6 +43,7 @@ android {
 }
 
 dependencies {
+    implementation project(path: ':core:model')
 
     implementation libs.androidx.core
     implementation libs.androidx.appcompat
@@ -51,6 +52,7 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.androidx.test.junit
     androidTestImplementation libs.androidx.test.espresso
+
     implementation libs.androidx.navigation.fragment
     implementation libs.androidx.navigation.ui
     implementation libs.androidx.splash

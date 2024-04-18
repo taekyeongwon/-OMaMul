@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tkw.omamul.common.C
 import com.tkw.omamul.common.ItemMoveListener
 import com.tkw.omamul.common.OnItemDrag
-import com.tkw.omamul.data.model.Cup
+import com.tkw.model.Cup
 import com.tkw.omamul.databinding.ItemCupListEditBinding
 import com.tkw.omamul.databinding.ItemManagedCupBinding
 

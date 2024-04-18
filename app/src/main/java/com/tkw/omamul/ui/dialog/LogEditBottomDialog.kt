@@ -13,7 +13,7 @@ import com.tkw.omamul.common.BottomExpand
 import com.tkw.omamul.common.BottomExpandImpl
 import com.tkw.omamul.common.autoCleared
 import com.tkw.omamul.common.util.DateTimeUtils
-import com.tkw.omamul.data.model.Water
+import com.tkw.model.Water
 import com.tkw.omamul.ui.view.water.log.LogViewModel
 
 class LogEditBottomDialog(
