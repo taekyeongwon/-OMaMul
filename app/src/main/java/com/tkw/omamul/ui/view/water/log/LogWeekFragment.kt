@@ -10,13 +10,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.tkw.model.DayOfWater
 import com.tkw.omamul.R
 import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.databinding.FragmentLogWeekBinding
 import com.tkw.common.autoCleared
-import com.tkw.common.util.DateTimeUtils
 import com.tkw.common.util.animateByMaxValue
+import com.tkw.domain.model.DayOfWater
+import com.tkw.domain.util.DateTimeUtils
 import com.tkw.omamul.ui.custom.chart.WeekMarkerView
 import kotlinx.coroutines.launch
 

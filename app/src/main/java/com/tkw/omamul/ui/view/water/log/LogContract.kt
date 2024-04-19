@@ -3,8 +3,8 @@ package com.tkw.omamul.ui.view.water.log
 import com.tkw.omamul.base.IEvent
 import com.tkw.omamul.base.ISideEffect
 import com.tkw.omamul.base.IState
-import com.tkw.model.DayOfWaterList
-import com.tkw.model.Water
+import com.tkw.domain.model.DayOfWaterList
+import com.tkw.domain.model.Water
 
 class LogContract {
     sealed class Event: IEvent {

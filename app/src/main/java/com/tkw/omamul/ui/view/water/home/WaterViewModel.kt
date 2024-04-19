@@ -6,12 +6,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.asLiveData
 import com.tkw.omamul.base.BaseViewModel
 import com.tkw.omamul.base.launch
-import com.tkw.common.util.DateTimeUtils
-import com.tkw.omamul.data.CupRepository
-import com.tkw.omamul.data.WaterRepository
-import com.tkw.model.Cup
-import com.tkw.model.DayOfWater
-import com.tkw.model.Water
+import com.tkw.domain.util.DateTimeUtils
+import com.tkw.domain.CupRepository
+import com.tkw.domain.WaterRepository
+import com.tkw.domain.model.Cup
+import com.tkw.domain.model.DayOfWater
+import com.tkw.domain.model.Water
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -30,14 +30,14 @@ class WaterViewModel(
     //현재 날짜로 조회한 DayOfWater
     @OptIn(ExperimentalCoroutinesApi::class)
     val amountLiveData: LiveData<DayOfWater> = dateStringFlow.flatMapLatest { date ->
-        waterRepository.getAmountByFlow(date).map { it.toMap() }
+        waterRepository.getAmountByFlow(date)
     }.asLiveData()
 
     //메인화면에 표시할 컵 리스트
     @OptIn(ExperimentalCoroutinesApi::class)
     val cupListLiveData: LiveData<List<Cup>> =
         cupRepository.getCupList().mapLatest {
-            it.toMap().cupList
+            it.cupList
         }.asLiveData()
 
     //컵 관리 화면 이동 후 돌아왔을 때 위치 저장용

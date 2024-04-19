@@ -16,7 +16,7 @@ import com.tkw.omamul.R
 import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.common.C
 import com.tkw.common.DateChangeReceiver
-import com.tkw.common.util.DateTimeUtils
+import com.tkw.domain.util.DateTimeUtils
 import com.tkw.omamul.databinding.ActivityWaterBinding
 import com.tkw.omamul.ui.view.water.home.WaterViewModel
 

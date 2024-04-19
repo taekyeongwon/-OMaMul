@@ -91,7 +91,7 @@
 
         <argument
             android:name="cupArgument"
-            app:argType="com.tkw.model.Cup"
+            app:argType="com.tkw.domain.model.Cup"
             app:nullable="true"/>
     </fragment>
 

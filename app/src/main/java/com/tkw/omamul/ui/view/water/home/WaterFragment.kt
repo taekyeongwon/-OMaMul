@@ -21,9 +21,9 @@ import com.tkw.omamul.databinding.FragmentWaterBinding
 import com.tkw.omamul.ui.dialog.WaterIntakeDialog
 import com.tkw.omamul.ui.view.water.home.adapter.CupPagerAdapter
 import com.tkw.common.autoCleared
-import com.tkw.common.util.DateTimeUtils
 import com.tkw.common.util.DimenUtils
-import com.tkw.model.Water
+import com.tkw.domain.model.Water
+import com.tkw.domain.util.DateTimeUtils
 
 
 class WaterFragment: Fragment() {

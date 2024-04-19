@@ -2,7 +2,7 @@ package com.tkw.omamul.ui.view.init
 
 import androidx.lifecycle.viewModelScope
 import com.tkw.omamul.base.IntentBaseViewModel
-import com.tkw.omamul.data.WaterRepository
+import com.tkw.domain.WaterRepository
 import kotlinx.coroutines.launch
 
 class InitViewModel(

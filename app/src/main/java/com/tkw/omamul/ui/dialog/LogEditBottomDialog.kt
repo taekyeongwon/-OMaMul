@@ -12,8 +12,8 @@ import com.tkw.omamul.databinding.DialogLogEditBinding
 import com.tkw.common.BottomExpand
 import com.tkw.common.BottomExpandImpl
 import com.tkw.common.autoCleared
-import com.tkw.common.util.DateTimeUtils
-import com.tkw.model.Water
+import com.tkw.domain.model.Water
+import com.tkw.domain.util.DateTimeUtils
 import com.tkw.omamul.ui.view.water.log.LogViewModel
 
 class LogEditBottomDialog(

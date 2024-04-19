@@ -16,8 +16,8 @@ import com.tkw.omamul.ui.view.water.log.adapter.DayListAdapter
 import com.tkw.omamul.ui.custom.DividerDecoration
 import com.tkw.omamul.ui.dialog.LogEditBottomDialog
 import com.tkw.common.autoCleared
-import com.tkw.model.DayOfWater
-import com.tkw.model.Water
+import com.tkw.domain.model.DayOfWater
+import com.tkw.domain.model.Water
 import com.tkw.omamul.ui.custom.chart.DayMarkerView
 import kotlinx.coroutines.launch
 

@@ -10,7 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.tkw.omamul.R
 import com.tkw.omamul.common.getViewModelFactory
-import com.tkw.common.util.DateTimeUtils
+import com.tkw.domain.util.DateTimeUtils
 import com.tkw.omamul.databinding.FragmentInitTimeBinding
 import com.tkw.omamul.ui.dialog.OnResultListener
 import com.tkw.omamul.ui.dialog.AlarmTimeBottomDialog

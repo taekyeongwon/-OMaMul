@@ -6,11 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.tkw.omamul.data.local.CupDaoImpl
-import com.tkw.omamul.data.local.CupRepositoryImpl
-import com.tkw.omamul.data.local.WaterDaoImpl
-import com.tkw.omamul.data.local.WaterRepositoryImpl
-import com.tkw.model.Cup
+import com.tkw.database.local.CupDaoImpl
+import com.tkw.data.local.CupRepositoryImpl
+import com.tkw.database.local.WaterDaoImpl
+import com.tkw.data.local.WaterRepositoryImpl
+import com.tkw.domain.Cup
 import com.tkw.model.CupEntity
 import com.tkw.model.CupListEntity
 import com.tkw.model.DayOfWaterEntity
@@ -41,19 +41,19 @@ fun <V: Parcelable> getViewModelFactory(params: V?) = object: ViewModelProvider.
 
         return when(modelClass) {
             WaterViewModel::class.java -> WaterViewModel(
-                WaterRepositoryImpl(WaterDaoImpl(realm)),
-                CupRepositoryImpl(CupDaoImpl(realm)),
+                com.tkw.data.local.WaterRepositoryImpl(com.tkw.database.local.WaterDaoImpl(realm)),
+                com.tkw.data.local.CupRepositoryImpl(com.tkw.database.local.CupDaoImpl(realm)),
                 handle
             )
             InitViewModel::class.java -> InitViewModel(
-                WaterRepositoryImpl(WaterDaoImpl(realm))
+                com.tkw.data.local.WaterRepositoryImpl(com.tkw.database.local.WaterDaoImpl(realm))
             )
             CupViewModel::class.java -> CupViewModel(
-                CupRepositoryImpl(CupDaoImpl(realm)),
-                params as? Cup ?: Cup()
+                com.tkw.data.local.CupRepositoryImpl(com.tkw.database.local.CupDaoImpl(realm)),
+                params as? com.tkw.domain.Cup ?: com.tkw.domain.Cup()
             )
             LogViewModel::class.java -> LogViewModel(
-                WaterRepositoryImpl(WaterDaoImpl(realm))
+                com.tkw.data.local.WaterRepositoryImpl(com.tkw.database.local.WaterDaoImpl(realm))
             )
             else -> throw IllegalArgumentException("Unknown Class")
         } as T

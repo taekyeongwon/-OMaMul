@@ -7,8 +7,8 @@ import com.tkw.omamul.base.AppError
 import com.tkw.omamul.base.BaseViewModel
 import com.tkw.omamul.base.launch
 import com.tkw.common.SingleLiveEvent
-import com.tkw.omamul.data.CupRepository
-import com.tkw.model.Cup
+import com.tkw.domain.CupRepository
+import com.tkw.domain.model.Cup
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.mapLatest
 
@@ -20,7 +20,7 @@ class CupViewModel(
     @OptIn(ExperimentalCoroutinesApi::class)
     val cupListLiveData: LiveData<List<Cup>> =
         cupRepository.getCupList().mapLatest {
-            it.toMap().cupList  //Flow<CupListEntity> -> Flow<List<Cup>>으로 최신값 매핑
+            it.cupList  //Flow<CupListEntity> -> Flow<List<Cup>>으로 최신값 매핑
         }.asLiveData()
 
     //cup create fragment에서 관찰할 변수

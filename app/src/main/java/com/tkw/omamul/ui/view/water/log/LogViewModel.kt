@@ -3,13 +3,13 @@ package com.tkw.omamul.ui.view.water.log
 import androidx.lifecycle.viewModelScope
 import com.tkw.omamul.base.IntentBaseViewModel
 import com.tkw.omamul.base.launch
-import com.tkw.common.util.DateTimeUtils
-import com.tkw.omamul.data.WaterRepository
-import com.tkw.model.DayOfWater
-import com.tkw.model.DayOfWaterList
-import com.tkw.model.MonthLog
-import com.tkw.model.Water
-import com.tkw.model.WeekLog
+import com.tkw.domain.util.DateTimeUtils
+import com.tkw.domain.WaterRepository
+import com.tkw.domain.model.DayOfWater
+import com.tkw.domain.model.DayOfWaterList
+import com.tkw.domain.model.MonthLog
+import com.tkw.domain.model.Water
+import com.tkw.domain.model.WeekLog
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -35,9 +35,7 @@ class LogViewModel(
     @OptIn(ExperimentalCoroutinesApi::class)
     private val dayFlow: StateFlow<DayOfWaterList> =
         waterRepository.getAllDayEntity().mapLatest { list ->
-            DayOfWaterList(
-                list.map { it.toMap() }
-            )
+            DayOfWaterList(list)
         }.stateIn(
             initialValue = DayOfWaterList(arrayListOf()),
             started = SharingStarted.Eagerly,
@@ -71,7 +69,8 @@ class LogViewModel(
         initialValue = listOf(
             Pair(
                 DateTimeUtils.getMonthDates(DateTimeUtils.getTodayDate()).first,
-                DayOfWaterList(arrayListOf()))
+                DayOfWaterList(arrayListOf())
+            )
         ),
         started = SharingStarted.Eagerly,
         scope = viewModelScope
@@ -158,7 +157,10 @@ class LogViewModel(
                     val current = if(currentIndex != -1) {
                         weekFlow.value[currentIndex]
                     } else {
-                        Pair(DateTimeUtils.getTodayDate(), DayOfWaterList(arrayListOf()))
+                        Pair(
+                            DateTimeUtils.getTodayDate(),
+                            DayOfWaterList(arrayListOf())
+                        )
                     }
                     getWeekAmount(current)
                 }
@@ -188,7 +190,10 @@ class LogViewModel(
                     val current = if(currentIndex != -1) {
                         monthFlow.value[currentIndex]
                     } else {
-                        Pair(DateTimeUtils.getTodayDate(), DayOfWaterList(arrayListOf()))
+                        Pair(
+                            DateTimeUtils.getTodayDate(),
+                            DayOfWaterList(arrayListOf())
+                        )
                     }
                     getMonthAmount(current)
                 }
