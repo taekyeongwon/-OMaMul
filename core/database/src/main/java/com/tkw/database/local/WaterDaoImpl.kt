@@ -9,8 +9,8 @@ import io.realm.kotlin.notifications.ResultsChange
 import kotlinx.coroutines.flow.Flow
 import kotlin.reflect.KClass
 
-class WaterDaoImpl(r: Realm): WaterDao {
-    override val realm: Realm = r
+class WaterDaoImpl: WaterDao {
+    override val realm: Realm = Realm.open(getRealmConfiguration())
     override val clazz: KClass<DayOfWaterEntity> = DayOfWaterEntity::class
 
     private val amountByDate: MutableRealm.(String) -> DayOfWaterEntity? = {

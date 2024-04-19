@@ -9,8 +9,8 @@ import io.realm.kotlin.notifications.ResultsChange
 import kotlinx.coroutines.flow.Flow
 import kotlin.reflect.KClass
 
-class CupDaoImpl(r: Realm): CupDao {
-    override val realm: Realm = r
+class CupDaoImpl: CupDao {
+    override val realm: Realm = Realm.open(getRealmConfiguration())
     override val clazz: KClass<CupListEntity> = CupListEntity::class
 
     private val getCupList: MutableRealm.() -> CupListEntity? = {

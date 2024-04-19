@@ -1,6 +1,11 @@
 package com.tkw.database
 
+import com.tkw.database.model.CupEntity
+import com.tkw.database.model.CupListEntity
+import com.tkw.database.model.DayOfWaterEntity
+import com.tkw.database.model.WaterEntity
 import io.realm.kotlin.Realm
+import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.notifications.ResultsChange
 import io.realm.kotlin.query.RealmResults
@@ -11,6 +16,17 @@ import kotlin.reflect.KClass
 interface RealmDao<T: RealmObject> {
     val realm: Realm
     val clazz: KClass<T>
+
+    fun getRealmConfiguration(): RealmConfiguration {
+        return RealmConfiguration.Builder(setOf(
+            DayOfWaterEntity::class,
+            WaterEntity::class,
+            CupListEntity::class,
+            CupEntity::class
+        ))
+            .deleteRealmIfMigrationNeeded()
+            .build()
+    }
 
     fun findBy(query: String, vararg args: Any): RealmResults<T> {
         return realm.query(clazz, query, *args).find()
