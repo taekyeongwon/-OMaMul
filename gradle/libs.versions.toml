@@ -32,6 +32,8 @@ jetbrains-kotlin-jvm = "1.8.20"
 navigation-safeargs = "2.5.3"
 realm-kotlin = "1.11.0"
 
+hilt = "2.44"
+
 [libraries]
 androidx-core = {module="androidx.core:core-ktx", version.ref="core-ktx"}
 androidx-appcompat = {module="androidx.appcompat:appcompat", version.ref="appcompat"}
@@ -61,6 +63,9 @@ android-chart = {module="com.github.PhilJay:MPAndroidChart", version.ref="mp-and
 
 kotlinx-coroutines = {module="org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref="coroutines"}
 
+hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt_compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+
 [plugins]
 android-application = { id="com.android.application", version.ref="android-application"}
 android-library = {id="com.android.library", version.ref="android-library"}
@@ -68,6 +73,8 @@ jetbrains-kotlin-android = {id="org.jetbrains.kotlin.android", version.ref="jetb
 jetbrains-kotlin-jvm = {id="org.jetbrains.kotlin.jvm", version.ref="jetbrains-kotlin-jvm"}
 navigation-safeargs = {id="androidx.navigation.safeargs.kotlin", version.ref="navigation-safeargs"}
 realm-kotlin = {id="io.realm.kotlin", version.ref="realm-kotlin"}
+
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 
 [bundles]
 retrofit = ['retrofit2-retrofit', 'retrofit2-converter-gson', 'okhttp3-okhttp', 'okhttp3-logging-interceptor']
