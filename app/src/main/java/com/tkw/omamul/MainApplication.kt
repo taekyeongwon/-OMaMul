@@ -5,10 +5,12 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Process
 import android.util.Log
+import dagger.hilt.android.HiltAndroidApp
 import java.io.PrintWriter
 import java.io.StringWriter
 import kotlin.system.exitProcess
 
+@HiltAndroidApp
 class MainApplication: Application() {
     companion object {
         var sharedPref: SharedPreferences? = null

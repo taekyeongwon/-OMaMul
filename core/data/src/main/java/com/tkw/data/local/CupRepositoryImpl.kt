@@ -8,8 +8,9 @@ import com.tkw.domain.model.Cup
 import com.tkw.domain.model.CupList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class CupRepositoryImpl(private val cupDao: CupDao): CupRepository {
+class CupRepositoryImpl @Inject constructor(private val cupDao: CupDao): CupRepository {
     override fun getCupById(id: String): Cup? = cupDao.getCup(id)?.let {
         CupMapper.cupToModel(it)
     }

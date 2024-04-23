@@ -24,11 +24,12 @@ import com.tkw.common.autoCleared
 import com.tkw.common.util.DimenUtils
 import com.tkw.domain.model.Water
 import com.tkw.domain.util.DateTimeUtils
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class WaterFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentWaterBinding>()
-    private val viewModel: WaterViewModel by activityViewModels { getViewModelFactory(null) }
+    private val viewModel: WaterViewModel by activityViewModels()
     private var countObject: List<Water>? = null
     private lateinit var cupPagerAdapter: CupPagerAdapter
 

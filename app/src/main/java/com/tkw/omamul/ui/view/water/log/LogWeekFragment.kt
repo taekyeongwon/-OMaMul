@@ -18,11 +18,13 @@ import com.tkw.common.util.animateByMaxValue
 import com.tkw.domain.model.DayOfWater
 import com.tkw.domain.util.DateTimeUtils
 import com.tkw.omamul.ui.custom.chart.WeekMarkerView
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class LogWeekFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentLogWeekBinding>()
-    private val viewModel: LogViewModel by activityViewModels { getViewModelFactory(null) }
+    private val viewModel: LogViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

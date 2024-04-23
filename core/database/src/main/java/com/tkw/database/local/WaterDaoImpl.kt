@@ -7,9 +7,10 @@ import io.realm.kotlin.MutableRealm
 import io.realm.kotlin.Realm
 import io.realm.kotlin.notifications.ResultsChange
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 import kotlin.reflect.KClass
 
-class WaterDaoImpl: WaterDao {
+class WaterDaoImpl @Inject constructor(): WaterDao {
     override val realm: Realm = Realm.open(getRealmConfiguration())
     override val clazz: KClass<DayOfWaterEntity> = DayOfWaterEntity::class
 

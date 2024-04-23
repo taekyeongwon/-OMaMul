@@ -14,11 +14,13 @@ import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.common.C
 import com.tkw.omamul.databinding.FragmentInitIntakeBinding
 import com.tkw.common.autoCleared
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class InitIntakeFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentInitIntakeBinding>()
-    private val viewModel: InitViewModel by viewModels { getViewModelFactory(null) }
+    private val viewModel: InitViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -3,9 +3,13 @@ package com.tkw.omamul.ui.view.init
 import androidx.lifecycle.viewModelScope
 import com.tkw.omamul.base.IntentBaseViewModel
 import com.tkw.domain.WaterRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class InitViewModel(
+@HiltViewModel
+class InitViewModel
+@Inject constructor(
     private val waterRepository: WaterRepository
 ): IntentBaseViewModel
 <InitContract.Event, InitContract.State, InitContract.SideEffect>() {

@@ -19,10 +19,12 @@ import com.tkw.common.DateChangeReceiver
 import com.tkw.domain.util.DateTimeUtils
 import com.tkw.omamul.databinding.ActivityWaterBinding
 import com.tkw.omamul.ui.view.water.home.WaterViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class WaterActivity : AppCompatActivity() {
     private lateinit var dataBinding: ActivityWaterBinding
-    private val viewModel: WaterViewModel by viewModels { getViewModelFactory(null) }
+    private val viewModel: WaterViewModel by viewModels()
     private val mainFragmentSet = setOf(
         R.id.waterFragment,
         R.id.waterLogFragment,

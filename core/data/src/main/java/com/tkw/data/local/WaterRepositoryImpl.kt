@@ -7,10 +7,13 @@ import com.tkw.domain.WaterRepository
 import com.tkw.domain.model.DayOfWater
 import com.tkw.domain.model.Water
 import com.tkw.domain.util.DateTimeUtils
+import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class WaterRepositoryImpl(private val waterDao: WaterDao): WaterRepository {
+
+class WaterRepositoryImpl @Inject constructor(private val waterDao: WaterDao): WaterRepository {
     override fun getAmount(date: String): DayOfWater? = waterDao.getDayOfWater(date)?.let {
         WaterMapper.dayOfWaterToModel(it)
     }

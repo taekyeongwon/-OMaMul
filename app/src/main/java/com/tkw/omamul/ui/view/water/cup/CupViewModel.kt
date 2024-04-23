@@ -2,6 +2,8 @@ package com.tkw.omamul.ui.view.water.cup
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import com.tkw.omamul.base.AppError
 import com.tkw.omamul.base.BaseViewModel
@@ -9,13 +11,35 @@ import com.tkw.omamul.base.launch
 import com.tkw.common.SingleLiveEvent
 import com.tkw.domain.CupRepository
 import com.tkw.domain.model.Cup
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.mapLatest
+import javax.inject.Inject
 
-class CupViewModel(
+class CupViewModel
+@AssistedInject constructor(
     private val cupRepository: CupRepository,
-    private val params: Cup
+    @Assisted private val params: Cup
 ): BaseViewModel() {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(params: Cup): CupViewModel
+    }
+    companion object {
+        fun provideFactory(
+            assistedFactory: Factory,
+            params: Cup
+        ): ViewModelProvider.Factory =
+            object: ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return assistedFactory.create(params) as T
+                }
+            }
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val cupListLiveData: LiveData<List<Cup>> =

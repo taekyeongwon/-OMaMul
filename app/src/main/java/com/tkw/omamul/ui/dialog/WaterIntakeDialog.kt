@@ -14,10 +14,13 @@ import com.tkw.omamul.ui.view.water.home.WaterViewModel
 import com.tkw.common.DialogResize
 import com.tkw.common.DialogResizeImpl
 import com.tkw.common.autoCleared
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class WaterIntakeDialog: DialogFragment(), DialogResize by DialogResizeImpl() {
+@AndroidEntryPoint
+class WaterIntakeDialog : DialogFragment(), DialogResize by DialogResizeImpl() {
     private var dataBinding by autoCleared<DialogWaterIntakeBinding>()
-    private val viewModel: WaterViewModel by activityViewModels { getViewModelFactory(null) }
+    private val viewModel: WaterViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

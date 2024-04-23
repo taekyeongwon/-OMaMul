@@ -10,6 +10,7 @@ import com.tkw.domain.model.DayOfWaterList
 import com.tkw.domain.model.MonthLog
 import com.tkw.domain.model.Water
 import com.tkw.domain.model.WeekLog
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,8 +19,11 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
-class LogViewModel(
+@HiltViewModel
+class LogViewModel
+@Inject constructor(
     private val waterRepository: WaterRepository
 ): IntentBaseViewModel
 <LogContract.Event, LogContract.State, LogContract.SideEffect>() {

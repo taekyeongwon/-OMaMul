@@ -15,12 +15,15 @@ import com.tkw.common.autoCleared
 import com.tkw.domain.model.Water
 import com.tkw.domain.util.DateTimeUtils
 import com.tkw.omamul.ui.view.water.log.LogViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LogEditBottomDialog(
     private val selectedItem: Water? = null
 ): BottomSheetDialogFragment(), BottomExpand by BottomExpandImpl() {
     private var dataBinding by autoCleared<DialogLogEditBinding>()
-    private val viewModel: LogViewModel by activityViewModels { getViewModelFactory(null) }
+    private val viewModel: LogViewModel by activityViewModels()
 
     override fun getTheme(): Int {
         return R.style.BottomDialogStyle

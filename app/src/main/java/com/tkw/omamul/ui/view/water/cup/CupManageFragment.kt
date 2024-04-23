@@ -17,10 +17,18 @@ import com.tkw.domain.model.Cup
 import com.tkw.omamul.databinding.FragmentCupManageBinding
 import com.tkw.omamul.ui.custom.DividerDecoration
 import com.tkw.omamul.ui.view.water.cup.adapter.CupListAdapter
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CupManageFragment: Fragment() {
+    @Inject
+    lateinit var cupViewModelFactory: CupViewModel.Factory
+
     private var dataBinding by autoCleared<FragmentCupManageBinding>()
-    private val viewModel: CupViewModel by viewModels { getViewModelFactory(null) }
+    private val viewModel: CupViewModel by viewModels {
+        CupViewModel.provideFactory(cupViewModelFactory, Cup())
+    }
     private lateinit var cupListAdapter: CupListAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
 

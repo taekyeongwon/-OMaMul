@@ -19,11 +19,13 @@ import com.tkw.common.autoCleared
 import com.tkw.domain.model.DayOfWater
 import com.tkw.domain.model.Water
 import com.tkw.omamul.ui.custom.chart.DayMarkerView
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class LogDayFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentLogDayBinding>()
-    private val viewModel: LogViewModel by activityViewModels { getViewModelFactory(null) }
+    private val viewModel: LogViewModel by activityViewModels()
     private lateinit var dayAdapter: DayListAdapter
 
     override fun onCreateView(

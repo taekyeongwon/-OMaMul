@@ -15,11 +15,13 @@ import com.tkw.omamul.databinding.FragmentInitTimeBinding
 import com.tkw.omamul.ui.dialog.OnResultListener
 import com.tkw.omamul.ui.dialog.AlarmTimeBottomDialog
 import com.tkw.common.autoCleared
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class InitTimeFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentInitTimeBinding>()
-    private val viewModel: InitViewModel by viewModels { getViewModelFactory(null) }
+    private val viewModel: InitViewModel by viewModels()
     private lateinit var alarmTimeDialog: AlarmTimeBottomDialog
 
     override fun onCreateView(
