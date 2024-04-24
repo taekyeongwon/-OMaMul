@@ -32,7 +32,7 @@ jetbrains-kotlin-jvm = "1.8.20"
 navigation-safeargs = "2.5.3"
 realm-kotlin = "1.11.0"
 
-hilt = "2.44"
+hilt = "2.50"
 
 [libraries]
 androidx-core = {module="androidx.core:core-ktx", version.ref="core-ktx"}

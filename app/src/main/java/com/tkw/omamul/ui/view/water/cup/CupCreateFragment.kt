@@ -12,22 +12,21 @@ import androidx.navigation.fragment.navArgs
 import com.tkw.omamul.R
 import com.tkw.common.autoCleared
 import com.tkw.domain.model.Cup
-import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.databinding.FragmentCupCreateBinding
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import dagger.hilt.android.lifecycle.withCreationCallback
 
 @AndroidEntryPoint
 class CupCreateFragment: Fragment() {
-    @Inject
-    lateinit var cupViewModelFactory: CupViewModel.Factory
-
     private var dataBinding by autoCleared<FragmentCupCreateBinding>()
-    private val viewModel: CupViewModel by viewModels {
-        val cupArgs: CupCreateFragmentArgs by navArgs()
-//        getViewModelFactory(cupArgs.cupArgument)
-        CupViewModel.provideFactory(cupViewModelFactory, cupArgs.cupArgument ?: Cup())
-    }
+    private val viewModel: CupViewModel by viewModels(
+        extrasProducer = {
+            defaultViewModelCreationExtras.withCreationCallback<CupViewModel.AssistFactory> { factory ->
+                val cupArgs: CupCreateFragmentArgs by navArgs()
+                factory.create(cupArgs.cupArgument ?: Cup())
+            }
+        }
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -12,23 +12,23 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tkw.common.ItemTouchHelperCallback
 import com.tkw.common.OnItemDrag
 import com.tkw.common.autoCleared
-import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.domain.model.Cup
 import com.tkw.omamul.databinding.FragmentCupListEditBinding
 import com.tkw.omamul.ui.custom.DividerDecoration
 import com.tkw.omamul.ui.view.water.cup.adapter.CupListAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import dagger.hilt.android.lifecycle.withCreationCallback
 
 @AndroidEntryPoint
 class CupListEditFragment: Fragment() {
-    @Inject
-    lateinit var cupViewModelFactory: CupViewModel.Factory
-
     private var dataBinding by autoCleared<FragmentCupListEditBinding>()
-    private val viewModel: CupViewModel by viewModels {
-        CupViewModel.provideFactory(cupViewModelFactory, Cup())
-    }
+    private val viewModel: CupViewModel by viewModels(
+        extrasProducer = {
+            defaultViewModelCreationExtras.withCreationCallback<CupViewModel.AssistFactory> { factory ->
+                factory.create(Cup())
+            }
+        }
+    )
     private lateinit var cupListAdapter: CupListAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
     private val saveCupList: ArrayList<Cup> = arrayListOf()

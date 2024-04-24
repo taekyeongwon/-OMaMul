@@ -11,25 +11,25 @@ import com.tkw.domain.WaterRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
-@InstallIn(SingletonComponent::class)
-abstract class CupModule {
+@InstallIn(ViewModelComponent::class)
+abstract class VMModule {
     @Binds
-    @Singleton
+    @ViewModelScoped
     abstract fun provideCupDao(dao: CupDaoImpl): CupDao
 
     @Binds
-    @Singleton
+    @ViewModelScoped
     abstract fun provideWaterDao(dao: WaterDaoImpl): WaterDao
 
     @Binds
-    @Singleton
+    @ViewModelScoped
     abstract fun provideCupRepo(repo: CupRepositoryImpl): CupRepository
 
     @Binds
-    @Singleton
+    @ViewModelScoped
     abstract fun provideWaterRepo(repo: WaterRepositoryImpl): WaterRepository
 }
