@@ -14,6 +14,7 @@ coroutines = "1.7.0"
 activity-ktx = "1.6.1"
 fragment-ktx = "1.5.5"
 lifecycle-livedata-ktx = "2.4.0"
+lifecycle-viewmodel-ktx = "2.4.0"
 
 retrofit = "2.9.0"
 converter-gson = "2.9.0"
@@ -50,6 +51,7 @@ androidx-splash = {module="androidx.core:core-splashscreen", version.ref="core-s
 androidx-activity-ktx = {module="androidx.activity:activity-ktx", version.ref="activity-ktx"}
 androidx-fragment-ktx = {module="androidx.fragment:fragment-ktx", version.ref="fragment-ktx"}
 androidx-lifecycle-livedata = {module="androidx.lifecycle:lifecycle-livedata-ktx", version.ref="lifecycle-livedata-ktx"}
+androidx-lifecycle-viewmodel = {module="androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref="lifecycle-viewmodel-ktx"}
 
 retrofit2-retrofit = {module="com.squareup.retrofit2:retrofit", version.ref="retrofit"}
 retrofit2-converter-gson = {module="com.squareup.retrofit2:converter-gson", version.ref="converter-gson"}

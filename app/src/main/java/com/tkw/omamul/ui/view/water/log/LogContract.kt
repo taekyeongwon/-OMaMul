@@ -1,8 +1,8 @@
 package com.tkw.omamul.ui.view.water.log
 
-import com.tkw.omamul.base.IEvent
-import com.tkw.omamul.base.ISideEffect
-import com.tkw.omamul.base.IState
+import com.tkw.base.IEvent
+import com.tkw.base.ISideEffect
+import com.tkw.base.IState
 import com.tkw.domain.model.DayOfWaterList
 import com.tkw.domain.model.Water
 

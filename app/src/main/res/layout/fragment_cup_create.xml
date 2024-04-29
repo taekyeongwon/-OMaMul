@@ -50,7 +50,7 @@
             android:background="@drawable/rounded_rect"
             android:layout_marginTop="4dp"
             app:layout_constraintTop_toBottomOf="@id/tv_cup_amount_title">
-            <com.tkw.omamul.ui.custom.WaterAmountPicker
+            <com.tkw.ui.WaterAmountPicker
                 android:id="@+id/np_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="150dp"

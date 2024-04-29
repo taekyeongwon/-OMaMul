@@ -4,9 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.tkw.domain.util.DateTimeUtils
 import com.tkw.domain.model.Water
 import com.tkw.omamul.databinding.ItemDayAmountBinding
+import com.tkw.util.DateTimeUtils
 
 class DayListAdapter(
     private val editListener: (Int) -> Unit,

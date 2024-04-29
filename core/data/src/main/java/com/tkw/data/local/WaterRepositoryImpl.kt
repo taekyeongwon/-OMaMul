@@ -6,8 +6,7 @@ import com.tkw.database.model.WaterEntity
 import com.tkw.domain.WaterRepository
 import com.tkw.domain.model.DayOfWater
 import com.tkw.domain.model.Water
-import com.tkw.domain.util.DateTimeUtils
-import dagger.hilt.android.scopes.ViewModelScoped
+import com.tkw.util.DateTimeUtils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

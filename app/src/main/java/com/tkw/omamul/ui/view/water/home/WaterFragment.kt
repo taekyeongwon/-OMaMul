@@ -16,14 +16,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import com.tkw.omamul.R
-import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.databinding.FragmentWaterBinding
 import com.tkw.omamul.ui.dialog.WaterIntakeDialog
 import com.tkw.omamul.ui.view.water.home.adapter.CupPagerAdapter
 import com.tkw.common.autoCleared
-import com.tkw.common.util.DimenUtils
 import com.tkw.domain.model.Water
-import com.tkw.domain.util.DateTimeUtils
+import com.tkw.util.DateTimeUtils
+import com.tkw.util.DimenUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -34,7 +34,10 @@ dependencies {
     implementation libs.androidx.core
     implementation libs.androidx.appcompat
     implementation libs.android.material
+    implementation project(':core:common')
     testImplementation libs.junit
     androidTestImplementation libs.androidx.test.junit
     androidTestImplementation libs.androidx.test.espresso
+
+    implementation libs.androidx.lifecycle.viewmodel
 }

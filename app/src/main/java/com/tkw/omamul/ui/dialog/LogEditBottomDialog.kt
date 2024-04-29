@@ -7,16 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tkw.omamul.R
-import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.databinding.DialogLogEditBinding
 import com.tkw.common.BottomExpand
 import com.tkw.common.BottomExpandImpl
 import com.tkw.common.autoCleared
 import com.tkw.domain.model.Water
-import com.tkw.domain.util.DateTimeUtils
 import com.tkw.omamul.ui.view.water.log.LogViewModel
+import com.tkw.util.DateTimeUtils
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class LogEditBottomDialog(
@@ -49,10 +47,8 @@ class LogEditBottomDialog(
         if(selectedItem != null) {
             with(dataBinding) {
                 etWaterAmount.setText(selectedItem.amount.toString())
-                tpDate.hour =
-                    DateTimeUtils.getTimeFromFullFormat(selectedItem.dateTime).hour
-                tpDate.minute =
-                    DateTimeUtils.getTimeFromFullFormat(selectedItem.dateTime).minute
+                tpDate.hour = selectedItem.getHourFromDate()
+                tpDate.minute = selectedItem.getMinuteFromDate()
             }
         }
     }

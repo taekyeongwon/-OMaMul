@@ -10,7 +10,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.tkw.omamul.MainApplication
 import com.tkw.omamul.R
-import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.common.C
 import com.tkw.omamul.databinding.FragmentInitIntakeBinding
 import com.tkw.common.autoCleared

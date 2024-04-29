@@ -1,6 +1,7 @@
 package com.tkw.domain.model
 
-import com.tkw.domain.util.DateTimeUtils
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 data class DayOfWater(
     val date: String,
@@ -30,13 +31,17 @@ data class Water(
     val amount: Int = 0
 ) {
     fun getHourFromDate(): Int {
-        return DateTimeUtils.getTimeFromFullFormat(dateTime).hour
+        return getLocalTime().hour
     }
 
-//    fun toMapEntity() = WaterEntity().apply {
-//        dateTime = this@Water.dateTime
-//        amount = this@Water.amount
-//    }
+    fun getMinuteFromDate(): Int {
+        return getLocalTime().minute
+    }
+
+    private fun getLocalTime(): LocalTime {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        return LocalTime.parse(dateTime, formatter)
+    }
 }
 
 data class DayOfWaterList(
@@ -50,32 +55,4 @@ data class DayOfWaterList(
 interface DayTransformer {
     //key값이 같은 날짜끼리 묶은 리스트 값 반환
     fun onTransform(list: List<DayOfWater>): List<Pair<String, DayOfWaterList>>
-}
-
-class WeekLog: DayTransformer {
-    override fun onTransform(list: List<DayOfWater>): List<Pair<String, DayOfWaterList>> {
-        val map = LinkedHashMap<String, DayOfWaterList>()
-        val sortedMap = list.groupBy {
-            DateTimeUtils.getWeekDates(it.date).first
-        }
-        for((k, v) in sortedMap) {
-            map[k] = DayOfWaterList(v)
-        }
-
-        return map.toList()
-    }
-}
-
-class MonthLog: DayTransformer {
-    override fun onTransform(list: List<DayOfWater>): List<Pair<String, DayOfWaterList>> {
-        val map = LinkedHashMap<String, DayOfWaterList>()
-        val sortedMap = list.groupBy {
-            DateTimeUtils.getMonthDates(it.date).first
-        }
-        for((k, v) in sortedMap) {
-            map[k] = DayOfWaterList(v)
-        }
-
-        return map.toList()
-    }
 }

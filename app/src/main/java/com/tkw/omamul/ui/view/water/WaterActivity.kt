@@ -13,12 +13,11 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.tkw.omamul.MainApplication
 import com.tkw.omamul.R
-import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.common.C
 import com.tkw.common.DateChangeReceiver
-import com.tkw.domain.util.DateTimeUtils
 import com.tkw.omamul.databinding.ActivityWaterBinding
 import com.tkw.omamul.ui.view.water.home.WaterViewModel
+import com.tkw.util.DateTimeUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

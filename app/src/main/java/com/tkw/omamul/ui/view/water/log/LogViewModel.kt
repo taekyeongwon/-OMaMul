@@ -1,15 +1,13 @@
 package com.tkw.omamul.ui.view.water.log
 
 import androidx.lifecycle.viewModelScope
-import com.tkw.omamul.base.IntentBaseViewModel
-import com.tkw.omamul.base.launch
-import com.tkw.domain.util.DateTimeUtils
+import com.tkw.base.IntentBaseViewModel
+import com.tkw.base.launch
 import com.tkw.domain.WaterRepository
 import com.tkw.domain.model.DayOfWater
 import com.tkw.domain.model.DayOfWaterList
-import com.tkw.domain.model.MonthLog
 import com.tkw.domain.model.Water
-import com.tkw.domain.model.WeekLog
+import com.tkw.util.DateTimeUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow

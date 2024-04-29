@@ -3,9 +3,9 @@ package com.tkw.omamul.ui.view.water.cup
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
-import com.tkw.omamul.base.AppError
-import com.tkw.omamul.base.BaseViewModel
-import com.tkw.omamul.base.launch
+import com.tkw.base.AppError
+import com.tkw.base.BaseViewModel
+import com.tkw.base.launch
 import com.tkw.common.SingleLiveEvent
 import com.tkw.domain.CupRepository
 import com.tkw.domain.model.Cup

@@ -9,16 +9,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.tkw.omamul.R
-import com.tkw.omamul.common.getViewModelFactory
-import com.tkw.common.util.animateByMaxValue
+import com.tkw.util.animateByMaxValue
 import com.tkw.omamul.databinding.FragmentLogDayBinding
 import com.tkw.omamul.ui.view.water.log.adapter.DayListAdapter
-import com.tkw.omamul.ui.custom.DividerDecoration
+import com.tkw.ui.DividerDecoration
 import com.tkw.omamul.ui.dialog.LogEditBottomDialog
 import com.tkw.common.autoCleared
 import com.tkw.domain.model.DayOfWater
 import com.tkw.domain.model.Water
-import com.tkw.omamul.ui.custom.chart.DayMarkerView
+import com.tkw.ui.chart.DayMarkerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -132,7 +131,7 @@ class LogDayFragment: Fragment() {
             barChart.setXMinMax(0f, 24f)
             barChart.setLimit(2000f) //todo 현재 설정된 목표 물의 양으로 변경 필요
             barChart.setUnit(getString(R.string.unit_hour), getString(R.string.unit_ml))
-            barChart.setMarker(DayMarkerView(requireContext(), R.layout.custom_marker))
+            barChart.setMarker(DayMarkerView(context))
             barChart.setChartData(arrayListOf())    //최초 호출 시 차트 여백 적용해 주기 위해 빈값으로 data set
         }
     }

@@ -8,14 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.databinding.DialogWaterIntakeBinding
 import com.tkw.omamul.ui.view.water.home.WaterViewModel
 import com.tkw.common.DialogResize
 import com.tkw.common.DialogResizeImpl
 import com.tkw.common.autoCleared
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class WaterIntakeDialog : DialogFragment(), DialogResize by DialogResizeImpl() {

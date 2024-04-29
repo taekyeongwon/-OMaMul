@@ -11,7 +11,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.tkw.omamul.R
-import com.tkw.omamul.common.getViewModelFactory
 import com.tkw.omamul.databinding.FragmentInitLanguageBinding
 import com.tkw.common.autoCleared
 import dagger.hilt.android.AndroidEntryPoint

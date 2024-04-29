@@ -14,7 +14,7 @@ import com.tkw.common.OnItemDrag
 import com.tkw.common.autoCleared
 import com.tkw.domain.model.Cup
 import com.tkw.omamul.databinding.FragmentCupManageBinding
-import com.tkw.omamul.ui.custom.DividerDecoration
+import com.tkw.ui.DividerDecoration
 import com.tkw.omamul.ui.view.water.cup.adapter.CupListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.withCreationCallback

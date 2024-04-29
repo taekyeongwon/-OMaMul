@@ -1,7 +1,7 @@
 package com.tkw.omamul.ui.view.init
 
 import androidx.lifecycle.viewModelScope
-import com.tkw.omamul.base.IntentBaseViewModel
+import com.tkw.base.IntentBaseViewModel
 import com.tkw.domain.WaterRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

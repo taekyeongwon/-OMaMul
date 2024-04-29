@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">OMaMul</string>
-    <string name="default_error">에러 발생</string>
     <string name="app_error_100">컵 이름을 설정해주세요.</string>
     <string name="init_language_title">앱 내 사용 언어를 설정해주세요.</string>
     <string name="lang_ko">한국어</string>
@@ -21,9 +20,7 @@
     <string name="init_intake_subtitle">매일 채울 물의 양을 설정합니다.</string>
     <string name="intake_amount">일일 물 섭취량(ml)</string>
     <string name="unit_ml">(ml)</string>
-    <string name="unit_ml_no_bracket">ml</string>
     <string name="unit_liter">(L)</string>
-    <string name="unit_l_no_bracket">L</string>
     <string name="unit_hour">(h)</string>
     <string name="unit_day">(d)</string>
     <string name="log_day_title">일</string>
