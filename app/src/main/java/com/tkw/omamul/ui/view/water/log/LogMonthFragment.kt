@@ -16,6 +16,7 @@ import com.tkw.common.autoCleared
 import com.tkw.util.animateByMaxValue
 import com.tkw.domain.model.DayOfWater
 import com.tkw.ui.chart.MonthMarkerView
+import com.tkw.ui.chart.XAxisValueFormatter
 import com.tkw.util.DateTimeUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -93,7 +94,10 @@ class LogMonthFragment: Fragment() {
     private fun initChart() {
         with(dataBinding) {
             barChart.setLimit(2f) //todo 현재 설정된 목표 물의 양으로 변경 필요
-            barChart.setUnit(getString(R.string.unit_day), getString(R.string.unit_liter))
+            barChart.setUnit(
+                getString(R.string.unit_day),
+                getString(R.string.unit_liter)
+            )
             barChart.setMarker(MonthMarkerView(context))
         }
     }

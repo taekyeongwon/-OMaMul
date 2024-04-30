@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="unit_ml_no_bracket">ml</string>
-
     <string name="unit_l_no_bracket">L</string>
 </resources>

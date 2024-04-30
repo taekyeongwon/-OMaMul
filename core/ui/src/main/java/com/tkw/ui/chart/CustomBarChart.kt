@@ -11,6 +11,7 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.tkw.ui.R
 
@@ -76,6 +77,14 @@ class CustomBarChart
     fun setUnit(xUnit: String, yUnit: String) {
         xAxis.valueFormatter = XAxisValueFormatter(xUnit)
         yAxisRenderer.setUnit(yUnit)
+    }
+
+    fun setUnit(yUnit: String) {
+        yAxisRenderer.setUnit(yUnit)
+    }
+
+    fun setXAxisValueFormatter(formatter: ValueFormatter) {
+        xAxis.valueFormatter = formatter
     }
 
     fun setMarker(markerView: MarkerView) {

@@ -82,6 +82,11 @@ object DateTimeUtils {
         return startOfWeek to endOfWeek
     }
 
+    fun getIndexOfWeek(date: String): Int {
+        val localDate = getDateFromFormat(date)
+        return localDate.dayOfWeek.value
+    }
+
     fun getMonthDates(date: String): Pair<String, String> {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val localDate = getDateFromFormat(date)
