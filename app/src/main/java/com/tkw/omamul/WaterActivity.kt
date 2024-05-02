@@ -23,9 +23,9 @@ class WaterActivity : AppCompatActivity() {
     private lateinit var dataBinding: ActivityWaterBinding
     private val viewModel: WaterViewModel by viewModels()
     private val mainFragmentSet = setOf(
-        R.id.waterFragment,
-        R.id.waterLogFragment,
-        R.id.settingFragment
+        com.tkw.home.R.id.waterFragment,
+        com.tkw.record.R.id.waterLogFragment,
+        com.tkw.setting.R.id.settingFragment
     )
 
     private val broadcastReceiver = DateChangeReceiver {
@@ -84,9 +84,9 @@ class WaterActivity : AppCompatActivity() {
         val navGraph = nav.navInflater.inflate(R.navigation.nav_graph)
 
         if(MainApplication.sharedPref?.getBoolean(C.FirstInstallFlag, false) == false) {
-            navGraph.setStartDestination(com.tkw.init.R.id.initLanguageFragment)
+            navGraph.setStartDestination(com.tkw.init.R.id.init_nav_graph)
         } else {
-            navGraph.setStartDestination(R.id.waterFragment)
+            navGraph.setStartDestination(com.tkw.home.R.id.home_nav_graph)
         }
         nav.graph = navGraph
     }

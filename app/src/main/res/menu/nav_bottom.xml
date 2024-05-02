@@ -2,15 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/waterFragment"
+        android:id="@+id/home_nav_graph"
         android:icon="@drawable/ic_launcher_foreground"
         android:title="홈"/>
     <item
-        android:id="@+id/waterLogFragment"
+        android:id="@+id/record_nav_graph"
         android:icon="@drawable/ic_launcher_foreground"
         android:title="로그"/>
     <item
-        android:id="@+id/settingFragment"
+        android:id="@+id/setting_nav_graph"
         android:icon="@drawable/ic_launcher_foreground"
         android:title="설정"/>
 </menu>
