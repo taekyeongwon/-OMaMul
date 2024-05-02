@@ -37,10 +37,12 @@ android {
 }
 
 dependencies {
+    implementation project(':core:util')
+    implementation project(':core:common')
+
     implementation libs.androidx.core
     implementation libs.androidx.appcompat
     implementation libs.android.material
-    implementation project(':core:util')
     testImplementation libs.junit
     androidTestImplementation libs.androidx.test.junit
     androidTestImplementation libs.androidx.test.espresso

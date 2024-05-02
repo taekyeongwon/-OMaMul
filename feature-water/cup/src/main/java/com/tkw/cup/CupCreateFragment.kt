@@ -14,7 +14,7 @@ import com.tkw.cup.databinding.FragmentCupCreateBinding
 import com.tkw.domain.model.Cup
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.withCreationCallback
-import com.tkw.base.R
+import com.tkw.common.R
 
 @AndroidEntryPoint
 class CupCreateFragment: Fragment() {

@@ -19,17 +19,19 @@ import dagger.hilt.android.scopes.ViewModelScoped
 abstract class VMModule {
     @Binds
     @ViewModelScoped
+    abstract fun provideCupRepo(repo: CupRepositoryImpl): CupRepository
+
+    @Binds
+    @ViewModelScoped
+    abstract fun provideWaterRepo(repo: WaterRepositoryImpl): WaterRepository
+
+    @Binds
+    @ViewModelScoped
     abstract fun provideCupDao(dao: CupDaoImpl): CupDao
 
     @Binds
     @ViewModelScoped
     abstract fun provideWaterDao(dao: WaterDaoImpl): WaterDao
 
-    @Binds
-    @ViewModelScoped
-    abstract fun provideCupRepo(repo: CupRepositoryImpl): CupRepository
 
-    @Binds
-    @ViewModelScoped
-    abstract fun provideWaterRepo(repo: WaterRepositoryImpl): WaterRepository
 }

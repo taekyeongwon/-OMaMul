@@ -93,7 +93,7 @@ class LogWeekFragment: Fragment() {
     private fun initChart() {
         with(dataBinding) {
             barChart.setLimit(2f) //todo 현재 설정된 목표 물의 양으로 변경 필요
-            barChart.setUnit(getString(com.tkw.base.R.string.unit_liter))
+            barChart.setUnit(getString(com.tkw.common.R.string.unit_liter))
             barChart.setMarker(WeekMarkerView(context))
             barChart.setXMinMax(1f, 7f)
         }

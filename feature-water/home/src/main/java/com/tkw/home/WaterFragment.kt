@@ -20,6 +20,8 @@ import com.tkw.cup.adapter.CupPagerAdapter
 import com.tkw.common.autoCleared
 import com.tkw.domain.model.Water
 import com.tkw.home.databinding.FragmentWaterBinding
+import com.tkw.navigation.DeepLinkDestination
+import com.tkw.navigation.deepLinkNavigateTo
 import com.tkw.util.DateTimeUtils
 import com.tkw.util.DimenUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -150,7 +152,7 @@ class WaterFragment: Fragment() {
         val lastPosition = cupPagerAdapter.itemCount - 1
         if(dataBinding.vpList.currentItem == lastPosition) {
             //add버튼 선택했고, snap된 상태면 관리화면 이동
-            findNavController().navigate(R.id.cupManageFragment)
+            findNavController().deepLinkNavigateTo(requireContext(), DeepLinkDestination.Cup)
         } else {
             //snap되지 않은 상태면 맨 마지막으로 스크롤
             scrollToPosition(lastPosition, true)

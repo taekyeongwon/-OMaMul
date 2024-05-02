@@ -1,5 +1,6 @@
 package com.tkw.init
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,10 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.tkw.omamul.MainApplication
 import com.tkw.common.C
 import com.tkw.common.autoCleared
 import com.tkw.init.databinding.FragmentInitIntakeBinding
+import com.tkw.navigation.DeepLinkDestination
+import com.tkw.navigation.deepLinkNavigateTo
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -46,9 +48,11 @@ class InitIntakeFragment: Fragment() {
             viewModel.sideEffect.collect {
                 when(it) {
                     InitContract.SideEffect.OnMoveNext -> {
-                        MainApplication.sharedPref?.edit()?.putBoolean(C.FirstInstallFlag, true)?.apply()
-                        findNavController().navigate(R.id.waterFragment)
-                        setStartDestination(R.id.waterFragment) //프래그먼트 이동 전에 호출하면 cannot be found from the current destination 에러 발생
+                        val pref = requireContext().getSharedPreferences("pref", Context.MODE_PRIVATE)
+                        pref.edit().putBoolean(C.FirstInstallFlag, true)?.apply()
+                        findNavController().deepLinkNavigateTo(requireContext(), DeepLinkDestination.Home, true)
+//                        findNavController().navigate(R.id.waterFragment)
+//                        setStartDestination(R.id.waterFragment) //프래그먼트 이동 전에 호출하면 cannot be found from the current destination 에러 발생
                     }
                 }
             }
@@ -63,10 +67,10 @@ class InitIntakeFragment: Fragment() {
         }
     }
 
-    private fun setStartDestination(fragmentId: Int) {
-        val nav = findNavController()
-        val navGraph = nav.navInflater.inflate(R.navigation.nav_graph)
-        navGraph.setStartDestination(fragmentId)
-        nav.graph = navGraph
-    }
+//    private fun setStartDestination(fragmentId: Int) {
+//        val nav = findNavController()
+//        val navGraph = nav.navInflater.inflate(R.navigation.nav_graph)
+//        navGraph.setStartDestination(fragmentId)
+//        nav.graph = navGraph
+//    }
 }
