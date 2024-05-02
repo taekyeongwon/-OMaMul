@@ -21,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class WaterActivity : AppCompatActivity() {
     private lateinit var dataBinding: ActivityWaterBinding
-    private val viewModel: com.tkw.home.WaterViewModel by viewModels()
+    private val viewModel: WaterViewModel by viewModels()
     private val mainFragmentSet = setOf(
         R.id.waterFragment,
         R.id.waterLogFragment,
@@ -75,7 +75,7 @@ class WaterActivity : AppCompatActivity() {
         }
         setStartDestination(navController)
 
-        val appBarConfiguration = AppBarConfiguration(mainFragmentSet.plus(R.id.initLanguageFragment))
+        val appBarConfiguration = AppBarConfiguration(mainFragmentSet.plus(com.tkw.init.R.id.initLanguageFragment))
         NavigationUI.setupWithNavController(dataBinding.toolbar, navController, appBarConfiguration)
         NavigationUI.setupWithNavController(dataBinding.bottomNav, navController)
     }
@@ -84,7 +84,7 @@ class WaterActivity : AppCompatActivity() {
         val navGraph = nav.navInflater.inflate(R.navigation.nav_graph)
 
         if(MainApplication.sharedPref?.getBoolean(C.FirstInstallFlag, false) == false) {
-            navGraph.setStartDestination(R.id.initLanguageFragment)
+            navGraph.setStartDestination(com.tkw.init.R.id.initLanguageFragment)
         } else {
             navGraph.setStartDestination(R.id.waterFragment)
         }

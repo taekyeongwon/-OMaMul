@@ -4,104 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph">
 
-    <fragment
-        android:id="@+id/initLanguageFragment"
-        android:name="com.tkw.init.InitLanguageFragment"
-        tools:layout="@layout/fragment_init_language">
-        <action
-            android:id="@+id/action_initLanguageFragment_to_initTimeFragment"
-            app:destination="@id/initTimeFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/initTimeFragment"
-        android:name="com.tkw.init.InitTimeFragment"
-        tools:layout="@layout/fragment_init_time">
-        <action
-            android:id="@+id/action_initTimeFragment_to_initIntakeFragment"
-            app:destination="@id/initIntakeFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/initIntakeFragment"
-        android:name="com.tkw.init.InitIntakeFragment"
-        tools:layout="@layout/fragment_init_intake">
-        <action
-            android:id="@+id/action_initIntakeFragment_to_waterFragment"
-            app:destination="@id/waterFragment"/>
-    </fragment>
-
-    <fragment
-        android:id="@+id/waterFragment"
-        android:name="com.tkw.home.WaterFragment"
-        tools:layout="@layout/fragment_water">
-<!--        <action-->
-<!--            android:id="@+id/action_waterIntakeFragment"-->
-<!--            app:destination="@id/waterIntakeFragment"/>-->
-
-        <action
-            android:id="@+id/action_waterFragment_to_waterAlarmFragment"
-            app:destination="@id/waterAlarmFragment" />
-        <action
-            android:id="@+id/action_waterFragment_to_cupManageFragment"
-            app:destination="@id/cupManageFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/waterLogFragment"
-        android:name="com.tkw.record.WaterLogFragment"
-        android:label="WaterLogFragment"
-        tools:layout="@layout/fragment_water_log"/>
-    <fragment
-        android:id="@+id/settingFragment"
-        android:name="com.tkw.setting.WaterSettingFragment"
-        android:label="SettingFragment"
-        tools:layout="@layout/fragment_setting"/>
-
-    <fragment
-        android:id="@+id/waterAlarmFragment"
-        android:name="com.tkw.alarm.WaterAlarmFragment"
-        tools:layout="@layout/fragment_water_alarm">
-
-    </fragment>
-
-    <!-- 컵 관리 화면 -->
-    <fragment
-        android:id="@+id/cupManageFragment"
-        android:name="com.tkw.cup.CupManageFragment"
-        tools:layout="@layout/fragment_cup_manage">
-
-        <action
-            android:id="@+id/action_cupManageFragment_to_cupCreateFragment"
-            app:destination="@id/cupCreateFragment" />
-        <action
-            android:id="@+id/action_cupManageFragment_to_cupListEditFragment"
-            app:destination="@id/cupListEditFragment"
-            app:enterAnim="@anim/fade_in"
-            app:exitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out" />
-    </fragment>
-
-    <!-- 컵 추가/수정 화면 -->
-    <fragment
-        android:id="@+id/cupCreateFragment"
-        android:name="com.tkw.cup.CupCreateFragment"
-        tools:layout="@layout/fragment_cup_create">
-
-
-        <argument
-            android:name="cupArgument"
-            app:argType="com.tkw.domain.model.Cup"
-            app:nullable="true"/>
-    </fragment>
-
-    <!-- 컵 리스트 수정 화면 -->
-    <fragment
-        android:id="@+id/cupListEditFragment"
-        android:name="com.tkw.cup.CupListEditFragment"
-        tools:layout="@layout/fragment_cup_list_edit">
-
-    </fragment>
-
+    <include app:graph="@navigation/init_nav_graph" />
+    <include app:graph="@navigation/alarm_nav_graph" />
+    <include app:graph="@navigation/cup_nav_graph" />
+    <include app:graph="@navigation/home_nav_graph" />
+    <include app:graph="@navigation/record_nav_graph" />
+    <include app:graph="@navigation/setting_nav_graph" />
 
 </navigation>

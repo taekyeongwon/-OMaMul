@@ -1,17 +1,15 @@
 plugins {
-    alias libs.plugins.android.library
-    alias libs.plugins.jetbrains.kotlin.android
-    alias libs.plugins.hilt
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.jetbrains.kotlin.android)
     id 'kotlin-kapt'
 }
 
 android {
-    namespace 'com.tkw.init'
+    namespace 'com.tkw.navigation'
     compileSdk 34
 
     defaultConfig {
         minSdk 26
-        targetSdk 34
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -30,23 +28,15 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = '1.8'
     }
 }
 
 dependencies {
-    implementation project(':core:common')
-    implementation project(':core:ui')
-    implementation project(':core:util')
-    implementation project(':core:domain')
-    implementation project(':core:navigation')
-    implementation project(':feature-common:base')
-    implementation project(':feature-water:alarm')
-
     implementation libs.androidx.core
     implementation libs.androidx.appcompat
     implementation libs.android.material
@@ -57,17 +47,6 @@ dependencies {
 
     implementation libs.androidx.navigation.fragment
     implementation libs.androidx.navigation.ui
-
-    //by viewModels
-    implementation libs.androidx.activity.ktx
-
-    //by activityViewModels
-    implementation libs.androidx.fragment.ktx
-
-    //hilt
-    implementation libs.hilt
-    // KAPT(Kotlin Annotation Processing Tools), 어노테이션 사용, annotationProcessor의 대체
-    kapt libs.hilt.compiler
 }
 
 kapt {

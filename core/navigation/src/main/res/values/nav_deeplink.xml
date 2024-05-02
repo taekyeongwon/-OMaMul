@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="init_language_deeplink">omamul://init/language</string>
+    <string name="init_intake_deeplink">omamul://init/intake</string>
+    <string name="init_time_deeplink">omamul://init/time</string>
+    
+    <string name="home_deeplink">omamul://home</string>
+    <string name="log_deeplink">omamul://log</string>
+    <string name="setting_deeplink">omamul://setting</string>
+    
+    <string name="cup_manage_deeplink">omamul://cup/manage</string>
+    <string name="cup_create_deep_link">omamul://cup/create/{cupArg}</string>
+    <string name="cup_list_edit_deeplink">omamul://cup/list</string>
+</resources>

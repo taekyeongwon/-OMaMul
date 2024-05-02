@@ -44,13 +44,15 @@ android {
 }
 
 dependencies {
-    implementation project(':core:domain')
     implementation project(':core:common')
-    implementation project(':core:data')
-    implementation project(':core:database')
     implementation project(':core:util')
     implementation project(':feature-common:base')
-    implementation project(':core:ui')
+    implementation project(':feature-common:init')
+    implementation project(':feature-water:alarm')
+    implementation project(':feature-water:cup')
+    implementation project(':feature-water:home')
+    implementation project(':feature-water:record')
+    implementation project(':feature-water:setting')
 
     implementation libs.androidx.core
     implementation libs.androidx.appcompat
