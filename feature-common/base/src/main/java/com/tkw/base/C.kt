@@ -1,4 +1,4 @@
-package com.tkw.common
+package com.tkw.base
 
 object C {
     val FirstInstallFlag = "firstInstallFlag"

@@ -1,4 +1,4 @@
-package com.tkw.util
+package com.tkw.ui.util
 
 import android.animation.ValueAnimator
 import android.view.animation.LinearInterpolator

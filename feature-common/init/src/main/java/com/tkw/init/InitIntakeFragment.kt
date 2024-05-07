@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.tkw.common.C
+import com.tkw.base.C
 import com.tkw.common.autoCleared
 import com.tkw.init.databinding.FragmentInitIntakeBinding
 import com.tkw.navigation.DeepLinkDestination

@@ -37,9 +37,6 @@ android {
 }
 
 dependencies {
-    implementation project(':core:util')
-    implementation project(':core:common')
-
     implementation libs.androidx.core
     implementation libs.androidx.appcompat
     implementation libs.android.material

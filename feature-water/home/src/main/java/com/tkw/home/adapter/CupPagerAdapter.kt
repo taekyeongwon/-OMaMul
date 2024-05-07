@@ -1,13 +1,13 @@
-package com.tkw.cup.adapter
+package com.tkw.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.tkw.common.C
-import com.tkw.cup.databinding.ItemCupAddBinding
-import com.tkw.cup.databinding.ItemCupBinding
+import com.tkw.base.C
 import com.tkw.domain.model.Cup
+import com.tkw.home.databinding.ItemCupAddBinding
+import com.tkw.home.databinding.ItemCupBinding
 
 class CupPagerAdapter(
     private val onClick: (Int) -> Unit,

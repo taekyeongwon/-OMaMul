@@ -1,4 +1,4 @@
-package com.tkw.alarm.dialog
+package com.tkw.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,11 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioGroup.OnCheckedChangeListener
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.tkw.alarm.R
-import com.tkw.alarm.databinding.DialogTimepickerBinding
-import com.tkw.common.BottomExpand
-import com.tkw.common.BottomExpandImpl
-import com.tkw.util.DateTimeUtils
+import com.tkw.ui.databinding.DialogTimepickerBinding
+import com.tkw.ui.util.DateTimeUtils
 import java.time.LocalTime
 
 class AlarmTimeBottomDialog(

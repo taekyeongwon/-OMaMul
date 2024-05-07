@@ -11,11 +11,9 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import com.tkw.common.C
-import com.tkw.common.DateChangeReceiver
+import com.tkw.base.C
 import com.tkw.omamul.databinding.ActivityWaterBinding
 import com.tkw.home.WaterViewModel
-import com.tkw.util.DateTimeUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,7 +27,7 @@ class WaterActivity : AppCompatActivity() {
     )
 
     private val broadcastReceiver = DateChangeReceiver {
-        viewModel.setDate(DateTimeUtils.getTodayDate())
+        viewModel.setToday()
     }
     private val receiveFilter = IntentFilter(Intent.ACTION_DATE_CHANGED)
 

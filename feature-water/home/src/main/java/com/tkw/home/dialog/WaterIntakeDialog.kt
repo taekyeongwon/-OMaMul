@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.tkw.home.WaterViewModel
-import com.tkw.common.DialogResize
-import com.tkw.common.DialogResizeImpl
+import com.tkw.ui.DialogResize
+import com.tkw.ui.DialogResizeImpl
 import com.tkw.common.autoCleared
 import com.tkw.home.databinding.DialogWaterIntakeBinding
 import dagger.hilt.android.AndroidEntryPoint

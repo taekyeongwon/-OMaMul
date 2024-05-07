@@ -11,7 +11,7 @@ import com.tkw.domain.WaterRepository
 import com.tkw.domain.model.Cup
 import com.tkw.domain.model.DayOfWater
 import com.tkw.domain.model.Water
-import com.tkw.util.DateTimeUtils
+import com.tkw.ui.util.DateTimeUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,8 +47,8 @@ class WaterViewModel
     val cupPagerScrollPosition = MutableLiveData(0)
 
     //date값 변경에 따라 flow에서 새로운 DayOfWater 객체 collect하기 위한 메서드
-    fun setDate(date: String) {
-        dateStringFlow.value = date
+    fun setToday() {
+        dateStringFlow.value = DateTimeUtils.getTodayDate()
     }
 
     fun addCount(amount: Int, date: String) {

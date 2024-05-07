@@ -16,14 +16,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import com.tkw.home.dialog.WaterIntakeDialog
-import com.tkw.cup.adapter.CupPagerAdapter
+import com.tkw.home.adapter.CupPagerAdapter
 import com.tkw.common.autoCleared
 import com.tkw.domain.model.Water
 import com.tkw.home.databinding.FragmentWaterBinding
 import com.tkw.navigation.DeepLinkDestination
 import com.tkw.navigation.deepLinkNavigateTo
-import com.tkw.util.DateTimeUtils
-import com.tkw.util.DimenUtils
+import com.tkw.ui.util.DateTimeUtils
+import com.tkw.ui.util.DimenUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -70,7 +70,7 @@ class WaterFragment: Fragment() {
 
     private fun initObserver() {
         //홈 화면은 오늘 날짜의 데이터만 보여주도록 여기서 세팅
-        viewModel.setDate(DateTimeUtils.getTodayDate())
+        viewModel.setToday()
 
         viewModel.amountLiveData.observe(viewLifecycleOwner) {
             countObject = it.dayOfList

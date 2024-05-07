@@ -6,9 +6,9 @@ import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.tkw.common.C
-import com.tkw.common.ItemMoveListener
-import com.tkw.common.OnItemDrag
+import com.tkw.base.C
+import com.tkw.ui.ItemMoveListener
+import com.tkw.ui.OnItemDrag
 import com.tkw.cup.databinding.ItemCupListEditBinding
 import com.tkw.cup.databinding.ItemManagedCupBinding
 import com.tkw.domain.model.Cup

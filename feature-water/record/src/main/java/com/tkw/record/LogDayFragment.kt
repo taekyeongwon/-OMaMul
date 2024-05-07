@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import com.tkw.util.animateByMaxValue
+import com.tkw.ui.util.animateByMaxValue
 import com.tkw.record.adapter.DayListAdapter
 import com.tkw.ui.DividerDecoration
 import com.tkw.record.dialog.LogEditBottomDialog
@@ -129,7 +129,7 @@ class LogDayFragment: Fragment() {
         with(dataBinding) {
             barChart.setXMinMax(0f, 24f)
             barChart.setLimit(2000f) //todo 현재 설정된 목표 물의 양으로 변경 필요
-            barChart.setUnit(getString(com.tkw.common.R.string.unit_hour), getString(com.tkw.common.R.string.unit_ml))
+            barChart.setUnit(getString(com.tkw.ui.R.string.unit_hour), getString(com.tkw.ui.R.string.unit_ml))
             barChart.setMarker(DayMarkerView(context))
             barChart.setChartData(arrayListOf())    //최초 호출 시 차트 여백 적용해 주기 위해 빈값으로 data set
         }

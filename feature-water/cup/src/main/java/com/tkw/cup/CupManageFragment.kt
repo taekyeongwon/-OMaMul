@@ -9,8 +9,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.tkw.common.ItemTouchHelperCallback
-import com.tkw.common.OnItemDrag
+import com.tkw.ui.ItemTouchHelperCallback
+import com.tkw.ui.OnItemDrag
 import com.tkw.common.autoCleared
 import com.tkw.domain.model.Cup
 import com.tkw.ui.DividerDecoration

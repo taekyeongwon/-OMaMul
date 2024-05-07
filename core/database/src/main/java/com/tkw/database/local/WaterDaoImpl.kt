@@ -34,10 +34,6 @@ class WaterDaoImpl @Inject constructor(): WaterDao {
         return this.stream(this.findBy("date == $0", date))
     }
 
-    override fun getAmountDuring(start: String, end: String): List<DayOfWaterEntity> {
-        return this.findBy("$0 <= date AND date <= $1", start, end)
-    }
-
     override suspend fun addAmount(date: String, newObj: WaterEntity) {
         realm.write {
             val query = amountByDate(date)

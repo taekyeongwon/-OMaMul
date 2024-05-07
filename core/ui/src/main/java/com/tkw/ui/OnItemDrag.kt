@@ -1,4 +1,4 @@
-package com.tkw.common
+package com.tkw.ui
 
 import androidx.recyclerview.widget.RecyclerView
 

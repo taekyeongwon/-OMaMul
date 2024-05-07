@@ -7,12 +7,12 @@ class AppError(private val code: Int, cause: Throwable? = null): Exception("", c
 
     fun getMessage(context: Context) : String {
         return try {
-            val ref = com.tkw.common.R.string::class.java
+            val ref = com.tkw.ui.R.string::class.java
             val field = ref.getField(prefix + code)
             val resId = field.getInt(null)
             context.getString(resId)
         } catch (e: Exception) {
-            context.getString(com.tkw.common.R.string.default_error)
+            context.getString(com.tkw.ui.R.string.default_error)
         }
     }
 }

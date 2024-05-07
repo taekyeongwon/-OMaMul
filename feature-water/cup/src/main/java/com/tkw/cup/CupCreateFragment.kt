@@ -14,7 +14,6 @@ import com.tkw.cup.databinding.FragmentCupCreateBinding
 import com.tkw.domain.model.Cup
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.withCreationCallback
-import com.tkw.common.R
 
 @AndroidEntryPoint
 class CupCreateFragment: Fragment() {
@@ -51,8 +50,8 @@ class CupCreateFragment: Fragment() {
     private fun initObserver() {
         viewModel.createMode.observe(viewLifecycleOwner) {
             viewModel.buttonName.value =
-                if(it) getString(R.string.add)
-                else getString(R.string.modify)
+                if(it) getString(com.tkw.ui.R.string.add)
+                else getString(com.tkw.ui.R.string.modify)
         }
 
         viewModel.nextEvent.observe(viewLifecycleOwner) {

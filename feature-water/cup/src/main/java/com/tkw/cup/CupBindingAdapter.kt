@@ -1,12 +1,11 @@
-package com.tkw.ui
+package com.tkw.cup
 
-import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
-import com.tkw.util.DateTimeUtils
+import com.tkw.ui.WaterAmountPicker
 
-object BindingAdapter {
+object CupBindingAdapter {
     /**
      * 물의 양 number picker 양방향 바인딩
      */
@@ -31,23 +30,5 @@ object BindingAdapter {
     @InverseBindingAdapter(attribute = "value", event = "valueAttrChanged")
     fun getValue(view: WaterAmountPicker): Int {
         return view.getCurrentValue()
-    }
-    //end
-
-    @JvmStatic
-    @BindingAdapter("weekDays")
-    fun setWeekDays(view: TextView, value: String?) {
-        if(value != null) {
-            val week = DateTimeUtils.getWeekDates(value)
-            view.text = "${week.first} - ${week.second}"
-        }
-    }
-
-    @JvmStatic
-    @BindingAdapter("monthDays")
-    fun setMonthDays(view: TextView, value: String?) {
-        if(value != null) {
-            view.text = value.substring(0, 7)
-        }
     }
 }

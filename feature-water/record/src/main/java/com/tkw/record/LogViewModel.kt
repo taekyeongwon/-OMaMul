@@ -7,7 +7,7 @@ import com.tkw.domain.WaterRepository
 import com.tkw.domain.model.DayOfWater
 import com.tkw.domain.model.DayOfWaterList
 import com.tkw.domain.model.Water
-import com.tkw.util.DateTimeUtils
+import com.tkw.ui.util.DateTimeUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,14 +29,14 @@ class LogViewModel
     private val week = WeekLog()
     private val month = MonthLog()
 
-    val dateLiveData = MutableStateFlow(DateTimeUtils.getTodayDate())
-    val weekLiveData = MutableStateFlow(DateTimeUtils.getTodayDate())
-    val monthLiveData = MutableStateFlow(DateTimeUtils.getTodayDate())
+    val dateLiveData = MutableStateFlow(getToday())
+    val weekLiveData = MutableStateFlow(getToday())
+    val monthLiveData = MutableStateFlow(getToday())
 
     //전체 DayOfWater 리스트
     @OptIn(ExperimentalCoroutinesApi::class)
     private val dayFlow: StateFlow<DayOfWaterList> =
-        waterRepository.getAllDayEntity().mapLatest { list ->
+        waterRepository.getAllDayEntity(getToday()).mapLatest { list ->
             DayOfWaterList(list)
         }.stateIn(
             initialValue = DayOfWaterList(arrayListOf()),
@@ -53,7 +53,7 @@ class LogViewModel
     }.stateIn(
         initialValue = listOf(
             Pair(
-                DateTimeUtils.getWeekDates(DateTimeUtils.getTodayDate()).first,
+                DateTimeUtils.getWeekDates(getToday()).first,
                 DayOfWaterList(arrayListOf())
             )
         ),
@@ -70,7 +70,7 @@ class LogViewModel
     }.stateIn(
         initialValue = listOf(
             Pair(
-                DateTimeUtils.getMonthDates(DateTimeUtils.getTodayDate()).first,
+                DateTimeUtils.getMonthDates(getToday()).first,
                 DayOfWaterList(arrayListOf())
             )
         ),
@@ -127,7 +127,7 @@ class LogViewModel
                         dayFlow.value.list[currentIndex]
                     } else {
                         DayOfWater(
-                            DateTimeUtils.getTodayDate(),
+                            getToday(),
                             arrayListOf()
                         )
                     }
@@ -160,7 +160,7 @@ class LogViewModel
                         weekFlow.value[currentIndex]
                     } else {
                         Pair(
-                            DateTimeUtils.getTodayDate(),
+                            getToday(),
                             DayOfWaterList(arrayListOf())
                         )
                     }
@@ -193,7 +193,7 @@ class LogViewModel
                         monthFlow.value[currentIndex]
                     } else {
                         Pair(
-                            DateTimeUtils.getTodayDate(),
+                            getToday(),
                             DayOfWaterList(arrayListOf())
                         )
                     }
@@ -202,6 +202,8 @@ class LogViewModel
             }
         }
     }
+
+    private fun getToday() = DateTimeUtils.getTodayDate()
 
     //현재 선택된 일자로 업데이트
     private fun getDayAmount(water: DayOfWater) {

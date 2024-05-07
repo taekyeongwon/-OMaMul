@@ -39,10 +39,9 @@ android {
 }
 
 dependencies {
-    implementation project(':core:util')
     implementation project(':core:domain')
     implementation project(':core:common')
-    implementation project(':core:navigation')
+//    implementation project(':core:navigation')
     implementation project(':feature-common:base')
 
     implementation libs.androidx.core

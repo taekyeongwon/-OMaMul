@@ -13,7 +13,6 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
-import com.tkw.ui.R
 
 class CustomBarChart
     @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0)

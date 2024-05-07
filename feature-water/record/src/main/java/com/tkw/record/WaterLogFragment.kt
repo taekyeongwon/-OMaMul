@@ -32,9 +32,9 @@ class WaterLogFragment: Fragment() {
             viewPager.adapter = ViewPagerAdapter(childFragmentManager, lifecycle)
             TabLayoutMediator(tabLayout, viewPager) { tab, position ->
                 when(position) {
-                    0 -> tab.text = getString(com.tkw.common.R.string.log_day_title)
-                    1 -> tab.text = getString(com.tkw.common.R.string.log_week_title)
-                    else -> tab.text = getString(com.tkw.common.R.string.log_month_title)
+                    0 -> tab.text = getString(com.tkw.ui.R.string.log_day_title)
+                    1 -> tab.text = getString(com.tkw.ui.R.string.log_week_title)
+                    else -> tab.text = getString(com.tkw.ui.R.string.log_month_title)
                 }
             }.attach()
         }

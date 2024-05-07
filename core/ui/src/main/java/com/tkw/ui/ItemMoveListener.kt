@@ -1,4 +1,4 @@
-package com.tkw.common
+package com.tkw.ui
 
 interface ItemMoveListener {
     fun onItemMove(from: Int, to: Int)

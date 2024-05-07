@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.tkw.common.BottomExpand
-import com.tkw.common.BottomExpandImpl
+import com.tkw.ui.BottomExpand
+import com.tkw.ui.BottomExpandImpl
 import com.tkw.common.autoCleared
 import com.tkw.domain.model.Water
 import com.tkw.record.LogViewModel
 import com.tkw.record.databinding.DialogLogEditBinding
-import com.tkw.util.DateTimeUtils
+import com.tkw.ui.util.DateTimeUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

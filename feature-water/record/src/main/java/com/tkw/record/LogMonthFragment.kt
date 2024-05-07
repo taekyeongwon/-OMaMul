@@ -11,11 +11,11 @@ import androidx.lifecycle.Lifecycle.State
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.tkw.common.autoCleared
-import com.tkw.util.animateByMaxValue
+import com.tkw.ui.util.animateByMaxValue
 import com.tkw.domain.model.DayOfWater
 import com.tkw.record.databinding.FragmentLogMonthBinding
 import com.tkw.ui.chart.MonthMarkerView
-import com.tkw.util.DateTimeUtils
+import com.tkw.ui.util.DateTimeUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -93,8 +93,8 @@ class LogMonthFragment: Fragment() {
         with(dataBinding) {
             barChart.setLimit(2f) //todo 현재 설정된 목표 물의 양으로 변경 필요
             barChart.setUnit(
-                getString(com.tkw.common.R.string.unit_day),
-                getString(com.tkw.common.R.string.unit_liter)
+                getString(com.tkw.ui.R.string.unit_day),
+                getString(com.tkw.ui.R.string.unit_liter)
             )
             barChart.setMarker(MonthMarkerView(context))
         }
