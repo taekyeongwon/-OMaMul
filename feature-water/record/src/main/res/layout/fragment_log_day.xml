@@ -70,7 +70,7 @@
                     android:layout_height="wrap_content"
                     app:layout_scrollFlags="scroll|snap"
                     android:layout_marginBottom="12dp">
-                    <com.tkw.ui.chart.CustomLineChart
+                    <com.tkw.ui.chart.CustomChartLine
                         android:id="@+id/bar_chart"
                         android:layout_width="match_parent"
                         android:layout_height="250dp"

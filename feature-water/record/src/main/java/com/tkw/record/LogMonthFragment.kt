@@ -14,6 +14,7 @@ import com.tkw.common.autoCleared
 import com.tkw.ui.util.animateByMaxValue
 import com.tkw.domain.model.DayOfWater
 import com.tkw.record.databinding.FragmentLogMonthBinding
+import com.tkw.ui.chart.MarkerType
 import com.tkw.ui.chart.MonthMarkerView
 import com.tkw.ui.util.DateTimeUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -85,7 +86,7 @@ class LogMonthFragment: Fragment() {
         }
 
         dataBinding.ibDayRight.setOnClickListener {
-            viewModel.setEvent(LogContract.Event.WeekAmountEvent(LogContract.Move.RIGHT))
+            viewModel.setEvent(LogContract.Event.MonthAmountEvent(LogContract.Move.RIGHT))
         }
     }
 
@@ -96,7 +97,7 @@ class LogMonthFragment: Fragment() {
                 getString(com.tkw.ui.R.string.unit_day),
                 getString(com.tkw.ui.R.string.unit_liter)
             )
-            barChart.setMarker(MonthMarkerView(context))
+            barChart.setMarker(MarkerType.MONTH)
         }
     }
 

@@ -3,22 +3,36 @@ package com.tkw.ui.chart
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
-import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class CustomBarChart
-    @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0)
-    : BarChart(context, attrs, defStyle) {
+@AndroidEntryPoint
+class CustomChartLine
+@JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0)
+    : LineChart(context, attrs, defStyle), BaseChart<Entry>{
     private var limit: Float = 0f
     private lateinit var yAxisRenderer: CustomYAxisRenderer
+
+    @Inject
+    @DayMarker
+    lateinit var dayMarker: MarkerView
+
+    @Inject
+    @WeekMarker
+    lateinit var weekMarker: MarkerView
+
+    @Inject
+    @MonthMarker
+    lateinit var monthMarker: MarkerView
 
     init {
         initDefault()
@@ -26,7 +40,7 @@ class CustomBarChart
         initYAxis()
     }
 
-    private fun initDefault() {
+    override fun initDefault() {
         setPinchZoom(false)
         setScaleEnabled(false)
         setExtraOffsets(10f, 100f, 20f, 10f)
@@ -42,7 +56,7 @@ class CustomBarChart
         setLimit(2000f)
     }
 
-    private fun initXAxis() {
+    override fun initXAxis() {
         xAxis.apply {
             position = XAxis.XAxisPosition.BOTTOM
             setDrawGridLines(false)
@@ -54,7 +68,7 @@ class CustomBarChart
         }
     }
 
-    private fun initYAxis() {
+    override fun initYAxis() {
         axisLeft.apply {
             setLabelCount(5, true)
             rendererLeftYAxis = yAxisRenderer
@@ -63,7 +77,7 @@ class CustomBarChart
         }
     }
 
-    fun setLimit(limit: Float) {
+    override fun setLimit(limit: Float) {
         this.limit = limit
         axisLeft.removeAllLimitLines()
         axisLeft.addLimitLine(LimitLine(limit).apply {
@@ -73,57 +87,56 @@ class CustomBarChart
         })
     }
 
-    fun setUnit(xUnit: String, yUnit: String) {
-        xAxis.valueFormatter = XAxisValueFormatter(xUnit)
+    override fun setUnit(xUnit: String, yUnit: String) {
+        xAxis.valueFormatter = XAxisUnitFormatter(xUnit)
         yAxisRenderer.setUnit(yUnit)
     }
 
-    fun setUnit(yUnit: String) {
+    override fun setYUnit(yUnit: String) {
         yAxisRenderer.setUnit(yUnit)
     }
 
-    fun setXAxisValueFormatter(formatter: ValueFormatter) {
-        xAxis.valueFormatter = formatter
+    override fun setXValueFormat(values: Array<String>) {
+        xAxis.valueFormatter = XAxisValueFormatter(values)
     }
 
-    fun setMarker(markerView: MarkerView) {
-        markerView.chartView = this
-        this.marker = markerView
+    override fun setMarker(markerType: MarkerType) {
+        val marker = when(markerType) {
+            MarkerType.DAY -> dayMarker
+            MarkerType.WEEK -> weekMarker
+            MarkerType.MONTH -> monthMarker
+        }
+        marker.chartView = this
+        this.marker = marker
     }
 
-    fun parsingChartData(x: Float, y: Float): BarEntry {
-        return BarEntry(x, y)
+    override fun parsingChartData(x: Float, y: Float): Entry {
+        return Entry(x, y)
     }
 
-    fun setChartData(list: List<BarEntry>) {
-        val sortedList = list.sortedBy { it.x }
-        val barDataSet = BarDataSet(sortedList, "").apply {
+    override fun setChartData(list: List<Entry>) {
+        val lineDataSet = LineDataSet(list, "").apply {
+            lineWidth = 4f
+            circleRadius = 5f
             color = ColorTemplate.getHoloBlue()
+            setCircleColors(ColorTemplate.getHoloBlue())
             valueTextColor = Color.BLACK
             valueTextSize = 16f
             setDrawValues(false)
         }
-        data = BarData(barDataSet)
-        data.barWidth = 0.5f
+        data = LineData(lineDataSet)
         calculateYMaximum()
         animateY(1000)
     }
 
-    /**
-     * 일 차트인 경우 0 ~ 24
-     * 주 차트인 경우 선택한 주의 날짜 ex) 1 ~ 7
-     * 월 차트인 경우 1 ~ 31
-     *
-     * 양쪽 끝이 바 가운데 위치하도록 0.5씩 증감
-     */
-    fun setXMinMax(min: Float, max: Float) {
+    override fun setXMinMax(min: Float, max: Float) {
         xAxis.apply {
             axisMinimum = min - 0.5f
             axisMaximum = max + 0.5f
         }
     }
 
-    private fun calculateYMaximum() {
+    override fun calculateYMaximum() {
         val maxAmount = data.yMax
         val newLimit = if(maxAmount < limit) limit else maxAmount
         axisLeft.axisMaximum = (newLimit / 4) * 5

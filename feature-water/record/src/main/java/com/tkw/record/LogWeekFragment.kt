@@ -14,8 +14,9 @@ import com.tkw.common.autoCleared
 import com.tkw.ui.util.animateByMaxValue
 import com.tkw.domain.model.DayOfWater
 import com.tkw.record.databinding.FragmentLogWeekBinding
+import com.tkw.ui.chart.MarkerType
 import com.tkw.ui.chart.WeekMarkerView
-import com.tkw.ui.chart.XAxisWeekFormatter
+import com.tkw.ui.chart.XAxisValueFormatter
 import com.tkw.ui.util.DateTimeUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -93,8 +94,8 @@ class LogWeekFragment: Fragment() {
     private fun initChart() {
         with(dataBinding) {
             barChart.setLimit(2f) //todo 현재 설정된 목표 물의 양으로 변경 필요
-            barChart.setUnit(getString(com.tkw.ui.R.string.unit_liter))
-            barChart.setMarker(WeekMarkerView(context))
+            barChart.setYUnit(getString(com.tkw.ui.R.string.unit_liter))
+            barChart.setMarker(MarkerType.WEEK)
             barChart.setXMinMax(1f, 7f)
         }
     }
@@ -108,7 +109,7 @@ class LogWeekFragment: Fragment() {
                 )
             }
             if(list.isNotEmpty()) {
-                barChart.setXAxisValueFormatter(XAxisWeekFormatter(list[0].date))
+                barChart.setXValueFormat(barChart.getWeekDateList(list[0].date))
             }
 
             barChart.setChartData(result)

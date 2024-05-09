@@ -17,6 +17,7 @@ import com.tkw.domain.model.DayOfWater
 import com.tkw.domain.model.Water
 import com.tkw.record.databinding.FragmentLogDayBinding
 import com.tkw.ui.chart.DayMarkerView
+import com.tkw.ui.chart.MarkerType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -130,7 +131,7 @@ class LogDayFragment: Fragment() {
             barChart.setXMinMax(0f, 24f)
             barChart.setLimit(2000f) //todo 현재 설정된 목표 물의 양으로 변경 필요
             barChart.setUnit(getString(com.tkw.ui.R.string.unit_hour), getString(com.tkw.ui.R.string.unit_ml))
-            barChart.setMarker(DayMarkerView(context))
+            barChart.setMarker(MarkerType.DAY)
             barChart.setChartData(arrayListOf())    //최초 호출 시 차트 여백 적용해 주기 위해 빈값으로 data set
         }
     }
@@ -138,7 +139,7 @@ class LogDayFragment: Fragment() {
     private fun setChartData(dayOfWater: DayOfWater) {
         with(dataBinding) {
             val result = dayOfWater.getAccumulatedAmount().map {
-                barChart.parsingChartData(it.key, it.value)
+                barChart.parsingChartData(it.key.toFloat(), it.value.toFloat())
             }
 
             barChart.setChartData(result)
