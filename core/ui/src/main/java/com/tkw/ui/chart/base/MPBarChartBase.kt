@@ -19,7 +19,6 @@ import com.tkw.ui.chart.renderer.CustomYAxisRenderer
 
 /**
  * MPAndroidChart 라이브러리 공통 세팅용 클래스. BarChart 설정 관련.
- * MP 붙은 base 클래스는 
  */
 open class MPBarChartBase
 @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0)
