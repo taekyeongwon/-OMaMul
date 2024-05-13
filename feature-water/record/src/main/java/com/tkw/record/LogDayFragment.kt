@@ -16,8 +16,7 @@ import com.tkw.common.autoCleared
 import com.tkw.domain.model.DayOfWater
 import com.tkw.domain.model.Water
 import com.tkw.record.databinding.FragmentLogDayBinding
-import com.tkw.ui.chart.DayMarkerView
-import com.tkw.ui.chart.MarkerType
+import com.tkw.ui.chart.marker.MarkerType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

@@ -1,38 +1,35 @@
-package com.tkw.ui.chart
+package com.tkw.ui.chart.base
 
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
-import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.utils.ColorTemplate
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import com.tkw.ui.chart.formatter.XAxisUnitFormatter
+import com.tkw.ui.chart.formatter.XAxisValueFormatter
+import com.tkw.ui.chart.marker.DayMarkerView
+import com.tkw.ui.chart.marker.MarkerType
+import com.tkw.ui.chart.marker.MonthMarkerView
+import com.tkw.ui.chart.marker.WeekMarkerView
+import com.tkw.ui.chart.renderer.CustomXAxisRenderer
+import com.tkw.ui.chart.renderer.CustomYAxisRenderer
 
-@AndroidEntryPoint
-class CustomChartLine
+/**
+ * MPAndroidChart 라이브러리 공통 세팅용 클래스. BarChart 설정 관련.
+ * MP 붙은 base 클래스는 
+ */
+open class MPBarChartBase
 @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0)
-    : LineChart(context, attrs, defStyle), BaseChart<Entry>{
+    : BarChart(context, attrs, defStyle) {
     private var limit: Float = 0f
     private lateinit var yAxisRenderer: CustomYAxisRenderer
 
-    @Inject
-    @DayMarker
-    lateinit var dayMarker: MarkerView
-
-    @Inject
-    @WeekMarker
-    lateinit var weekMarker: MarkerView
-
-    @Inject
-    @MonthMarker
-    lateinit var monthMarker: MarkerView
+    private val dayMarker: MarkerView by lazy { DayMarkerView(context) }
+    private val weekMarker: MarkerView by lazy { WeekMarkerView(context) }
+    private val monthMarker: MarkerView by lazy { MonthMarkerView(context) }
 
     init {
         initDefault()
@@ -40,7 +37,11 @@ class CustomChartLine
         initYAxis()
     }
 
-    override fun initDefault() {
+    /**
+     * zoom, offset 등 기본 세팅.
+     * label count는 x축 7, y축 5 고정
+     */
+    private fun initDefault() {
         setPinchZoom(false)
         setScaleEnabled(false)
         setExtraOffsets(10f, 100f, 20f, 10f)
@@ -53,22 +54,31 @@ class CustomChartLine
             axisLeft,
             getTransformer(YAxis.AxisDependency.LEFT)
         )
-        setLimit(2000f)
+        setChartLimit(2000f)
     }
 
-    override fun initXAxis() {
+    /**
+     * x축 세팅
+     */
+    private fun initXAxis() {
         xAxis.apply {
             position = XAxis.XAxisPosition.BOTTOM
             setDrawGridLines(false)
             setDrawAxisLine(false)
-            val xAxisRenderer = CustomXAxisRenderer(viewPortHandler, this, getTransformer(
-                YAxis.AxisDependency.LEFT))
+            val xAxisRenderer = CustomXAxisRenderer(
+                viewPortHandler, this, getTransformer(
+                    YAxis.AxisDependency.LEFT
+                )
+            )
             setXAxisRenderer(xAxisRenderer)
             labelCount = 7
         }
     }
 
-    override fun initYAxis() {
+    /**
+     * y축 세팅
+     */
+    private fun initYAxis() {
         axisLeft.apply {
             setLabelCount(5, true)
             rendererLeftYAxis = yAxisRenderer
@@ -77,7 +87,7 @@ class CustomChartLine
         }
     }
 
-    override fun setLimit(limit: Float) {
+    fun setChartLimit(limit: Float) {
         this.limit = limit
         axisLeft.removeAllLimitLines()
         axisLeft.addLimitLine(LimitLine(limit).apply {
@@ -87,20 +97,20 @@ class CustomChartLine
         })
     }
 
-    override fun setUnit(xUnit: String, yUnit: String) {
+    protected fun setChartUnit(xUnit: String, yUnit: String) {
         xAxis.valueFormatter = XAxisUnitFormatter(xUnit)
         yAxisRenderer.setUnit(yUnit)
     }
 
-    override fun setYUnit(yUnit: String) {
+    protected fun setChartYUnit(yUnit: String) {
         yAxisRenderer.setUnit(yUnit)
     }
 
-    override fun setXValueFormat(values: Array<String>) {
+    protected fun setChartXValueFormat(values: Array<String>) {
         xAxis.valueFormatter = XAxisValueFormatter(values)
     }
 
-    override fun setMarker(markerType: MarkerType) {
+    protected fun setChartMarker(markerType: MarkerType) {
         val marker = when(markerType) {
             MarkerType.DAY -> dayMarker
             MarkerType.WEEK -> weekMarker
@@ -110,33 +120,17 @@ class CustomChartLine
         this.marker = marker
     }
 
-    override fun parsingChartData(x: Float, y: Float): Entry {
-        return Entry(x, y)
-    }
-
-    override fun setChartData(list: List<Entry>) {
-        val lineDataSet = LineDataSet(list, "").apply {
-            lineWidth = 4f
-            circleRadius = 5f
-            color = ColorTemplate.getHoloBlue()
-            setCircleColors(ColorTemplate.getHoloBlue())
-            valueTextColor = Color.BLACK
-            valueTextSize = 16f
-            setDrawValues(false)
-        }
-        data = LineData(lineDataSet)
-        calculateYMaximum()
-        animateY(1000)
-    }
-
-    override fun setXMinMax(min: Float, max: Float) {
+    protected fun setChartXMinMax(min: Float, max: Float) {
         xAxis.apply {
             axisMinimum = min - 0.5f
             axisMaximum = max + 0.5f
         }
     }
 
-    override fun calculateYMaximum() {
+    /**
+     * limit보다 값이 커지는 경우 y축 5번째 값 계산 하기 위한 함수
+     */
+    protected fun calculateYMaximum() {
         val maxAmount = data.yMax
         val newLimit = if(maxAmount < limit) limit else maxAmount
         axisLeft.axisMaximum = (newLimit / 4) * 5

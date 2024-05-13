@@ -14,12 +14,12 @@ import com.tkw.common.autoCleared
 import com.tkw.ui.util.animateByMaxValue
 import com.tkw.domain.model.DayOfWater
 import com.tkw.record.databinding.FragmentLogWeekBinding
-import com.tkw.ui.chart.MarkerType
-import com.tkw.ui.chart.WeekMarkerView
-import com.tkw.ui.chart.XAxisValueFormatter
+import com.tkw.ui.chart.marker.MarkerType
 import com.tkw.ui.util.DateTimeUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.time.DayOfWeek
+import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class LogWeekFragment: Fragment() {
@@ -109,11 +109,21 @@ class LogWeekFragment: Fragment() {
                 )
             }
             if(list.isNotEmpty()) {
-                barChart.setXValueFormat(barChart.getWeekDateList(list[0].date))
+                barChart.setXValueFormat(getWeekDateList(list[0].date))
             }
 
             barChart.setChartData(result)
             tvTotalAmount.animateByMaxValue(list.sumOf { it.getTotalWaterAmount() } / 1000f)
         }
+    }
+
+    private fun getWeekDateList(date: String): Array<String> {
+        val formatter = DateTimeFormatter.ofPattern("MM/dd")
+        val localDate = DateTimeUtils.getDateFromFormat(date)
+        val week = ArrayList<String>()
+        for(i in 1..7) {
+            week.add(localDate.with(DayOfWeek.of(i)).format(formatter))
+        }
+        return week.toArray(arrayOf())
     }
 }

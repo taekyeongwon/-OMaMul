@@ -1,27 +1,8 @@
-package com.tkw.ui.chart
+package com.tkw.ui.chart.base
 
-import android.content.Context
-import android.util.AttributeSet
-import android.widget.LinearLayout
-import androidx.constraintlayout.widget.ConstraintLayout
+import com.tkw.ui.chart.marker.MarkerType
 
 interface BaseChart<E> {
-    /**
-     * zoom, offset 등 기본 세팅.
-     * label count는 x축 7, y축 5 고정
-     */
-    fun initDefault()
-
-    /**
-     * x축 세팅
-     */
-    fun initXAxis()
-
-    /**
-     * y축 세팅
-     */
-    fun initYAxis()
-
     /**
      * y축 점선 세팅
      */
@@ -43,6 +24,9 @@ interface BaseChart<E> {
      */
     fun setXValueFormat(values: Array<String>)
 
+    /**
+     * MarkerType : Day, Week, Month enum값에 따라 마커 설정
+     */
     fun setMarker(markerType: MarkerType)
 
     /**
@@ -60,9 +44,4 @@ interface BaseChart<E> {
      * x축 최소, 최대 범위 지정
      */
     fun setXMinMax(min: Float, max: Float)
-
-    /**
-     * limit보다 값이 커지는 경우 y축 5번째 값 계산 하기 위한 함수
-     */
-    fun calculateYMaximum()
 }

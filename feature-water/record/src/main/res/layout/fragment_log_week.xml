@@ -51,7 +51,7 @@
                 app:layout_constraintLeft_toRightOf="@id/tv_date"
                 app:layout_constraintRight_toRightOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <com.tkw.ui.chart.CustomChartBar
+        <com.tkw.ui.chart.CustomBarChart
             android:id="@+id/bar_chart"
             android:layout_width="match_parent"
             android:layout_height="0dp"

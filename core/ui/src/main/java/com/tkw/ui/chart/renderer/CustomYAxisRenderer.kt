@@ -1,4 +1,4 @@
-package com.tkw.ui.chart
+package com.tkw.ui.chart.renderer
 
 import android.graphics.Canvas
 import com.github.mikephil.charting.components.YAxis

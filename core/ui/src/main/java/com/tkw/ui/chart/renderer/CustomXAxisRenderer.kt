@@ -1,4 +1,4 @@
-package com.tkw.ui.chart
+package com.tkw.ui.chart.renderer
 
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.renderer.XAxisRenderer
