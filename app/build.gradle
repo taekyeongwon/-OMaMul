@@ -71,18 +71,8 @@ dependencies {
     //by activityViewModels
     implementation libs.androidx.fragment.ktx
 
-    //Flow.asLiveData
-    implementation libs.androidx.lifecycle.livedata
-
     //retrofit
     implementation libs.bundles.retrofit
-
-    //realm
-    implementation libs.realm.kotlin.library.base
-    implementation libs.realm.kotlin.library.sync// If using Device Sync
-
-    //chart
-    implementation libs.android.chart
 
     //hilt
     implementation libs.hilt

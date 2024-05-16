@@ -35,6 +35,8 @@ realm-kotlin = "1.11.0"
 
 hilt = "2.50"
 
+datastore-preferences = "1.0.0"
+
 [libraries]
 androidx-core = {module="androidx.core:core-ktx", version.ref="core-ktx"}
 androidx-appcompat = {module="androidx.appcompat:appcompat", version.ref="appcompat"}
@@ -67,6 +69,8 @@ kotlinx-coroutines = {module="org.jetbrains.kotlinx:kotlinx-coroutines-core", ve
 
 hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt_compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore-preferences"}
 
 [plugins]
 android-application = { id="com.android.application", version.ref="android-application"}
