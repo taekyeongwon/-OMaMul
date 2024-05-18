@@ -3,6 +3,7 @@ package com.tkw.record
 import androidx.lifecycle.viewModelScope
 import com.tkw.base.IntentBaseViewModel
 import com.tkw.base.launch
+import com.tkw.domain.InitRepository
 import com.tkw.domain.WaterRepository
 import com.tkw.domain.model.DayOfWater
 import com.tkw.domain.model.DayOfWaterList
@@ -13,6 +14,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapLatest
@@ -22,9 +24,13 @@ import javax.inject.Inject
 @HiltViewModel
 class LogViewModel
 @Inject constructor(
-    private val waterRepository: WaterRepository
+    private val waterRepository: WaterRepository,
+    private val initRepository: InitRepository
 ): IntentBaseViewModel
 <LogContract.Event, LogContract.State, LogContract.SideEffect>() {
+
+    //목표 섭취량
+    suspend fun getIntakeAmount() = initRepository.fetchIntakeAmount().first()?.toFloat() ?: 2000f
 
     private val week = WeekLog()
     private val month = MonthLog()

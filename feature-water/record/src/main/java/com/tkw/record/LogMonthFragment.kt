@@ -50,8 +50,8 @@ class LogMonthFragment: Fragment() {
     }
 
     private fun initView() {
-        initChart()
         viewLifecycleOwner.lifecycleScope.launch {
+            initChart()
             repeatOnLifecycle(State.RESUMED) {
                 viewModel.setEvent(LogContract.Event.MonthAmountEvent(LogContract.Move.INIT))
             }
@@ -89,9 +89,10 @@ class LogMonthFragment: Fragment() {
         }
     }
 
-    private fun initChart() {
+    private suspend fun initChart() {
+        val amount = viewModel.getIntakeAmount()
         with(dataBinding) {
-            barChart.setLimit(2f) //todo 현재 설정된 목표 물의 양으로 변경 필요
+            barChart.setLimit(amount / 1000)
             barChart.setUnit(
                 getString(com.tkw.ui.R.string.unit_day),
                 getString(com.tkw.ui.R.string.unit_liter)

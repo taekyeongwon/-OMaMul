@@ -3,17 +3,20 @@ package com.tkw.home.dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.tkw.home.WaterViewModel
 import com.tkw.ui.DialogResize
 import com.tkw.ui.DialogResizeImpl
 import com.tkw.common.autoCleared
 import com.tkw.home.databinding.DialogWaterIntakeBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class WaterIntakeDialog : DialogFragment(), DialogResize by DialogResizeImpl() {
@@ -32,6 +35,8 @@ class WaterIntakeDialog : DialogFragment(), DialogResize by DialogResizeImpl() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
+        initObserver()
         initListener()
     }
 
@@ -40,14 +45,27 @@ class WaterIntakeDialog : DialogFragment(), DialogResize by DialogResizeImpl() {
         onResize(this, 0.9f)
     }
 
+    private fun initView() {
+        lifecycleScope.launch {
+            val current = dataBinding.npAmount.getCurrentValue()
+            dataBinding.npAmount.setValue(viewModel.getIntakeAmount(current))
+        }
+    }
+
+    private fun initObserver() {
+        viewModel.amountSaveEvent.observe(viewLifecycleOwner) {
+            dismiss()
+        }
+    }
+
     private fun initListener() {
         dataBinding.btnCancel.setOnClickListener {
             dismiss()
         }
 
         dataBinding.btnSave.setOnClickListener {
-            //todo 데이터 저장하고 dismiss 시 해당 데이터 보여지도록 해야 함.
-            dismiss()
+            val amount = dataBinding.npAmount.getCurrentValue()
+            viewModel.saveIntakeAmount(amount)
         }
     }
 }

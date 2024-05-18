@@ -57,8 +57,10 @@ class LogDayFragment: Fragment() {
             adapter = dayAdapter
             addItemDecoration(DividerDecoration(10f))
         }
-        initChart()
-        viewModel.setEvent(LogContract.Event.DayAmountEvent(LogContract.Move.INIT))
+        lifecycleScope.launch {
+            initChart()
+            viewModel.setEvent(LogContract.Event.DayAmountEvent(LogContract.Move.INIT))
+        }
     }
 
     private fun initObserver() {
@@ -125,10 +127,11 @@ class LogDayFragment: Fragment() {
         viewModel.setEvent(LogContract.Event.RemoveDayAmount(item))
     }
 
-    private fun initChart() {
+    private suspend fun initChart() {
+        val amount = viewModel.getIntakeAmount()
         with(dataBinding) {
             barChart.setXMinMax(0f, 24f)
-            barChart.setLimit(2000f) //todo 현재 설정된 목표 물의 양으로 변경 필요
+            barChart.setLimit(amount)
             barChart.setUnit(getString(com.tkw.ui.R.string.unit_hour), getString(com.tkw.ui.R.string.unit_ml))
             barChart.setMarker(MarkerType.DAY)
             barChart.setChartData(arrayListOf())    //최초 호출 시 차트 여백 적용해 주기 위해 빈값으로 data set
