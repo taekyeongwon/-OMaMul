@@ -7,6 +7,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -15,6 +16,7 @@ import com.tkw.base.C
 import com.tkw.omamul.databinding.ActivityWaterBinding
 import com.tkw.home.WaterViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class WaterActivity : AppCompatActivity() {
@@ -71,20 +73,23 @@ class WaterActivity : AppCompatActivity() {
                 if(mainFragmentSet.contains(destination.id)) View.VISIBLE
                 else View.GONE
         }
-        setStartDestination(navController)
 
         val appBarConfiguration = AppBarConfiguration(mainFragmentSet.plus(com.tkw.init.R.id.initLanguageFragment))
         NavigationUI.setupWithNavController(dataBinding.toolbar, navController, appBarConfiguration)
         NavigationUI.setupWithNavController(dataBinding.bottomNav, navController)
+
+        lifecycleScope.launch {
+            setStartDestination(navController)
+        }
     }
 
-    private fun setStartDestination(nav: NavController) {
+    private suspend fun setStartDestination(nav: NavController) {
         val navGraph = nav.navInflater.inflate(R.navigation.nav_graph)
 
-        if(MainApplication.sharedPref?.getBoolean(C.FirstInstallFlag, false) == false) {
-            navGraph.setStartDestination(com.tkw.init.R.id.init_nav_graph)
-        } else {
+        if(viewModel.getInitFlag()) {
             navGraph.setStartDestination(com.tkw.home.R.id.home_nav_graph)
+        } else {
+            navGraph.setStartDestination(com.tkw.init.R.id.init_nav_graph)
         }
         nav.graph = navGraph
     }

@@ -1,5 +1,6 @@
 package com.tkw.data.local
 
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -31,10 +32,17 @@ class InitRepositoryImpl
 
     override fun fetchIntakeAmount(): Flow<Int?> = dataSource.fetchData(INTAKE_AMOUNT_KEY)
 
+    override suspend fun saveInitialFlag(flag: Boolean) {
+        dataSource.saveData(INIT_FLAG_KEY, flag)
+    }
+
+    override fun fetchInitialFlag(): Flow<Boolean?> = dataSource.fetchData(INIT_FLAG_KEY)
+
     companion object {
         val LANG_KEY = stringPreferencesKey("language")
         val ALARM_WAKE_TIME_KEY = stringPreferencesKey("alarm_wake_time")
         val ALARM_SLEEP_TIME_KEY = stringPreferencesKey("alarm_sleep_time")
         val INTAKE_AMOUNT_KEY = intPreferencesKey("intake_amount")
+        val INIT_FLAG_KEY = booleanPreferencesKey("init_flag")
     }
 }

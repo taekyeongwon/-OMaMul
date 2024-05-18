@@ -40,20 +40,16 @@ class InitIntakeFragment: Fragment() {
     private fun initObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.state.collect {
-
+                if(it is InitContract.State.Complete) {
+                    viewModel.setEvent(InitContract.Event.SaveInitialFlag(true))
+                }
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.sideEffect.collect {
-                when(it) {
-                    InitContract.SideEffect.OnMoveNext -> {
-                        val pref = requireContext().getSharedPreferences("pref", Context.MODE_PRIVATE)
-                        pref.edit().putBoolean(C.FirstInstallFlag, true)?.apply()
-                        findNavController().deepLinkNavigateTo(requireContext(), DeepLinkDestination.Home, true)
-//                        findNavController().navigate(R.id.waterFragment)
-//                        setStartDestination(R.id.waterFragment) //프래그먼트 이동 전에 호출하면 cannot be found from the current destination 에러 발생
-                    }
+                if(it is InitContract.SideEffect.OnMoveNext) {
+                    findNavController().deepLinkNavigateTo(requireContext(), DeepLinkDestination.Home, true)
                 }
             }
         }
@@ -66,11 +62,4 @@ class InitIntakeFragment: Fragment() {
             viewModel.setEvent(InitContract.Event.SaveIntake(amount))
         }
     }
-
-//    private fun setStartDestination(fragmentId: Int) {
-//        val nav = findNavController()
-//        val navGraph = nav.navInflater.inflate(R.navigation.nav_graph)
-//        navGraph.setStartDestination(fragmentId)
-//        nav.graph = navGraph
-//    }
 }

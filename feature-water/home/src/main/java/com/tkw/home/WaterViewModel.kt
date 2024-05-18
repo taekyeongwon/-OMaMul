@@ -7,6 +7,7 @@ import androidx.lifecycle.asLiveData
 import com.tkw.base.BaseViewModel
 import com.tkw.base.launch
 import com.tkw.domain.CupRepository
+import com.tkw.domain.InitRepository
 import com.tkw.domain.WaterRepository
 import com.tkw.domain.model.Cup
 import com.tkw.domain.model.DayOfWater
@@ -15,6 +16,7 @@ import com.tkw.ui.util.DateTimeUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapLatest
 import javax.inject.Inject
@@ -24,8 +26,12 @@ class WaterViewModel
 @Inject constructor(
     private val waterRepository: WaterRepository,
     private val cupRepository: CupRepository,
+    private val initRepository: InitRepository,
     private val savedStateHandle: SavedStateHandle
 ): BaseViewModel() {
+
+    //최초 진입 여부
+    private val initFlag = initRepository.fetchInitialFlag()
 
     //현재 날짜
     private val dateStringFlow = MutableStateFlow(DateTimeUtils.getTodayDate())
@@ -62,4 +68,6 @@ class WaterViewModel
             waterRepository.deleteAmount(dateStringFlow.value, obj.dateTime)
         }
     }
+
+    suspend fun getInitFlag(): Boolean = initFlag.first() ?: false
 }

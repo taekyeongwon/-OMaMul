@@ -12,9 +12,9 @@
         <!--            android:id="@+id/action_waterIntakeFragment"-->
         <!--            app:destination="@id/waterIntakeFragment"/>-->
 
-        <action
-            android:id="@+id/action_waterFragment_to_waterAlarmFragment"
-            app:destination="@id/waterAlarmFragment" />
+<!--        <action-->
+<!--            android:id="@+id/action_waterFragment_to_waterAlarmFragment"-->
+<!--            app:destination="@id/waterAlarmFragment" />-->
         <deepLink
             app:uri="@string/home_deeplink"/>
     </fragment>

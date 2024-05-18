@@ -47,17 +47,9 @@ class InitLanguageFragment: Fragment() {
 
     private fun initObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.state.collect {
-
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.sideEffect.collect {
-                when(it) {
-                    InitContract.SideEffect.OnMoveNext -> {
-                        findNavController().navigate(R.id.initTimeFragment)
-                    }
+                if(it is InitContract.SideEffect.OnMoveNext) {
+                    findNavController().navigate(R.id.initTimeFragment)
                 }
             }
         }

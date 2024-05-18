@@ -12,4 +12,7 @@ interface InitRepository {
 
     suspend fun saveIntakeAmount(amount: Int)
     fun fetchIntakeAmount(): Flow<Int?>
+
+    suspend fun saveInitialFlag(flag: Boolean)
+    fun fetchInitialFlag(): Flow<Boolean?>
 }

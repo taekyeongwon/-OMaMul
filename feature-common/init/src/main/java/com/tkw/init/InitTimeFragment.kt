@@ -44,19 +44,14 @@ class InitTimeFragment: Fragment() {
 
     private fun initObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.state.collect {
-                if(it is InitContract.State.InitTimePicker) {
-                    initTimePicker(it.flag)
-                    showTimePicker()
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.sideEffect.collect {
                 when(it) {
                     InitContract.SideEffect.OnMoveNext -> {
                         findNavController().navigate(R.id.initIntakeFragment)
+                    }
+                    is InitContract.SideEffect.InitTimePicker -> {
+                        initTimePicker(it.flag)
+                        showTimePicker()
                     }
                 }
             }

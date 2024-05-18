@@ -24,6 +24,10 @@ android {
 
     flavorDimensions = ["app-dev"]
     productFlavors {
+        prod {
+            dimension "app-dev"
+        }
+
         dev {
             dimension "app-dev"
             applicationIdSuffix '.dev'
