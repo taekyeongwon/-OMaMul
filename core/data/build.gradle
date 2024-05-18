@@ -47,6 +47,8 @@ dependencies {
 
     implementation libs.realm.kotlin.library.base
 
+    implementation libs.androidx.datastore.preferences
+
     //hilt
     implementation libs.hilt
     // KAPT(Kotlin Annotation Processing Tools), 어노테이션 사용, annotationProcessor의 대체

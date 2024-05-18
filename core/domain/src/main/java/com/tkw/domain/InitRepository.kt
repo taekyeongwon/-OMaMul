@@ -3,12 +3,13 @@ package com.tkw.domain
 import kotlinx.coroutines.flow.Flow
 
 interface InitRepository {
-    fun saveLanguage(lang: String)
-    fun fetchLanguage(): Flow<String>
+    suspend fun saveLanguage(lang: String)
+    fun fetchLanguage(): Flow<String?>
 
-    fun saveAlarmTime(wake: String, sleep: String)
-    fun fetchAlarmTime(): Flow<Pair<String, String>>
+    suspend fun saveAlarmTime(wake: String, sleep: String)
+    fun fetchAlarmWakeTime(): Flow<String?>
+    fun fetchAlarmSleepTime(): Flow<String?>
 
-    fun saveIntakeAmount(amount: Int)
-    fun fetchIntakeAmount(): Flow<Int>
+    suspend fun saveIntakeAmount(amount: Int)
+    fun fetchIntakeAmount(): Flow<Int?>
 }

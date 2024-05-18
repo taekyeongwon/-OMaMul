@@ -1,12 +1,16 @@
 package com.tkw.data.di
 
 import com.tkw.data.local.CupRepositoryImpl
+import com.tkw.data.local.InitRepositoryImpl
 import com.tkw.data.local.WaterRepositoryImpl
 import com.tkw.database.CupDao
 import com.tkw.database.WaterDao
 import com.tkw.database.local.CupDaoImpl
 import com.tkw.database.local.WaterDaoImpl
+import com.tkw.datastore.PrefDataSource
+import com.tkw.datastore.local.PrefLocalDataSourceImpl
 import com.tkw.domain.CupRepository
+import com.tkw.domain.InitRepository
 import com.tkw.domain.WaterRepository
 import dagger.Binds
 import dagger.Module
@@ -27,11 +31,18 @@ abstract class VMModule {
 
     @Binds
     @ViewModelScoped
+    abstract fun provideInitRepo(repo: InitRepositoryImpl): InitRepository
+
+    @Binds
+    @ViewModelScoped
     abstract fun provideCupDao(dao: CupDaoImpl): CupDao
 
     @Binds
     @ViewModelScoped
     abstract fun provideWaterDao(dao: WaterDaoImpl): WaterDao
 
+    @Binds
+    @ViewModelScoped
+    abstract fun provideInitDataSource(dataSource: PrefLocalDataSourceImpl): PrefDataSource
 
 }

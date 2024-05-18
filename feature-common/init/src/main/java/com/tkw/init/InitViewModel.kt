@@ -2,6 +2,7 @@ package com.tkw.init
 
 import androidx.lifecycle.viewModelScope
 import com.tkw.base.IntentBaseViewModel
+import com.tkw.domain.InitRepository
 import com.tkw.domain.WaterRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -10,7 +11,7 @@ import javax.inject.Inject
 @HiltViewModel
 class InitViewModel
 @Inject constructor(
-    private val waterRepository: WaterRepository
+    private val initRepository: InitRepository
 ): IntentBaseViewModel
 <InitContract.Event, InitContract.State, InitContract.SideEffect>() {
     override fun createInitialState(): InitContract.State {
@@ -19,29 +20,29 @@ class InitViewModel
 
     override fun handleEvent(event: InitContract.Event) {
         when(event) {
-            is InitContract.Event.SaveLanguage -> saveLanguage()
+            is InitContract.Event.SaveLanguage -> saveLanguage(event.lang)
             is InitContract.Event.SaveTime -> saveTime(event.wakeTime, event.sleepTime)
-            is InitContract.Event.SaveIntake -> saveIntake()
+            is InitContract.Event.SaveIntake -> saveIntake(event.amount)
             is InitContract.Event.ClickWakeUpTimePicker -> clickTimePicker(true)
             is InitContract.Event.ClickSleepTimePicker -> clickTimePicker(false)
         }
     }
 
-    private fun saveLanguage() {
+    private fun saveLanguage(lang: String) {
         save {
-
+            initRepository.saveLanguage(lang)
         }
     }
 
     private fun saveTime(wakeTime: String, sleepTime: String) {
         save {
-
+            initRepository.saveAlarmTime(wakeTime, sleepTime)
         }
     }
 
-    private fun saveIntake() {
+    private fun saveIntake(amount: Int) {
         save {
-
+            initRepository.saveIntakeAmount(amount)
         }
     }
 
