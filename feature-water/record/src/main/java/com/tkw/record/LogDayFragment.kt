@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.tkw.ui.util.animateByMaxValue
 import com.tkw.record.adapter.DayListAdapter
 import com.tkw.ui.DividerDecoration
@@ -17,6 +19,7 @@ import com.tkw.domain.model.DayOfWater
 import com.tkw.domain.model.Water
 import com.tkw.record.databinding.FragmentLogDayBinding
 import com.tkw.ui.chart.marker.MarkerType
+import com.tkw.ui.util.DateTimeUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -59,7 +62,9 @@ class LogDayFragment: Fragment() {
         }
         lifecycleScope.launch {
             initChart()
-            viewModel.setEvent(LogContract.Event.DayAmountEvent(LogContract.Move.INIT))
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                viewModel.setEvent(LogContract.Event.DayAmountEvent(LogContract.Move.INIT))
+            }
         }
     }
 

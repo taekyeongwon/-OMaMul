@@ -76,6 +76,6 @@ class LogEditBottomDialog(
 
     private fun getSelectedDateTime(): String {
         return selectedItem?.dateTime
-            ?: DateTimeUtils.getFullFormatFromDate(viewModel.dateLiveData.value)
+            ?: DateTimeUtils.getFullFormatFromDate(viewModel.getSelectedDate())
     }
 }

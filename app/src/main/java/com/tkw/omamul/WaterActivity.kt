@@ -12,16 +12,17 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import com.tkw.base.C
 import com.tkw.omamul.databinding.ActivityWaterBinding
 import com.tkw.home.WaterViewModel
+import com.tkw.record.LogViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class WaterActivity : AppCompatActivity() {
     private lateinit var dataBinding: ActivityWaterBinding
-    private val viewModel: WaterViewModel by viewModels()
+    private val waterViewModel: WaterViewModel by viewModels()
+    private val logViewModel: LogViewModel by viewModels()
     private val mainFragmentSet = setOf(
         com.tkw.home.R.id.waterFragment,
         com.tkw.record.R.id.waterLogFragment,
@@ -29,7 +30,8 @@ class WaterActivity : AppCompatActivity() {
     )
 
     private val broadcastReceiver = DateChangeReceiver {
-        viewModel.setToday()
+        waterViewModel.setToday()
+        logViewModel.setToday()
     }
     private val receiveFilter = IntentFilter(Intent.ACTION_DATE_CHANGED)
 
@@ -52,18 +54,12 @@ class WaterActivity : AppCompatActivity() {
 
     private fun initBinding() {
         dataBinding = ActivityWaterBinding.inflate(layoutInflater)
-        dataBinding.run {
-            lifecycleOwner = this@WaterActivity
-            viewModel = this@WaterActivity.viewModel
-            executePendingBindings()
-        }
     }
 
     private fun initView() {
         setContentView(dataBinding.root)
         setSupportActionBar(dataBinding.toolbar)
         initNavigate()
-//        viewModel.getCount()
     }
 
     private fun initNavigate() {
@@ -86,7 +82,7 @@ class WaterActivity : AppCompatActivity() {
     private suspend fun setStartDestination(nav: NavController) {
         val navGraph = nav.navInflater.inflate(R.navigation.nav_graph)
 
-        if(viewModel.getInitFlag()) {
+        if(waterViewModel.getInitFlag()) {
             navGraph.setStartDestination(com.tkw.home.R.id.home_nav_graph)
         } else {
             navGraph.setStartDestination(com.tkw.init.R.id.init_nav_graph)

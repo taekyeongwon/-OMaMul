@@ -27,7 +27,7 @@ class WaterLogFragment: Fragment() {
         initView()
     }
 
-    fun initView() {
+    private fun initView() {
         with(dataBinding) {
             viewPager.adapter = ViewPagerAdapter(childFragmentManager, lifecycle)
             TabLayoutMediator(tabLayout, viewPager) { tab, position ->
