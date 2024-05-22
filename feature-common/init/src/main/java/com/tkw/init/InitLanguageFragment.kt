@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -18,7 +19,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class InitLanguageFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentInitLanguageBinding>()
-    private val viewModel: InitViewModel by viewModels()
+    private val viewModel: InitViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,12 +62,13 @@ class InitLanguageFragment: Fragment() {
             val lang = when(dataBinding.rgLanguage.checkedRadioButtonId) {
                 R.id.rb_ko -> "ko"
                 R.id.rb_en -> "en"
-                R.id.rb_jp -> "jp"
-                R.id.rb_cn -> "cn"
+                R.id.rb_jp -> "ja"
+                R.id.rb_cn -> "zh"
                 else -> ""
             }
             viewModel.setEvent(InitContract.Event.SaveLanguage(lang))
         }
+        //todo 라디오버튼 누를 때마다 언어가 바뀌도록 api레벨 분기처리해서 테스트
     }
 
     private val callback = object: OnBackPressedCallback(true) {

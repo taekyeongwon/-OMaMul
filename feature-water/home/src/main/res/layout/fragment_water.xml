@@ -26,13 +26,13 @@
             android:id="@+id/btn_add"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="추가"
+            android:text="@string/add"
             app:layout_constraintTop_toBottomOf="@id/tv_count"/>
         <Button
             android:id="@+id/btn_remove"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="제거"
+            android:text="@string/delete"
             app:layout_constraintTop_toBottomOf="@id/btn_add"/>
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vp_list"
