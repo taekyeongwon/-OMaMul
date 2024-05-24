@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.tkw.common.LocaleHelper
 import com.tkw.common.autoCleared
 import com.tkw.init.databinding.FragmentInitLanguageBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,12 +38,12 @@ class InitLanguageFragment: Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+//        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
 
     override fun onDetach() {
         super.onDetach()
-        callback.remove()
+//        callback.remove()
     }
 
     private fun initObserver() {
@@ -58,17 +58,29 @@ class InitLanguageFragment: Fragment() {
     }
 
     private fun initListener() {
-        dataBinding.btnNext.setOnClickListener {
-            val lang = when(dataBinding.rgLanguage.checkedRadioButtonId) {
+        dataBinding.rgLanguage.setOnCheckedChangeListener { group, checkedId ->
+            val lang = when(checkedId) {
                 R.id.rb_ko -> "ko"
                 R.id.rb_en -> "en"
                 R.id.rb_jp -> "ja"
                 R.id.rb_cn -> "zh"
-                else -> ""
+                else -> "ko"
             }
-            viewModel.setEvent(InitContract.Event.SaveLanguage(lang))
+            LocaleHelper.setApplicationLocales(requireContext(), lang)
         }
-        //todo 라디오버튼 누를 때마다 언어가 바뀌도록 api레벨 분기처리해서 테스트
+
+        dataBinding.btnNext.setOnClickListener {
+            if(dataBinding.rgLanguage.checkedRadioButtonId != -1) {
+                val lang = when (dataBinding.rgLanguage.checkedRadioButtonId) {
+                    R.id.rb_ko -> "ko"
+                    R.id.rb_en -> "en"
+                    R.id.rb_jp -> "ja"
+                    R.id.rb_cn -> "zh"
+                    else -> "ko"
+                }
+                viewModel.setEvent(InitContract.Event.SaveLanguage(lang))
+            }
+        }
     }
 
     private val callback = object: OnBackPressedCallback(true) {

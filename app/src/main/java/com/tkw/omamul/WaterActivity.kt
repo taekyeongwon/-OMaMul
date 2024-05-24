@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -26,7 +24,6 @@ class WaterActivity : AppCompatActivity() {
     private lateinit var dataBinding: ActivityWaterBinding
     private val waterViewModel: WaterViewModel by viewModels()
     private val logViewModel: LogViewModel by viewModels()
-    private val initViewModel: InitViewModel by viewModels()    //todo 언어 변경 시 마다 setApplicationLocales 적용, 현재 저장된 언어 가져오는 용도
     private val mainFragmentSet = setOf(
         com.tkw.home.R.id.waterFragment,
         com.tkw.record.R.id.waterLogFragment,
@@ -41,9 +38,6 @@ class WaterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AppCompatDelegate.setApplicationLocales(
-            LocaleListCompat.forLanguageTags("ko")  //현재 저장된 언어로 세팅. 기본값 ko
-        )
         installSplashScreen()
         initBinding()
         initView()
@@ -89,7 +83,7 @@ class WaterActivity : AppCompatActivity() {
     private suspend fun setStartDestination(nav: NavController) {
         val navGraph = nav.navInflater.inflate(R.navigation.nav_graph)
 
-        if(waterViewModel.getInitFlag()) {
+        if(waterViewModel.getInitFlag() && false) {
             navGraph.setStartDestination(com.tkw.home.R.id.home_nav_graph)
         } else {
             navGraph.setStartDestination(com.tkw.init.R.id.init_nav_graph)

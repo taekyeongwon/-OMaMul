@@ -2,17 +2,45 @@ package com.tkw.common
 
 import android.annotation.TargetApi
 import android.app.Activity
+import android.app.LocaleManager
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
+import android.os.LocaleList
 import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import java.util.*
 
 /**
  * language 저장 후 호출
  */
 object LocaleHelper {
+    /**
+     * appcompat 1.6.0 버전부터 set,getApplicationLocales 추가.
+     * API 33부터 per-app language preferences 자동 저장.
+     * 32 이하는 Manifest에 AppLocalesMetadataHolderService 서비스 등록을 통해
+     * 프레임워크에서 저장 처리하도록 하거나, onCreate 이전에 직접 저장한 값을 가져와 세팅해야 함.
+     *
+     */
+    fun setApplicationLocales(context: Context, storedLang: String?) {
+        val localeCompat = if(storedLang.isNullOrEmpty()) {
+            LocaleList.getDefault()
+        } else {
+            LocaleList.forLanguageTags(storedLang)
+        }
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.getSystemService(LocaleManager::class.java)
+                .applicationLocales = localeCompat
+        } else {
+            AppCompatDelegate.setApplicationLocales(
+                LocaleListCompat.wrap(localeCompat)
+            )
+        }
+    }
+
     /**
      * application 또는 activity단의 context를 preference로 저장된 언어로 업데이트하여 리턴.
      *
@@ -58,21 +86,19 @@ object LocaleHelper {
         return overrideConfiguration
     }
 
-    fun <T> restartApplication(context: Context, locale: String?, restartActivity: Class<T>) {
-        locale?.let {
-            if(context is Activity) {
-                context.finishAffinity()        //root 액티비티까지 종료
-                val intent = Intent(context, restartActivity)
-                context.startActivity(intent)
-            }
-
-            System.runFinalization()
-            //현재 동작중인 스레드의 종료를 기다림.
-            // 언어설정 preference 저장이 apply면 비동기, commit이면 동기인데 apply로 저장하는 경우 저장이 안된 채로 재시작됨.
-            // 따라서 commit으로 저장하여 저장안되는 현상 해결
-
-            System.exit(0)
+    fun <T> restartApplication(context: Context, restartActivity: Class<T>) {
+        if(context is Activity) {
+            context.finishAffinity()        //root 액티비티까지 종료
+            val intent = Intent(context, restartActivity)
+            context.startActivity(intent)
         }
+
+        System.runFinalization()
+        //현재 동작중인 스레드의 종료를 기다림.
+        // 언어설정 preference 저장이 apply면 비동기, commit이면 동기인데 apply로 저장하는 경우 저장이 안된 채로 재시작됨.
+        // 따라서 commit으로 저장하여 저장안되는 현상 해결
+
+        System.exit(0)
     }
 
     private fun setLocale(context: Context, language: String): Context {
