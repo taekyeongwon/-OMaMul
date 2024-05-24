@@ -6,12 +6,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import com.tkw.common.LocaleHelper
 import com.tkw.omamul.databinding.ActivityWaterBinding
 import com.tkw.home.WaterViewModel
 import com.tkw.record.LogViewModel
@@ -37,6 +39,8 @@ class WaterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        initLanguage()
         installSplashScreen()
         initBinding()
         initView()
@@ -50,6 +54,12 @@ class WaterActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         unregisterReceiver(broadcastReceiver)
+    }
+
+    //최초 설치 시 언어 선택하면 액티비티 재생성되지 않도록(configChanges 적용 안됨) 추가함.
+    private fun initLanguage() {
+        val getLanguage = AppCompatDelegate.getApplicationLocales().toLanguageTags()
+        LocaleHelper.setApplicationLocales(this, getLanguage)
     }
 
     private fun initBinding() {
