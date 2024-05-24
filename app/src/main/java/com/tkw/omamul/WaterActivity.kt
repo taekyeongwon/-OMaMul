@@ -14,7 +14,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.tkw.omamul.databinding.ActivityWaterBinding
 import com.tkw.home.WaterViewModel
-import com.tkw.init.InitViewModel
 import com.tkw.record.LogViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -83,7 +82,7 @@ class WaterActivity : AppCompatActivity() {
     private suspend fun setStartDestination(nav: NavController) {
         val navGraph = nav.navInflater.inflate(R.navigation.nav_graph)
 
-        if(waterViewModel.getInitFlag() && false) {
+        if(waterViewModel.getInitFlag()) {
             navGraph.setStartDestination(com.tkw.home.R.id.home_nav_graph)
         } else {
             navGraph.setStartDestination(com.tkw.init.R.id.init_nav_graph)
