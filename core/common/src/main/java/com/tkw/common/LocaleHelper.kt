@@ -9,6 +9,7 @@ import android.content.res.Configuration
 import android.os.Build
 import android.os.LocaleList
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import java.util.*
@@ -23,8 +24,13 @@ object LocaleHelper {
      * 32 이하는 Manifest에 AppLocalesMetadataHolderService 서비스 등록을 통해
      * 프레임워크에서 저장 처리하도록 하거나, onCreate 이전에 직접 저장한 값을 가져와 세팅해야 함.
      *
+     * API 32 이하는 반드시 AppCompatActivity 컨텍스트에서 호출해야 변경이 적용된다.
+     *
+     * hilt 라이브러리 사용 시 Fragment에서 context는 FragmentContextWrapper를 통해 가져오는데,
+     * 이 context는 activity의 context가 아니므로 check에서 걸림.
+     * 따라서 Activity로 파라미터를 받도록 함.
      */
-    fun setApplicationLocales(context: Context, storedLang: String?) {
+    fun setApplicationLocales(context: Activity, storedLang: String?) {
         val localeCompat = if(storedLang.isNullOrEmpty()) {
             LocaleList.getDefault()
         } else {
@@ -35,6 +41,7 @@ object LocaleHelper {
             context.getSystemService(LocaleManager::class.java)
                 .applicationLocales = localeCompat
         } else {
+            check(context is AppCompatActivity) { "This method must be called by AppCompatActivity." }
             AppCompatDelegate.setApplicationLocales(
                 LocaleListCompat.wrap(localeCompat)
             )

@@ -66,7 +66,7 @@ class InitLanguageFragment: Fragment() {
                 R.id.rb_cn -> "zh"
                 else -> "ko"
             }
-            LocaleHelper.setApplicationLocales(requireContext(), lang)
+            LocaleHelper.setApplicationLocales(requireActivity(), lang)
         }
 
         dataBinding.btnNext.setOnClickListener {
