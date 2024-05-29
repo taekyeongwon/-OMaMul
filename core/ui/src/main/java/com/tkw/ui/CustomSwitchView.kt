@@ -9,6 +9,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import com.tkw.ui.databinding.CustomSwitchBinding
 
+/**
+ * 스위치뷰 track, thumb drawable 커스텀, CheckedChangeListener 설정하기 위한 뷰
+ */
 class CustomSwitchView
 @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
     ConstraintLayout(context, attrs, defStyle) {

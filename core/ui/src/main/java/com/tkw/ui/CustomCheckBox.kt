@@ -8,6 +8,9 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import com.tkw.ui.util.DimenUtils
 
+/**
+ * 텍스트 뷰 크기에 맞춰 선택 시 동그라미 표시하는 뷰
+ */
 class CustomCheckBox @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
