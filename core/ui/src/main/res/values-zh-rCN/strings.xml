@@ -45,4 +45,25 @@
     <string name="empty_day_list">没有饮水记录。</string>
     <string name="empty_cup_list">请添加一个杯子。</string>
     <string name="delete">删除</string>
+    <string name="alarm_sound_title">铃声和振动</string>
+    <string name="alarm_sound_device">与手机设置相同</string>
+    <string name="alarm_sound_vibe">振动</string>
+    <string name="alarm_sound_ringtone">铃声</string>
+    <string name="alarm_sound_noti">显示通知</string>
+    <string name="alarm_time_title">闹钟时间</string>
+    <string name="alarm_mode_title">闹钟模式</string>
+    <string name="alarm_mode_period">周期</string>
+    <string name="alarm_mode_custom">自定义</string>
+    <string name="sunday">日</string>
+    <string name="monday">一</string>
+    <string name="tuesday">二</string>
+    <string name="wednesday">三</string>
+    <string name="thursday">四</string>
+    <string name="friday">五</string>
+    <string name="saturday">六</string>
+    <string name="alarm_interval">闹钟间隔</string>
+    <string name="alarm_etc_setting">其他设置</string>
+    <string name="alarm_etc_stop_reached_goal">达到目标时停止</string>
+    <string name="alarm_etc_delay">将闹钟延迟到明天</string>
+
 </resources>

@@ -45,4 +45,25 @@
     <string name="empty_day_list">No water intake records.</string>
     <string name="empty_cup_list">Please add a cup.</string>
     <string name="delete">Remove</string>
+    <string name="alarm_sound_title">Ringtone and Vibration</string>
+    <string name="alarm_sound_device">Same as phone settings</string>
+    <string name="alarm_sound_vibe">Vibration</string>
+    <string name="alarm_sound_ringtone">Ringtone</string>
+    <string name="alarm_sound_noti">Show notification</string>
+    <string name="alarm_time_title">Alarm Time</string>
+    <string name="alarm_mode_title">Alarm Mode</string>
+    <string name="alarm_mode_period">Period</string>
+    <string name="alarm_mode_custom">Custom</string>
+    <string name="sunday">Sun</string>
+    <string name="monday">Mon</string>
+    <string name="tuesday">Tue</string>
+    <string name="wednesday">Wed</string>
+    <string name="thursday">Thu</string>
+    <string name="friday">Fri</string>
+    <string name="saturday">Sat</string>
+    <string name="alarm_interval">Alarm Interval</string>
+    <string name="alarm_etc_setting">Other Settings</string>
+    <string name="alarm_etc_stop_reached_goal">Stop when goal is reached</string>
+    <string name="alarm_etc_delay">Delay alarm until tomorrow</string>
+
 </resources>
