@@ -5,4 +5,9 @@
         <attr name="maxValue" format="integer"/>
         <attr name="interval" format="integer"/>
     </declare-styleable>
+
+    <declare-styleable name="CustomTextImage">
+        <attr name="text" format="string"/>
+        <attr name="src" format="reference"/>
+    </declare-styleable>
 </resources>
