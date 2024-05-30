@@ -49,7 +49,7 @@ class WaterActivity : AppCompatActivity() {
 
         val triggerTime = Calendar.getInstance()
         triggerTime.set(Calendar.HOUR_OF_DAY, 22)
-        triggerTime.set(Calendar.MINUTE, 40)
+        triggerTime.set(Calendar.MINUTE, 50)
         triggerTime.set(Calendar.SECOND, 0)
         triggerTime.set(Calendar.MILLISECOND, 0)
         WaterAlarmManager.setAlarm(this, triggerTime.timeInMillis, 1000 * 60)

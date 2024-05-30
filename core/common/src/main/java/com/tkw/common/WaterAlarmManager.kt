@@ -19,7 +19,7 @@ object WaterAlarmManager {
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         alarmManager.setInexactRepeating(
-            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            AlarmManager.RTC_WAKEUP,
             startTime,
             interval,
             pendingIntent
