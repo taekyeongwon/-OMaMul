@@ -14,11 +14,13 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.tkw.common.LocaleHelper
+import com.tkw.common.WaterAlarmManager
 import com.tkw.omamul.databinding.ActivityWaterBinding
 import com.tkw.home.WaterViewModel
 import com.tkw.record.LogViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 @AndroidEntryPoint
 class WaterActivity : AppCompatActivity() {
@@ -44,6 +46,13 @@ class WaterActivity : AppCompatActivity() {
         installSplashScreen()
         initBinding()
         initView()
+
+        val triggerTime = Calendar.getInstance()
+        triggerTime.set(Calendar.HOUR_OF_DAY, 22)
+        triggerTime.set(Calendar.MINUTE, 40)
+        triggerTime.set(Calendar.SECOND, 0)
+        triggerTime.set(Calendar.MILLISECOND, 0)
+        WaterAlarmManager.setAlarm(this, triggerTime.timeInMillis, 1000 * 60)
     }
 
     override fun onResume() {
