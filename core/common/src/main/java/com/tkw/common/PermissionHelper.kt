@@ -80,7 +80,8 @@ object PermissionHelper {
         message: String,
         positiveButtonTitle: String,
         negativeButtonTitle: String,
-        positiveAction: () -> Unit
+        positiveAction: () -> Unit = {},
+        negativeAction: () -> Unit = {}
     ) {
         AlertDialog.Builder(context)
             .setTitle(title)
@@ -89,7 +90,7 @@ object PermissionHelper {
                 positiveAction()
             }
             .setNegativeButton(negativeButtonTitle) { _, _ ->
-
+                negativeAction()
             }
             .show()
     }

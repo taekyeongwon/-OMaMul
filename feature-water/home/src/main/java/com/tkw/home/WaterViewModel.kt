@@ -8,7 +8,7 @@ import com.tkw.base.BaseViewModel
 import com.tkw.base.launch
 import com.tkw.common.SingleLiveEvent
 import com.tkw.domain.CupRepository
-import com.tkw.domain.InitRepository
+import com.tkw.domain.PrefDataRepository
 import com.tkw.domain.WaterRepository
 import com.tkw.domain.model.Cup
 import com.tkw.domain.model.DayOfWater
@@ -16,7 +16,6 @@ import com.tkw.domain.model.Water
 import com.tkw.ui.util.DateTimeUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -28,12 +27,12 @@ class WaterViewModel
 @Inject constructor(
     private val waterRepository: WaterRepository,
     private val cupRepository: CupRepository,
-    private val initRepository: InitRepository,
+    private val prefDataRepository: PrefDataRepository,
     private val savedStateHandle: SavedStateHandle
 ): BaseViewModel() {
 
     //최초 진입 여부
-    private val initFlag = initRepository.fetchInitialFlag()
+    private val initFlag = prefDataRepository.fetchInitialFlag()
     suspend fun getInitFlag(): Boolean = initFlag.first() ?: false
 
     //현재 날짜
@@ -77,11 +76,11 @@ class WaterViewModel
     }
 
     suspend fun getIntakeAmount(default: Int): Int =
-        initRepository.fetchIntakeAmount().first() ?: default
+        prefDataRepository.fetchIntakeAmount().first() ?: default
 
     fun saveIntakeAmount(amount: Int) {
         launch {
-            initRepository.saveIntakeAmount(amount)
+            prefDataRepository.saveIntakeAmount(amount)
             _amountSaveEvent.call()
         }
     }

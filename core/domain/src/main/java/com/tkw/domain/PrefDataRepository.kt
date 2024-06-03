@@ -2,7 +2,7 @@ package com.tkw.domain
 
 import kotlinx.coroutines.flow.Flow
 
-interface InitRepository {
+interface PrefDataRepository {
     suspend fun saveLanguage(lang: String)
     fun fetchLanguage(): Flow<String?>
 
@@ -15,4 +15,7 @@ interface InitRepository {
 
     suspend fun saveInitialFlag(flag: Boolean)
     fun fetchInitialFlag(): Flow<Boolean?>
+
+    suspend fun saveAlarmEnableFlag(flag: Boolean)
+    fun fetchAlarmEnableFlag(): Flow<Boolean?>
 }

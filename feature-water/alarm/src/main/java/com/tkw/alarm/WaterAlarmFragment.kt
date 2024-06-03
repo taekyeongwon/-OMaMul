@@ -1,5 +1,6 @@
 package com.tkw.alarm
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -7,21 +8,43 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import com.tkw.alarm.databinding.FragmentWaterAlarmBinding
+import com.tkw.common.PermissionHelper
+import com.tkw.common.WaterAlarmManager
 import com.tkw.common.autoCleared
 import com.tkw.ui.CustomSwitchView
 import com.tkw.ui.util.ToggleAnimation
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import java.util.Calendar
 
 @AndroidEntryPoint
 class WaterAlarmFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentWaterAlarmBinding>()
     private val viewModel: WaterAlarmViewModel by viewModels()
+
+    private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+
+    private lateinit var toolbarSwitchView: CustomSwitchView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        activityResultLauncher =
+            registerForActivityResult(
+                ActivityResultContracts.StartActivityForResult()
+            ) {
+
+            }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,9 +86,15 @@ class WaterAlarmFragment: Fragment() {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.toolbar_toggle, menu)
                 val toggleItem = menu.findItem(R.id.alarm_toggle)
-                val customView = toggleItem.actionView as CustomSwitchView
+                toolbarSwitchView = toggleItem.actionView as CustomSwitchView
 
-
+                NotificationManagerCompat
+                    .from(requireContext())
+                    .areNotificationsEnabled()
+                    .also {
+                        setSwitchButtonCheckedListener(it)
+                        setSwitchButtonCheckedWithEnabled(it)
+                    }
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -77,5 +106,59 @@ class WaterAlarmFragment: Fragment() {
     private fun initAlarmModeFocusable() {
         dataBinding.tvAlarmModePeriod.setFocusable()
         dataBinding.tvAlarmModeCustom.setFocusable()
+    }
+
+    private fun setSwitchButtonCheckedListener(isNotificationEnabled: Boolean) {
+        toolbarSwitchView.setCheckedChangeListener { _, isChecked ->
+            lifecycleScope.launch {
+                viewModel.setNotificationEnabled(isChecked)
+            }
+            if(isChecked) {
+                if(!isNotificationEnabled) showAlert()
+                else setAlarm() //알람 설정
+            } else cancelAlarm() //알람 cancel
+        }
+    }
+
+    private fun setSwitchButtonCheckedWithEnabled(isNotificationEnabled: Boolean) {
+        lifecycleScope.launch {
+            if(!isNotificationEnabled) {
+                cancelAlarm()
+            }
+            toolbarSwitchView.setChecked(
+                isNotificationEnabled && viewModel.getNotificationEnabled()
+            )
+        }
+    }
+
+    private fun showAlert() {
+        PermissionHelper.showSettingAlert(
+            requireContext(),
+            getString(com.tkw.ui.R.string.permission_title),
+            getString(com.tkw.ui.R.string.permission_message),
+            getString(com.tkw.ui.R.string.ok),
+            getString(com.tkw.ui.R.string.cancel),
+            {
+                PermissionHelper.goToNotificationSetting(
+                    requireActivity(),
+                    activityResultLauncher
+                )
+            }, {
+                toolbarSwitchView.setChecked(false)
+            }
+        )
+    }
+
+    private fun setAlarm() {
+        val triggerTime = Calendar.getInstance()
+//                            triggerTime.set(Calendar.HOUR_OF_DAY, 22)
+//                            triggerTime.set(Calendar.MINUTE, 50)
+//                            triggerTime.set(Calendar.SECOND, 0)
+//                            triggerTime.set(Calendar.MILLISECOND, 0)
+        WaterAlarmManager.setAlarm(requireContext(), triggerTime.timeInMillis, 1000 * 60)
+    }
+
+    private fun cancelAlarm() {
+        WaterAlarmManager.cancelAlarm(requireContext())
     }
 }

@@ -2,15 +2,14 @@ package com.tkw.data.local
 
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.tkw.datastore.PrefDataSource
-import com.tkw.domain.InitRepository
+import com.tkw.domain.PrefDataRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class InitRepositoryImpl
-@Inject constructor(private val dataSource: PrefDataSource): InitRepository {
+class PrefDataRepositoryImpl
+@Inject constructor(private val dataSource: PrefDataSource): PrefDataRepository {
     override suspend fun saveLanguage(lang: String) {
         dataSource.saveData(LANG_KEY, lang)
     }
@@ -38,11 +37,18 @@ class InitRepositoryImpl
 
     override fun fetchInitialFlag(): Flow<Boolean?> = dataSource.fetchData(INIT_FLAG_KEY)
 
+    override suspend fun saveAlarmEnableFlag(flag: Boolean) {
+        dataSource.saveData(ALARM_ENABLED_KEY, flag)
+    }
+
+    override fun fetchAlarmEnableFlag(): Flow<Boolean?> = dataSource.fetchData(ALARM_ENABLED_KEY)
+
     companion object {
         val LANG_KEY = stringPreferencesKey("language")
         val ALARM_WAKE_TIME_KEY = stringPreferencesKey("alarm_wake_time")
         val ALARM_SLEEP_TIME_KEY = stringPreferencesKey("alarm_sleep_time")
         val INTAKE_AMOUNT_KEY = intPreferencesKey("intake_amount")
         val INIT_FLAG_KEY = booleanPreferencesKey("init_flag")
+        val ALARM_ENABLED_KEY = booleanPreferencesKey("alarm_enabled")
     }
 }

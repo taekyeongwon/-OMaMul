@@ -2,7 +2,7 @@ package com.tkw.init
 
 import androidx.lifecycle.viewModelScope
 import com.tkw.base.IntentBaseViewModel
-import com.tkw.domain.InitRepository
+import com.tkw.domain.PrefDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -10,7 +10,7 @@ import javax.inject.Inject
 @HiltViewModel
 class InitViewModel
 @Inject constructor(
-    private val initRepository: InitRepository
+    private val prefDataRepository: PrefDataRepository
 ): IntentBaseViewModel
 <InitContract.Event, InitContract.State, InitContract.SideEffect>() {
     override fun createInitialState(): InitContract.State {
@@ -30,25 +30,25 @@ class InitViewModel
 
     private fun saveLanguage(lang: String) {
         save(InitContract.SideEffect.OnMoveNext) {
-            initRepository.saveLanguage(lang)
+            prefDataRepository.saveLanguage(lang)
         }
     }
 
     private fun saveTime(wakeTime: String, sleepTime: String) {
         save(InitContract.SideEffect.OnMoveNext) {
-            initRepository.saveAlarmTime(wakeTime, sleepTime)
+            prefDataRepository.saveAlarmTime(wakeTime, sleepTime)
         }
     }
 
     private fun saveIntake(amount: Int) {
         save(InitContract.State.Complete) {
-            initRepository.saveIntakeAmount(amount)
+            prefDataRepository.saveIntakeAmount(amount)
         }
     }
 
     private fun saveInitialFlag(flag: Boolean) {
         save(InitContract.SideEffect.OnMoveNext) {
-            initRepository.saveInitialFlag(flag)
+            prefDataRepository.saveInitialFlag(flag)
         }
     }
 
