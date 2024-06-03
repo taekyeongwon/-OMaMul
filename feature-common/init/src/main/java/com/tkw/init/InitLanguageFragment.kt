@@ -1,16 +1,21 @@
 package com.tkw.init
 
+import android.Manifest
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.tkw.common.LocaleHelper
+import com.tkw.common.PermissionHelper
 import com.tkw.common.autoCleared
 import com.tkw.init.databinding.FragmentInitLanguageBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,6 +25,17 @@ import kotlinx.coroutines.launch
 class InitLanguageFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentInitLanguageBinding>()
     private val viewModel: InitViewModel by activityViewModels()
+
+    private lateinit var permissionResultLauncher: ActivityResultLauncher<Array<String>>
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        permissionResultLauncher =
+            registerForActivityResult(
+                ActivityResultContracts.RequestMultiplePermissions(),
+                PermissionHelper.getPermissionResultCallback(requireActivity())
+            )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,6 +48,7 @@ class InitLanguageFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
         initObserver()
         initListener()
     }
@@ -44,6 +61,10 @@ class InitLanguageFragment: Fragment() {
     override fun onDetach() {
         super.onDetach()
 //        callback.remove()
+    }
+
+    private fun initView() {
+        requestAppPermissions()
     }
 
     private fun initObserver() {
@@ -86,6 +107,18 @@ class InitLanguageFragment: Fragment() {
     private val callback = object: OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
 
+        }
+    }
+
+    private fun requestAppPermissions() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            PermissionHelper.requestPerms(
+                context = requireActivity(),
+                perms = arrayOf(
+                    Manifest.permission.POST_NOTIFICATIONS,
+                ),
+                permissionResultLauncher = permissionResultLauncher
+            )
         }
     }
 }

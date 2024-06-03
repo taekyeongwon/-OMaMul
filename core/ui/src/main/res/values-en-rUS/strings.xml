@@ -20,6 +20,7 @@
     <string name="end">End</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
+    <string name="ok">OK</string>
     <string name="unit_ml">(ml)</string>
     <string name="unit_liter">(L)</string>
     <string name="unit_ml_no_bracket">ml</string>
@@ -65,5 +66,6 @@
     <string name="alarm_etc_setting">Other Settings</string>
     <string name="alarm_etc_stop_reached_goal">Stop when goal is reached</string>
     <string name="alarm_etc_delay">Delay alarm until tomorrow</string>
-
+    <string name="permission_title">Permission Settings</string>
+    <string name="permission_message">Please enable permissions directly from the settings screen.</string>
 </resources>

@@ -20,6 +20,7 @@
     <string name="end">終了</string>
     <string name="cancel">キャンセル</string>
     <string name="save">保存</string>
+    <string name="ok">確認</string>
     <string name="unit_ml">（ml）</string>
     <string name="unit_liter">（L）</string>
     <string name="unit_ml_no_bracket">ml</string>
@@ -65,5 +66,6 @@
     <string name="alarm_etc_setting">その他の設定</string>
     <string name="alarm_etc_stop_reached_goal">目標に到達したら停止</string>
     <string name="alarm_etc_delay">アラームを明日まで遅らせる</string>
-
+    <string name="permission_title">権限設定</string>
+    <string name="permission_message">設定画面から直接許可してください。</string>
 </resources>

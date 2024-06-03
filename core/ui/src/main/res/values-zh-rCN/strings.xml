@@ -20,6 +20,7 @@
     <string name="end">结束</string>
     <string name="cancel">取消</string>
     <string name="save">保存</string>
+    <string name="ok">确认</string>
     <string name="unit_ml">（ml）</string>
     <string name="unit_liter">（L）</string>
     <string name="unit_ml_no_bracket">ml</string>
@@ -65,5 +66,6 @@
     <string name="alarm_etc_setting">其他设置</string>
     <string name="alarm_etc_stop_reached_goal">达到目标时停止</string>
     <string name="alarm_etc_delay">将闹钟延迟到明天</string>
-
+    <string name="permission_title">权限设置</string>
+    <string name="permission_message">请在设置页面中直接允许。</string>
 </resources>
