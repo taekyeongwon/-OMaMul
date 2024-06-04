@@ -1,5 +1,8 @@
 package com.tkw.database
 
+import com.tkw.database.model.AlarmEtcSettings
+import com.tkw.database.model.AlarmMode
+import com.tkw.database.model.AlarmSettingsEntity
 import com.tkw.database.model.CupEntity
 import com.tkw.database.model.CupListEntity
 import com.tkw.database.model.DayOfWaterEntity
@@ -22,7 +25,10 @@ interface RealmDao<T: RealmObject> {
             DayOfWaterEntity::class,
             WaterEntity::class,
             CupListEntity::class,
-            CupEntity::class
+            CupEntity::class,
+            AlarmSettingsEntity::class,
+            AlarmMode::class,
+            AlarmEtcSettings::class
         ))
             .deleteRealmIfMigrationNeeded()
             .build()
