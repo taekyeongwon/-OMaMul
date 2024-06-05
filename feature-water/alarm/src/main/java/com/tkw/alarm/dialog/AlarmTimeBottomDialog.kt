@@ -1,15 +1,14 @@
-package com.tkw.ui.alarm
+package com.tkw.alarm.dialog
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioGroup.OnCheckedChangeListener
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.tkw.ui.BottomExpand
-import com.tkw.ui.BottomExpandImpl
-import com.tkw.ui.R
-import com.tkw.ui.databinding.DialogTimepickerBinding
+import com.tkw.alarm.R
+import com.tkw.alarm.databinding.DialogTimepickerBinding
+import com.tkw.common.autoCleared
+import com.tkw.ui.CustomBottomDialog
 import com.tkw.ui.util.DateTimeUtils
 import java.time.LocalTime
 
@@ -18,18 +17,17 @@ class AlarmTimeBottomDialog(
     private val selectedStart: LocalTime,
     private val selectedEnd: LocalTime,
     private val resultListener: (String, String) -> Unit
-    ) : BottomSheetDialogFragment(), BottomExpand by BottomExpandImpl() {
+    ) : CustomBottomDialog() {
 
-    private lateinit var dataBinding: DialogTimepickerBinding
+    private var dataBinding by autoCleared<DialogTimepickerBinding>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        onSetBottomBehavior(dialog)
         dataBinding = DialogTimepickerBinding.inflate(layoutInflater, container, false)
-        return dataBinding.root
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,6 +37,8 @@ class AlarmTimeBottomDialog(
     }
 
     private fun initView() {
+        setView(dataBinding.root)
+
         val startHour = selectedStart.hour
         val startMin = selectedStart.minute
         val endHour = selectedEnd.hour
@@ -50,14 +50,15 @@ class AlarmTimeBottomDialog(
     }
 
     private fun initListener() {
-        dataBinding.btnCancel.setOnClickListener {
-            dismiss()
-        }
-
-        dataBinding.btnSave.setOnClickListener {
-            sendSelectTime()
-            dismiss()
-        }
+        setButtonListener(
+            cancelAction = {
+                dismiss()
+            },
+            confirmAction = {
+                sendSelectTime()
+                dismiss()
+            }
+        )
     }
 
     private fun initTimePicker(startHour: Int, startMin: Int, endHour: Int, endMin: Int) {

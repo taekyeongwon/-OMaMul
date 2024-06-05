@@ -1,19 +1,19 @@
-package com.tkw.ui.alarm
+package com.tkw.alarm.custom
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.tkw.alarm.databinding.CustomAlarmModeBinding
 import com.tkw.ui.CustomCheckBox
-import com.tkw.ui.databinding.CustomAlarmBinding
 
-class CustomAlarmModeView
+class AlarmModeView
 @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
     ConstraintLayout(context, attrs, defStyle) {
-    private val dataBinding: CustomAlarmBinding
+    private val dataBinding: CustomAlarmModeBinding
 
     init {
-        dataBinding = CustomAlarmBinding.inflate(LayoutInflater.from(context), this, true)
+        dataBinding = CustomAlarmModeBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
     fun getCheckedList(): ArrayList<Int> {

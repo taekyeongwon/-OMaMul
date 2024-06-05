@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.tkw.ui.alarm.AlarmTimeBottomDialog
+import com.tkw.alarm.dialog.AlarmTimeBottomDialog
 import com.tkw.common.autoCleared
 import com.tkw.init.databinding.FragmentInitTimeBinding
 import com.tkw.ui.util.DateTimeUtils
