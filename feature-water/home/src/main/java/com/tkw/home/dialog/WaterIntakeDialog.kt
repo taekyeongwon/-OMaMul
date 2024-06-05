@@ -5,13 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.tkw.home.WaterViewModel
 import com.tkw.common.autoCleared
 import com.tkw.home.databinding.DialogWaterIntakeBinding
-import com.tkw.ui.CustomDialog
+import com.tkw.ui.dialog.CustomDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

@@ -1,4 +1,4 @@
-package com.tkw.ui
+package com.tkw.ui.dialog
 
 import android.app.Dialog
 import android.view.View

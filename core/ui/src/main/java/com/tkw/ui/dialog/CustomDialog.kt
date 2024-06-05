@@ -1,4 +1,4 @@
-package com.tkw.ui
+package com.tkw.ui.dialog
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -36,10 +36,20 @@ open class CustomDialog: DialogFragment(), DialogResize by DialogResizeImpl() {
         }
     }
 
+    fun setTextView(title: String, message: String) {
+        dataBinding.clTextView.visibility = View.VISIBLE
+        dataBinding.tvTitle.text = title
+        dataBinding.tvMessage.text = message
+    }
+
     fun setButtonListener(
+        cancelButtonTitle: String = "",
+        confirmButtonTitle: String = "",
         cancelAction: () -> Unit = {},
         confirmAction: () -> Unit = {}
     ) {
+        if(cancelButtonTitle.isNotBlank()) dataBinding.btnCancel.text = cancelButtonTitle
+        if(confirmButtonTitle.isNotBlank()) dataBinding.btnSave.text = confirmButtonTitle
         dataBinding.btnCancel.setOnClickListener { cancelAction() }
         dataBinding.btnSave.setOnClickListener { confirmAction() }
     }

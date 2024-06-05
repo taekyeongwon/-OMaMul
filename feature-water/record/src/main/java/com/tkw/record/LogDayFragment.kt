@@ -19,7 +19,6 @@ import com.tkw.domain.model.DayOfWater
 import com.tkw.domain.model.Water
 import com.tkw.record.databinding.FragmentLogDayBinding
 import com.tkw.ui.chart.marker.MarkerType
-import com.tkw.ui.util.DateTimeUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

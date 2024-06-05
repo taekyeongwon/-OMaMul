@@ -1,4 +1,4 @@
-package com.tkw.ui
+package com.tkw.ui.dialog
 
 import android.content.Context
 import android.graphics.Point

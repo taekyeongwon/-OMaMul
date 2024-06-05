@@ -1,4 +1,4 @@
-package com.tkw.ui
+package com.tkw.ui.dialog
 
 import android.os.Bundle
 import android.view.LayoutInflater
