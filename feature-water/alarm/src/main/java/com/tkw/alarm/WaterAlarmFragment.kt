@@ -22,6 +22,7 @@ import com.tkw.common.PermissionHelper
 import com.tkw.common.WaterAlarmManager
 import com.tkw.common.autoCleared
 import com.tkw.ui.CustomSwitchView
+import com.tkw.ui.dialog.SettingDialog
 import com.tkw.ui.util.ToggleAnimation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -132,21 +133,18 @@ class WaterAlarmFragment: Fragment() {
     }
 
     private fun showAlert() {
-        PermissionHelper.showSettingAlert(
-            requireContext(),
-            getString(com.tkw.ui.R.string.permission_title),
-            getString(com.tkw.ui.R.string.permission_message),
-            getString(com.tkw.ui.R.string.ok),
-            getString(com.tkw.ui.R.string.cancel),
-            {
+        val dialog = SettingDialog(
+            cancelAction = {
+                toolbarSwitchView.setChecked(false)
+            },
+            confirmAction = {
                 PermissionHelper.goToNotificationSetting(
                     requireActivity(),
                     activityResultLauncher
                 )
-            }, {
-                toolbarSwitchView.setChecked(false)
             }
         )
+        dialog.show(childFragmentManager, dialog.tag)
     }
 
     private fun setAlarm() {

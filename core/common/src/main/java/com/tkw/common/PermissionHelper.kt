@@ -2,7 +2,6 @@ package com.tkw.common
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -10,7 +9,6 @@ import android.os.Build
 import android.provider.Settings
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
-import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
@@ -72,27 +70,6 @@ object PermissionHelper {
             }
         }
         return true
-    }
-
-    fun showSettingAlert(
-        context: Context,
-        title: String,
-        message: String,
-        positiveButtonTitle: String,
-        negativeButtonTitle: String,
-        positiveAction: () -> Unit = {},
-        negativeAction: () -> Unit = {}
-    ) {
-        AlertDialog.Builder(context)
-            .setTitle(title)
-            .setMessage(message)
-            .setPositiveButton(positiveButtonTitle) { _, _ ->
-                positiveAction()
-            }
-            .setNegativeButton(negativeButtonTitle) { _, _ ->
-                negativeAction()
-            }
-            .show()
     }
 
     fun goToSetting(context: Activity, launcher: ActivityResultLauncher<Intent>) {
