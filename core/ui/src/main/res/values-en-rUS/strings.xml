@@ -68,4 +68,6 @@
     <string name="alarm_etc_delay">Delay alarm until tomorrow</string>
     <string name="permission_title">Permission Settings</string>
     <string name="permission_message">Please enable permissions directly from the settings screen.</string>
+    <string name="hour">hour</string>
+    <string name="minute">minute</string>
 </resources>

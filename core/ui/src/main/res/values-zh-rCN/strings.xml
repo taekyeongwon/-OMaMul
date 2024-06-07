@@ -68,4 +68,6 @@
     <string name="alarm_etc_delay">将闹钟延迟到明天</string>
     <string name="permission_title">权限设置</string>
     <string name="permission_message">请在设置页面中直接允许。</string>
+    <string name="hour">小时</string>
+    <string name="minute">分钟</string>
 </resources>

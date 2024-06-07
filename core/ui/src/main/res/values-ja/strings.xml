@@ -68,4 +68,6 @@
     <string name="alarm_etc_delay">アラームを明日まで遅らせる</string>
     <string name="permission_title">権限設定</string>
     <string name="permission_message">設定画面から直接許可してください。</string>
+    <string name="hour">時間</string>
+    <string name="minute">分</string>
 </resources>

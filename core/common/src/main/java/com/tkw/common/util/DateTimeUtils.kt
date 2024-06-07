@@ -5,6 +5,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 object DateTimeUtils {
 
@@ -71,6 +72,20 @@ object DateTimeUtils {
 
     fun getTimeFromFormat(formatted: String): LocalTime {
         val formatter = DateTimeFormatter.ofPattern("a hh:mm")
+        return LocalTime.parse(formatted, formatter)
+    }
+
+    fun getTime(hour: Int, minute: Int, hourFormat: String, minFormat: String): String {
+        val formatter = DateTimeFormatter
+            .ofPattern("H'$hourFormat' mm'$minFormat'", Locale.getDefault())
+
+        val time = LocalTime.of(hour, minute)
+        return time.format(formatter)
+    }
+
+    fun getTimeFromLocalTime(formatted: String, hourFormat: String, minFormat: String): LocalTime {
+        val formatter = DateTimeFormatter
+            .ofPattern("H'$hourFormat' mm'$minFormat'", Locale.getDefault())
         return LocalTime.parse(formatted, formatter)
     }
 
