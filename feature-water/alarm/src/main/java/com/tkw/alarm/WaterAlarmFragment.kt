@@ -23,7 +23,7 @@ import com.tkw.common.WaterAlarmManager
 import com.tkw.common.autoCleared
 import com.tkw.ui.CustomSwitchView
 import com.tkw.ui.dialog.SettingDialog
-import com.tkw.ui.util.ToggleAnimation
+import com.tkw.common.util.ToggleAnimation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.Calendar

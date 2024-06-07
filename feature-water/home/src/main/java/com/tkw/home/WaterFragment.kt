@@ -22,8 +22,8 @@ import com.tkw.domain.model.Water
 import com.tkw.home.databinding.FragmentWaterBinding
 import com.tkw.navigation.DeepLinkDestination
 import com.tkw.navigation.deepLinkNavigateTo
-import com.tkw.ui.util.DateTimeUtils
-import com.tkw.ui.util.DimenUtils
+import com.tkw.common.util.DateTimeUtils
+import com.tkw.common.util.DimenUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

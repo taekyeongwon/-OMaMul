@@ -2,7 +2,7 @@ package com.tkw.record
 
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import com.tkw.ui.util.DateTimeUtils
+import com.tkw.common.util.DateTimeUtils
 
 object LogBindingAdapter {
     @JvmStatic

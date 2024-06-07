@@ -9,7 +9,7 @@ import com.tkw.alarm.R
 import com.tkw.alarm.databinding.DialogTimepickerBinding
 import com.tkw.common.autoCleared
 import com.tkw.ui.dialog.CustomBottomDialog
-import com.tkw.ui.util.DateTimeUtils
+import com.tkw.common.util.DateTimeUtils
 import java.time.LocalTime
 
 class AlarmTimeBottomDialog(

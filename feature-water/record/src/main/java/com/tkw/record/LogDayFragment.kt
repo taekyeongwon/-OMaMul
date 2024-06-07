@@ -10,7 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.tkw.ui.util.animateByMaxValue
+import com.tkw.common.util.animateByMaxValue
 import com.tkw.record.adapter.DayListAdapter
 import com.tkw.ui.DividerDecoration
 import com.tkw.record.dialog.LogEditBottomDialog

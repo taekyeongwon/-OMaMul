@@ -6,7 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
-import com.tkw.ui.util.DimenUtils
+import com.tkw.common.util.DimenUtils
 
 /**
  * 텍스트 뷰 크기에 맞춰 선택 시 동그라미 표시하는 뷰

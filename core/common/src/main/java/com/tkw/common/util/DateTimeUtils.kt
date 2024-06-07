@@ -1,4 +1,4 @@
-package com.tkw.ui.util
+package com.tkw.common.util
 
 import java.time.DayOfWeek
 import java.time.LocalDate

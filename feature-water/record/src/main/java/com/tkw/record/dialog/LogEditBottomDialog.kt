@@ -10,7 +10,7 @@ import com.tkw.domain.model.Water
 import com.tkw.record.LogViewModel
 import com.tkw.record.databinding.DialogLogEditBinding
 import com.tkw.ui.dialog.CustomBottomDialog
-import com.tkw.ui.util.DateTimeUtils
+import com.tkw.common.util.DateTimeUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

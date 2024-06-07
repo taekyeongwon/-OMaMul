@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.tkw.domain.model.Water
 import com.tkw.record.databinding.ItemDayAmountBinding
-import com.tkw.ui.util.DateTimeUtils
+import com.tkw.common.util.DateTimeUtils
 
 class DayListAdapter(
     private val editListener: (Int) -> Unit,

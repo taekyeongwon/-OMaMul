@@ -1,4 +1,4 @@
-package com.tkw.ui.util
+package com.tkw.common.util
 
 import android.content.Context
 import kotlin.math.round

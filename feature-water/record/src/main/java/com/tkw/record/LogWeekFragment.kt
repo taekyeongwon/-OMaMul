@@ -11,11 +11,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.tkw.common.autoCleared
-import com.tkw.ui.util.animateByMaxValue
+import com.tkw.common.util.animateByMaxValue
 import com.tkw.domain.model.DayOfWater
 import com.tkw.record.databinding.FragmentLogWeekBinding
 import com.tkw.ui.chart.marker.MarkerType
-import com.tkw.ui.util.DateTimeUtils
+import com.tkw.common.util.DateTimeUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
