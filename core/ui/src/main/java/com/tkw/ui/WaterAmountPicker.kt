@@ -72,6 +72,10 @@ class WaterAmountPicker
         return displayedArray
     }
 
+    /**
+     * number picker 선택 시 키보드 inputType 설정
+     * https://stackoverflow.com/questions/16793414/android-number-picker-keyboard-type
+     */
     private fun setInputTypeNumber(vg: ViewGroup) {
         (0..vg.childCount).map { vg.getChildAt(it) }.forEach {
             when (it) {

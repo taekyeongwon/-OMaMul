@@ -48,6 +48,18 @@ object LocaleHelper {
         }
     }
 
+    fun getApplicationLocales(context: Activity): LocaleListCompat {
+        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            LocaleListCompat.wrap(
+                context.getSystemService(LocaleManager::class.java)
+                    .applicationLocales
+            )
+        } else {
+            check(context is AppCompatActivity) { "This method must be called by AppCompatActivity." }
+            AppCompatDelegate.getApplicationLocales()
+        }
+    }
+
     /**
      * application 또는 activity단의 context를 preference로 저장된 언어로 업데이트하여 리턴.
      *

@@ -15,7 +15,7 @@ class CustomTimePicker
 @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyle: Int = android.R.attr.timePickerStyle
+    defStyle: Int = 0
 ) : ConstraintLayout(context, attrs, defStyle) {
 
     private val minHour = 0
