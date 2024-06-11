@@ -16,8 +16,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class LogEditBottomDialog(
     private val selectedItem: Water? = null
-): CustomBottomDialog() {
-    private var dataBinding by autoCleared<DialogLogEditBinding>()
+): CustomBottomDialog<DialogLogEditBinding>() {
+    override var childBinding by autoCleared<DialogLogEditBinding>()
     private val viewModel: LogViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -25,7 +25,7 @@ class LogEditBottomDialog(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dataBinding = DialogLogEditBinding.inflate(inflater, container, false)
+        childBinding = DialogLogEditBinding.inflate(inflater, container, false)
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
@@ -36,10 +36,8 @@ class LogEditBottomDialog(
     }
 
     private fun initView() {
-        setView(dataBinding.root)
-
         if(selectedItem != null) {
-            with(dataBinding) {
+            with(childBinding) {
                 etWaterAmount.setText(selectedItem.amount.toString())
                 tpDate.hour = selectedItem.getHourFromDate()
                 tpDate.minute = selectedItem.getMinuteFromDate()
@@ -53,11 +51,11 @@ class LogEditBottomDialog(
                 dismiss()
             },
             confirmAction = {
-                val amount = dataBinding.etWaterAmount.text.toString().toInt()
+                val amount = childBinding.etWaterAmount.text.toString().toInt()
                 val fullDateFormat = DateTimeUtils.getFullFormatFromDateTime(
                     getSelectedDateTime(),
-                    dataBinding.tpDate.hour,
-                    dataBinding.tpDate.minute
+                    childBinding.tpDate.hour,
+                    childBinding.tpDate.minute
                 )
                 if(selectedItem != null) {
                     viewModel.updateAmount(selectedItem, amount, fullDateFormat)

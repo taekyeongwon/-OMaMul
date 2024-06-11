@@ -17,16 +17,15 @@ class AlarmTimeBottomDialog(
     private val selectedStart: LocalTime,
     private val selectedEnd: LocalTime,
     private val resultListener: (String, String) -> Unit
-    ) : CustomBottomDialog() {
-
-    private var dataBinding by autoCleared<DialogTimepickerBinding>()
+    ) : CustomBottomDialog<DialogTimepickerBinding>() {
+    override var childBinding by autoCleared<DialogTimepickerBinding>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dataBinding = DialogTimepickerBinding.inflate(layoutInflater, container, false)
+        childBinding = DialogTimepickerBinding.inflate(layoutInflater, container, false)
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
@@ -37,15 +36,13 @@ class AlarmTimeBottomDialog(
     }
 
     private fun initView() {
-        setView(dataBinding.root)
-
         val startHour = selectedStart.hour
         val startMin = selectedStart.minute
         val endHour = selectedEnd.hour
         val endMin = selectedEnd.minute
         initTimePicker(startHour, startMin, endHour, endMin)
 
-        dataBinding.rgSelector.setOnCheckedChangeListener(onCheckedChangeListener)
+        childBinding.rgSelector.setOnCheckedChangeListener(onCheckedChangeListener)
         setRadioChecked(buttonFlag)
     }
 
@@ -62,7 +59,7 @@ class AlarmTimeBottomDialog(
     }
 
     private fun initTimePicker(startHour: Int, startMin: Int, endHour: Int, endMin: Int) {
-        dataBinding.apply {
+        childBinding.apply {
             tpStart.hour = startHour
             tpStart.minute = startMin
             tpEnd.hour = endHour
@@ -71,20 +68,20 @@ class AlarmTimeBottomDialog(
     }
 
     private fun setRadioChecked(flag: Boolean) {
-        if(flag) dataBinding.rgSelector.check(R.id.rb_start)
-        else dataBinding.rgSelector.check(R.id.rb_end)
+        if(flag) childBinding.rgSelector.check(R.id.rb_start)
+        else childBinding.rgSelector.check(R.id.rb_end)
     }
 
     private fun sendSelectTime() {
         val startTime =
             DateTimeUtils.getFormattedTime(
-                dataBinding.tpStart.hour,
-                dataBinding.tpStart.minute
+                childBinding.tpStart.hour,
+                childBinding.tpStart.minute
             )
         val endTime =
             DateTimeUtils.getFormattedTime(
-                dataBinding.tpEnd.hour,
-                dataBinding.tpEnd.minute
+                childBinding.tpEnd.hour,
+                childBinding.tpEnd.minute
             )
         resultListener(startTime, endTime)
     }
@@ -93,13 +90,13 @@ class AlarmTimeBottomDialog(
         OnCheckedChangeListener { _, checkedId ->
             when(checkedId) {
                 R.id.rb_start -> {
-                    dataBinding.tpStart.visibility = View.VISIBLE
-                    dataBinding.tpEnd.visibility = View.GONE
+                    childBinding.tpStart.visibility = View.VISIBLE
+                    childBinding.tpEnd.visibility = View.GONE
                 }
 
                 R.id.rb_end -> {
-                    dataBinding.tpStart.visibility = View.GONE
-                    dataBinding.tpEnd.visibility = View.VISIBLE
+                    childBinding.tpStart.visibility = View.GONE
+                    childBinding.tpEnd.visibility = View.VISIBLE
                 }
             }
         }
