@@ -35,10 +35,10 @@ class AlarmPeriodDialog(
     private fun initListener() {
         setButtonListener(
             cancelAction = {
-
+                dismiss()
             },
             confirmAction = {
-
+                dismiss()
             }
         )
     }
