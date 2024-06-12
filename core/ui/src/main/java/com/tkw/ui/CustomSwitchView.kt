@@ -19,22 +19,6 @@ class CustomSwitchView
 
     init {
         dataBinding = CustomSwitchBinding.inflate(LayoutInflater.from(context), this, true)
-        initDrawable()
-    }
-
-    private fun initDrawable() {
-        with(dataBinding) {
-            customSwitch.trackDrawable = ResourcesCompat.getDrawable(
-                resources,
-                R.drawable.switch_track_selector,
-                null
-            )
-            customSwitch.thumbDrawable = ResourcesCompat.getDrawable(
-                resources,
-                R.drawable.switch_thumb_selector,
-                null
-            )
-        }
     }
 
     fun setCheckedChangeListener(block: (CompoundButton, Boolean) -> Unit) {
