@@ -24,12 +24,7 @@ class AlarmPeriodDialog(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initView()
         initListener()
-    }
-
-    private fun initView() {
-
     }
 
     private fun initListener() {
@@ -38,8 +33,13 @@ class AlarmPeriodDialog(
                 dismiss()
             },
             confirmAction = {
+                sendPeriod()
                 dismiss()
             }
         )
+    }
+
+    private fun sendPeriod() {
+        resultListener(childBinding.timePicker.getValue())
     }
 }
