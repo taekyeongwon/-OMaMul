@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Process
 import android.util.Log
+import com.tkw.common.NotificationManager
 import dagger.hilt.android.HiltAndroidApp
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -20,6 +21,7 @@ class MainApplication: Application() {
         super.onCreate()
         sharedPref = getSharedPreferences("pref", Context.MODE_PRIVATE)
         setUncaughtExceptionHandler()
+        NotificationManager.createNotificationChannel(this)
     }
 
     private fun setUncaughtExceptionHandler() {

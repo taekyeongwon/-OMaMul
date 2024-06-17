@@ -11,14 +11,14 @@ object WaterAlarmManager {
     fun setAlarm(context: Context, startTime: Long, interval: Long) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, WaterAlarmReceiver::class.java)
-        intent.putExtra("test", "hi")
+//        intent.putExtra("test", "hi")
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             0,
             intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-        alarmManager.setInexactRepeating(
+        alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP,
             startTime,
             interval,

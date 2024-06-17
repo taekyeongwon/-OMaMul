@@ -2,6 +2,7 @@ package com.tkw.common
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -59,7 +60,7 @@ object PermissionHelper {
         }
     }
 
-    fun checkPerms(context: Activity, perms: Array<String>): Boolean {
+    fun checkPerms(context: Context, perms: Array<String>): Boolean {
         for (element in perms) {
             if (ContextCompat.checkSelfPermission(
                     context,
