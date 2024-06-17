@@ -87,7 +87,7 @@ class WaterAlarmFragment: Fragment() {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.toolbar_toggle, menu)
                 val toggleItem = menu.findItem(R.id.alarm_toggle)
-                toolbarSwitchView = toggleItem.actionView as CustomSwitchView
+                toolbarSwitchView = toggleItem.actionView!!.findViewById(R.id.toolbar_switch)
 
                 NotificationManagerCompat
                     .from(requireContext())

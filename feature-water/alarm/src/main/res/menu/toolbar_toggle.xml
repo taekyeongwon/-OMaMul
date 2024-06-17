@@ -5,6 +5,6 @@
     <item
         android:id="@+id/alarm_toggle"
         android:title="toggle"
-        app:actionViewClass="com.tkw.ui.CustomSwitchView"
+        app:actionLayout="@layout/layout_alarm_switch"
         app:showAsAction="always"/>
 </menu>
