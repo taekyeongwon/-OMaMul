@@ -4,9 +4,9 @@ import android.app.Application
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
-import android.media.AudioManager
-import android.provider.Settings
+import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 
 
@@ -14,6 +14,7 @@ object NotificationManager {
     const val NOTI_CH = "NOTI_CH"
     const val MUTE_CH = "MUTE_CH"
     private const val NOTIFICATION_GROUP_NAME = "GROUP_NAME"
+    private lateinit var homeIntent: PendingIntent
 
     fun createNotificationChannel(context: Context) {
         val importance = NotificationManager.IMPORTANCE_HIGH
@@ -34,6 +35,10 @@ object NotificationManager {
         notificationManager.createNotificationChannel(muteChannel)
     }
 
+    fun setPendingIntent(intent: PendingIntent) {
+        homeIntent = intent
+    }
+
     fun buildNotification(
         context: Context,
         drawable: Int,
@@ -41,14 +46,18 @@ object NotificationManager {
         text: String,
         channelId: String
     ): NotificationCompat.Builder {
+        val contentView = RemoteViews(context.packageName, R.layout.custom_notification)
+        contentView.setTextViewText(R.id.tv_title, title)
+        contentView.setTextViewText(R.id.tv_content, text)
+
         val builder = NotificationCompat.Builder(context, channelId)
         builder.setSmallIcon(drawable)
-            .setContentTitle(title)
-            .setContentText(text)
-            .setAutoCancel(true)
-            .setGroup(NOTIFICATION_GROUP_NAME)
             .setCategory(Notification.CATEGORY_ALARM)
-            .setOngoing(true)
+            .setContentIntent(homeIntent)
+            .setFullScreenIntent(homeIntent, true)
+            .setStyle(NotificationCompat.DecoratedCustomViewStyle())
+            .setCustomHeadsUpContentView(contentView)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)    //테스트 필요
 
         return builder
     }

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Process
 import android.util.Log
+import androidx.navigation.NavDeepLinkBuilder
 import com.tkw.common.NotificationManager
 import dagger.hilt.android.HiltAndroidApp
 import java.io.PrintWriter
@@ -21,7 +22,7 @@ class MainApplication: Application() {
         super.onCreate()
         sharedPref = getSharedPreferences("pref", Context.MODE_PRIVATE)
         setUncaughtExceptionHandler()
-        NotificationManager.createNotificationChannel(this)
+        initNotification()
     }
 
     private fun setUncaughtExceptionHandler() {
@@ -33,6 +34,15 @@ class MainApplication: Application() {
             Process.killProcess(Process.myPid())
             exitProcess(0)
         }
+    }
+
+    private fun initNotification() {
+        val pendingIntent = NavDeepLinkBuilder(this)
+            .setGraph(com.tkw.home.R.navigation.home_nav_graph)
+            .setDestination(com.tkw.home.R.id.waterFragment)
+            .createPendingIntent()
+        NotificationManager.createNotificationChannel(this)
+        NotificationManager.setPendingIntent(pendingIntent)
     }
 
     private fun getStackTrace(e: Throwable?): String {
