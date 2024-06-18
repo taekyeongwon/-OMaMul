@@ -8,6 +8,7 @@ import android.os.SystemClock
 
 object WaterAlarmManager {
 
+    //todo ringtone mode 받아서 extra로 넘겨줌.
     fun setAlarm(context: Context, startTime: Long, interval: Long) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, WaterAlarmReceiver::class.java)
