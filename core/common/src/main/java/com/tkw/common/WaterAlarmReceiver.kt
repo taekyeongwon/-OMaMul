@@ -20,8 +20,8 @@ class WaterAlarmReceiver : BroadcastReceiver() {
             val builder = NotificationManager.buildNotification(
                 context,
                 R.drawable.noti_foreground,
-                "오마물",
-                "물 마실 시간 입니다.",
+                context.getString(R.string.notification_title),
+                context.getString(R.string.notification_text),
                 NotificationManager.NOTI_CH //핸드폰 설정대로면 NOTI_CH, 그 외 MUTE_CH
             )
             //휴대폰 설정과 동일이라면 그대로 빌드.

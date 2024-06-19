@@ -24,8 +24,8 @@ object NotificationManager {
 
     fun createNotificationChannel(context: Context) {
         val importance = NotificationManager.IMPORTANCE_HIGH
-        val name = "오마물"
-        val description = "물 알람 채널입니다."
+        val name = context.getString(R.string.channel_name)
+        val description = context.getString(R.string.channel_desc)
         val channel = NotificationChannel(NOTI_CH, name, importance).apply {
             this.description = description
         }

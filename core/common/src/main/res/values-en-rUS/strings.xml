@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="channel_name">Today\'s Water</string>
+    <string name="channel_desc">Water alarm channel.</string>
+    <string name="notification_title">Today\'s Water</string>
+    <string name="notification_text">It\'s time to drink water.</string>
+</resources>

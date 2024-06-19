@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="channel_name">오마물</string>
+    <string name="channel_desc">물 알람 채널입니다.</string>
+    <string name="notification_title">오마물</string>
+    <string name="notification_text">물 마실 시간입니다.</string>
+</resources>
