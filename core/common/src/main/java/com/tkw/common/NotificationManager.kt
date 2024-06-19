@@ -6,6 +6,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 
@@ -15,6 +16,11 @@ object NotificationManager {
     const val MUTE_CH = "MUTE_CH"
     private const val NOTIFICATION_GROUP_NAME = "GROUP_NAME"
     private lateinit var homeIntent: PendingIntent
+    const val TIMEOUT: Long = 1000 * 30
+
+    fun setPendingIntent(intent: PendingIntent) {
+        homeIntent = intent
+    }
 
     fun createNotificationChannel(context: Context) {
         val importance = NotificationManager.IMPORTANCE_HIGH
@@ -35,10 +41,6 @@ object NotificationManager {
         notificationManager.createNotificationChannel(muteChannel)
     }
 
-    fun setPendingIntent(intent: PendingIntent) {
-        homeIntent = intent
-    }
-
     fun buildNotification(
         context: Context,
         drawable: Int,
@@ -52,12 +54,16 @@ object NotificationManager {
 
         val builder = NotificationCompat.Builder(context, channelId)
         builder.setSmallIcon(drawable)
+            .setContentTitle(title)
+            .setContentText(text)
             .setCategory(Notification.CATEGORY_ALARM)
             .setContentIntent(homeIntent)
-            .setFullScreenIntent(homeIntent, true)
+            .setFullScreenIntent(getFullScreenIntent(context), true)
             .setStyle(NotificationCompat.DecoratedCustomViewStyle())
+            .setCustomContentView(contentView)
             .setCustomHeadsUpContentView(contentView)
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)    //테스트 필요
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setTimeoutAfter(TIMEOUT)
 
         return builder
     }
@@ -72,5 +78,26 @@ object NotificationManager {
             .setGroup(NOTIFICATION_GROUP_NAME)
             .setGroupSummary(true)
         return builder
+    }
+
+    fun notify(
+        context: Context,
+        builder: NotificationCompat.Builder
+    ) {
+        val notificationId = "${System.currentTimeMillis()}".hashCode()
+        val notificationManager: NotificationManager =
+            context.getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(notificationId, builder.build())
+    }
+
+    private fun getFullScreenIntent(context: Context): PendingIntent {
+        val intent = Intent(context, AlarmActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        return PendingIntent.getActivity(
+            context,
+            0x01,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
     }
 }
