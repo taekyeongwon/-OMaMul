@@ -12,6 +12,7 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import android.util.Log
+import com.tkw.common.NotificationManager.fullScreenBuilder
 
 class WaterAlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -29,10 +30,16 @@ class WaterAlarmReceiver : BroadcastReceiver() {
             //해당 링톤 모드에 맞게 아래 인스턴스 메서드 호출
 //            builder.setSilent(true)
 //            summaryBuilder.setSilent(true)
+            if(NotificationManager.canUseFullScreenIntent(context)) {
+                builder.fullScreenBuilder(
+                    context,
+                    context.getString(R.string.notification_title),
+                    context.getString(R.string.notification_text)
+                )
+            }
             NotificationManager.notify(context, builder)
             WaterAlarmManager.setAlarm(context, 0, 0)
-//            if(Build.VERSION.SDK_INT >= 34)
-//                Log.d("alarm receiver", notificationManager.canUseFullScreenIntent().toString())
+
         }
 
         Log.d("alarm receiver", "received")

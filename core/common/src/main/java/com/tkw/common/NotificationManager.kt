@@ -7,7 +7,9 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.widget.RemoteViews
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 
 
@@ -18,7 +20,7 @@ object NotificationManager {
     private lateinit var homeIntent: PendingIntent
     const val TIMEOUT: Long = 1000 * 30
 
-    fun setPendingIntent(intent: PendingIntent) {
+    fun setContentClickPendingIntent(intent: PendingIntent) {
         homeIntent = intent
     }
 
@@ -58,14 +60,26 @@ object NotificationManager {
             .setContentText(text)
             .setCategory(Notification.CATEGORY_ALARM)
             .setContentIntent(homeIntent)
-            .setFullScreenIntent(getFullScreenIntent(context), true)
             .setStyle(NotificationCompat.DecoratedCustomViewStyle())
             .setCustomContentView(contentView)
-            .setCustomHeadsUpContentView(contentView)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-            .setTimeoutAfter(TIMEOUT)
 
         return builder
+    }
+
+    fun NotificationCompat.Builder.fullScreenBuilder(
+        context: Context,
+        title: String,
+        text: String
+    ): NotificationCompat.Builder {
+        val contentView = RemoteViews(context.packageName, R.layout.custom_notification)
+        contentView.setTextViewText(R.id.tv_title, title)
+        contentView.setTextViewText(R.id.tv_content, text)
+
+        setCustomHeadsUpContentView(contentView)
+        setFullScreenIntent(getFullScreenIntent(context), true)
+        setTimeoutAfter(TIMEOUT)
+        return this
     }
 
     fun buildSummaryNotification(
@@ -88,6 +102,16 @@ object NotificationManager {
         val notificationManager: NotificationManager =
             context.getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(notificationId, builder.build())
+    }
+
+    fun canUseFullScreenIntent(context: Context): Boolean {
+        return if(Build.VERSION.SDK_INT >= 34) {
+            val notificationManager: NotificationManager =
+                context.getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.canUseFullScreenIntent()
+        } else {
+            true
+        }
     }
 
     private fun getFullScreenIntent(context: Context): PendingIntent {

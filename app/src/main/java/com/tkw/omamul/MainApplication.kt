@@ -42,7 +42,7 @@ class MainApplication: Application() {
             .setDestination(com.tkw.home.R.id.waterFragment)
             .createPendingIntent()
         NotificationManager.createNotificationChannel(this)
-        NotificationManager.setPendingIntent(pendingIntent)
+        NotificationManager.setContentClickPendingIntent(pendingIntent)
     }
 
     private fun getStackTrace(e: Throwable?): String {
