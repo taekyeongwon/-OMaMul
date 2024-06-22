@@ -1,6 +1,5 @@
 package com.tkw.common
 
-import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Context.VIBRATOR_SERVICE
@@ -12,37 +11,16 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import android.util.Log
-import com.tkw.common.NotificationManager.fullScreenBuilder
 
 class WaterAlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         //todo extra로 받아서 buildNotification에 ringtone mode 넘겨줌
         if (context != null) {
-            val builder = NotificationManager.buildNotification(
-                context,
-                R.drawable.noti_foreground,
-                context.getString(R.string.notification_title),
-                context.getString(R.string.notification_text),
-                NotificationManager.NOTI_CH //핸드폰 설정대로면 NOTI_CH, 그 외 MUTE_CH
-            )
-            //휴대폰 설정과 동일이라면 그대로 빌드.
-            //알림 표시 안하는 경우 builder.setSilent(true) 적용 후
-            //해당 링톤 모드에 맞게 아래 인스턴스 메서드 호출
-//            builder.setSilent(true)
-//            summaryBuilder.setSilent(true)
-            if(NotificationManager.canUseFullScreenIntent(context)) {
-                builder.fullScreenBuilder(
-                    context,
-                    context.getString(R.string.notification_title),
-                    context.getString(R.string.notification_text)
-                )
-            }
-            NotificationManager.notify(context, builder)
+            NotificationManager.notify(context)
             WaterAlarmManager.setAlarm(context, 0, 0)
-
         }
 
-        Log.d("alarm receiver", "received")
+        Log.d("test", "alarm received")
 
     }
 

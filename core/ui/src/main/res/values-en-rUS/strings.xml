@@ -70,4 +70,9 @@
     <string name="permission_message">Please enable permissions directly from the settings screen.</string>
     <string name="hour">hour</string>
     <string name="minute">minute</string>
+    <string name="exact_alarm_content">Please allow the permission to receive accurate alarms.\nSelecting the move button will take you to the settings screen.</string>
+    <string name="do_not_show_again">Do not show again</string>
+    <string name="move">Move</string>
+    <string name="close">Close</string>
+
 </resources>

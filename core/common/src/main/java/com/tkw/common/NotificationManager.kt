@@ -9,7 +9,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.widget.RemoteViews
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 
 
@@ -94,10 +93,26 @@ object NotificationManager {
         return builder
     }
 
-    fun notify(
-        context: Context,
-        builder: NotificationCompat.Builder
-    ) {
+    fun notify(context: Context) {
+        val builder = buildNotification(
+            context,
+            R.drawable.noti_foreground,
+            context.getString(R.string.notification_title),
+            context.getString(R.string.notification_text),
+            NOTI_CH //핸드폰 설정대로면 NOTI_CH, 그 외 MUTE_CH
+        )
+        //휴대폰 설정과 동일이라면 그대로 빌드.
+        //알림 표시 안하는 경우 builder.setSilent(true) 적용 후
+        //해당 링톤 모드에 맞게 아래 인스턴스 메서드 호출
+//            builder.setSilent(true)
+//            summaryBuilder.setSilent(true)
+        if (canUseFullScreenIntent(context)) {
+            builder.fullScreenBuilder(
+                context,
+                context.getString(R.string.notification_title),
+                context.getString(R.string.notification_text)
+            )
+        }
         val notificationId = "${System.currentTimeMillis()}".hashCode()
         val notificationManager: NotificationManager =
             context.getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager

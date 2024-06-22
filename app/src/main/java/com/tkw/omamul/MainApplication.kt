@@ -33,7 +33,6 @@ class MainApplication: Application() {
         super.onCreate()
         sharedPref = getSharedPreferences("pref", Context.MODE_PRIVATE)
         setUncaughtExceptionHandler()
-        delayCreateWork()
         initNotification()
     }
 

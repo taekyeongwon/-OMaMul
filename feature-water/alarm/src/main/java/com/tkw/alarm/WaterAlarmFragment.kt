@@ -1,6 +1,9 @@
 package com.tkw.alarm
 
+import android.app.AlarmManager
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -19,6 +22,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import com.tkw.alarm.databinding.FragmentWaterAlarmBinding
 import com.tkw.alarm.dialog.AlarmRingtoneDialog
+import com.tkw.alarm.dialog.ExactAlarmDialog
 import com.tkw.common.PermissionHelper
 import com.tkw.common.WaterAlarmManager
 import com.tkw.common.autoCleared
@@ -64,6 +68,7 @@ class WaterAlarmFragment: Fragment() {
     }
 
     private fun initView() {
+        checkApi31ExactAlarm()
         initItemMenu()
         initAlarmModeFocusable()
     }
@@ -86,6 +91,17 @@ class WaterAlarmFragment: Fragment() {
 
             }
             soundDialog.show(childFragmentManager, soundDialog.tag)
+        }
+    }
+
+    private fun checkApi31ExactAlarm() {
+        if(Build.VERSION.SDK_INT >= 31) {
+            val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val hasPermission = alarmManager.canScheduleExactAlarms()
+            if(!hasPermission /* && 다시 보지 않기 체크 여부 */) {
+                val dialog = ExactAlarmDialog()
+                dialog.show(childFragmentManager, dialog.tag)
+            }
         }
     }
 

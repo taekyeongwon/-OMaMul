@@ -7,7 +7,6 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 class ScheduledWorkManager(
@@ -26,6 +25,7 @@ class ScheduledWorkManager(
     override suspend fun doWork(): Result {
         try {
             Log.d("test", "work manager do work.")
+            notify(applicationContext)
 
             val oneTimeWorkRequest = OneTimeWorkRequestBuilder<ScheduledWorkManager>()
                 .setInitialDelay(getCertainTime(), TimeUnit.MILLISECONDS)
@@ -42,5 +42,9 @@ class ScheduledWorkManager(
         }
 
         return Result.success()
+    }
+
+    private fun notify(context: Context) {
+        NotificationManager.notify(context)
     }
 }
