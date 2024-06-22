@@ -18,6 +18,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import com.tkw.alarm.databinding.FragmentWaterAlarmBinding
+import com.tkw.alarm.dialog.AlarmRingtoneDialog
 import com.tkw.common.PermissionHelper
 import com.tkw.common.WaterAlarmManager
 import com.tkw.common.autoCleared
@@ -79,6 +80,13 @@ class WaterAlarmFragment: Fragment() {
             ToggleAnimation.collapse(dataBinding.alarmCustomLayout)
         })
         dataBinding.tvAlarmModePeriod.setSelected() //todo 저장된 모드 setSelected 호출 필요
+
+        dataBinding.tvAlarmSound.setOnClickListener {
+            val soundDialog = AlarmRingtoneDialog {
+
+            }
+            soundDialog.show(childFragmentManager, soundDialog.tag)
+        }
     }
 
     private fun initItemMenu() {

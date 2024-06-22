@@ -6,10 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import com.tkw.alarm.databinding.DialogRingtoneBinding
 import com.tkw.common.autoCleared
+import com.tkw.domain.model.AlarmSettings
+import com.tkw.domain.model.RingTone
 import com.tkw.ui.dialog.CustomBottomDialog
 
 class AlarmRingtoneDialog(
-    private val resultListener: (String) -> Unit
+    private val resultListener: (RingTone) -> Unit
 ): CustomBottomDialog<DialogRingtoneBinding>() {
     override var childBinding by autoCleared<DialogRingtoneBinding>()
 
@@ -29,7 +31,7 @@ class AlarmRingtoneDialog(
     }
 
     private fun initView() {
-
+        //뷰모델에서 알람 세팅 가져와서 Ringtone 상태에 맞게. 디폴트는 현재 폰 설정
     }
 
     private fun initListener() {
@@ -38,8 +40,14 @@ class AlarmRingtoneDialog(
                 dismiss()
             },
             confirmAction = {
+                sendRingtone()
                 dismiss()
             }
         )
+    }
+
+    private fun sendRingtone() {
+        //현재 선택된 벨소리 모드로 전달
+        resultListener(RingTone.BELL)
     }
 }

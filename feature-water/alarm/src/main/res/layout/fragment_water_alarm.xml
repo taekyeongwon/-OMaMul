@@ -76,7 +76,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/tv_alarm_mode_period"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_alarm_mode_period"
+                tools:visibility="visible"/>
             <View
                 android:id="@+id/divider"
                 android:layout_width="match_parent"

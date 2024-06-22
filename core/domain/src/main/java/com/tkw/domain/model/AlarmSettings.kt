@@ -1,11 +1,11 @@
 package com.tkw.domain.model
 
 data class AlarmSettings(
-    val ringToneMode: RingTone,
-    val alarmStartTime: String,
-    val alarmEndTime: String,
-    val alarmMode: AlarmMode,
-    val etcSetting: AlarmEtcSettings
+    val ringToneMode: RingTone = RingTone.BELL,
+    val alarmStartTime: String = "",
+    val alarmEndTime: String = "",
+    val alarmMode: AlarmMode = AlarmMode.Custom(listOf(), 0),
+    val etcSetting: AlarmEtcSettings = AlarmEtcSettings()
 ) {
 
 }
@@ -27,6 +27,6 @@ sealed class AlarmMode {
 }
 
 data class AlarmEtcSettings(
-    val stopReachedGoal: Boolean,
-    val delayTomorrow: Boolean
+    val stopReachedGoal: Boolean = false,
+    val delayTomorrow: Boolean = false
 )
