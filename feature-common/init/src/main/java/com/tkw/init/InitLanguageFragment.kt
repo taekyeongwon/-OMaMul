@@ -28,6 +28,8 @@ class InitLanguageFragment: Fragment() {
 
     private lateinit var permissionResultLauncher: ActivityResultLauncher<Array<String>>
 
+    private var isGrantNotificationPermission = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         permissionResultLauncher =
@@ -68,6 +70,13 @@ class InitLanguageFragment: Fragment() {
     }
 
     private fun initObserver() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.state.collect {
+                if(it is InitContract.State.Complete) {
+                    viewModel.setEvent(InitContract.Event.SaveAlarmEnableFlag(isGrantNotificationPermission))
+                }
+            }
+        }
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.sideEffect.collect {
                 if(it is InitContract.SideEffect.OnMoveNext) {
@@ -117,7 +126,13 @@ class InitLanguageFragment: Fragment() {
                 perms = arrayOf(
                     Manifest.permission.POST_NOTIFICATIONS,
                 ),
-                permissionResultLauncher = permissionResultLauncher
+                permissionResultLauncher = permissionResultLauncher,
+                grantAction = {
+                    isGrantNotificationPermission = true
+                },
+                cancelAction = {
+                    isGrantNotificationPermission = false
+                }
             )
         }
     }

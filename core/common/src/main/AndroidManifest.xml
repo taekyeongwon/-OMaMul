@@ -10,12 +10,6 @@
             android:launchMode="singleInstance"
             android:taskAffinity=":alarm"
             android:excludeFromRecents="true"/>
-        <receiver
-            android:name=".ExactAlarmPermissionReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED" />
-            </intent-filter>
-        </receiver>
+
     </application>
 </manifest>

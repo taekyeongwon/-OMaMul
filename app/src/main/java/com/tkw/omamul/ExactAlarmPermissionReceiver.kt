@@ -1,9 +1,10 @@
-package com.tkw.common
+package com.tkw.omamul
 
 import android.app.AlarmManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.tkw.common.WaterAlarmManager
 
 class ExactAlarmPermissionReceiver: BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {

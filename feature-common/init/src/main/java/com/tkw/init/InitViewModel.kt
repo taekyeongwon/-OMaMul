@@ -23,13 +23,14 @@ class InitViewModel
             is InitContract.Event.SaveTime -> saveTime(event.wakeTime, event.sleepTime)
             is InitContract.Event.SaveIntake -> saveIntake(event.amount)
             is InitContract.Event.SaveInitialFlag -> saveInitialFlag(event.flag)
+            is InitContract.Event.SaveAlarmEnableFlag -> setNotificationEnabled(event.flag)
             is InitContract.Event.ClickWakeUpTimePicker -> clickTimePicker(true)
             is InitContract.Event.ClickSleepTimePicker -> clickTimePicker(false)
         }
     }
 
     private fun saveLanguage(lang: String) {
-        save(InitContract.SideEffect.OnMoveNext) {
+        save(InitContract.State.Complete) {
             prefDataRepository.saveLanguage(lang)
         }
     }
@@ -49,6 +50,12 @@ class InitViewModel
     private fun saveInitialFlag(flag: Boolean) {
         save(InitContract.SideEffect.OnMoveNext) {
             prefDataRepository.saveInitialFlag(flag)
+        }
+    }
+
+    private fun setNotificationEnabled(flag: Boolean) {
+        save(InitContract.SideEffect.OnMoveNext) {
+            prefDataRepository.saveAlarmEnableFlag(flag)
         }
     }
 

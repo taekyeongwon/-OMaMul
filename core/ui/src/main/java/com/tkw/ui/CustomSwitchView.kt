@@ -28,4 +28,6 @@ class CustomSwitchView
     fun setChecked(flag: Boolean) {
         dataBinding.customSwitch.isChecked = flag
     }
+
+    fun getChecked(): Boolean = dataBinding.customSwitch.isChecked
 }

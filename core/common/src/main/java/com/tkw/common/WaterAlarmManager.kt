@@ -29,7 +29,7 @@ object WaterAlarmManager {
         cancelWorkManager(context)
     }
 
-    private fun canScheduleExactAlarms(context: Context): Boolean {
+    fun canScheduleExactAlarms(context: Context): Boolean {
         return if(Build.VERSION.SDK_INT >= 31) {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             alarmManager.canScheduleExactAlarms()

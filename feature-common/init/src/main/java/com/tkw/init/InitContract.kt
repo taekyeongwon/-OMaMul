@@ -11,6 +11,7 @@ class InitContract {
         data class SaveTime(val wakeTime: String, val sleepTime: String): Event()
         data class SaveIntake(val amount: Int): Event()
         data class SaveInitialFlag(val flag: Boolean): Event()
+        data class SaveAlarmEnableFlag(val flag: Boolean): Event()
         object ClickWakeUpTimePicker: Event()
         object ClickSleepTimePicker: Event()
     }

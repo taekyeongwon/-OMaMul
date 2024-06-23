@@ -68,9 +68,9 @@ class WaterAlarmFragment: Fragment() {
     }
 
     private fun initView() {
-        checkApi31ExactAlarm()
         initItemMenu()
         initAlarmModeFocusable()
+        checkApi31ExactAlarm()
     }
 
     private fun initListener() {
@@ -95,10 +95,9 @@ class WaterAlarmFragment: Fragment() {
     }
 
     private fun checkApi31ExactAlarm() {
-        if(Build.VERSION.SDK_INT >= 31) {
-            val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val hasPermission = alarmManager.canScheduleExactAlarms()
-            if(!hasPermission /* && 다시 보지 않기 체크 여부 */) {
+        if(Build.VERSION.SDK_INT >= 31 &&
+            WaterAlarmManager.canScheduleExactAlarms(requireContext())) {
+            if(toolbarSwitchView.getChecked() /* && 다시 보지 않기 체크 여부 */) {
                 val dialog = ExactAlarmDialog()
                 dialog.show(childFragmentManager, dialog.tag)
             }
