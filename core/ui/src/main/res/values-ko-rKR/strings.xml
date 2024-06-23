@@ -70,7 +70,7 @@
     <string name="permission_message">설정 화면에서 직접 허용해 주세요.</string>
     <string name="hour">시간</string>
     <string name="minute">분</string>
-    <string name="exact_alarm_content">정확한 알람 수신을 위해 권한을 허용해 주세요.\n이동 버튼 선택 시 설정 화면으로 이동합니다.</string>
+    <string name="exact_alarm_content">화면 잠금 상태에서도 정확한 알람 수신을 위해 권한을 허용해 주세요.\n이동 버튼 선택 시 설정 화면으로 이동합니다.</string>
     <string name="do_not_show_again">다시 보지 않기</string>
     <string name="move">이동</string>
     <string name="close">닫기</string>
