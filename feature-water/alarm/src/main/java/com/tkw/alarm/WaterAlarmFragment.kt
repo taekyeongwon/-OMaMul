@@ -70,7 +70,6 @@ class WaterAlarmFragment: Fragment() {
     private fun initView() {
         initItemMenu()
         initAlarmModeFocusable()
-        checkApi31ExactAlarm()
     }
 
     private fun initListener() {
@@ -116,6 +115,7 @@ class WaterAlarmFragment: Fragment() {
                     .also {
                         setSwitchButtonCheckedListener(it)
                         setSwitchButtonCheckedWithEnabled(it)
+                        checkApi31ExactAlarm()
                     }
             }
 

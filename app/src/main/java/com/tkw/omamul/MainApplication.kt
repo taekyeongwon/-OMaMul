@@ -6,19 +6,10 @@ import android.content.SharedPreferences
 import android.os.Process
 import android.util.Log
 import androidx.navigation.NavDeepLinkBuilder
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.tkw.common.NotificationManager
-import com.tkw.common.ScheduledWorkManager
 import dagger.hilt.android.HiltAndroidApp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import okhttp3.Dispatcher
 import java.io.PrintWriter
 import java.io.StringWriter
-import java.util.concurrent.TimeUnit
 import kotlin.system.exitProcess
 
 @HiltAndroidApp
@@ -26,8 +17,6 @@ class MainApplication: Application() {
     companion object {
         var sharedPref: SharedPreferences? = null
     }
-
-    private val backgroundCoroutineScope = CoroutineScope(Dispatchers.Default)
 
     override fun onCreate() {
         super.onCreate()
@@ -47,12 +36,6 @@ class MainApplication: Application() {
         }
     }
 
-    private fun delayCreateWork() {
-        backgroundCoroutineScope.launch {
-            createWorkManager()
-        }
-    }
-
     private fun initNotification() {
         val pendingIntent = NavDeepLinkBuilder(this)
             .setGraph(com.tkw.home.R.navigation.home_nav_graph)
@@ -60,18 +43,6 @@ class MainApplication: Application() {
             .createPendingIntent()
         NotificationManager.createNotificationChannel(this)
         NotificationManager.setContentClickPendingIntent(pendingIntent)
-    }
-
-    private fun createWorkManager() {
-        val oneTimeWorkRequest = OneTimeWorkRequestBuilder<ScheduledWorkManager>()
-            .setInitialDelay(ScheduledWorkManager.getCertainTime(), TimeUnit.MILLISECONDS)
-            .build()
-
-        WorkManager.getInstance(applicationContext).enqueueUniqueWork(
-            ScheduledWorkManager.WORK_NAME,
-            ExistingWorkPolicy.KEEP,
-            oneTimeWorkRequest
-        )
     }
 
     private fun getStackTrace(e: Throwable?): String {

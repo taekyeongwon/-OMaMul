@@ -1,6 +1,5 @@
 package com.tkw.omamul
 
-import android.app.AlarmManager
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
@@ -16,8 +15,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.tkw.alarm.WaterAlarmViewModel
 import com.tkw.common.LocaleHelper
-import com.tkw.common.NotificationManager
-import com.tkw.common.WaterAlarmManager
 import com.tkw.omamul.databinding.ActivityWaterBinding
 import com.tkw.home.WaterViewModel
 import com.tkw.record.LogViewModel
@@ -75,9 +72,6 @@ class WaterActivity : AppCompatActivity() {
         setContentView(dataBinding.root)
         setSupportActionBar(dataBinding.toolbar)
         initNavigate()
-        lifecycleScope.launch {
-            initNotification()
-        }
     }
 
     private fun initNavigate() {
@@ -94,15 +88,6 @@ class WaterActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             setStartDestination(navController)
-        }
-    }
-
-    private suspend fun initNotification() {
-        if(
-            NotificationManager.isNotificationEnabled(this)
-            && alarmViewModel.getNotificationEnabled()
-        ) {
-            WaterAlarmManager.setAlarm(this, 0, 0)
         }
     }
 

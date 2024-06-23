@@ -13,8 +13,11 @@ import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
+import com.tkw.common.NotificationManager
+import com.tkw.common.WaterAlarmManager
 import com.tkw.home.dialog.WaterIntakeDialog
 import com.tkw.home.adapter.CupPagerAdapter
 import com.tkw.common.autoCleared
@@ -25,6 +28,7 @@ import com.tkw.navigation.deepLinkNavigateTo
 import com.tkw.common.util.DateTimeUtils
 import com.tkw.common.util.DimenUtils
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class WaterFragment: Fragment() {
@@ -66,6 +70,9 @@ class WaterFragment: Fragment() {
     private fun initView() {
         initViewPager()
         initItemMenu()
+        lifecycleScope.launch {
+            initNotification()
+        }
     }
 
     private fun initObserver() {
@@ -142,6 +149,15 @@ class WaterFragment: Fragment() {
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private suspend fun initNotification() {
+        if(
+            NotificationManager.isNotificationEnabled(requireContext())
+            && viewModel.getNotificationEnabled()
+        ) {
+            WaterAlarmManager.setAlarm(requireContext(), 0, 0)
+        }
     }
 
     private val clickScrollListener: (Int) -> Unit = { position ->

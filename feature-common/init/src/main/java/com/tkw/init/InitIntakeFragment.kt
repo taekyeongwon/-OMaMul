@@ -1,6 +1,6 @@
 package com.tkw.init
 
-import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.tkw.base.C
+import com.tkw.alarm.dialog.ExactAlarmDialog
+import com.tkw.common.WaterAlarmManager
 import com.tkw.common.autoCleared
 import com.tkw.init.databinding.FragmentInitIntakeBinding
 import com.tkw.navigation.DeepLinkDestination
@@ -41,7 +42,7 @@ class InitIntakeFragment: Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.state.collect {
                 if(it is InitContract.State.Complete) {
-                    viewModel.setEvent(InitContract.Event.SaveInitialFlag(true))
+                    checkApi31ExactAlarm()
                 }
             }
         }
@@ -60,6 +61,24 @@ class InitIntakeFragment: Fragment() {
         dataBinding.btnNext.setOnClickListener {
             val amount = dataBinding.npAmount.getCurrentValue()
             viewModel.setEvent(InitContract.Event.SaveIntake(amount))
+        }
+    }
+
+    private fun checkApi31ExactAlarm() {
+        if(Build.VERSION.SDK_INT >= 31 &&
+            !WaterAlarmManager.canScheduleExactAlarms(requireContext()) ) {
+            val dialog = ExactAlarmDialog(
+                true,
+                cancelAction = {
+                    viewModel.setEvent(InitContract.Event.SaveInitialFlag(true))
+                },
+                confirmAction = {
+                    viewModel.setEvent(InitContract.Event.SaveInitialFlag(true))
+                }
+            )
+            dialog.show(childFragmentManager, dialog.tag)
+        } else {
+            viewModel.setEvent(InitContract.Event.SaveInitialFlag(true))
         }
     }
 }

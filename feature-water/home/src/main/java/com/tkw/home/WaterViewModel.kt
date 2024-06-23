@@ -35,6 +35,10 @@ class WaterViewModel
     private val initFlag = prefDataRepository.fetchInitialFlag()
     suspend fun getInitFlag(): Boolean = initFlag.first() ?: false
 
+    //알람 권한 허용 여부
+    private val isAlarmEnabled = prefDataRepository.fetchAlarmEnableFlag()
+    suspend fun getNotificationEnabled() = isAlarmEnabled.first() ?: false
+
     //현재 날짜
     private val dateStringFlow = MutableStateFlow(DateTimeUtils.getTodayDate())
 
