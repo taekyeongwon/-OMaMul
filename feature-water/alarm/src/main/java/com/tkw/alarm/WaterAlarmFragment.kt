@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -23,6 +22,7 @@ import androidx.lifecycle.lifecycleScope
 import com.tkw.alarm.databinding.FragmentWaterAlarmBinding
 import com.tkw.alarm.dialog.AlarmRingtoneDialog
 import com.tkw.alarm.dialog.ExactAlarmDialog
+import com.tkw.common.NotificationManager
 import com.tkw.common.PermissionHelper
 import com.tkw.common.WaterAlarmManager
 import com.tkw.common.autoCleared
@@ -113,9 +113,7 @@ class WaterAlarmFragment: Fragment() {
                 val toggleItem = menu.findItem(R.id.alarm_toggle)
                 toolbarSwitchView = toggleItem.actionView!!.findViewById(R.id.toolbar_switch)
 
-                NotificationManagerCompat
-                    .from(requireContext())
-                    .areNotificationsEnabled()
+                NotificationManager.isNotificationEnabled(requireContext())
                     .also {
                         setSwitchButtonCheckedListener(it)
                         setSwitchButtonCheckedWithEnabled(it)

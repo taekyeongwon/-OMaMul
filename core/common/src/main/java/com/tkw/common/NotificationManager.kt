@@ -10,6 +10,7 @@ import android.content.Intent
 import android.os.Build
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 
 
 object NotificationManager {
@@ -127,6 +128,12 @@ object NotificationManager {
         } else {
             true
         }
+    }
+
+    fun isNotificationEnabled(context: Context): Boolean {
+        return NotificationManagerCompat
+            .from(context)
+            .areNotificationsEnabled()
     }
 
     private fun getFullScreenIntent(context: Context): PendingIntent {
