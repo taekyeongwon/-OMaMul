@@ -14,6 +14,7 @@ import com.tkw.domain.model.Cup
 import com.tkw.domain.model.DayOfWater
 import com.tkw.domain.model.Water
 import com.tkw.common.util.DateTimeUtils
+import com.tkw.domain.AlarmRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +28,7 @@ class WaterViewModel
 @Inject constructor(
     private val waterRepository: WaterRepository,
     private val cupRepository: CupRepository,
+    private val alarmRepository: AlarmRepository,
     private val prefDataRepository: PrefDataRepository,
     private val savedStateHandle: SavedStateHandle
 ): BaseViewModel() {
@@ -87,5 +89,9 @@ class WaterViewModel
             prefDataRepository.saveIntakeAmount(amount)
             _amountSaveEvent.call()
         }
+    }
+
+    fun setAlarm() {
+        alarmRepository.setAlarm()
     }
 }

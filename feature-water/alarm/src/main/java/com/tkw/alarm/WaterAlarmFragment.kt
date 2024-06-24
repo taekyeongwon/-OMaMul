@@ -1,7 +1,5 @@
 package com.tkw.alarm
 
-import android.app.AlarmManager
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -22,16 +20,18 @@ import androidx.lifecycle.lifecycleScope
 import com.tkw.alarm.databinding.FragmentWaterAlarmBinding
 import com.tkw.alarm.dialog.AlarmRingtoneDialog
 import com.tkw.alarm.dialog.ExactAlarmDialog
-import com.tkw.common.NotificationManager
+import com.tkw.alarmnoti.NotificationManager
 import com.tkw.common.PermissionHelper
-import com.tkw.common.WaterAlarmManager
+import com.tkw.alarmnoti.WaterAlarmManager
 import com.tkw.common.autoCleared
 import com.tkw.ui.CustomSwitchView
 import com.tkw.ui.dialog.SettingDialog
 import com.tkw.common.util.ToggleAnimation
+import com.tkw.domain.IAlarmManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class WaterAlarmFragment: Fragment() {
@@ -41,6 +41,9 @@ class WaterAlarmFragment: Fragment() {
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
     private lateinit var toolbarSwitchView: CustomSwitchView
+
+    @Inject
+    lateinit var alarmManager: IAlarmManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,7 +98,7 @@ class WaterAlarmFragment: Fragment() {
 
     private fun checkApi31ExactAlarm() {
         if(Build.VERSION.SDK_INT >= 31 &&
-            WaterAlarmManager.canScheduleExactAlarms(requireContext())) {
+            !alarmManager.canScheduleExactAlarms()) {
             if(toolbarSwitchView.getChecked() /* && 다시 보지 않기 체크 여부 */) {
                 val dialog = ExactAlarmDialog()
                 dialog.show(childFragmentManager, dialog.tag)
@@ -174,10 +177,12 @@ class WaterAlarmFragment: Fragment() {
 //                            triggerTime.set(Calendar.MINUTE, 50)
 //                            triggerTime.set(Calendar.SECOND, 0)
 //                            triggerTime.set(Calendar.MILLISECOND, 0)
-        WaterAlarmManager.setAlarm(requireContext(), triggerTime.timeInMillis, 1000 * 60)
+        viewModel.setAlarm()
+//        WaterAlarmManager.setAlarm(requireContext(), triggerTime.timeInMillis, 1000 * 60)
     }
 
     private fun cancelAlarm() {
-        WaterAlarmManager.cancelAlarm(requireContext())
+        viewModel.cancelAlarm()
+//        WaterAlarmManager.cancelAlarm(requireContext())
     }
 }

@@ -16,8 +16,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
-import com.tkw.common.NotificationManager
-import com.tkw.common.WaterAlarmManager
+import com.tkw.alarmnoti.NotificationManager
 import com.tkw.home.dialog.WaterIntakeDialog
 import com.tkw.home.adapter.CupPagerAdapter
 import com.tkw.common.autoCleared
@@ -156,7 +155,8 @@ class WaterFragment: Fragment() {
             NotificationManager.isNotificationEnabled(requireContext())
             && viewModel.getNotificationEnabled()
         ) {
-            WaterAlarmManager.setAlarm(requireContext(), 0, 0)
+            viewModel.setAlarm()
+//            WaterAlarmManager.setAlarm(requireContext(), 0, 0)
         }
     }
 

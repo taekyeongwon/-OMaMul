@@ -1,4 +1,4 @@
-package com.tkw.common
+package com.tkw.alarmnoti
 
 import android.content.Context
 import android.util.Log

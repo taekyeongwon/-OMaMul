@@ -1,4 +1,4 @@
-package com.tkw.common
+package com.tkw.alarmnoti
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -11,16 +11,23 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import android.util.Log
+import com.tkw.domain.AlarmRepository
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class WaterAlarmReceiver : BroadcastReceiver() {
+    @Inject
+    lateinit var alarmRepository: AlarmRepository
     override fun onReceive(context: Context?, intent: Intent?) {
         //todo extra로 받아서 buildNotification에 ringtone mode 넘겨줌
         if (context != null) {
             NotificationManager.notify(context)
-            WaterAlarmManager.setAlarm(context, 0, 0)
+            alarmRepository.setAlarm()
+//            WaterAlarmManager.setAlarm(context, 0, 0)
         }
 
-        Log.d("test", "alarm received")
+        Log.d("test", "alarmnoti received")
 
     }
 

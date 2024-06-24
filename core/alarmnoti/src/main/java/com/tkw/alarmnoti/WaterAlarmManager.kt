@@ -1,4 +1,4 @@
-package com.tkw.common
+package com.tkw.alarmnoti
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -8,35 +8,40 @@ import android.os.Build
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.tkw.domain.IAlarmManager
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-object WaterAlarmManager {
+class WaterAlarmManager @Inject constructor(
+    @ApplicationContext private val context: Context
+): IAlarmManager {
 
     //todo ringtone mode 받아서 extra로 넘겨줌.
-    fun setAlarm(context: Context, startTime: Long, interval: Long) {
-        if(canScheduleExactAlarms(context)) {
-            setAlarmManager(context)
-            cancelWorkManager(context)
+    override fun setAlarm(startTime: Long, interval: Long) {
+        if(canScheduleExactAlarms()) {
+            setAlarmManager()
+            cancelWorkManager()
         } else {
-            setWorkManager(context)
-            cancelAlarmManager(context)
+            setWorkManager()
+            cancelAlarmManager()
         }
     }
 
-    fun cancelAlarm(context: Context) {
-        cancelAlarmManager(context)
-        cancelWorkManager(context)
+    override fun cancelAlarm() {
+        cancelAlarmManager()
+        cancelWorkManager()
     }
 
-    fun canScheduleExactAlarms(context: Context): Boolean {
+    override fun canScheduleExactAlarms(): Boolean {
         return if(Build.VERSION.SDK_INT >= 31) {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             alarmManager.canScheduleExactAlarms()
         } else true
     }
 
-    private fun setAlarmManager(context: Context) {
+    private fun setAlarmManager() {
         val intent = Intent(context, WaterAlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             context,
@@ -56,7 +61,7 @@ object WaterAlarmManager {
         )
     }
 
-    private fun setWorkManager(context: Context) {
+    private fun setWorkManager() {
         val oneTimeWorkRequest = OneTimeWorkRequestBuilder<ScheduledWorkManager>()
             .setInitialDelay(ScheduledWorkManager.getCertainTime(), TimeUnit.MILLISECONDS)
             .build()
@@ -68,7 +73,7 @@ object WaterAlarmManager {
         )
     }
 
-    private fun cancelAlarmManager(context: Context) {
+    private fun cancelAlarmManager() {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, WaterAlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
@@ -80,7 +85,7 @@ object WaterAlarmManager {
         alarmManager.cancel(pendingIntent)
     }
 
-    private fun cancelWorkManager(context: Context) {
+    private fun cancelWorkManager() {
         WorkManager.getInstance(context).cancelUniqueWork(ScheduledWorkManager.WORK_NAME)
     }
 }

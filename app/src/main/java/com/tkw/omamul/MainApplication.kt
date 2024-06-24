@@ -6,7 +6,7 @@ import android.content.SharedPreferences
 import android.os.Process
 import android.util.Log
 import androidx.navigation.NavDeepLinkBuilder
-import com.tkw.common.NotificationManager
+import com.tkw.alarmnoti.NotificationManager
 import dagger.hilt.android.HiltAndroidApp
 import java.io.PrintWriter
 import java.io.StringWriter

@@ -33,14 +33,6 @@ abstract class VMModule {
     @ViewModelScoped
     abstract fun provideWaterRepo(repo: WaterRepositoryImpl): WaterRepository
 
-//    @Binds
-//    @ViewModelScoped
-//    abstract fun providePrefRepo(repo: PrefDataRepositoryImpl): PrefDataRepository
-
-    @Binds
-    @ViewModelScoped
-    abstract fun provideAlarmRepo(repo: AlarmRepositoryImpl): AlarmRepository
-
     @Binds
     @ViewModelScoped
     abstract fun provideCupDao(dao: CupDaoImpl): CupDao
@@ -49,11 +41,4 @@ abstract class VMModule {
     @ViewModelScoped
     abstract fun provideWaterDao(dao: WaterDaoImpl): WaterDao
 
-//    @Binds
-//    @ViewModelScoped
-//    abstract fun providePrefDataSource(dataSource: PrefLocalDataSourceImpl): PrefDataSource
-
-    @Binds
-    @ViewModelScoped
-    abstract fun provideAlarmDao(dao: AlarmDaoImpl): AlarmDao
 }

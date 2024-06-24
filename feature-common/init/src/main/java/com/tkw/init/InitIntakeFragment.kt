@@ -10,18 +10,22 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.tkw.alarm.dialog.ExactAlarmDialog
-import com.tkw.common.WaterAlarmManager
 import com.tkw.common.autoCleared
+import com.tkw.domain.IAlarmManager
 import com.tkw.init.databinding.FragmentInitIntakeBinding
 import com.tkw.navigation.DeepLinkDestination
 import com.tkw.navigation.deepLinkNavigateTo
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class InitIntakeFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentInitIntakeBinding>()
     private val viewModel: InitViewModel by viewModels()
+
+    @Inject
+    lateinit var alarmManager: IAlarmManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,7 +70,7 @@ class InitIntakeFragment: Fragment() {
 
     private fun checkApi31ExactAlarm() {
         if(Build.VERSION.SDK_INT >= 31 &&
-            !WaterAlarmManager.canScheduleExactAlarms(requireContext()) ) {
+            !alarmManager.canScheduleExactAlarms() ) {
             val dialog = ExactAlarmDialog(
                 true,
                 cancelAction = {

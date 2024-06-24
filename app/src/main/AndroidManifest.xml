@@ -33,7 +33,7 @@
                 android:value="true" />
         </service>
 
-        <receiver android:name="com.tkw.common.WaterAlarmReceiver" android:exported="false"/>
+        <receiver android:name="com.tkw.alarmnoti.WaterAlarmReceiver" android:exported="false"/>
 
         <receiver android:name=".BootReceiver"
             android:exported="false"

@@ -1,17 +1,16 @@
 plugins {
-    alias libs.plugins.android.library
-    alias libs.plugins.jetbrains.kotlin.android
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.jetbrains.kotlin.android)
     alias libs.plugins.hilt
     id 'kotlin-kapt'
 }
 
 android {
-    namespace 'com.tkw.alarm'
+    namespace 'com.tkw.alarmnoti'
     compileSdk 34
 
     defaultConfig {
         minSdk 26
-        targetSdk 34
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -24,11 +23,6 @@ android {
         }
     }
 
-    buildFeatures {
-        dataBinding = true
-        viewBinding = true
-    }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -39,28 +33,17 @@ android {
 }
 
 dependencies {
-    implementation project(':core:domain')
-    implementation project(':core:common')
     implementation project(':core:ui')
-    implementation project(':core:alarmnoti')
-    implementation project(':feature-common:base')
+    implementation project(':core:domain')
 
     implementation libs.androidx.core
     implementation libs.androidx.appcompat
     implementation libs.android.material
-    implementation libs.androidx.constraintlayout
     testImplementation libs.junit
     androidTestImplementation libs.androidx.test.junit
     androidTestImplementation libs.androidx.test.espresso
 
-    implementation libs.androidx.navigation.fragment
-    implementation libs.androidx.navigation.ui
-
-    //by viewModels
-    implementation libs.androidx.activity.ktx
-
-    //by activityViewModels
-    implementation libs.androidx.fragment.ktx
+    implementation libs.androidx.work.runtime.ktx
 
     //hilt
     implementation libs.hilt

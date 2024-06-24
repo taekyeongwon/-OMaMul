@@ -1,4 +1,4 @@
-package com.tkw.common
+package com.tkw.alarmnoti
 
 import android.app.Application
 import android.app.Notification
