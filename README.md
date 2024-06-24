@@ -28,5 +28,6 @@ Flow 및 LiveData 적용
 
 **멀티 모듈 구조**
 
-![omamul drawio (2)](https://github.com/taekyeongwon/OMaMul/assets/24698972/138c5e1a-a5fc-46ce-bb5b-c3baa1a642bb)
+![omamul drawio (3)](https://github.com/taekyeongwon/OMaMul/assets/24698972/a0e5998d-7320-4d18-821f-ae5148bf800c)
+
 
