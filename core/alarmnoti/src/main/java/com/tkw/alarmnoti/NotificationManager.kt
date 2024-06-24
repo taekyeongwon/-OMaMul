@@ -12,7 +12,6 @@ import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 
-
 object NotificationManager {
     const val NOTI_CH = "NOTI_CH"
     const val MUTE_CH = "MUTE_CH"
