@@ -1,10 +1,8 @@
 package com.tkw.datastore.local
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.longPreferencesKey
 import com.tkw.datastore.PrefDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

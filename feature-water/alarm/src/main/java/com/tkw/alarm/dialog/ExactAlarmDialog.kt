@@ -12,7 +12,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
-import com.tkw.alarm.R
 import com.tkw.alarm.WaterAlarmViewModel
 import com.tkw.alarm.databinding.DialogExactAlarmBinding
 import com.tkw.common.autoCleared

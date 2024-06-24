@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
-import com.tkw.record.adapter.ViewPagerAdapter
 import com.tkw.common.autoCleared
+import com.tkw.record.adapter.ViewPagerAdapter
 import com.tkw.record.databinding.FragmentWaterLogBinding
 
 class WaterLogFragment: Fragment() {

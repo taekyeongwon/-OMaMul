@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.tkw.alarm.databinding.DialogRingtoneBinding
 import com.tkw.common.autoCleared
-import com.tkw.domain.model.AlarmSettings
 import com.tkw.domain.model.RingTone
 import com.tkw.ui.dialog.CustomBottomDialog
 

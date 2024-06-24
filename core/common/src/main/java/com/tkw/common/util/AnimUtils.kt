@@ -1,12 +1,12 @@
 package com.tkw.common.util
 
 import android.animation.ValueAnimator
-import android.view.animation.LinearInterpolator
-import android.widget.TextView
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
+import android.view.animation.LinearInterpolator
 import android.view.animation.Transformation
+import android.widget.TextView
 
 fun TextView.animateByMaxValue(maxValue: Int) {
     ValueAnimator.ofInt(0, maxValue).apply {

@@ -10,8 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.tkw.alarm.dialog.AlarmTimeBottomDialog
 import com.tkw.common.autoCleared
-import com.tkw.init.databinding.FragmentInitTimeBinding
 import com.tkw.common.util.DateTimeUtils
+import com.tkw.init.databinding.FragmentInitTimeBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

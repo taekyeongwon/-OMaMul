@@ -22,12 +22,11 @@ import com.tkw.alarm.dialog.AlarmRingtoneDialog
 import com.tkw.alarm.dialog.ExactAlarmDialog
 import com.tkw.alarmnoti.NotificationManager
 import com.tkw.common.PermissionHelper
-import com.tkw.alarmnoti.WaterAlarmManager
 import com.tkw.common.autoCleared
-import com.tkw.ui.CustomSwitchView
-import com.tkw.ui.dialog.SettingDialog
 import com.tkw.common.util.ToggleAnimation
 import com.tkw.domain.IAlarmManager
+import com.tkw.ui.CustomSwitchView
+import com.tkw.ui.dialog.SettingDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.Calendar

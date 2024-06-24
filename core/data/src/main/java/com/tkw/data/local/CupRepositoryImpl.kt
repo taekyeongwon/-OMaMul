@@ -2,7 +2,6 @@ package com.tkw.data.local
 
 import com.tkw.database.CupDao
 import com.tkw.database.model.CupEntity
-import com.tkw.database.model.CupListEntity
 import com.tkw.domain.CupRepository
 import com.tkw.domain.model.Cup
 import com.tkw.domain.model.CupList

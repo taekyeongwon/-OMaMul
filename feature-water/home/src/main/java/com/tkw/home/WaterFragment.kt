@@ -17,15 +17,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import com.tkw.alarmnoti.NotificationManager
-import com.tkw.home.dialog.WaterIntakeDialog
-import com.tkw.home.adapter.CupPagerAdapter
 import com.tkw.common.autoCleared
-import com.tkw.domain.model.Water
-import com.tkw.home.databinding.FragmentWaterBinding
-import com.tkw.navigation.DeepLinkDestination
-import com.tkw.navigation.deepLinkNavigateTo
 import com.tkw.common.util.DateTimeUtils
 import com.tkw.common.util.DimenUtils
+import com.tkw.domain.model.Water
+import com.tkw.home.adapter.CupPagerAdapter
+import com.tkw.home.databinding.FragmentWaterBinding
+import com.tkw.home.dialog.WaterIntakeDialog
+import com.tkw.navigation.DeepLinkDestination
+import com.tkw.navigation.deepLinkNavigateTo
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
