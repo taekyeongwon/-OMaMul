@@ -17,4 +17,12 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
     override fun getSetting(): AlarmSettingsEntity {
         TODO("Not yet implemented")
     }
+
+    override fun updateAlarm() {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteAlarm(alarmId: Int) {
+        TODO("Not yet implemented")
+    }
 }

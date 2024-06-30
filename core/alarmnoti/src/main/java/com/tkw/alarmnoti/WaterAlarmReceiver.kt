@@ -19,11 +19,27 @@ import javax.inject.Inject
 class WaterAlarmReceiver : BroadcastReceiver() {
     @Inject
     lateinit var alarmRepository: AlarmRepository
+
+    private val defaultInterval: Int = 1000 * 60 * 5
     override fun onReceive(context: Context?, intent: Intent?) {
         //todo extra로 받아서 buildNotification에 ringtone mode 넘겨줌
-        if (context != null) {
+        if (context != null && intent != null) {
             NotificationManager.notify(context)
-            alarmRepository.setAlarm()
+            //주기 모드면 interval만큼 startTime에 더해서 실행
+            //그 외에는 시간마다 각 알람 설정하고, 24시간만큼 startTime에 더해서 실행
+            val alarmTime = intent.getLongExtra("ALARM_TIME", -1)
+            val alarmId = intent.getIntExtra("ALARM_ID", -1)
+            val alarmInterval = intent.getIntExtra("ALARM_INTERVAL", -1)
+            val startTime = if(alarmInterval != -1) {
+                alarmTime + alarmInterval
+            } else {
+                alarmTime + defaultInterval   //테스트용. 추후 24시간 등으로 변경 필요
+            }
+
+            alarmRepository.setAlarm(
+                startTime,
+                alarmId
+            )
 //            WaterAlarmManager.setAlarm(context, 0, 0)
         }
 

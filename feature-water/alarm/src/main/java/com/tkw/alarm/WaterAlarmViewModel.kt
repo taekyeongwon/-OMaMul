@@ -21,10 +21,10 @@ class WaterAlarmViewModel @Inject constructor(
     }
 
     fun setAlarm() {
-        alarmRepository.setAlarm()
+        alarmRepository.wakeAllAlarm()
     }
 
     fun cancelAlarm() {
-        alarmRepository.cancelAlarm()
+        alarmRepository.cancelAllAlarm()
     }
 }

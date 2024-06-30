@@ -19,12 +19,12 @@ class WaterAlarmManager @Inject constructor(
 ): IAlarmManager {
 
     //todo ringtone mode 받아서 extra로 넘겨줌.
-    override fun setAlarm(startTime: Long, interval: Long) {
+    override fun setAlarm(startTime: Long, interval: Int, alarmId: Int) {
         if(canScheduleExactAlarms()) {
-            setAlarmManager()
+            setAlarmManager(startTime, interval, alarmId)
             cancelWorkManager()
         } else {
-            setWorkManager()
+            setWorkManager(startTime, alarmId)
             cancelAlarmManager()
         }
     }
@@ -41,17 +41,20 @@ class WaterAlarmManager @Inject constructor(
         } else true
     }
 
-    private fun setAlarmManager() {
+    private fun setAlarmManager(startTime: Long, interval: Int, alarmId: Int) {
         val intent = Intent(context, WaterAlarmReceiver::class.java)
+        intent.putExtra("ALARM_TIME", startTime)
+        intent.putExtra("ALARM_ID", alarmId)
+        intent.putExtra("ALARM_INTERVAL", interval)
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            0,
+            alarmId,
             intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         val alarmClock = AlarmManager.AlarmClockInfo(
-            Calendar.getInstance().timeInMillis + 1000 * 60,
+            startTime,
             pendingIntent
         )
 
@@ -61,7 +64,7 @@ class WaterAlarmManager @Inject constructor(
         )
     }
 
-    private fun setWorkManager() {
+    private fun setWorkManager(startTime: Long, alarmId: Int) {
         val oneTimeWorkRequest = OneTimeWorkRequestBuilder<ScheduledWorkManager>()
             .setInitialDelay(ScheduledWorkManager.getCertainTime(), TimeUnit.MILLISECONDS)
             .build()

@@ -29,7 +29,7 @@ class BootReceiver: BroadcastReceiver() {
                     NotificationManager.isNotificationEnabled(context)
                     && prefRepository.fetchAlarmEnableFlag().first() == true
                 ) {
-                    alarmRepository.setAlarm()
+                    alarmRepository.wakeAllAlarm()
 //                    WaterAlarmManager.setAlarm(context, 0, 0)
                 }
             }

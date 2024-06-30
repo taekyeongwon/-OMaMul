@@ -17,7 +17,7 @@ class ExactAlarmPermissionReceiver: BroadcastReceiver() {
         when (intent.action) {
             AlarmManager.ACTION_SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED -> {
                 // onReceive
-                alarmRepository.setAlarm()
+                alarmRepository.wakeAllAlarm()
 //                WaterAlarmManager.setAlarm(context, 0, 0)
             }
         }

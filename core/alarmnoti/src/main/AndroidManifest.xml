@@ -11,6 +11,7 @@
             android:taskAffinity=":alarm"
             android:excludeFromRecents="true"/>
 
+        <receiver android:name=".WaterAlarmReceiver" android:exported="false"/>
     </application>
 
 </manifest>

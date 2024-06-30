@@ -91,7 +91,7 @@ class WaterViewModel
         }
     }
 
-    fun setAlarm() {
-        alarmRepository.setAlarm()
+    fun setAlarm(startTime: Long, alarmId: Int) {
+        alarmRepository.setAlarm(startTime, alarmId)
     }
 }
