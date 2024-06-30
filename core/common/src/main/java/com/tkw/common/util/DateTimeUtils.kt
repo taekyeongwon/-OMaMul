@@ -1,9 +1,11 @@
 package com.tkw.common.util
 
 import java.time.DayOfWeek
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -108,6 +110,15 @@ object DateTimeUtils {
         val startOfMonth = localDate.withDayOfMonth(1).format(formatter)
         val endOfMonth = localDate.withDayOfMonth(localDate.lengthOfMonth()).format(formatter)
         return startOfMonth to endOfMonth
+    }
+
+    fun getDateTimeInt(timeInMillis: Long): Int {
+        val formatter = DateTimeFormatter.ofPattern("yyMMddHHmmss")
+        val dateTime = Instant.ofEpochMilli(timeInMillis)
+            .atZone(ZoneId.systemDefault())
+            .toLocalDateTime()
+        val formattedDateTime = dateTime.format(formatter)
+        return formattedDateTime.toInt()
     }
 
     fun addWeek(date: String, add: Long): String {
