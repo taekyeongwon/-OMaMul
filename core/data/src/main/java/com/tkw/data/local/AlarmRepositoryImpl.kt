@@ -15,7 +15,7 @@ class AlarmRepositoryImpl @Inject constructor(
     }
 
     override fun wakeAllAlarm() {
-        //모든 알람 가져와서 실행. 알람 객체는 현재 enable 상태 가지고 있고, enable상태인 알람만 전부 다시 켜기.
+        //모든 알람 가져와서 실행. 알람 객체는 현재 enable 상태 가지고 있고, enable true 상태인 알람만 전부 다시 켜기.
     }
 
     override fun setAlarm(startTime: Long, alarmId: Int) {
@@ -24,7 +24,7 @@ class AlarmRepositoryImpl @Inject constructor(
         if(alarmId != -1) {
             alarmManager.setAlarm(startTime, interval, alarmId)
         }
-        //dao에도 알람 추가 또는 수정
+        //dao에도 알람 추가 또는 수정. 알람 객체 enable true로 저장.
     }
 
     override fun getAlarm(alarmId: Int) {
@@ -35,11 +35,11 @@ class AlarmRepositoryImpl @Inject constructor(
         //모든 알람 객체 가져오기
     }
 
-    override fun cancelAlarm() {
-        alarmManager.cancelAlarm()
+    override fun cancelAlarm(alarmId: Int) {
+        alarmManager.cancelAlarm(alarmId)
     }
 
     override fun cancelAllAlarm() {
-        //모든 알람 취소
+        //모든 알람 객체 가져와서 enable true인 알람 모두 id값 대로 취소 후 enable false 상태로 업데이트.
     }
 }

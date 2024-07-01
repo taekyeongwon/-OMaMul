@@ -22,16 +22,16 @@ class WaterAlarmManager @Inject constructor(
     override fun setAlarm(startTime: Long, interval: Int, alarmId: Int) {
         if(canScheduleExactAlarms()) {
             setAlarmManager(startTime, interval, alarmId)
-            cancelWorkManager()
+            cancelWorkManager(alarmId)
         } else {
             setWorkManager(startTime, alarmId)
-            cancelAlarmManager()
+            cancelAlarmManager(alarmId)
         }
     }
 
-    override fun cancelAlarm() {
-        cancelAlarmManager()
-        cancelWorkManager()
+    override fun cancelAlarm(alarmId: Int) {
+        cancelAlarmManager(alarmId)
+        cancelWorkManager(alarmId)
     }
 
     override fun canScheduleExactAlarms(): Boolean {
@@ -76,19 +76,19 @@ class WaterAlarmManager @Inject constructor(
         )
     }
 
-    private fun cancelAlarmManager() {
+    private fun cancelAlarmManager(alarmId: Int) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, WaterAlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            0,
+            alarmId,
             intent,
             PendingIntent.FLAG_IMMUTABLE
         )
         alarmManager.cancel(pendingIntent)
     }
 
-    private fun cancelWorkManager() {
+    private fun cancelWorkManager(alarmId: Int) {
         WorkManager.getInstance(context).cancelUniqueWork(ScheduledWorkManager.WORK_NAME)
     }
 }

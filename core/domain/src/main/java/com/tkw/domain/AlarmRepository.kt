@@ -13,7 +13,7 @@ interface AlarmRepository {
 
     fun getAllAlarm()//: List<Alarm>
 
-    fun cancelAlarm()
+    fun cancelAlarm(alarmId: Int)
 
     fun cancelAllAlarm()
 }
