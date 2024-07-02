@@ -11,6 +11,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.tkw.alarm.WaterAlarmViewModel
@@ -75,7 +76,9 @@ class WaterActivity : AppCompatActivity() {
     }
 
     private fun initNavigate() {
-        val navController = findNavController(R.id.fragment_container_view)
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment
+        val navController = navHostFragment.navController
         navController.addOnDestinationChangedListener { _, destination, _ ->
             dataBinding.bottomNav.visibility =
                 if(mainFragmentSet.contains(destination.id)) View.VISIBLE
