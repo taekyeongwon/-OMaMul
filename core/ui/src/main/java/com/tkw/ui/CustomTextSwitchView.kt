@@ -8,21 +8,27 @@ import android.widget.CompoundButton
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.tkw.ui.databinding.CustomTextImageBinding
 
+/**
+ * 텍스트 뷰 우측에 스위치 버튼 표시할 커스텀 뷰
+ */
 class CustomTextSwitchView
 @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0)
     : ConstraintLayout(context, attrs, defStyle) {
-    val dataBinding = CustomTextImageBinding.inflate(
-        LayoutInflater.from(context),
-        this,
-        true
-    )
+    lateinit var dataBinding: CustomTextImageBinding
 
     init {
-        dataBinding.svSwitch.visibility = View.VISIBLE
         initView(context, attrs)
     }
 
     private fun initView(context: Context, attrs: AttributeSet? = null) {
+        dataBinding = CustomTextImageBinding.inflate(
+            LayoutInflater.from(context),
+            this,
+            true
+        )
+
+        dataBinding.svSwitch.visibility = View.VISIBLE
+
         val typedArray = context.theme.obtainStyledAttributes(
             attrs,
             R.styleable.CustomTextImage,

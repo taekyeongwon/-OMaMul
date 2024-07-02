@@ -66,6 +66,8 @@
     <string name="alarm_etc_setting">Other Settings</string>
     <string name="alarm_etc_stop_reached_goal">Stop when goal is reached</string>
     <string name="alarm_etc_delay">Delay alarm until tomorrow</string>
+    <string name="alarm_etc_fullscreen_setting">Fullscreen Alarm Setting</string>
+    <string name="alarm_etc_exact_setting">Exact Alarm Setting</string>
     <string name="permission_title">Permission Settings</string>
     <string name="permission_message">Please enable permissions directly from the settings screen.</string>
     <string name="hour">hour</string>

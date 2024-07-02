@@ -8,25 +8,25 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.tkw.ui.databinding.CustomTextImageBinding
 
 /**
- * 텍스트 뷰 우측에
+ * 텍스트 뷰 우측에 이미지 표시할 커스텀 뷰
  */
 class CustomTextImageView
 @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0)
     : ConstraintLayout(context, attrs, defStyle) {
-    val dataBinding = CustomTextImageBinding.inflate(
-        LayoutInflater.from(context),
-        this,
-        true
-    )
-
-    private var expandListener: () -> Unit = {}
-    private var collapseListener: () -> Unit = {}
+    lateinit var dataBinding: CustomTextImageBinding
 
     init {
         initView(context, attrs)
     }
 
     private fun initView(context: Context, attrs: AttributeSet? = null) {
+        dataBinding = CustomTextImageBinding.inflate(
+            LayoutInflater.from(context),
+            this,
+            true
+        )
+        dataBinding.ivImage.visibility = View.VISIBLE
+
         val typedArray = context.theme.obtainStyledAttributes(
             attrs,
             R.styleable.CustomTextImage,
@@ -42,51 +42,6 @@ class CustomTextImageView
             } finally {
                 recycle()
             }
-        }
-    }
-
-    fun setFocusable() {
-        isFocusableInTouchMode = true
-        setOnFocusChangeListener { _, hasFocus ->
-            dataBinding.ivImage.visibility =
-                if (hasFocus) {
-                    expandListener()
-                    View.VISIBLE
-                }
-                else {
-                    collapseListener()
-                    View.GONE
-                }
-        }
-        setOnClickListener {
-            requestFocus()
-        }
-    }
-
-    fun setFocusChangeListener(
-        expandListener: () -> Unit,
-        collapseListener: () -> Unit
-    ) {
-        this.expandListener = expandListener
-        this.collapseListener = collapseListener
-    }
-
-    /**
-     * 뷰를 접었다 폈다 하기 위해 setFocusChangeListener 호출 후 사용
-     */
-    fun setSelected() {
-        if(isFocusableInTouchMode) {
-            requestFocus()
-        } else {
-            dataBinding.ivImage.visibility = View.VISIBLE
-        }
-    }
-
-    fun clear() {
-        if(isFocusableInTouchMode) {
-            clearFocus()
-        } else {
-            dataBinding.ivImage.visibility = View.GONE
         }
     }
 }

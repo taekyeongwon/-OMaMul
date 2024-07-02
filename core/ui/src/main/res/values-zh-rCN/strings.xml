@@ -66,6 +66,8 @@
     <string name="alarm_etc_setting">其他设置</string>
     <string name="alarm_etc_stop_reached_goal">达到目标时停止</string>
     <string name="alarm_etc_delay">将闹钟延迟到明天</string>
+    <string name="alarm_etc_fullscreen_setting">全屏闹钟设置</string>
+    <string name="alarm_etc_exact_setting">精确闹钟设置</string>
     <string name="permission_title">权限设置</string>
     <string name="permission_message">请在设置页面中直接允许。</string>
     <string name="hour">小时</string>

@@ -71,22 +71,9 @@ class WaterAlarmFragment: Fragment() {
 
     private fun initView() {
         initItemMenu()
-        initAlarmModeFocusable()
     }
 
     private fun initListener() {
-        dataBinding.tvAlarmModePeriod.setFocusChangeListener({
-            ToggleAnimation.expand(dataBinding.alarmPeriodLayout)
-        }, {
-            ToggleAnimation.collapse(dataBinding.alarmPeriodLayout)
-        })
-        dataBinding.tvAlarmModeCustom.setFocusChangeListener({
-            ToggleAnimation.expand(dataBinding.alarmCustomLayout)
-        }, {
-            ToggleAnimation.collapse(dataBinding.alarmCustomLayout)
-        })
-        dataBinding.tvAlarmModePeriod.setSelected() //todo 저장된 모드 setSelected 호출 필요
-
         dataBinding.tvAlarmSound.setOnClickListener {
             val soundDialog = AlarmRingtoneDialog {
 
@@ -125,11 +112,6 @@ class WaterAlarmFragment: Fragment() {
                 return true
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-    }
-
-    private fun initAlarmModeFocusable() {
-        dataBinding.tvAlarmModePeriod.setFocusable()
-        dataBinding.tvAlarmModeCustom.setFocusable()
     }
 
     private fun setSwitchButtonCheckedListener(isNotificationEnabled: Boolean) {

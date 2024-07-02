@@ -155,8 +155,7 @@ class WaterFragment: Fragment() {
             NotificationManager.isNotificationEnabled(requireContext())
             && viewModel.getNotificationEnabled()
         ) {
-            viewModel.setAlarm()
-//            WaterAlarmManager.setAlarm(requireContext(), 0, 0)
+            viewModel.resetAlarm()
         }
     }
 

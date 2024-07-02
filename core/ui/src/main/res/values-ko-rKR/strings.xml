@@ -66,6 +66,8 @@
     <string name="alarm_etc_setting">기타 설정</string>
     <string name="alarm_etc_stop_reached_goal">목표 도달 시 멈추기</string>
     <string name="alarm_etc_delay">내일로 알람 미루기</string>
+    <string name="alarm_etc_fullscreen_setting">전체화면 알람 설정</string>
+    <string name="alarm_etc_exact_setting">정확한 알람 설정</string>
     <string name="permission_title">권한 설정</string>
     <string name="permission_message">설정 화면에서 직접 허용해 주세요.</string>
     <string name="hour">시간</string>
