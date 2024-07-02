@@ -52,11 +52,11 @@
             android:layout_marginTop="4dp"
             app:layout_constraintTop_toBottomOf="@id/tv_alarm_mode_title">
             <com.tkw.ui.CustomTextImageView
-                android:id="@+id/tv_alarm_mode_period"
+                android:id="@+id/tv_alarm_mode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
-                app:text="@string/alarm_mode_period"
+                tools:text="@string/alarm_mode_period"
                 app:src="@drawable/right_arrow"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

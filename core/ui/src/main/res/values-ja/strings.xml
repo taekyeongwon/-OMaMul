@@ -76,5 +76,10 @@
     <string name="do_not_show_again">再び表示しない</string>
     <string name="move">移動</string>
     <string name="close">閉じる</string>
+    <string name="alarm_detail_empty">設定されたアラームがありません。</string>
+    <string name="alarm_detail_remain">%d分後にアラームが鳴ります。</string>
+    <string name="alarm_detail_mode_title">リマインダーモード</string>
+    <string name="alarm_detail_mode_period_desc">選択した間隔でアラームを鳴らします。</string>
+    <string name="alarm_detail_mode_custom_desc">アラーム受信時間を手動で設定します。</string>
 
 </resources>

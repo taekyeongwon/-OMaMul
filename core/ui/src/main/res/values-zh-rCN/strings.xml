@@ -76,5 +76,10 @@
     <string name="do_not_show_again">不再显示</string>
     <string name="move">移动</string>
     <string name="close">关闭</string>
+    <string name="alarm_detail_empty">没有设定的闹钟。</string>
+    <string name="alarm_detail_remain">闹钟将在%d分钟后响起。</string>
+    <string name="alarm_detail_mode_title">提醒模式</string>
+    <string name="alarm_detail_mode_period_desc">闹钟将按选择的间隔响起。</string>
+    <string name="alarm_detail_mode_custom_desc">手动设置闹钟接收时间。</string>
 
 </resources>
