@@ -1,6 +1,7 @@
 package com.tkw.ui
 
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -39,6 +40,7 @@ class CustomTextImageView
                     getDrawable(R.styleable.CustomTextImage_src)
                 )
                 dataBinding.tvText.text = getString(R.styleable.CustomTextImage_text)
+                dataBinding.tvText.setTextColor(getColor(R.styleable.CustomTextImage_textColor, Color.BLACK))
             } finally {
                 recycle()
             }
