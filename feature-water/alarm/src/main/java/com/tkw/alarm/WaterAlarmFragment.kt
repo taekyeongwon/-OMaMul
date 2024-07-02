@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.tkw.alarm.databinding.FragmentWaterAlarmBinding
 import com.tkw.alarm.dialog.AlarmRingtoneDialog
 import com.tkw.alarm.dialog.ExactAlarmDialog
@@ -79,6 +80,11 @@ class WaterAlarmFragment: Fragment() {
 
             }
             soundDialog.show(childFragmentManager, soundDialog.tag)
+        }
+
+        dataBinding.clAlarmMode.setOnClickListener {
+            findNavController().navigate(WaterAlarmFragmentDirections
+                .actionWaterAlarmFragmentToWaterAlarmDetailFragment())
         }
     }
 
