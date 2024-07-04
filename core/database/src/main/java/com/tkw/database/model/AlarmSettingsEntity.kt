@@ -8,33 +8,43 @@ import io.realm.kotlin.types.annotations.PrimaryKey
 
 class AlarmSettingsEntity: RealmObject {
     @PrimaryKey
-    var id: Int = 0
-    private var ringToneMode: String = RingTone.BELL.state
-    var ringToneEnum: RingTone
-        get() = RingTone.valueOf(ringToneMode)
+    var id: Int = 0 //세팅은 하나만 존재하므로 0 고정
+    private var ringToneMode: String = RingToneEntity.BELL.state
+    var ringToneEnum: RingToneEntity
+        get() = RingToneEntity.valueOf(ringToneMode)
         set(value) {
             ringToneMode = value.state
         }
-    var alarmStartTime: String = ""
-    var alarmEndTime: String = ""
-    var alarmMode: AlarmMode? = null
-    var etcSetting: AlarmEtcSettings? = null
+    var alarmMode: AlarmModeEntity? = null
+    var etcSetting: AlarmEtcSettingsEntity? = null
 }
 
-enum class RingTone(var state: String) {
+enum class RingToneEntity(var state: String) {
     BELL("BELL"), VIBE("VIBE"), ALL("ALL"), IGNORE("IGNORE")
 }
 
-open class AlarmMode: EmbeddedRealmObject {
+open class AlarmModeEntity: EmbeddedRealmObject
+
+class PeriodEntity: AlarmModeEntity() {
     var selectedDate: RealmList<Int> = realmListOf()
     var interval: Long = 0L
+    var alarmStartTime: String = ""
+    var alarmEndTime: String = ""
+    var alarm: AlarmEntity = AlarmEntity()
 }
 
-class Period: AlarmMode()
+class CustomEntity: AlarmModeEntity() {
+    var selectedDate: RealmList<Int> = realmListOf()
+    var alarmList: RealmList<AlarmEntity> = realmListOf()
+}
 
-class Custom: AlarmMode()
-
-class AlarmEtcSettings: EmbeddedRealmObject {
+class AlarmEtcSettingsEntity: EmbeddedRealmObject {
     var stopReachedGoal: Boolean = false
     var delayTomorrow: Boolean = false
+}
+
+class AlarmEntity: EmbeddedRealmObject {
+    var alarmId: Int = 0
+    var startTime: Long = 0L
+    var enabled: Boolean = false
 }
