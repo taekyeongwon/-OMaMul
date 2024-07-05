@@ -34,8 +34,8 @@ sealed class AlarmMode {
     }
 
     data class Custom(
-        val selectedDate: List<Int>,
-        val alarmList: List<Alarm>
+        val selectedDate: List<Int> = listOf(1, 2, 3, 4, 5),
+        val alarmList: List<Alarm> = listOf()
     ): AlarmMode()
 }
 

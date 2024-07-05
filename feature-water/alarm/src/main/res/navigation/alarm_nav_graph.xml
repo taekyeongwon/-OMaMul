@@ -16,8 +16,8 @@
 
     <fragment
         android:id="@+id/waterAlarmDetailFragment"
-        android:name="com.tkw.alarm.DetailAlarmFragment"
-        tools:layout="@layout/fragment_water_alarm_detail">
+        android:name="com.tkw.alarm.AlarmModeFragment"
+        tools:layout="@layout/fragment_alarm_mode">
 
     </fragment>
 </navigation>

@@ -6,34 +6,52 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
-import com.tkw.alarm.databinding.FragmentWaterAlarmDetailBinding
+import com.tkw.alarm.databinding.FragmentAlarmModeBinding
+import com.tkw.alarm.dialog.AlarmModeBottomDialog
 import com.tkw.common.autoCleared
+import com.tkw.domain.model.AlarmMode
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DetailAlarmFragment: Fragment() {
-    private var dataBinding by autoCleared<FragmentWaterAlarmDetailBinding>()
+class AlarmModeFragment: Fragment() {
+    private var dataBinding by autoCleared<FragmentAlarmModeBinding>()
+    private val fragmentList by lazy {
+        listOf(
+            AlarmModePeriodFragment(),
+            AlarmModeCustomFragment()
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dataBinding = FragmentWaterAlarmDetailBinding.inflate(inflater, container, false)
+        dataBinding = FragmentAlarmModeBinding.inflate(inflater, container, false)
         return dataBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        replaceFragment(DetailAlarmPeriodFragment())
+        initView()
+        initListener()
+    }
 
+    private fun initView() {
+        replaceFragment(fragmentList[0])    //todo navArgs로 전달받은 모드의 프래그먼트로 설정
+    }
+
+    private fun initListener() {
         dataBinding.tvAlarmMode.setOnClickListener {
-            replaceFragment(DetailAlarmPeriodFragment())
-        }
-
-        dataBinding.tvAlarmMode2.setOnClickListener {
-            replaceFragment(DetailAlarmCustomFragment())
+            val dialog = AlarmModeBottomDialog {
+                if(it is AlarmMode.Period) {
+                    replaceFragment(fragmentList[0])
+                } else {
+                    replaceFragment(fragmentList[1])
+                }
+            }
+            dialog.show(childFragmentManager, dialog.tag)
         }
     }
 

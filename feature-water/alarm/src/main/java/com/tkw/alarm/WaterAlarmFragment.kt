@@ -24,7 +24,6 @@ import com.tkw.alarm.dialog.ExactAlarmDialog
 import com.tkw.alarmnoti.NotificationManager
 import com.tkw.common.PermissionHelper
 import com.tkw.common.autoCleared
-import com.tkw.common.util.ToggleAnimation
 import com.tkw.domain.IAlarmManager
 import com.tkw.ui.CustomSwitchView
 import com.tkw.ui.dialog.SettingDialog
@@ -85,6 +84,7 @@ class WaterAlarmFragment: Fragment() {
         dataBinding.clAlarmMode.setOnClickListener {
             findNavController().navigate(WaterAlarmFragmentDirections
                 .actionWaterAlarmFragmentToWaterAlarmDetailFragment())
+            //todo 현재 세팅된 AlarmMode객체 argument로 전달하기.
         }
     }
 
@@ -127,15 +127,15 @@ class WaterAlarmFragment: Fragment() {
             }
             if(isChecked) {
                 if(!isNotificationEnabled) showAlert()
-                else setAlarm() //알람 설정
-            } else cancelAlarm() //알람 cancel
+                else alarmOn() //알람 설정
+            } else alarmOff() //알람 cancel
         }
     }
 
     private fun setSwitchButtonCheckedWithEnabled(isNotificationEnabled: Boolean) {
         lifecycleScope.launch {
             if(!isNotificationEnabled) {
-                cancelAlarm()
+                alarmOff()
             }
             toolbarSwitchView.setChecked(
                 isNotificationEnabled && viewModel.getNotificationEnabled()
@@ -158,18 +158,11 @@ class WaterAlarmFragment: Fragment() {
         dialog.show(childFragmentManager, dialog.tag)
     }
 
-    private fun setAlarm() {
-        val triggerTime = Calendar.getInstance()
-//                            triggerTime.set(Calendar.HOUR_OF_DAY, 22)
-//                            triggerTime.set(Calendar.MINUTE, 50)
-//                            triggerTime.set(Calendar.SECOND, 0)
-//                            triggerTime.set(Calendar.MILLISECOND, 0)
-        viewModel.setAlarm()
-//        WaterAlarmManager.setAlarm(requireContext(), triggerTime.timeInMillis, 1000 * 60)
+    private fun alarmOn() {
+        viewModel.wakeAllAlarm()
     }
 
-    private fun cancelAlarm() {
-        viewModel.cancelAlarm()
-//        WaterAlarmManager.cancelAlarm(requireContext())
+    private fun alarmOff() {
+        viewModel.cancelAllAlarm()
     }
 }
