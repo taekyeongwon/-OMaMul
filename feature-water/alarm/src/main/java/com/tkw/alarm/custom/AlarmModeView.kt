@@ -3,6 +3,7 @@ package com.tkw.alarm.custom
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.tkw.alarm.databinding.CustomAlarmModeBinding
 import com.tkw.ui.CustomCheckBox
@@ -31,5 +32,11 @@ class AlarmModeView
             }
         }
         return result
+    }
+
+    fun setPeriodLayoutVisibility(flag: Boolean) {
+        dataBinding.clPeriod.visibility =
+            if(flag) View.VISIBLE
+            else View.GONE
     }
 }
