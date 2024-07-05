@@ -13,10 +13,10 @@ import com.tkw.ui.dialog.CustomBottomDialog
 import java.time.LocalTime
 
 class AlarmTimeBottomDialog(
-    private val buttonFlag: Boolean,
-    private val selectedStart: LocalTime,
-    private val selectedEnd: LocalTime,
-    private val resultListener: (String, String) -> Unit
+    private val buttonFlag: Boolean = true,
+    private val selectedStart: LocalTime? = null,
+    private val selectedEnd: LocalTime? = null,
+    private val resultListener: (String, String?) -> Unit
     ) : CustomBottomDialog<DialogTimepickerBinding>() {
     override var childBinding by autoCleared<DialogTimepickerBinding>()
 
@@ -36,10 +36,10 @@ class AlarmTimeBottomDialog(
     }
 
     private fun initView() {
-        val startHour = selectedStart.hour
-        val startMin = selectedStart.minute
-        val endHour = selectedEnd.hour
-        val endMin = selectedEnd.minute
+        val startHour = selectedStart?.hour ?: 1
+        val startMin = selectedStart?.minute ?: 0
+        val endHour = selectedEnd?.hour ?: 23
+        val endMin = selectedEnd?.minute ?: 0
         initTimePicker(startHour, startMin, endHour, endMin)
 
         childBinding.rgSelector.setOnCheckedChangeListener(onCheckedChangeListener)
@@ -83,7 +83,12 @@ class AlarmTimeBottomDialog(
                 childBinding.tpEnd.hour,
                 childBinding.tpEnd.minute
             )
-        resultListener(startTime, endTime)
+
+        if(childBinding.rgSelector.visibility == View.GONE) {
+            resultListener(startTime, null)
+        } else {
+            resultListener(startTime, endTime)
+        }
     }
 
     private val onCheckedChangeListener =
@@ -100,4 +105,10 @@ class AlarmTimeBottomDialog(
                 }
             }
         }
+
+    fun setRadioButtonVisibility(isVisible: Boolean) {
+        childBinding.rgSelector.visibility =
+            if (isVisible) View.VISIBLE
+            else View.GONE
+    }
 }

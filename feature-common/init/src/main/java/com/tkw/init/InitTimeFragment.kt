@@ -92,7 +92,7 @@ class InitTimeFragment: Fragment() {
         alarmTimeDialog.show(childFragmentManager, alarmTimeDialog.tag)
     }
 
-    private val resultListener: (String, String) -> Unit = { wake, sleep ->
+    private val resultListener: (String, String?) -> Unit = { wake, sleep ->
             dataBinding.tvWakeupTime.text = wake
             dataBinding.tvSleepTime.text = sleep
     }
