@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.tkw.common.autoCleared
@@ -45,46 +46,90 @@ class CupListEditFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        initObserver()
         initListener()
     }
 
-    private fun initView() {
-        cupListAdapter = CupListAdapter(dragListener = object : OnItemDrag<Cup> {
-            override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
-                itemTouchHelper.startDrag(viewHolder)
-            }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        cupListAdapter.unregisterAdapterDataObserver(positionObserver)
+    }
 
-            override fun onStopDrag(list: List<Cup>) {
-                saveCupList.clear()
-                saveCupList.addAll(list)
+    private fun initView() {
+        initAdapter()
+        initList()
+        setRecyclerView()
+    }
+
+    private fun initListener() {
+        dataBinding.btnDelete.setOnClickListener {
+            saveCupList
+                .filter { it.isChecked }
+                .forEach {
+                    viewModel.deleteCup(it.cupId)
+                }
+            findNavController().navigateUp()
+        }
+    }
+
+    private fun initAdapter() {
+        cupListAdapter = CupListAdapter(
+            deleteCheckListener = { position, isChecked ->
+                saveCupList[position].isChecked = isChecked
+
+                setDeleteBtnVisibility()
+            },
+            dragListener = object : OnItemDrag<Cup> {
+                override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
+                    itemTouchHelper.startDrag(viewHolder)
+                }
+
+                override fun onStopDrag(list: List<Cup>) {
+                    saveCupList.clear()
+                    saveCupList.addAll(list)
+                    viewModel.updateAll(list)
+                }
             }
-        })
+        )
         cupListAdapter.setDraggable(true)
+        cupListAdapter.registerAdapterDataObserver(positionObserver)
+    }
+
+    private fun initList() {
+        val cupArgs: CupListEditFragmentArgs by navArgs()
+        cupArgs.cupArgument?.let {
+            val cupList = it.cupList
+            saveCupList.addAll(cupList)
+            cupListAdapter.submitList(cupList)
+        }
+
+        setDeleteBtnVisibility()
+    }
+
+    private fun setRecyclerView() {
         itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(cupListAdapter, false))
 
         dataBinding.rvCupList.apply {
             adapter = cupListAdapter
             addItemDecoration(DividerDecoration(10f))
             itemTouchHelper.attachToRecyclerView(this)
+            setHasFixedSize(true)
         }
     }
 
-    private fun initObserver() {
-        viewModel.cupListLiveData.observe(viewLifecycleOwner) {
-            saveCupList.addAll(it)
-            cupListAdapter.submitList(it)
-        }
-
-        viewModel.nextEvent.observe(viewLifecycleOwner) {
-            findNavController().navigateUp()
-        }
+    private fun setDeleteBtnVisibility() {
+        saveCupList
+            .count { it.isChecked }
+            .also {
+                dataBinding.btnDelete.visibility =
+                    if (it > 0) View.VISIBLE
+                    else View.INVISIBLE
+            }
     }
 
-    private fun initListener() {
-        dataBinding.btnComplete.setOnClickListener {
-            if(saveCupList.isNotEmpty()) {
-                viewModel.updateAll(saveCupList)
+    private val positionObserver = object: RecyclerView.AdapterDataObserver() {
+        override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
+            if(fromPosition == 0 || toPosition == 0) {
+                dataBinding.rvCupList.scrollToPosition(0)
             }
         }
     }

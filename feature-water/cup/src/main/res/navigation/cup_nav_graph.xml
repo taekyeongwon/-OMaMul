@@ -43,5 +43,9 @@
         android:name="com.tkw.cup.CupListEditFragment"
         tools:layout="@layout/fragment_cup_list_edit">
 
+        <argument
+            android:name="cupArgument"
+            app:argType="com.tkw.domain.model.CupList"
+            app:nullable="true"/>
     </fragment>
 </navigation>

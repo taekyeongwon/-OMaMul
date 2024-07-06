@@ -1,5 +1,6 @@
 package com.tkw.cup
 
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
@@ -30,5 +31,11 @@ object CupBindingAdapter {
     @InverseBindingAdapter(attribute = "value", event = "valueAttrChanged")
     fun getValue(view: WaterAmountPicker): Int {
         return view.getCurrentValue()
+    }
+
+    @JvmStatic
+    @BindingAdapter("unit")
+    fun setUnit(view: TextView, value: Int) {
+        view.text = "${value}ml"
     }
 }

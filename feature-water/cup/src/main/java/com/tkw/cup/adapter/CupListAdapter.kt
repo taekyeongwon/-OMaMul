@@ -15,7 +15,8 @@ import com.tkw.ui.OnItemDrag
 
 class CupListAdapter(
     private val editListener: (Int) -> Unit = {},
-    private val deleteListener: (Int) -> Unit = {},
+    private val deleteCheckListener: (Int, Boolean) -> Unit = {_, _ -> },
+    private val longClickListener: (Int) -> Unit = {},
     private val dragListener: OnItemDrag<Cup>? = null
 ): ListAdapter<Cup, RecyclerView.ViewHolder>(CupDiffCallback()),
     ItemMoveListener {
@@ -30,7 +31,7 @@ class CupListAdapter(
                     parent,
                     false
                 )
-                CupListViewHolder(binding, editListener, deleteListener)
+                CupListViewHolder(binding, editListener, longClickListener)
             }
             C.CupListViewType.DRAG -> {
                 val binding = ItemCupListEditBinding.inflate(
@@ -38,7 +39,7 @@ class CupListAdapter(
                     parent,
                     false
                 )
-                CupListEditViewHolder(binding, dragListener)
+                CupListEditViewHolder(binding, deleteCheckListener, dragListener)
             }
         }
     }
@@ -74,12 +75,17 @@ class CupListAdapter(
     class CupListViewHolder(
         val binding: ItemManagedCupBinding,
         editListener: (Int) -> Unit,
-        deleteListener: (Int) -> Unit
+//        deleteListener: (Int) -> Unit,
+        longClickListener: (Int) -> Unit
     ): RecyclerView.ViewHolder(binding.root) {
         init {
             with(binding) {
                 ibEdit.setOnClickListener { editListener(adapterPosition) }
-                ibDelete.setOnClickListener { deleteListener(adapterPosition) }
+//                ibDelete.setOnClickListener { deleteListener(adapterPosition) }
+                root.setOnLongClickListener {
+                    longClickListener(adapterPosition)
+                    return@setOnLongClickListener true
+                }
             }
         }
 
@@ -91,6 +97,7 @@ class CupListAdapter(
     @SuppressLint("ClickableViewAccessibility")
     class CupListEditViewHolder(
         val binding: ItemCupListEditBinding,
+        deleteCheckListener: (Int, Boolean) -> Unit,
         dragListener: OnItemDrag<Cup>?
     ): RecyclerView.ViewHolder(binding.root) {
         init {
@@ -99,8 +106,12 @@ class CupListAdapter(
                     if(event.action == MotionEvent.ACTION_DOWN) {
                         dragListener?.onStartDrag(this@CupListEditViewHolder)
                     }
-                    false
+                    true
                 }
+                cbDelete.setOnCheckedChangeListener { buttonView, isChecked ->
+                    deleteCheckListener(adapterPosition, isChecked)
+                }
+                root.setOnClickListener { cbDelete.isChecked = !cbDelete.isChecked }
             }
         }
 

@@ -13,6 +13,8 @@ data class Cup(
         const val DEFAULT_CUP_ID = "default_cup_id"
     }
 
+    var isChecked: Boolean = false
+
 //    fun toMapEntity() = CupEntity().apply {
 //        cupId = this@Cup.cupId
 //        cupName = this@Cup.cupName
@@ -23,4 +25,4 @@ data class Cup(
 data class CupList(
     val cupId: String = Cup.DEFAULT_CUP_ID,
     val cupList: List<Cup> = listOf()
-)
+): Serializable
