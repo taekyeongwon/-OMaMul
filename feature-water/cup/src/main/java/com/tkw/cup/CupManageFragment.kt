@@ -169,9 +169,9 @@ class CupManageFragment: Fragment() {
             else View.GONE
     }
 
-    private fun modeChanged(isModify: Boolean) {
-        cupListAdapter.setDraggable(isModify)
-        if(isModify) {
+    private fun modeChanged(isModified: Boolean) {
+        cupListAdapter.setDraggable(isModified)
+        if(isModified) {
             setDeleteBtnVisibility()
             dataBinding.btnNext.visibility = View.GONE
             dataBinding.btnReorder.visibility = View.GONE

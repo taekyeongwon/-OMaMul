@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.tkw.base.C
-import com.tkw.cup.databinding.ItemCupBinding
-import com.tkw.cup.databinding.ItemCupEditBinding
+import com.tkw.cup.databinding.ItemCupListBinding
+import com.tkw.cup.databinding.ItemCupListEditBinding
 import com.tkw.domain.model.Cup
 import com.tkw.ui.ItemMoveListener
 import com.tkw.ui.OnItemDrag
@@ -26,7 +26,7 @@ class CupListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(C.CupListViewType.values()[viewType]) {
             C.CupListViewType.NORMAL -> {
-                val binding = ItemCupBinding.inflate(
+                val binding = ItemCupListBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
@@ -34,7 +34,7 @@ class CupListAdapter(
                 CupListViewHolder(binding, editListener, longClickListener)
             }
             C.CupListViewType.DRAG -> {
-                val binding = ItemCupEditBinding.inflate(
+                val binding = ItemCupListEditBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
@@ -73,7 +73,7 @@ class CupListAdapter(
     }
 
     class CupListViewHolder(
-        private val binding: ItemCupBinding,
+        private val binding: ItemCupListBinding,
         editListener: (Int) -> Unit,
         longClickListener: (Int) -> Unit
     ): RecyclerView.ViewHolder(binding.root) {
@@ -94,7 +94,7 @@ class CupListAdapter(
 
     @SuppressLint("ClickableViewAccessibility")
     class CupEditViewHolder(
-        private val binding: ItemCupEditBinding,
+        private val binding: ItemCupListEditBinding,
         deleteCheckListener: (Int, Boolean) -> Unit,
         dragListener: OnItemDrag<Cup>?
     ): RecyclerView.ViewHolder(binding.root) {
