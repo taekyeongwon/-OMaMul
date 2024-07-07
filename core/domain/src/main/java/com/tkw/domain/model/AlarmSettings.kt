@@ -1,6 +1,8 @@
 package com.tkw.domain.model
 
+import java.time.Instant
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
@@ -24,7 +26,7 @@ sealed class AlarmMode {
         val alarmEndTime: LocalTime = LocalTime.of(22, 0),
         val alarm: Alarm = Alarm(0, 0, false)
     ): AlarmMode() {
-        fun getAlarmTime(): String {
+        fun getAlarmTimeRange(): String {
             val formatter = DateTimeFormatter.ofPattern("a hh:mm")
             val startTime = alarmStartTime.format(formatter)
             val endTime = alarmEndTime.format(formatter)
@@ -48,4 +50,14 @@ data class Alarm(
     val alarmId: Int,   //period인 경우 0 고정, custom인 경우 HHmm값으로.
     val startTime: Long,
     val enabled: Boolean
-)
+) {
+    var isChecked: Boolean = false
+
+    fun getAlarmTime(): String {
+        val formatter = DateTimeFormatter.ofPattern("a hh:mm")
+        val instant = Instant.ofEpochMilli(startTime)
+        val localTime = instant.atZone(ZoneId.systemDefault()).toLocalTime()
+
+        return localTime.format(formatter)
+    }
+}

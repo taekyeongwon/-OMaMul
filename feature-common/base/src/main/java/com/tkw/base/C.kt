@@ -9,4 +9,8 @@ object C {
     enum class CupListViewType(val viewType: Int) {
         NORMAL(0), DRAG(1)
     }
+
+    enum class AlarmListViewType(val viewType: Int) {
+        NORMAL(0), DRAG(1)
+    }
 }

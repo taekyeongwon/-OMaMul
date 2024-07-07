@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.CompoundButton
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.databinding.BindingAdapter
 import com.tkw.ui.databinding.CustomSwitchBinding
 
 /**
@@ -28,4 +29,12 @@ class CustomSwitchView
     }
 
     fun getChecked(): Boolean = dataBinding.customSwitch.isChecked
+
+    companion object {
+        @JvmStatic
+        @BindingAdapter("checked")
+        fun setChecked(view: CustomSwitchView, flag: Boolean) {
+            view.setChecked(flag)
+        }
+    }
 }

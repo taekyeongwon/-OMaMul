@@ -1,4 +1,4 @@
-package com.tkw.cup.adapter
+package com.tkw.alarm.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -6,59 +6,60 @@ import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.tkw.alarm.databinding.ItemAlarmBinding
+import com.tkw.alarm.databinding.ItemAlarmEditBinding
 import com.tkw.base.C
-import com.tkw.cup.databinding.ItemCupBinding
-import com.tkw.cup.databinding.ItemCupEditBinding
+import com.tkw.domain.model.Alarm
 import com.tkw.domain.model.Cup
 import com.tkw.ui.ItemMoveListener
 import com.tkw.ui.OnItemDrag
 
-class CupListAdapter(
+class AlarmListAdapter(
     private val editListener: (Int) -> Unit = {},
     private val deleteCheckListener: (Int, Boolean) -> Unit = {_, _ -> },
     private val longClickListener: (Int) -> Unit = {},
-    private val dragListener: OnItemDrag<Cup>? = null
-): ListAdapter<Cup, RecyclerView.ViewHolder>(CupDiffCallback()),
+    private val dragListener: OnItemDrag<Alarm>? = null
+): ListAdapter<Alarm, RecyclerView.ViewHolder>(AlarmDiffCallback()),
     ItemMoveListener {
 
     private var draggable: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when(C.CupListViewType.values()[viewType]) {
-            C.CupListViewType.NORMAL -> {
-                val binding = ItemCupBinding.inflate(
+        return when(C.AlarmListViewType.values()[viewType]) {
+            C.AlarmListViewType.NORMAL -> {
+                val binding = ItemAlarmBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
                 )
-                CupListViewHolder(binding, editListener, longClickListener)
+                AlarmListViewHolder(binding, editListener, longClickListener)
             }
-            C.CupListViewType.DRAG -> {
-                val binding = ItemCupEditBinding.inflate(
+            C.AlarmListViewType.DRAG -> {
+                val binding = ItemAlarmEditBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
                 )
-                CupEditViewHolder(binding, deleteCheckListener, dragListener)
+                AlarmEditViewHolder(binding, deleteCheckListener, dragListener)
             }
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when(holder) {
-            is CupListViewHolder -> holder.onBind(getItem(position))
-            is CupEditViewHolder -> holder.onBind(getItem(position))
+            is AlarmListViewHolder -> holder.onBind(getItem(position))
+            is AlarmEditViewHolder -> holder.onBind(getItem(position))
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if(draggable) C.CupListViewType.DRAG.viewType
-        else C.CupListViewType.NORMAL.viewType
+        return if(draggable) C.AlarmListViewType.DRAG.viewType
+        else C.AlarmListViewType.NORMAL.viewType
     }
 
     override fun onItemMove(from: Int, to: Int) {
         val current = currentList[from]
-        submitList(currentList.toMutableList().apply {
+        submitList(currentList.apply {
             removeAt(from)
             add(to, current)
         })
@@ -72,11 +73,12 @@ class CupListAdapter(
         draggable = isDraggable
     }
 
-    class CupListViewHolder(
-        private val binding: ItemCupBinding,
+    class AlarmListViewHolder(
+        private val binding: ItemAlarmBinding,
         editListener: (Int) -> Unit,
         longClickListener: (Int) -> Unit
     ): RecyclerView.ViewHolder(binding.root) {
+
         init {
             with(binding) {
                 ibEdit.setOnClickListener { editListener(adapterPosition) }
@@ -87,22 +89,23 @@ class CupListAdapter(
             }
         }
 
-        fun onBind(data: Cup) {
-            binding.cup = data
+        fun onBind(alarm: Alarm) {
+            binding.alarm = alarm
         }
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    class CupEditViewHolder(
-        private val binding: ItemCupEditBinding,
+    class AlarmEditViewHolder(
+        private val binding: ItemAlarmEditBinding,
         deleteCheckListener: (Int, Boolean) -> Unit,
-        dragListener: OnItemDrag<Cup>?
+        dragListener: OnItemDrag<Alarm>?
     ): RecyclerView.ViewHolder(binding.root) {
+
         init {
             with(binding) {
                 ibDrag.setOnTouchListener { v, event ->
                     if(event.action == MotionEvent.ACTION_DOWN) {
-                        dragListener?.onStartDrag(this@CupEditViewHolder)
+                        dragListener?.onStartDrag(this@AlarmEditViewHolder)
                     }
                     true
                 }
@@ -113,8 +116,8 @@ class CupListAdapter(
             }
         }
 
-        fun onBind(data: Cup) {
-            binding.cup = data
+        fun onBind(alarm: Alarm) {
+            binding.alarm = alarm
         }
     }
 }
