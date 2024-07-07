@@ -21,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.withCreationCallback
 
 @AndroidEntryPoint
+@Deprecated("Integrated into the CupManageFragment")
 class CupListEditFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentCupListEditBinding>()
     private val viewModel: CupViewModel by viewModels(
@@ -56,8 +57,8 @@ class CupListEditFragment: Fragment() {
 
     private fun initView() {
         initAdapter()
-        initList()
         setRecyclerView()
+        initList()
     }
 
     private fun initListener() {
@@ -94,17 +95,6 @@ class CupListEditFragment: Fragment() {
         cupListAdapter.registerAdapterDataObserver(positionObserver)
     }
 
-    private fun initList() {
-        val cupArgs: CupListEditFragmentArgs by navArgs()
-        cupArgs.cupArgument?.let {
-            val cupList = it.cupList
-            saveCupList.addAll(cupList)
-            cupListAdapter.submitList(cupList)
-        }
-
-        setDeleteBtnVisibility()
-    }
-
     private fun setRecyclerView() {
         itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(cupListAdapter, false))
 
@@ -114,6 +104,17 @@ class CupListEditFragment: Fragment() {
             itemTouchHelper.attachToRecyclerView(this)
             setHasFixedSize(true)
         }
+    }
+
+    private fun initList() {
+        val cupArgs: CupListEditFragmentArgs by navArgs()
+        cupArgs.cupArgument?.let {
+            val cupList = it.cupList
+            saveCupList.addAll(cupList)
+            cupListAdapter.submitList(cupList)
+        }
+
+        setDeleteBtnVisibility()
     }
 
     private fun setDeleteBtnVisibility() {

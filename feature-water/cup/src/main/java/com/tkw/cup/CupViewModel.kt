@@ -49,6 +49,9 @@ class CupViewModel
     private val _toastEvent = SingleLiveEvent<AppError>()
     val toastEvent: LiveData<AppError> = _toastEvent
 
+    private val _modifyMode = MutableLiveData(false)
+    val modifyMode: LiveData<Boolean> = _modifyMode
+
     init {
         //createMode true면 추가 모드, 그 외 수정 모드
         _createMode.value = params.createMode
@@ -98,5 +101,9 @@ class CupViewModel
                 throw it
             }
         }
+    }
+
+    fun setModifyMode(flag: Boolean) {
+        _modifyMode.value = flag
     }
 }

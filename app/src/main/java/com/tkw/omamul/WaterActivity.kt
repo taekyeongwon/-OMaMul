@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -88,6 +87,13 @@ class WaterActivity : AppCompatActivity() {
         val appBarConfiguration = AppBarConfiguration(mainFragmentSet.plus(com.tkw.init.R.id.initLanguageFragment))
         NavigationUI.setupWithNavController(dataBinding.toolbar, navController, appBarConfiguration)
         NavigationUI.setupWithNavController(dataBinding.bottomNav, navController)
+
+        dataBinding.toolbar.setNavigationOnClickListener {
+            // 시스템 back key 동작과 동일하게 설정.
+            // CupManageFragment 등 특정 flag에서 백 키 또는 업 버튼 눌렀을 때 백스택 이동 제어하기 위해 설정.
+            // 다른 프래그먼트에서 onBackPressedDispatcher에 콜백을 설정함으로써 백스택 이동을 제어할 수 있음.
+            onBackPressedDispatcher.onBackPressed()
+        }
 
         lifecycleScope.launch {
             setStartDestination(navController)
