@@ -81,5 +81,7 @@
     <string name="alarm_detail_mode_title">リマインダーモード</string>
     <string name="alarm_detail_mode_period_desc">選択した間隔でアラームを鳴らします。</string>
     <string name="alarm_detail_mode_custom_desc">アラーム受信時間を手動で設定します。</string>
+    <string name="alarm_custom_empty_title">アラームを追加してください。</string>
+    <string name="alarm_custom_add">+ 新しいアラームを追加</string>
 
 </resources>

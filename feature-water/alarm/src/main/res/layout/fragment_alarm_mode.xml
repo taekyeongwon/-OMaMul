@@ -35,7 +35,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:text="@string/alarm_mode_period"
             app:src="@drawable/right_arrow"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

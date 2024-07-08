@@ -121,6 +121,15 @@ object DateTimeUtils {
         return formattedDateTime.toInt()
     }
 
+    fun getTimeHHmm(timeInMillis: Long): Int {
+        val formatter = DateTimeFormatter.ofPattern("HHmm")
+        val localTime = Instant.ofEpochMilli(timeInMillis)
+            .atZone(ZoneId.systemDefault())
+            .toLocalTime()
+        val formattedDateTime = localTime.format(formatter)
+        return formattedDateTime.toInt()
+    }
+
     fun addWeek(date: String, add: Long): String {
         val day = if(add > 0) getDateFromFormat(date).plusWeeks(add)
         else getDateFromFormat(date).minusWeeks(add)

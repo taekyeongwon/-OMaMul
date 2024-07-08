@@ -81,5 +81,7 @@
     <string name="alarm_detail_mode_title">提醒模式</string>
     <string name="alarm_detail_mode_period_desc">闹钟将按选择的间隔响起。</string>
     <string name="alarm_detail_mode_custom_desc">手动设置闹钟接收时间。</string>
+    <string name="alarm_custom_empty_title">请添加一个闹钟。</string>
+    <string name="alarm_custom_add">+ 添加新闹钟</string>
 
 </resources>

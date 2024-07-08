@@ -14,7 +14,7 @@ import com.tkw.ui.databinding.CustomTextImageBinding
 class CustomTextImageView
 @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0)
     : ConstraintLayout(context, attrs, defStyle) {
-    lateinit var dataBinding: CustomTextImageBinding
+    private lateinit var dataBinding: CustomTextImageBinding
 
     init {
         initView(context, attrs)
@@ -45,5 +45,9 @@ class CustomTextImageView
                 recycle()
             }
         }
+    }
+
+    fun setText(text: String) {
+        dataBinding.tvText.text = text
     }
 }

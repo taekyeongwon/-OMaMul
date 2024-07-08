@@ -67,5 +67,15 @@ class AlarmModeFragment: Fragment() {
                     .show(fragment)
             }
         }
+        setAlarmModeText(fragment)
+    }
+
+    private fun setAlarmModeText(fragment: Fragment) {
+        val text = when(fragment) {
+            is AlarmModePeriodFragment -> getString(com.tkw.ui.R.string.alarm_mode_period)
+            is AlarmModeCustomFragment -> getString(com.tkw.ui.R.string.alarm_mode_custom)
+            else -> ""
+        }
+        dataBinding.tvAlarmMode.setText(text)
     }
 }

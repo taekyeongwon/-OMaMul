@@ -81,5 +81,7 @@
     <string name="alarm_detail_mode_title">Reminder Mode</string>
     <string name="alarm_detail_mode_period_desc">The alarm will ring at the selected interval.</string>
     <string name="alarm_detail_mode_custom_desc">Set the alarm reception time manually.</string>
+    <string name="alarm_custom_empty_title">Please add an alarm.</string>
+    <string name="alarm_custom_add">+ Add new alarm</string>
 
 </resources>

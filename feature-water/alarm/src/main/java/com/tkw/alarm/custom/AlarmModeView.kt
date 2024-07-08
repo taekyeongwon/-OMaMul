@@ -17,6 +17,15 @@ class AlarmModeView
         dataBinding = CustomAlarmModeBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
+    fun setCheckListListener(block: (ArrayList<Int>) -> Unit) {
+        for(i in 0 until childCount) {
+            val view = getChildAt(i)
+            if(view is CustomCheckBox) {
+                view.setOnClickListener { block(getCheckedList()) }
+            }
+        }
+    }
+
     fun getCheckedList(): ArrayList<Int> {
         val result = ArrayList<Int>()
         val checkBoxArray = ArrayList<CustomCheckBox>()
@@ -38,5 +47,9 @@ class AlarmModeView
         dataBinding.clPeriod.visibility =
             if(flag) View.VISIBLE
             else View.GONE
+    }
+
+    fun setPeriodClickListener(block: () -> Unit) {
+        dataBinding.clPeriod.setOnClickListener { block() }
     }
 }
