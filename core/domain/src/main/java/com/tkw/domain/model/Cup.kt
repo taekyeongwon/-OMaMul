@@ -6,13 +6,13 @@ data class Cup(
     var cupId: String = "",
     var cupName: String = "",
     var cupAmount: Int = DEFAULT_CUP_AMOUNT,
-    var createMode: Boolean = true
 ): Serializable {
     companion object {
         const val DEFAULT_CUP_AMOUNT = 1000
         const val DEFAULT_CUP_ID = "default_cup_id"
     }
 
+    var createMode: Boolean = true
     var isChecked: Boolean = false
 
 //    fun toMapEntity() = CupEntity().apply {
