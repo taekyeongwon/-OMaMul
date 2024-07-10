@@ -1,15 +1,12 @@
 package com.tkw.data.local
 
 import com.tkw.database.AlarmDao
-import com.tkw.database.model.AlarmModeEnum
-import com.tkw.database.model.AlarmSettingsEntity
 import com.tkw.domain.AlarmRepository
 import com.tkw.domain.IAlarmManager
 import com.tkw.domain.model.Alarm
-import com.tkw.domain.model.AlarmMode
+import com.tkw.domain.model.AlarmModeSetting
 import com.tkw.domain.model.AlarmSettings
 import com.tkw.domain.model.RingTone
-import io.realm.kotlin.notifications.InitialResults
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -39,21 +36,22 @@ class AlarmRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getAlarmList(): List<Alarm> {
-        val alarmList = ArrayList<Alarm>()
-
-        alarmDao.getAlarmList()
-            .forEach {
-                alarmList.add(AlarmMapper.alarmToModel(it))
-            }
-        return alarmList
+    override suspend fun updateAlarmModeSetting(setting: AlarmModeSetting) {
+        alarmDao.updateAlarmModeSetting(AlarmMapper.alarmModeToEntity(setting))
     }
+
+    override fun getAlarmModeSetting(): Flow<AlarmModeSetting?> =
+        alarmDao.getAlarmModeSetting().map {
+            runCatching {
+                AlarmMapper.alarmModeToModel(it)
+            }.getOrNull()
+        }
 
     override suspend fun wakeAllAlarm() {
         //모든 알람 가져와서 실행. 알람 객체는 현재 enable 상태 가지고 있고, enable true 상태인 알람만 전부 다시 켜기.
-        val alarmListEntity = alarmDao.getEnabledAlarmList()
+        val alarmListEntity = alarmDao.getEnabledAlarmModeSetting()
 
-        alarmListEntity.forEach {
+        alarmListEntity?.alarmList?.forEach {
             setAlarm(it.alarmId, it.startTime, it.interval)
         }
     }
@@ -65,13 +63,17 @@ class AlarmRepositoryImpl @Inject constructor(
 
     override suspend fun cancelAllAlarm() {
         //모든 알람 객체 가져와서 enable true인 알람 모두 id값 대로 취소 후 enable false 상태로 업데이트.
-        val alarmListEntity = alarmDao.getEnabledAlarmList()
+        val alarmListEntity = alarmDao.getEnabledAlarmModeSetting()
 
-        alarmListEntity.forEach {
+        alarmListEntity?.alarmList?.forEach {
             cancelAlarm(it.alarmId)
         }
     }
 
     override suspend fun deleteAlarm(alarmId: Int) =
         alarmDao.deleteAlarm(alarmId)
+
+    override suspend fun allDelete() {
+        alarmDao.allDelete()
+    }
 }

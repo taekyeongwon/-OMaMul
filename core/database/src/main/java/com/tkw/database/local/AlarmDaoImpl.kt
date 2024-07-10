@@ -2,22 +2,44 @@ package com.tkw.database.local
 
 import com.tkw.database.AlarmDao
 import com.tkw.database.model.AlarmEntity
-import com.tkw.database.model.AlarmListEntity
-import com.tkw.database.model.AlarmModeEnum
+import com.tkw.database.model.AlarmModeSettingEntity
+import com.tkw.database.model.AlarmModeEntity
 import com.tkw.database.model.AlarmSettingsEntity
 import com.tkw.database.model.CustomEntity
 import com.tkw.database.model.PeriodEntity
 import io.realm.kotlin.MutableRealm
 import io.realm.kotlin.Realm
+import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.notifications.ResultsChange
+import io.realm.kotlin.query.RealmResults
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
 class AlarmDaoImpl @Inject constructor(): AlarmDao {
     override val realm: Realm = Realm.open(getRealmConfiguration())
     override val clazz: KClass<AlarmSettingsEntity> = AlarmSettingsEntity::class
+
+    private fun getAlarmMode(): AlarmModeEntity {
+        val alarmMode = this.findBy(
+            "id == $0", AlarmSettingsEntity.DEFAULT_SETTING_ID
+        ).firstOrNull()
+        return alarmMode?.alarmModeEnum ?: AlarmModeEntity.PERIOD
+    }
+
+    private fun getPeriodEntity(): RealmResults<PeriodEntity> =
+        this.find(
+            PeriodEntity::class,
+            "id == $0", AlarmSettingsEntity.DEFAULT_SETTING_ID
+        )
+
+    private fun getCustomEntity(): RealmResults<CustomEntity> =
+        this.find(
+            CustomEntity::class,
+            "id == $0", AlarmSettingsEntity.DEFAULT_SETTING_ID
+        )
 
     override suspend fun updateSetting(setting: AlarmSettingsEntity) {
         this.upsert(setting)
@@ -49,15 +71,17 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
     }
 
     private fun MutableRealm.setAlarm(alarm: AlarmEntity) {
-        val alarmMode = this.query<AlarmListEntity>().first().find()
-        alarmMode?.let {
-            when(alarmMode.alarmModeEnum) {
-                AlarmModeEnum.PERIOD -> {
-                    alarmMode.period?.alarmList?.add(alarm)
-                }
-                AlarmModeEnum.CUSTOM -> {
-                    alarmMode.custom?.alarmList?.add(alarm)
-                }
+        val alarmMode = getAlarmMode()
+        when(alarmMode) {
+            AlarmModeEntity.PERIOD -> {   //PeriodEntity 조회해서 업데이트
+                val period = getPeriodEntity().firstOrNull() ?: PeriodEntity()
+                period.alarmList.add(alarm)
+                copyToRealm(period, UpdatePolicy.ALL)
+            }
+            AlarmModeEntity.CUSTOM -> {   //CustomEntity 조회해서 업데이트
+                val custom = getCustomEntity().firstOrNull() ?: CustomEntity()
+                custom.alarmList.add(alarm)
+                copyToRealm(custom, UpdatePolicy.ALL)
             }
         }
     }
@@ -70,28 +94,56 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
         }
     }
 
-    override fun getAlarmList(): List<AlarmEntity> {
-        val alarmList = this.find(AlarmListEntity::class, "").first()
-        return when (alarmList.alarmModeEnum) {
-            AlarmModeEnum.PERIOD -> {
-                alarmList.period?.alarmList ?: listOf()
-            }
-
-            AlarmModeEnum.CUSTOM -> {
-                alarmList.custom?.alarmList ?: listOf()
+    override suspend fun updateAlarmModeSetting(alarmModeSettingEntity: AlarmModeSettingEntity) {
+        realm.write {
+            when(alarmModeSettingEntity) {
+                is PeriodEntity -> {
+                    copyToRealm(alarmModeSettingEntity)
+                }
+                is CustomEntity -> {
+                    copyToRealm(alarmModeSettingEntity)
+                }
+                else -> {
+                    //nothing
+                }
             }
         }
     }
 
-    override fun getEnabledAlarmList(): List<AlarmEntity> {
-        val alarmList = this.find(AlarmListEntity::class, "").first()
-        return when (alarmList.alarmModeEnum) {
-            AlarmModeEnum.PERIOD -> {
-                alarmList.period?.alarmList?.filter { it.enabled } ?: listOf()
+    override fun getAlarmModeSetting(): Flow<AlarmModeSettingEntity?> {
+        val alarmMode = getAlarmMode()
+        return when (alarmMode) {
+            AlarmModeEntity.PERIOD -> {
+                getPeriodEntity().asFlow().map {
+                    it.list.firstOrNull()
+                }
             }
+            AlarmModeEntity.CUSTOM -> {
+                getCustomEntity().asFlow().map {
+                    it.list.firstOrNull()
+                }
+            }
+        }
+    }
 
-            AlarmModeEnum.CUSTOM -> {
-                alarmList.custom?.alarmList?.filter { it.enabled } ?: listOf()
+    override fun getEnabledAlarmModeSetting(): AlarmModeSettingEntity? {
+        val alarmMode = getAlarmMode()
+        return when (alarmMode) {
+            AlarmModeEntity.PERIOD -> {
+                val period = getPeriodEntity().firstOrNull()
+                val enableList = period?.alarmList?.filter { it.enabled } ?: listOf()
+                copyFromRealm(period).apply {
+                    this?.alarmList?.clear()
+                    this?.alarmList?.addAll(enableList)
+                }
+            }
+            AlarmModeEntity.CUSTOM -> {
+                val custom = getCustomEntity().firstOrNull()
+                val enableList = custom?.alarmList?.filter { it.enabled } ?: listOf()
+                copyFromRealm(custom).apply {
+                    this?.alarmList?.clear()
+                    this?.alarmList?.addAll(enableList)
+                }
             }
         }
     }
@@ -100,6 +152,12 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
         realm.write {
             val entity = this.query<AlarmEntity>("alarmId == $0", alarmId).first().find()
             entity?.let { delete(it) }
+        }
+    }
+
+    override suspend fun allDelete() {
+        realm.write {
+            delete(PeriodEntity::class)
         }
     }
 }

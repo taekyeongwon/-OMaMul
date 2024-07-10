@@ -1,6 +1,6 @@
 package com.tkw.domain
 
-import com.tkw.domain.model.Alarm
+import com.tkw.domain.model.AlarmModeSetting
 import com.tkw.domain.model.AlarmMode
 import com.tkw.domain.model.AlarmSettings
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +12,9 @@ interface AlarmRepository {
 
     suspend fun setAlarm(alarmId: Int, startTime: Long, interval: Long)
 
-    fun getAlarmList(): List<Alarm>
+    suspend fun updateAlarmModeSetting(setting: AlarmModeSetting)
+
+    fun getAlarmModeSetting(): Flow<AlarmModeSetting?>
 
     suspend fun wakeAllAlarm()
 
@@ -21,4 +23,6 @@ interface AlarmRepository {
     suspend fun cancelAllAlarm()
 
     suspend fun deleteAlarm(alarmId: Int)
+
+    suspend fun allDelete()
 }

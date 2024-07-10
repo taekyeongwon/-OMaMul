@@ -2,7 +2,6 @@ package com.tkw.database
 
 import com.tkw.database.model.AlarmEntity
 import com.tkw.database.model.AlarmEtcSettingsEntity
-import com.tkw.database.model.AlarmListEntity
 import com.tkw.database.model.AlarmSettingsEntity
 import com.tkw.database.model.CupEntity
 import com.tkw.database.model.CupListEntity
@@ -31,7 +30,6 @@ interface RealmDao<T: RealmObject> {
             CupListEntity::class,
             CupEntity::class,
             AlarmSettingsEntity::class,
-            AlarmListEntity::class,
             PeriodEntity::class,
             CustomEntity::class,
             AlarmEntity::class,
@@ -63,6 +61,11 @@ interface RealmDao<T: RealmObject> {
 
     fun stream(query: RealmResults<T>): Flow<ResultsChange<T>> {
         return query.asFlow()
+    }
+
+    fun <T: TypedRealmObject> copyFromRealm(obj: T?): T? {
+        return if(obj != null) realm.copyFromRealm(obj)
+        else null
     }
 
     suspend fun insert(entity: T) {
