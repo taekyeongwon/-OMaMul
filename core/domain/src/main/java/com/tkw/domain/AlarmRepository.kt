@@ -1,19 +1,24 @@
 package com.tkw.domain
 
+import com.tkw.domain.model.Alarm
+import com.tkw.domain.model.AlarmMode
 import com.tkw.domain.model.AlarmSettings
+import kotlinx.coroutines.flow.Flow
 
 interface AlarmRepository {
-    fun update(setting: AlarmSettings)
+    fun getAlarmSetting(): Flow<AlarmSettings?>
 
-    fun wakeAllAlarm()
+    suspend fun update(setting: AlarmSettings)
 
-    fun setAlarm(startTime: Long, alarmId: Int)
+    suspend fun setAlarm(alarmId: Int, startTime: Long, interval: Long)
 
-    fun getAlarm(alarmId: Int)//: Alarm 객체 반환
+    fun getAlarmList(): List<Alarm>
 
-    fun getAllAlarm()//: List<Alarm>
+    suspend fun wakeAllAlarm()
 
-    fun cancelAlarm(alarmId: Int)
+    suspend fun cancelAlarm(alarmId: Int)
 
-    fun cancelAllAlarm()
+    suspend fun cancelAllAlarm()
+
+    suspend fun deleteAlarm(alarmId: Int)
 }

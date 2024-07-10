@@ -1,11 +1,14 @@
 package com.tkw.database
 
+import com.tkw.database.model.AlarmEntity
 import com.tkw.database.model.AlarmEtcSettingsEntity
-import com.tkw.database.model.AlarmModeEntity
+import com.tkw.database.model.AlarmListEntity
 import com.tkw.database.model.AlarmSettingsEntity
 import com.tkw.database.model.CupEntity
 import com.tkw.database.model.CupListEntity
+import com.tkw.database.model.CustomEntity
 import com.tkw.database.model.DayOfWaterEntity
+import com.tkw.database.model.PeriodEntity
 import com.tkw.database.model.WaterEntity
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
@@ -13,6 +16,7 @@ import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.notifications.ResultsChange
 import io.realm.kotlin.query.RealmResults
 import io.realm.kotlin.types.RealmObject
+import io.realm.kotlin.types.TypedRealmObject
 import kotlinx.coroutines.flow.Flow
 import kotlin.reflect.KClass
 
@@ -27,11 +31,18 @@ interface RealmDao<T: RealmObject> {
             CupListEntity::class,
             CupEntity::class,
             AlarmSettingsEntity::class,
-            AlarmModeEntity::class,
+            AlarmListEntity::class,
+            PeriodEntity::class,
+            CustomEntity::class,
+            AlarmEntity::class,
             AlarmEtcSettingsEntity::class
         ))
             .deleteRealmIfMigrationNeeded()
             .build()
+    }
+
+    fun <K: TypedRealmObject> find(clazz: KClass<K>, query: String, vararg args: Any): RealmResults<K> {
+        return realm.query(clazz, query, *args).find()
     }
 
     fun findBy(query: String, vararg args: Any): RealmResults<T> {
