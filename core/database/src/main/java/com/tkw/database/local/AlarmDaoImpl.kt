@@ -76,12 +76,12 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
             AlarmModeEntity.PERIOD -> {   //PeriodEntity 조회해서 업데이트
                 val period = getPeriodEntity().firstOrNull() ?: PeriodEntity()
                 period.alarmList.add(alarm)
-                copyToRealm(period, UpdatePolicy.ALL)
+                this.upsert(period)
             }
             AlarmModeEntity.CUSTOM -> {   //CustomEntity 조회해서 업데이트
                 val custom = getCustomEntity().firstOrNull() ?: CustomEntity()
                 custom.alarmList.add(alarm)
-                copyToRealm(custom, UpdatePolicy.ALL)
+                this.upsert(custom)
             }
         }
     }
@@ -95,17 +95,15 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
     }
 
     override suspend fun updateAlarmModeSetting(alarmModeSettingEntity: AlarmModeSettingEntity) {
-        realm.write {
-            when(alarmModeSettingEntity) {
-                is PeriodEntity -> {
-                    copyToRealm(alarmModeSettingEntity)
-                }
-                is CustomEntity -> {
-                    copyToRealm(alarmModeSettingEntity)
-                }
-                else -> {
-                    //nothing
-                }
+        when(alarmModeSettingEntity) {
+            is PeriodEntity -> {
+                this.upsert(alarmModeSettingEntity)
+            }
+            is CustomEntity -> {
+                this.upsert(alarmModeSettingEntity)
+            }
+            else -> {
+                //nothing
             }
         }
     }

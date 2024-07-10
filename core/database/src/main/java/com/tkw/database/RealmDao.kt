@@ -9,6 +9,7 @@ import com.tkw.database.model.CustomEntity
 import com.tkw.database.model.DayOfWaterEntity
 import com.tkw.database.model.PeriodEntity
 import com.tkw.database.model.WaterEntity
+import io.realm.kotlin.MutableRealm
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.UpdatePolicy
@@ -63,7 +64,7 @@ interface RealmDao<T: RealmObject> {
         return query.asFlow()
     }
 
-    fun <T: TypedRealmObject> copyFromRealm(obj: T?): T? {
+    fun <K: TypedRealmObject> copyFromRealm(obj: K?): K? {
         return if(obj != null) realm.copyFromRealm(obj)
         else null
     }
@@ -74,10 +75,14 @@ interface RealmDao<T: RealmObject> {
         }
     }
 
-    suspend fun upsert(entity: T) {
+    suspend fun <K: RealmObject> upsert(entity: K) {
         realm.write {
             copyToRealm(entity, UpdatePolicy.ALL)
         }
+    }
+
+    fun <K: RealmObject> MutableRealm.upsert(entity: K) {
+        copyToRealm(entity, UpdatePolicy.ALL)
     }
 
     suspend fun delete(entity: T) {
