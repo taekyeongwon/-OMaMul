@@ -92,6 +92,8 @@ class WaterViewModel
     }
 
     fun resetAlarm() {
-        alarmRepository.wakeAllAlarm()
+        launch {
+            alarmRepository.wakeAllAlarm()
+        }
     }
 }
