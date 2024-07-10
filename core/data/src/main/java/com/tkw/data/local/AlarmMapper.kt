@@ -2,7 +2,8 @@ package com.tkw.data.local
 
 import com.tkw.database.model.AlarmEntity
 import com.tkw.database.model.AlarmEtcSettingsEntity
-import com.tkw.database.model.AlarmModeEntity
+import com.tkw.database.model.AlarmListEntity
+import com.tkw.database.model.AlarmModeEnum
 import com.tkw.database.model.AlarmSettingsEntity
 import com.tkw.database.model.CustomEntity
 import com.tkw.database.model.PeriodEntity
@@ -23,7 +24,7 @@ object AlarmMapper {
     ): AlarmSettingsEntity {
         return AlarmSettingsEntity().apply {
             this.ringToneEnum = RingToneEntity.valueOf(alarmSettings.ringToneMode.name)
-            this.alarmMode = alarmModeToEntity(alarmSettings.alarmMode)
+            this.alarmList = alarmModeToEntity(alarmSettings.alarmMode)
             this.etcSetting = alarmEtcToEntity(alarmSettings.etcSetting)
         }
     }
@@ -33,8 +34,8 @@ object AlarmMapper {
     ): AlarmSettings {
         return AlarmSettings(
             RingTone.valueOf(alarmSettingsEntity.ringToneEnum.state),
-            alarmModeToModel(alarmSettingsEntity.alarmMode),
-            alarmEtcToModel(alarmSettingsEntity.etcSetting)
+            alarmModeToModel(alarmSettingsEntity.alarmList ?: AlarmListEntity()),
+            alarmEtcToModel(alarmSettingsEntity.etcSetting ?: AlarmEtcSettingsEntity())
         )
     }
 
@@ -43,6 +44,7 @@ object AlarmMapper {
             this.alarmId = alarm.alarmId
             this.startTime = alarm.startTime
             this.enabled = alarm.enabled
+            this.interval = alarm.interval
         }
     }
 
@@ -50,51 +52,66 @@ object AlarmMapper {
         return Alarm(
             alarm.alarmId,
             alarm.startTime,
-            alarm.enabled
+            alarm.enabled,
+            alarm.interval
         )
     }
 
-    private fun alarmModeToEntity(alarmMode: AlarmMode): AlarmModeEntity {
+    fun alarmModeToEntity(alarmMode: AlarmMode): AlarmListEntity {
         val formatter = DateTimeFormatter.ofPattern("HHmm")
         return when(alarmMode) {
             is AlarmMode.Period -> {
-                PeriodEntity().apply {
+                val entity = PeriodEntity().apply {
                     this.selectedDate = alarmMode.selectedDate.toRealmList()
                     this.interval = alarmMode.interval
                     this.alarmStartTime = alarmMode.alarmStartTime.format(formatter)
                     this.alarmEndTime = alarmMode.alarmEndTime.format(formatter)
-                    this.alarm = alarmToEntity(alarmMode.alarm)
+                    this.alarmList = alarmListToEntity(alarmMode.alarmList).toRealmList()
+                }
+                AlarmListEntity().apply {
+                    alarmModeEnum = AlarmModeEnum.PERIOD
+                    period = entity
                 }
             }
             is AlarmMode.Custom -> {
-                CustomEntity().apply {
+                val entity = CustomEntity().apply {
                     this.selectedDate = alarmMode.selectedDate.toRealmList()
+                    this.interval = alarmMode.interval
                     this.alarmList = alarmListToEntity(alarmMode.alarmList).toRealmList()
+                }
+                AlarmListEntity().apply {
+                    alarmModeEnum = AlarmModeEnum.CUSTOM
+                    custom = entity
                 }
             }
         }
     }
 
-    private fun alarmModeToModel(alarmModeEntity: AlarmModeEntity?): AlarmMode {
+    fun alarmModeToModel(alarmModeEntity: AlarmListEntity): AlarmMode {
         val formatter = DateTimeFormatter.ofPattern("HHmm")
-        return when(alarmModeEntity) {
-            is PeriodEntity -> {
-                AlarmMode.Period(
-                    alarmModeEntity.selectedDate,
-                    alarmModeEntity.interval,
-                    LocalTime.parse(alarmModeEntity.alarmStartTime, formatter),
-                    LocalTime.parse(alarmModeEntity.alarmEndTime, formatter),
-                    alarmToModel(alarmModeEntity.alarm)
-                )
-            }
-            is CustomEntity -> {
-                AlarmMode.Custom(
-                    alarmModeEntity.selectedDate,
-                    alarmListToModel(alarmModeEntity.alarmList)
-                )
-            }
-            else -> {
-                AlarmMode.Period()
+        with(alarmModeEntity) {
+            val period = this.period ?: PeriodEntity()
+            val custom = this.custom ?: CustomEntity()
+            return when(alarmModeEnum) {
+                AlarmModeEnum.PERIOD -> {
+                    AlarmMode.Period(
+                        period.selectedDate,
+                        period.interval,
+                        LocalTime.parse(period.alarmStartTime, formatter),
+                        LocalTime.parse(period.alarmEndTime, formatter),
+                        alarmListToModel(period.alarmList)
+                    )
+                }
+                AlarmModeEnum.CUSTOM -> {
+                    AlarmMode.Custom(
+                        custom.selectedDate,
+                        custom.interval,
+                        alarmListToModel(custom.alarmList)
+                    )
+                }
+                else -> {
+                    AlarmMode.Period()
+                }
             }
         }
     }
@@ -106,10 +123,10 @@ object AlarmMapper {
         }
     }
 
-    private fun alarmEtcToModel(alarmEtcSettingsEntity: AlarmEtcSettingsEntity?): AlarmEtcSettings {
+    private fun alarmEtcToModel(alarmEtcSettingsEntity: AlarmEtcSettingsEntity): AlarmEtcSettings {
         return AlarmEtcSettings(
-            alarmEtcSettingsEntity?.stopReachedGoal ?: false,
-            alarmEtcSettingsEntity?.delayTomorrow ?: false
+            alarmEtcSettingsEntity.stopReachedGoal,
+            alarmEtcSettingsEntity.delayTomorrow
         )
     }
 

@@ -1,8 +1,17 @@
 package com.tkw.database.local
 
 import com.tkw.database.AlarmDao
+import com.tkw.database.model.AlarmEntity
+import com.tkw.database.model.AlarmListEntity
+import com.tkw.database.model.AlarmModeEnum
 import com.tkw.database.model.AlarmSettingsEntity
+import com.tkw.database.model.CustomEntity
+import com.tkw.database.model.PeriodEntity
+import io.realm.kotlin.MutableRealm
 import io.realm.kotlin.Realm
+import io.realm.kotlin.ext.query
+import io.realm.kotlin.notifications.ResultsChange
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
@@ -10,19 +19,87 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
     override val realm: Realm = Realm.open(getRealmConfiguration())
     override val clazz: KClass<AlarmSettingsEntity> = AlarmSettingsEntity::class
 
-    override fun updateSetting(setting: AlarmSettingsEntity) {
-        TODO("Not yet implemented")
+    override suspend fun updateSetting(setting: AlarmSettingsEntity) {
+        this.upsert(setting)
     }
 
-    override fun getSetting(): AlarmSettingsEntity {
-        TODO("Not yet implemented")
+    override fun getSetting(): Flow<ResultsChange<AlarmSettingsEntity>> {
+        return this.stream(this.findBy("id == $0", AlarmSettingsEntity.DEFAULT_SETTING_ID))
     }
 
-    override fun updateAlarm() {
-        TODO("Not yet implemented")
+    override suspend fun updateAlarm(alarm: AlarmEntity) {
+        realm.write {
+            val entity = this.query<AlarmEntity>("alarmId == $0", alarm.alarmId).first().find()
+            //todo 해당 쿼리로 period랑 custom 구분 없이 id로만 가져오는게 가능한건지 확인 필요.
+            //만약 period랑 custom에 들어간 알람 객체의 id가 동일하다면?
+
+            if(entity != null) {
+                updateAlarm(entity, alarm)
+            } else {
+                setAlarm(alarm)
+            }
+        }
     }
 
-    override fun deleteAlarm(alarmId: Int) {
-        TODO("Not yet implemented")
+    private fun MutableRealm.updateAlarm(from: AlarmEntity, to: AlarmEntity) {
+        findLatest(to)?.apply {
+            this.startTime = from.startTime
+            this.enabled = from.enabled
+        }
+    }
+
+    private fun MutableRealm.setAlarm(alarm: AlarmEntity) {
+        val alarmMode = this.query<AlarmListEntity>().first().find()
+        alarmMode?.let {
+            when(alarmMode.alarmModeEnum) {
+                AlarmModeEnum.PERIOD -> {
+                    alarmMode.period?.alarmList?.add(alarm)
+                }
+                AlarmModeEnum.CUSTOM -> {
+                    alarmMode.custom?.alarmList?.add(alarm)
+                }
+            }
+        }
+    }
+
+    override suspend fun cancelAlarm(alarmId: Int) {
+        val alarm = this.find(AlarmEntity::class, "alarmId == $0", alarmId).firstOrNull()
+        alarm?.enabled = false
+        realm.write {
+            alarm?.let { setAlarm(it) }
+        }
+    }
+
+    override fun getAlarmList(): List<AlarmEntity> {
+        val alarmList = this.find(AlarmListEntity::class, "").first()
+        return when (alarmList.alarmModeEnum) {
+            AlarmModeEnum.PERIOD -> {
+                alarmList.period?.alarmList ?: listOf()
+            }
+
+            AlarmModeEnum.CUSTOM -> {
+                alarmList.custom?.alarmList ?: listOf()
+            }
+        }
+    }
+
+    override fun getEnabledAlarmList(): List<AlarmEntity> {
+        val alarmList = this.find(AlarmListEntity::class, "").first()
+        return when (alarmList.alarmModeEnum) {
+            AlarmModeEnum.PERIOD -> {
+                alarmList.period?.alarmList?.filter { it.enabled } ?: listOf()
+            }
+
+            AlarmModeEnum.CUSTOM -> {
+                alarmList.custom?.alarmList?.filter { it.enabled } ?: listOf()
+            }
+        }
+    }
+
+    override suspend fun deleteAlarm(alarmId: Int) {
+        realm.write {
+            val entity = this.query<AlarmEntity>("alarmId == $0", alarmId).first().find()
+            entity?.let { delete(it) }
+        }
     }
 }
