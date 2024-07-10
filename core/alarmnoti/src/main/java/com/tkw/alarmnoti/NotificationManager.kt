@@ -7,14 +7,19 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.media.AudioAttributes
+import android.media.RingtoneManager
 import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 
 object NotificationManager {
-    const val NOTI_CH = "NOTI_CH"
-    const val MUTE_CH = "MUTE_CH"
+    private const val NOTI_CH = "NOTI_CH"
+    private const val MUTE_CH = "MUTE_CH"
     private const val NOTIFICATION_GROUP_NAME = "GROUP_NAME"
     private lateinit var homeIntent: PendingIntent
     const val TIMEOUT: Long = 1000 * 30
@@ -93,13 +98,13 @@ object NotificationManager {
         return builder
     }
 
-    fun notify(context: Context) {
+    fun notify(context: Context, ringtoneMode: String) {
         val builder = buildNotification(
             context,
             R.drawable.noti_foreground,
             context.getString(R.string.notification_title),
             context.getString(R.string.notification_text),
-            NOTI_CH //핸드폰 설정대로면 NOTI_CH, 그 외 MUTE_CH
+            getChannel(ringtoneMode) //핸드폰 설정대로면 NOTI_CH, 그 외 MUTE_CH
         )
         //휴대폰 설정과 동일이라면 그대로 빌드.
         //알림 표시 안하는 경우 builder.setSilent(true) 적용 후
@@ -144,5 +149,38 @@ object NotificationManager {
             intent,
             PendingIntent.FLAG_IMMUTABLE
         )
+    }
+
+    /**
+     * ringtone mode
+     * 핸드폰 설정과 동일한 경우 NOTI_CH 리턴
+     * 이외 MUTE_CH 리턴
+     */
+    private fun getChannel(ringtoneMode: String): String {
+        return MUTE_CH
+    }
+
+    /**
+     * 아래 두 메서드는 notify 시 호출
+     */
+    private fun playRingtone(context: Context) {
+        val uriRingtone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        val ringtone = RingtoneManager.getRingtone(context, uriRingtone)
+        val audioAttributes =
+            AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build()
+        ringtone.audioAttributes = audioAttributes
+        ringtone.play()
+    }
+
+    private fun playVibrate(context: Context) {
+        val vibrator =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { // API Level 31에서 VibratorManager로 변경됨
+                val vibratorManager =
+                    context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                vibratorManager.defaultVibrator
+            } else {
+                context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            }
+        vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
     }
 }

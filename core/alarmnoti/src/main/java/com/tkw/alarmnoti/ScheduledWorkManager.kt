@@ -7,6 +7,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import com.tkw.domain.model.RingTone
 import java.util.concurrent.TimeUnit
 
 class ScheduledWorkManager(
@@ -45,6 +46,7 @@ class ScheduledWorkManager(
     }
 
     private fun notify(context: Context) {
-        NotificationManager.notify(context)
+//        val data = inputData.getString()
+        NotificationManager.notify(context, RingTone.ALL.name)
     }
 }

@@ -5,10 +5,13 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.tkw.domain.IAlarmManager
+import com.tkw.domain.model.Alarm
+import com.tkw.domain.model.RingTone
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
@@ -19,13 +22,15 @@ class WaterAlarmManager @Inject constructor(
 ): IAlarmManager {
 
     //todo ringtone mode 받아서 extra로 넘겨줌.
-    override fun setAlarm(startTime: Long, interval: Int, alarmId: Int) {
-        if(canScheduleExactAlarms()) {
-            setAlarmManager(startTime, interval, alarmId)
-            cancelWorkManager(alarmId)
-        } else {
-            setWorkManager(startTime, alarmId)
-            cancelAlarmManager(alarmId)
+    override fun setAlarm(alarm: Alarm, ringTone: RingTone) {
+        with(alarm) {
+            if(canScheduleExactAlarms()) {
+                setAlarmManager(alarmId, startTime, interval)
+                cancelWorkManager(alarmId)
+            } else {
+                setWorkManager(alarmId, startTime)
+                cancelAlarmManager(alarmId)
+            }
         }
     }
 
@@ -41,10 +46,10 @@ class WaterAlarmManager @Inject constructor(
         } else true
     }
 
-    private fun setAlarmManager(startTime: Long, interval: Int, alarmId: Int) {
+    private fun setAlarmManager(alarmId: Int, startTime: Long, interval: Long) {
         val intent = Intent(context, WaterAlarmReceiver::class.java)
-        intent.putExtra("ALARM_TIME", startTime)
         intent.putExtra("ALARM_ID", alarmId)
+        intent.putExtra("ALARM_TIME", startTime)
         intent.putExtra("ALARM_INTERVAL", interval)
         val pendingIntent = PendingIntent.getBroadcast(
             context,
@@ -64,9 +69,13 @@ class WaterAlarmManager @Inject constructor(
         )
     }
 
-    private fun setWorkManager(startTime: Long, alarmId: Int) {
+    private fun setWorkManager(alarmId: Int, startTime: Long) {
         val oneTimeWorkRequest = OneTimeWorkRequestBuilder<ScheduledWorkManager>()
             .setInitialDelay(ScheduledWorkManager.getCertainTime(), TimeUnit.MILLISECONDS)
+//            .setInputData(
+//                Data.Builder()
+//                    .putString()
+//            )
             .build()
 
         WorkManager.getInstance(context).enqueueUniqueWork(
