@@ -14,7 +14,7 @@ data class AlarmSettings(
 }
 
 enum class RingTone {
-    BELL, VIBE, ALL, IGNORE
+    BELL, VIBE, ALL, IGNORE, DEVICE
 }
 
 enum class AlarmMode {

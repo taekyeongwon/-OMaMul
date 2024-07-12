@@ -34,8 +34,8 @@ object AlarmMapper {
         alarmSettingsEntity: AlarmSettingsEntity
     ): AlarmSettings {
         return AlarmSettings(
-            RingTone.valueOf(alarmSettingsEntity.ringToneEnum.state),
-            AlarmMode.valueOf(alarmSettingsEntity.alarmModeEnum.state),
+            RingTone.valueOf(alarmSettingsEntity.ringToneEnum.name),
+            AlarmMode.valueOf(alarmSettingsEntity.alarmModeEnum.name),
             alarmEtcToModel(alarmSettingsEntity.etcSetting ?: AlarmEtcSettingsEntity())
         )
     }
