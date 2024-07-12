@@ -10,12 +10,12 @@
         tools:layout="@layout/fragment_water_alarm">
 
         <action
-            android:id="@+id/action_waterAlarmFragment_to_waterAlarmDetailFragment"
-            app:destination="@id/waterAlarmDetailFragment" />
+            android:id="@+id/action_waterAlarmFragment_to_alarmModeFragment"
+            app:destination="@id/AlarmModeFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/waterAlarmDetailFragment"
+        android:id="@+id/AlarmModeFragment"
         android:name="com.tkw.alarm.AlarmModeFragment"
         tools:layout="@layout/fragment_alarm_mode">
 

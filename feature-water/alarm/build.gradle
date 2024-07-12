@@ -57,6 +57,9 @@ dependencies {
     implementation libs.androidx.navigation.fragment
     implementation libs.androidx.navigation.ui
 
+    //hiltNavGraphViewModels
+    implementation libs.androidx.hilt.navigation.fragment
+
     //Flow.asLiveData
     implementation libs.androidx.lifecycle.livedata
 

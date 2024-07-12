@@ -50,6 +50,8 @@
     <string name="alarm_sound_device">与手机设置相同</string>
     <string name="alarm_sound_vibe">振动</string>
     <string name="alarm_sound_ringtone">铃声</string>
+    <string name="alarm_sound_all">振动和铃声</string>
+    <string name="alarm_sound_silence">静音</string>
     <string name="alarm_sound_noti">显示通知</string>
     <string name="alarm_time_title">闹钟时间</string>
     <string name="alarm_mode_title">闹钟模式</string>

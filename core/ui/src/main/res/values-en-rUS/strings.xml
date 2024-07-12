@@ -50,6 +50,8 @@
     <string name="alarm_sound_device">Same as phone settings</string>
     <string name="alarm_sound_vibe">Vibration</string>
     <string name="alarm_sound_ringtone">Ringtone</string>
+    <string name="alarm_sound_all">Vibration and Ringtone</string>
+    <string name="alarm_sound_silence">Silent</string>
     <string name="alarm_sound_noti">Show notification</string>
     <string name="alarm_time_title">Alarm Time</string>
     <string name="alarm_mode_title">Alarm Mode</string>

@@ -50,6 +50,8 @@
     <string name="alarm_sound_device">電話設定と同じ</string>
     <string name="alarm_sound_vibe">バイブレーション</string>
     <string name="alarm_sound_ringtone">着信音</string>
+    <string name="alarm_sound_all">バイブレーションと着信音</string>
+    <string name="alarm_sound_silence">無音</string>
     <string name="alarm_sound_noti">通知を表示</string>
     <string name="alarm_time_title">アラーム時間</string>
     <string name="alarm_mode_title">アラームモード</string>

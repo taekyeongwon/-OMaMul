@@ -1,8 +1,10 @@
 package com.tkw.alarm
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -15,6 +17,7 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -25,6 +28,9 @@ import com.tkw.alarmnoti.NotificationManager
 import com.tkw.common.PermissionHelper
 import com.tkw.common.autoCleared
 import com.tkw.domain.IAlarmManager
+import com.tkw.domain.model.AlarmEtcSettings
+import com.tkw.domain.model.AlarmMode
+import com.tkw.domain.model.RingTone
 import com.tkw.ui.CustomSwitchView
 import com.tkw.ui.dialog.SettingDialog
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,10 +41,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class WaterAlarmFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentWaterAlarmBinding>()
-    private val viewModel: WaterAlarmViewModel by viewModels()
-
+    private val viewModel: WaterAlarmViewModel by hiltNavGraphViewModels(R.id.alarm_nav_graph)
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
-
     private lateinit var toolbarSwitchView: CustomSwitchView
 
     @Inject
@@ -50,7 +54,7 @@ class WaterAlarmFragment: Fragment() {
             registerForActivityResult(
                 ActivityResultContracts.StartActivityForResult()
             ) {
-
+                //MenuProvider onCreateMenu가 resume마다 다시 호출되므로 아무 것도 처리하지 않음.
             }
     }
 
@@ -66,11 +70,21 @@ class WaterAlarmFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+        initObserver()
         initListener()
     }
 
     private fun initView() {
         initItemMenu()
+    }
+
+    private fun initObserver() {
+        viewModel.alarmSettings.observe(viewLifecycleOwner) {
+            //가져온 데이터로 화면 구성
+            setRingtoneTitle(it.ringToneMode)
+            setAlarmModeTitle(it.alarmMode)
+            setEtcSetting(it.etcSetting)
+        }
     }
 
     private fun initListener() {
@@ -83,8 +97,33 @@ class WaterAlarmFragment: Fragment() {
 
         dataBinding.clAlarmMode.setOnClickListener {
             findNavController().navigate(WaterAlarmFragmentDirections
-                .actionWaterAlarmFragmentToWaterAlarmDetailFragment())
-            //todo 현재 세팅된 AlarmMode객체 argument로 전달하기.
+                .actionWaterAlarmFragmentToAlarmModeFragment())
+        }
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            dataBinding.tvFullscreenSetting.setOnClickListener {
+                val intent = Intent(
+                    Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT,
+                    Uri.parse("package:${requireContext().packageName}")
+                )
+                startActivity(intent)
+            }
+        } else {
+            dataBinding.divider2.visibility = View.GONE
+            dataBinding.tvFullscreenSetting.visibility = View.GONE
+        }
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            dataBinding.tvExactSetting.setOnClickListener {
+                val intent = Intent(
+                    Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                    Uri.parse("package:${requireContext().packageName}")
+                )
+                startActivity(intent)
+            }
+        } else {
+            dataBinding.divider3.visibility = View.GONE
+            dataBinding.tvExactSetting.visibility = View.GONE
         }
     }
 
@@ -164,5 +203,30 @@ class WaterAlarmFragment: Fragment() {
 
     private fun alarmOff() {
         viewModel.cancelAllAlarm()
+    }
+
+    private fun setRingtoneTitle(ringtone: RingTone) {
+        val soundTitle = when(ringtone) {
+            RingTone.DEVICE -> getString(com.tkw.ui.R.string.alarm_sound_device)
+            RingTone.BELL -> getString(com.tkw.ui.R.string.alarm_sound_ringtone)
+            RingTone.VIBE -> getString(com.tkw.ui.R.string.alarm_sound_vibe)
+            RingTone.ALL -> getString(com.tkw.ui.R.string.alarm_sound_all)
+            RingTone.IGNORE -> getString(com.tkw.ui.R.string.alarm_sound_silence)
+        }
+        dataBinding.tvAlarmSound.setText(soundTitle)
+    }
+
+    private fun setAlarmModeTitle(alarmMode: AlarmMode) {
+        val modeTitle = when(alarmMode) {
+            AlarmMode.PERIOD -> getString(com.tkw.ui.R.string.alarm_mode_period)
+            AlarmMode.CUSTOM -> getString(com.tkw.ui.R.string.alarm_mode_custom)
+        }
+        dataBinding.tvAlarmMode.setText(modeTitle)
+    }
+
+    private fun setEtcSetting(etcSettings: AlarmEtcSettings) {
+        dataBinding.tvAlarmEtcStop.setSwitch(etcSettings.stopReachedGoal) { _, isChecekd ->
+            //todo 목표 도달 시 알람 멈추기 기능 구현 필요
+        }
     }
 }

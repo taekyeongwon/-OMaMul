@@ -50,6 +50,8 @@
     <string name="alarm_sound_device">폰 설정과 동일</string>
     <string name="alarm_sound_vibe">진동</string>
     <string name="alarm_sound_ringtone">벨소리</string>
+    <string name="alarm_sound_all">진동 및 벨소리</string>
+    <string name="alarm_sound_silence">무음</string>
     <string name="alarm_sound_noti">알림 표시</string>
     <string name="alarm_time_title">알람 시간</string>
     <string name="alarm_mode_title">알람 모드</string>
