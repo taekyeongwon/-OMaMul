@@ -12,6 +12,7 @@ class AlarmPeriodDialog(
     private val resultListener: (String) -> Unit
 ): CustomBottomDialog<DialogAlarmPeriodBinding>() {
     override var childBinding by autoCleared<DialogAlarmPeriodBinding>()
+    override var buttonCount: Int = 2
 
     override fun onCreateView(
         inflater: LayoutInflater,

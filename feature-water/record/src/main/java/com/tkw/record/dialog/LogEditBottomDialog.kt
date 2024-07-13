@@ -19,6 +19,7 @@ class LogEditBottomDialog(
 ): CustomBottomDialog<DialogLogEditBinding>() {
     override var childBinding by autoCleared<DialogLogEditBinding>()
     private val viewModel: LogViewModel by activityViewModels()
+    override var buttonCount: Int = 2
 
     override fun onCreateView(
         inflater: LayoutInflater,

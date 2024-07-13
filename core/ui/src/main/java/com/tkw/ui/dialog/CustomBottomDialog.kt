@@ -16,6 +16,7 @@ import com.tkw.ui.databinding.CustomBottomDialogBinding
 abstract class CustomBottomDialog<T: ViewBinding>: BottomSheetDialogFragment(), BottomExpand by BottomExpandImpl() {
     private var dataBinding by autoCleared<CustomBottomDialogBinding>()
     abstract var childBinding: T
+    abstract var buttonCount: Int
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,11 +34,23 @@ abstract class CustomBottomDialog<T: ViewBinding>: BottomSheetDialogFragment(), 
         setView(childBinding.root)
     }
 
-    fun setView(view: View, isOneButton: Boolean = false) {
+    private fun setView(view: View) {
         dataBinding.llParent.addView(view)
-        if(isOneButton) {
-            dataBinding.btnCancel.visibility = View.GONE
-            dataBinding.divider.visibility = View.GONE
+        when(buttonCount) {
+            0 -> {
+                dataBinding.btnSave.visibility = View.GONE
+                dataBinding.btnCancel.visibility = View.GONE
+                dataBinding.divider.visibility = View.GONE
+            }
+            1 -> {
+                dataBinding.btnCancel.visibility = View.GONE
+                dataBinding.divider.visibility = View.GONE
+            }
+            else -> {
+                dataBinding.btnSave.visibility = View.VISIBLE
+                dataBinding.btnCancel.visibility = View.VISIBLE
+                dataBinding.divider.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -47,5 +60,13 @@ abstract class CustomBottomDialog<T: ViewBinding>: BottomSheetDialogFragment(), 
     ) {
         dataBinding.btnCancel.setOnClickListener { cancelAction() }
         dataBinding.btnSave.setOnClickListener { confirmAction() }
+    }
+
+    fun setButtonTitle(
+        cancelTitle: String? = null,
+        confirmTitle: String? = null
+    ) {
+        cancelTitle?.let { dataBinding.btnCancel.text = it }
+        confirmTitle?.let { dataBinding.btnSave.text = it }
     }
 }

@@ -19,6 +19,7 @@ class AlarmTimeBottomDialog(
     private val resultListener: (String, String?) -> Unit
     ) : CustomBottomDialog<DialogTimepickerBinding>() {
     override var childBinding by autoCleared<DialogTimepickerBinding>()
+    override var buttonCount: Int = 2
 
     override fun onCreateView(
         inflater: LayoutInflater,
