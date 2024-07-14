@@ -1,16 +1,33 @@
 package com.tkw.domain.model
 
+import java.io.Serializable
 import java.time.Instant
-import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 data class AlarmSettings(
-    val ringToneMode: RingTone = RingTone.BELL,
+    val ringToneMode: RingToneMode = RingToneMode(),
     val alarmMode: AlarmMode = AlarmMode.PERIOD,
     val etcSetting: AlarmEtcSettings = AlarmEtcSettings()
 ) {
 
+}
+
+data class RingToneMode(
+    val isBell: Boolean = false,
+    val isVibe: Boolean = false,
+    val isDevice: Boolean = false,
+    val isSilence: Boolean = false
+) {
+    fun getCurrentMode(): RingTone {
+        return when {
+            isBell && isVibe -> RingTone.ALL
+            isBell -> RingTone.BELL
+            isVibe -> RingTone.VIBE
+            isDevice -> RingTone.DEVICE
+            else -> RingTone.IGNORE
+        }
+    }
 }
 
 enum class RingTone {

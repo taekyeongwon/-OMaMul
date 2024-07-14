@@ -8,6 +8,7 @@ import com.tkw.database.model.CupListEntity
 import com.tkw.database.model.CustomEntity
 import com.tkw.database.model.DayOfWaterEntity
 import com.tkw.database.model.PeriodEntity
+import com.tkw.database.model.RingToneModeEntity
 import com.tkw.database.model.WaterEntity
 import io.realm.kotlin.MutableRealm
 import io.realm.kotlin.Realm
@@ -31,6 +32,7 @@ interface RealmDao<T: RealmObject> {
             CupListEntity::class,
             CupEntity::class,
             AlarmSettingsEntity::class,
+            RingToneModeEntity::class,
             PeriodEntity::class,
             CustomEntity::class,
             AlarmEntity::class,

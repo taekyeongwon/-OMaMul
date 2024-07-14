@@ -7,13 +7,14 @@ import com.tkw.database.model.AlarmModeEntity
 import com.tkw.database.model.AlarmSettingsEntity
 import com.tkw.database.model.CustomEntity
 import com.tkw.database.model.PeriodEntity
-import com.tkw.database.model.RingToneEntity
+import com.tkw.database.model.RingToneModeEntity
 import com.tkw.domain.model.Alarm
 import com.tkw.domain.model.AlarmEtcSettings
 import com.tkw.domain.model.AlarmModeSetting
 import com.tkw.domain.model.AlarmMode
 import com.tkw.domain.model.AlarmSettings
 import com.tkw.domain.model.RingTone
+import com.tkw.domain.model.RingToneMode
 import io.realm.kotlin.ext.toRealmList
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -24,7 +25,7 @@ object AlarmMapper {
         alarmSettings: AlarmSettings
     ): AlarmSettingsEntity {
         return AlarmSettingsEntity().apply {
-            this.ringToneEnum = RingToneEntity.valueOf(alarmSettings.ringToneMode.name)
+            this.ringToneMode = ringToneToEntity(alarmSettings.ringToneMode)
             this.alarmModeEnum = AlarmModeEntity.valueOf(alarmSettings.alarmMode.name)
             this.etcSetting = alarmEtcToEntity(alarmSettings.etcSetting)
         }
@@ -34,7 +35,7 @@ object AlarmMapper {
         alarmSettingsEntity: AlarmSettingsEntity
     ): AlarmSettings {
         return AlarmSettings(
-            RingTone.valueOf(alarmSettingsEntity.ringToneEnum.name),
+            ringToneToModel(alarmSettingsEntity.ringToneMode ?: RingToneModeEntity()),
             AlarmMode.valueOf(alarmSettingsEntity.alarmModeEnum.name),
             alarmEtcToModel(alarmSettingsEntity.etcSetting ?: AlarmEtcSettingsEntity())
         )
@@ -105,34 +106,23 @@ object AlarmMapper {
         )
     }
 
-//    fun alarmModeToModel(alarmModeEntity: AlarmListEntity): AlarmMode {
-//        val formatter = DateTimeFormatter.ofPattern("HHmm")
-//        with(alarmModeEntity) {
-//            val period = this.period ?: PeriodEntity()
-//            val custom = this.custom ?: CustomEntity()
-//            return when(alarmModeEnum) {
-//                AlarmModeEnum.PERIOD -> {
-//                    AlarmMode.Period(
-//                        period.selectedDate,
-//                        period.interval,
-//                        LocalTime.parse(period.alarmStartTime, formatter),
-//                        LocalTime.parse(period.alarmEndTime, formatter),
-//                        alarmListToModel(period.alarmList)
-//                    )
-//                }
-//                AlarmModeEnum.CUSTOM -> {
-//                    AlarmMode.Custom(
-//                        custom.selectedDate,
-//                        custom.interval,
-//                        alarmListToModel(custom.alarmList)
-//                    )
-//                }
-//                else -> {
-//                    AlarmMode.Period()
-//                }
-//            }
-//        }
-//    }
+    private fun ringToneToEntity(ringToneMode: RingToneMode): RingToneModeEntity {
+        return RingToneModeEntity().apply {
+            this.isBell = ringToneMode.isBell
+            this.isVibe = ringToneMode.isVibe
+            this.isDevice = ringToneMode.isDevice
+            this.isSilence = ringToneMode.isSilence
+        }
+    }
+
+    private fun ringToneToModel(ringToneEntity: RingToneModeEntity): RingToneMode {
+        return RingToneMode(
+            isBell = ringToneEntity.isBell,
+            isVibe = ringToneEntity.isVibe,
+            isDevice = ringToneEntity.isDevice,
+            isSilence = ringToneEntity.isSilence
+        )
+    }
 
     private fun alarmEtcToEntity(alarmEtcSettings: AlarmEtcSettings): AlarmEtcSettingsEntity {
         return AlarmEtcSettingsEntity().apply {
