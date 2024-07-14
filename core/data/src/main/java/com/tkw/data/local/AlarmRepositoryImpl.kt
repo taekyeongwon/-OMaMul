@@ -39,9 +39,8 @@ class AlarmRepositoryImpl @Inject constructor(
     override suspend fun setAlarm(alarmId: Int, startTime: Long, interval: Long) {
         if(alarmId != -1) {
             val alarm = Alarm(alarmId, startTime, true, interval)
-            val ringTone = getAlarmSetting().first().ringToneMode
 
-            alarmManager.setAlarm(alarm, ringTone)
+            alarmManager.setAlarm(alarm)
             alarmDao.updateAlarm(AlarmMapper.alarmToEntity(alarm))
         }
     }

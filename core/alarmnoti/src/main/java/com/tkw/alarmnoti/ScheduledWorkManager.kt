@@ -47,6 +47,6 @@ class ScheduledWorkManager(
 
     private fun notify(context: Context) {
 //        val data = inputData.getString()
-        NotificationManager.notify(context, RingTone.ALL.name)
+//        NotificationManager.notify(context, RingTone.ALL.name, false)
     }
 }

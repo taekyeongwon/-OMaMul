@@ -5,15 +5,12 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.tkw.domain.IAlarmManager
 import com.tkw.domain.model.Alarm
-import com.tkw.domain.model.RingTone
 import dagger.hilt.android.qualifiers.ApplicationContext
-import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -21,8 +18,7 @@ class WaterAlarmManager @Inject constructor(
     @ApplicationContext private val context: Context
 ): IAlarmManager {
 
-    //todo ringtone mode 받아서 extra로 넘겨줌.
-    override fun setAlarm(alarm: Alarm, ringTone: RingTone) {
+    override fun setAlarm(alarm: Alarm) {
         with(alarm) {
             if(canScheduleExactAlarms()) {
                 setAlarmManager(alarmId, startTime, interval)
@@ -46,7 +42,11 @@ class WaterAlarmManager @Inject constructor(
         } else true
     }
 
-    private fun setAlarmManager(alarmId: Int, startTime: Long, interval: Long) {
+    private fun setAlarmManager(
+        alarmId: Int,
+        startTime: Long,
+        interval: Long
+    ) {
         val intent = Intent(context, WaterAlarmReceiver::class.java)
         intent.putExtra("ALARM_ID", alarmId)
         intent.putExtra("ALARM_TIME", startTime)

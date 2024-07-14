@@ -16,6 +16,8 @@ import android.os.VibratorManager
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.tkw.domain.model.RingTone
+import com.tkw.domain.model.RingToneMode
 
 object NotificationManager {
     private const val NOTI_CH = "NOTI_CH"
@@ -47,7 +49,7 @@ object NotificationManager {
         notificationManager.createNotificationChannel(muteChannel)
     }
 
-    fun buildNotification(
+    private fun buildNotification(
         context: Context,
         drawable: Int,
         title: String,
@@ -71,7 +73,7 @@ object NotificationManager {
         return builder
     }
 
-    fun NotificationCompat.Builder.fullScreenBuilder(
+    private fun NotificationCompat.Builder.fullScreenBuilder(
         context: Context,
         title: String,
         text: String
@@ -86,6 +88,9 @@ object NotificationManager {
         return this
     }
 
+    /**
+     * 그룹으로 묶어서 알람 처리하는 경우 호출
+     */
     fun buildSummaryNotification(
         context: Context,
         drawable: Int,
@@ -98,19 +103,19 @@ object NotificationManager {
         return builder
     }
 
-    fun notify(context: Context, ringtoneMode: String) {
+    fun notify(context: Context, ringtoneMode: RingToneMode) {
         val builder = buildNotification(
             context,
             R.drawable.noti_foreground,
             context.getString(R.string.notification_title),
             context.getString(R.string.notification_text),
-            getChannel(ringtoneMode) //핸드폰 설정대로면 NOTI_CH, 그 외 MUTE_CH
+            getChannel(ringtoneMode.getCurrentMode().name) //핸드폰 설정대로면 NOTI_CH, 그 외 MUTE_CH
         )
         //휴대폰 설정과 동일이라면 그대로 빌드.
-        //알림 표시 안하는 경우 builder.setSilent(true) 적용 후
-        //해당 링톤 모드에 맞게 아래 인스턴스 메서드 호출
-//            builder.setSilent(true)
-//            summaryBuilder.setSilent(true)
+        //알림 표시 안하는 경우 builder.setSilent(true) 적용
+        if(ringtoneMode.isSilence) {
+            builder.setSilent(true)
+        }
         if (canUseFullScreenIntent(context)) {
             builder.fullScreenBuilder(
                 context,
@@ -122,9 +127,10 @@ object NotificationManager {
         val notificationManager: NotificationManager =
             context.getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(notificationId, builder.build())
+        play(ringtoneMode.getCurrentMode().name, context)
     }
 
-    fun canUseFullScreenIntent(context: Context): Boolean {
+    private fun canUseFullScreenIntent(context: Context): Boolean {
         return if(Build.VERSION.SDK_INT >= 34) {
             val notificationManager: NotificationManager =
                 context.getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager
@@ -157,7 +163,25 @@ object NotificationManager {
      * 이외 MUTE_CH 리턴
      */
     private fun getChannel(ringtoneMode: String): String {
-        return MUTE_CH
+        return when(ringtoneMode) {
+            RingTone.DEVICE.name -> NOTI_CH
+            else -> MUTE_CH
+        }
+    }
+
+    private fun play(ringtoneMode: String, context: Context) {
+        when(ringtoneMode) {
+            RingTone.BELL.name -> {
+                playRingtone(context)
+            }
+            RingTone.VIBE.name -> {
+                playVibrate(context)
+            }
+            RingTone.ALL.name -> {
+                playRingtone(context)
+                playVibrate(context)
+            }
+        }
     }
 
     /**
