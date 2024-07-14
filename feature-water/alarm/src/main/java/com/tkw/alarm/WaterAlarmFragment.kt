@@ -16,7 +16,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -35,7 +34,6 @@ import com.tkw.ui.CustomSwitchView
 import com.tkw.ui.dialog.SettingDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.util.Calendar
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -81,7 +79,7 @@ class WaterAlarmFragment: Fragment() {
     private fun initObserver() {
         viewModel.alarmSettings.observe(viewLifecycleOwner) {
             //가져온 데이터로 화면 구성
-            setRingtoneTitle(it.ringToneMode)
+            setRingtoneTitle(it.ringToneMode.getCurrentMode())
             setAlarmModeTitle(it.alarmMode)
             setEtcSetting(it.etcSetting)
         }

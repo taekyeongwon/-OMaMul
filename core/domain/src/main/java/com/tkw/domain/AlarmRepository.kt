@@ -6,7 +6,7 @@ import com.tkw.domain.model.AlarmSettings
 import kotlinx.coroutines.flow.Flow
 
 interface AlarmRepository {
-    fun getAlarmSetting(): Flow<AlarmSettings?>
+    fun getAlarmSetting(): Flow<AlarmSettings>
 
     suspend fun update(setting: AlarmSettings)
 

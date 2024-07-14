@@ -1,13 +1,17 @@
 package com.tkw.data.local
 
 import com.tkw.database.AlarmDao
+import com.tkw.database.model.AlarmSettingsEntity
 import com.tkw.domain.AlarmRepository
 import com.tkw.domain.IAlarmManager
 import com.tkw.domain.model.Alarm
 import com.tkw.domain.model.AlarmModeSetting
 import com.tkw.domain.model.AlarmSettings
 import com.tkw.domain.model.RingTone
+import com.tkw.domain.model.RingToneMode
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -15,12 +19,19 @@ class AlarmRepositoryImpl @Inject constructor(
     private val alarmDao: AlarmDao,
     private val alarmManager: IAlarmManager
 ): AlarmRepository {
-    override fun getAlarmSetting(): Flow<AlarmSettings?> =
-        alarmDao.getSetting().map {
-            runCatching {
-                AlarmMapper.alarmSettingToModel(it.list.first())
-            }.getOrNull()
+    override fun getAlarmSetting(): Flow<AlarmSettings> {
+        val setting = alarmDao.getSetting()
+        return flow {
+            setting.collect {
+                val settingList = it.list.firstOrNull()
+                if(settingList == null) {
+                    update(AlarmSettings())
+                } else {
+                    emit(AlarmMapper.alarmSettingToModel(settingList))
+                }
+            }
         }
+    }
 
     override suspend fun update(setting: AlarmSettings) =
         alarmDao.updateSetting(AlarmMapper.alarmSettingToEntity(setting))
@@ -28,10 +39,9 @@ class AlarmRepositoryImpl @Inject constructor(
     override suspend fun setAlarm(alarmId: Int, startTime: Long, interval: Long) {
         if(alarmId != -1) {
             val alarm = Alarm(alarmId, startTime, true, interval)
-//            val ringtone = alarmDao.getRingtone()
+            val ringTone = getAlarmSetting().first().ringToneMode
 
-
-            alarmManager.setAlarm(alarm, RingTone.ALL)
+            alarmManager.setAlarm(alarm, ringTone)
             alarmDao.updateAlarm(AlarmMapper.alarmToEntity(alarm))
         }
     }

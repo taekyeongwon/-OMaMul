@@ -1,6 +1,8 @@
 package com.tkw.alarm
 
+import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import com.tkw.base.BaseViewModel
 import com.tkw.base.launch
@@ -10,12 +12,17 @@ import com.tkw.domain.model.AlarmEtcSettings
 import com.tkw.domain.model.AlarmMode
 import com.tkw.domain.model.AlarmSettings
 import com.tkw.domain.model.RingTone
+import com.tkw.domain.model.RingToneMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,20 +38,13 @@ class WaterAlarmViewModel @Inject constructor(
         prefDataRepository.saveAlarmEnableFlag(flag)
     }
 
-    private val alarmSettingsFlow: Flow<AlarmSettings> = flow {
-        alarmRepository.getAlarmSetting().collect { alarmSettings ->
-            //todo 최초 업데이트 시 AlarmSettings() 빈 객체에
-            // AlarmMode.Period().alarmList 값은 현재 설정된
-            // 시작 시간 ~ 종료 시간 사이 interval마다 모두 설정.
-            alarmSettings?.let { emit(it) } ?: alarmRepository.update(AlarmSettings())
-        }
-    }
+    private val alarmSettingsFlow: Flow<AlarmSettings> = alarmRepository.getAlarmSetting()
 
     val alarmSettings: LiveData<AlarmSettings> =
         alarmSettingsFlow.asLiveData()
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val alarmRingTone: LiveData<RingTone> =
+    val alarmRingTone: LiveData<RingToneMode> =
         alarmSettingsFlow.mapLatest {
             it.ringToneMode
         }.asLiveData()
@@ -70,6 +70,18 @@ class WaterAlarmViewModel @Inject constructor(
     fun cancelAllAlarm() {
         launch {
             alarmRepository.cancelAllAlarm()
+        }
+    }
+
+    fun updateRingToneMode(mode: RingToneMode) {
+        launch {
+            val currentSetting = alarmSettingsFlow.first()
+            val newSetting = AlarmSettings(
+                mode,
+                currentSetting.alarmMode,
+                currentSetting.etcSetting
+            )
+            alarmRepository.update(newSetting)
         }
     }
 }
