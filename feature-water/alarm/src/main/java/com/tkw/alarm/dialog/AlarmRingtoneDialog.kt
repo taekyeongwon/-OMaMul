@@ -1,13 +1,10 @@
 package com.tkw.alarm.dialog
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.withResumed
 import com.tkw.alarm.R
 import com.tkw.alarm.WaterAlarmViewModel
 import com.tkw.alarm.databinding.DialogRingtoneBinding
@@ -15,12 +12,8 @@ import com.tkw.common.autoCleared
 import com.tkw.domain.model.RingTone
 import com.tkw.domain.model.RingToneMode
 import com.tkw.ui.dialog.CustomBottomDialog
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 
-class AlarmRingtoneDialog(
-    private val resultListener: (RingTone) -> Unit
-): CustomBottomDialog<DialogRingtoneBinding>() {
+class AlarmRingtoneDialog: CustomBottomDialog<DialogRingtoneBinding>() {
     override var childBinding by autoCleared<DialogRingtoneBinding>()
     private val viewModel: WaterAlarmViewModel by hiltNavGraphViewModels(R.id.alarm_nav_graph)
     override var buttonCount: Int = 2

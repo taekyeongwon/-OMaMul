@@ -10,6 +10,7 @@ import com.tkw.domain.AlarmRepository
 import com.tkw.domain.PrefDataRepository
 import com.tkw.domain.model.AlarmEtcSettings
 import com.tkw.domain.model.AlarmMode
+import com.tkw.domain.model.AlarmModeSetting
 import com.tkw.domain.model.AlarmSettings
 import com.tkw.domain.model.RingTone
 import com.tkw.domain.model.RingToneMode
@@ -39,6 +40,14 @@ class WaterAlarmViewModel @Inject constructor(
     }
 
     private val alarmSettingsFlow: Flow<AlarmSettings> = alarmRepository.getAlarmSetting()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val alarmModeSettingsLiveData: LiveData<AlarmModeSetting> = flow {
+        alarmRepository.getAlarmModeSetting().mapLatest {
+            if(it == null) alarmRepository.updateAlarmModeSetting(AlarmModeSetting.Period())
+            else emit(it)
+        }
+    }.asLiveData()
 
     val alarmSettings: LiveData<AlarmSettings> =
         alarmSettingsFlow.asLiveData()
@@ -79,6 +88,18 @@ class WaterAlarmViewModel @Inject constructor(
             val newSetting = AlarmSettings(
                 mode,
                 currentSetting.alarmMode,
+                currentSetting.etcSetting
+            )
+            alarmRepository.update(newSetting)
+        }
+    }
+
+    fun updateAlarmMode(mode: AlarmMode) {
+        launch {
+            val currentSetting = alarmSettingsFlow.first()
+            val newSetting = AlarmSettings(
+                currentSetting.ringToneMode,
+                mode,
                 currentSetting.etcSetting
             )
             alarmRepository.update(newSetting)

@@ -79,17 +79,17 @@ class WaterAlarmFragment: Fragment() {
     private fun initObserver() {
         viewModel.alarmSettings.observe(viewLifecycleOwner) {
             //가져온 데이터로 화면 구성
-            setRingtoneTitle(it.ringToneMode.getCurrentMode())
-            setAlarmModeTitle(it.alarmMode)
-            setEtcSetting(it.etcSetting)
+            it?.let {
+                setRingtoneTitle(it.ringToneMode.getCurrentMode())
+                setAlarmModeTitle(it.alarmMode)
+                setEtcSetting(it.etcSetting)
+            }
         }
     }
 
     private fun initListener() {
         dataBinding.tvAlarmSound.setOnClickListener {
-            val soundDialog = AlarmRingtoneDialog {
-
-            }
+            val soundDialog = AlarmRingtoneDialog()
             soundDialog.show(childFragmentManager, soundDialog.tag)
         }
 
