@@ -63,18 +63,18 @@ class AlarmModeFragment: Fragment() {
                 }
             }
         }
-        viewModel.alarmModeSettingsLiveData.observe(viewLifecycleOwner) {
-            it?.let {
-                when(it) {
-                    is AlarmModeSetting.Period -> {
-                        //현재 설정된 알람 몇 분 남았는지 세팅
-                    }
-                    is AlarmModeSetting.Custom -> {
-                        //현재 설정된 알람 몇 분 남았는지 세팅
-                    }
-                }
-            }
-        }
+//        viewModel.alarmModeSettingsLiveData.observe(viewLifecycleOwner) {
+//            it?.let {
+//                when(it) {
+//                    is AlarmModeSetting.Period -> {
+//                        //현재 설정된 알람 몇 분 남았는지 세팅
+//                    }
+//                    is AlarmModeSetting.Custom -> {
+//                        //현재 설정된 알람 몇 분 남았는지 세팅
+//                    }
+//                }
+//            }
+//        }
     }
 
     private fun initListener() {

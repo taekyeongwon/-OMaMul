@@ -108,9 +108,8 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
         }
     }
 
-    override fun getAlarmModeSetting(): Flow<AlarmModeSettingEntity?> {
-        val alarmMode = getAlarmMode()
-        return when (alarmMode) {
+    override fun getAlarmModeSetting(mode: AlarmModeEntity): Flow<AlarmModeSettingEntity?> {
+        return when (mode) {
             AlarmModeEntity.PERIOD -> {
                 getPeriodEntity().asFlow().map {
                     it.list.firstOrNull()

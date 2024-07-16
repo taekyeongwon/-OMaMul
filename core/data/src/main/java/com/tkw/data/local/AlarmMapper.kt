@@ -106,6 +106,10 @@ object AlarmMapper {
         )
     }
 
+    fun alarmModeToEntity(mode: AlarmMode): AlarmModeEntity {
+        return AlarmModeEntity.valueOf(mode.name)
+    }
+
     private fun ringToneToEntity(ringToneMode: RingToneMode): RingToneModeEntity {
         return RingToneModeEntity().apply {
             this.isBell = ringToneMode.isBell

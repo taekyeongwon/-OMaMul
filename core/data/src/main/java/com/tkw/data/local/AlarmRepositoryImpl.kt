@@ -5,6 +5,7 @@ import com.tkw.database.model.AlarmSettingsEntity
 import com.tkw.domain.AlarmRepository
 import com.tkw.domain.IAlarmManager
 import com.tkw.domain.model.Alarm
+import com.tkw.domain.model.AlarmMode
 import com.tkw.domain.model.AlarmModeSetting
 import com.tkw.domain.model.AlarmSettings
 import com.tkw.domain.model.RingTone
@@ -49,8 +50,8 @@ class AlarmRepositoryImpl @Inject constructor(
         alarmDao.updateAlarmModeSetting(AlarmMapper.alarmModeToEntity(setting))
     }
 
-    override fun getAlarmModeSetting(): Flow<AlarmModeSetting?> =
-        alarmDao.getAlarmModeSetting().map {
+    override fun getAlarmModeSetting(mode: AlarmMode): Flow<AlarmModeSetting?> =
+        alarmDao.getAlarmModeSetting(AlarmMapper.alarmModeToEntity(mode)).map {
             runCatching {
                 AlarmMapper.alarmModeToModel(it)
             }.getOrNull()

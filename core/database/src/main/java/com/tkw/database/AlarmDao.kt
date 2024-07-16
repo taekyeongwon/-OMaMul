@@ -1,6 +1,7 @@
 package com.tkw.database
 
 import com.tkw.database.model.AlarmEntity
+import com.tkw.database.model.AlarmModeEntity
 import com.tkw.database.model.AlarmModeSettingEntity
 import com.tkw.database.model.AlarmSettingsEntity
 import io.realm.kotlin.notifications.ResultsChange
@@ -36,7 +37,7 @@ interface AlarmDao: RealmDao<AlarmSettingsEntity> {
      * 현재 설정된 모드에 해당하는
      * PeriodEntity/CustomEntity 객체 리턴
      */
-    fun getAlarmModeSetting(): Flow<AlarmModeSettingEntity?>
+    fun getAlarmModeSetting(mode: AlarmModeEntity): Flow<AlarmModeSettingEntity?>
 
     /**
      * 현재 설정된 모드에 해당하는
