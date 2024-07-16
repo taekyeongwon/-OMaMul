@@ -41,21 +41,11 @@ class WaterAlarmViewModel @Inject constructor(
 
     private val alarmSettingsFlow: Flow<AlarmSettings> = alarmRepository.getAlarmSetting()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val periodModeSettingsLiveData: LiveData<AlarmModeSetting> = flow {
-        alarmRepository.getAlarmModeSetting(AlarmMode.PERIOD).mapLatest {
-            if(it == null) alarmRepository.updateAlarmModeSetting(AlarmModeSetting.Period())
-            else emit(it)
-        }
-    }.asLiveData()
+    val periodModeSettingsLiveData: LiveData<AlarmModeSetting> =
+        alarmRepository.getAlarmModeSetting(AlarmMode.PERIOD).asLiveData()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val customModeSettingsLiveData: LiveData<AlarmModeSetting> = flow {
-        alarmRepository.getAlarmModeSetting(AlarmMode.CUSTOM).mapLatest {
-            if(it == null) alarmRepository.updateAlarmModeSetting(AlarmModeSetting.Custom())
-            else emit(it)
-        }
-    }.asLiveData()
+    val customModeSettingsLiveData: LiveData<AlarmModeSetting> =
+        alarmRepository.getAlarmModeSetting(AlarmMode.CUSTOM).asLiveData()
 
     val alarmSettings: LiveData<AlarmSettings> =
         alarmSettingsFlow.asLiveData()

@@ -24,9 +24,12 @@ class CustomCheckBox @JvmOverloads constructor(
         strokeWidth = 4f
     }
 
+    private var clickListener: () -> Unit = {}
+
     init {
         setOnClickListener {
             toggle()
+            clickListener()
         }
     }
 
@@ -46,4 +49,13 @@ class CustomCheckBox @JvmOverloads constructor(
     }
 
     fun getChecked() = isChecked
+
+    fun setChecked(isChecked: Boolean) {
+        this.isChecked = isChecked
+        invalidate()
+    }
+
+    fun setCheckBoxClickListener(block: () -> Unit) {
+        this.clickListener = block
+    }
 }

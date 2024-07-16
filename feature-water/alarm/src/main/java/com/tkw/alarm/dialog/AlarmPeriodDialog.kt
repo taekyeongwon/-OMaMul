@@ -6,9 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import com.tkw.alarm.databinding.DialogAlarmPeriodBinding
 import com.tkw.common.autoCleared
+import com.tkw.common.util.DateTimeUtils
 import com.tkw.ui.dialog.CustomBottomDialog
+import java.time.LocalTime
 
 class AlarmPeriodDialog(
+    private val currentPeriod: LocalTime,
     private val resultListener: (String) -> Unit
 ): CustomBottomDialog<DialogAlarmPeriodBinding>() {
     override var childBinding by autoCleared<DialogAlarmPeriodBinding>()
@@ -25,7 +28,12 @@ class AlarmPeriodDialog(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
         initListener()
+    }
+
+    private fun initView() {
+        childBinding.timePicker.setValue(currentPeriod.hour, currentPeriod.minute)
     }
 
     private fun initListener() {

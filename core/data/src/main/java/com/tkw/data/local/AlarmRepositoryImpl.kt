@@ -50,12 +50,21 @@ class AlarmRepositoryImpl @Inject constructor(
         alarmDao.updateAlarmModeSetting(AlarmMapper.alarmModeToEntity(setting))
     }
 
-    override fun getAlarmModeSetting(mode: AlarmMode): Flow<AlarmModeSetting?> =
-        alarmDao.getAlarmModeSetting(AlarmMapper.alarmModeToEntity(mode)).map {
-            runCatching {
-                AlarmMapper.alarmModeToModel(it)
-            }.getOrNull()
+    override fun getAlarmModeSetting(mode: AlarmMode): Flow<AlarmModeSetting> {
+        val alarmModeSetting = alarmDao.getAlarmModeSetting(AlarmMapper.alarmModeToEntity(mode))
+        return flow {
+            alarmModeSetting.collect {
+                if(it == null) {
+                    when(mode) {
+                        AlarmMode.PERIOD -> updateAlarmModeSetting(AlarmModeSetting.Period())
+                        AlarmMode.CUSTOM -> updateAlarmModeSetting(AlarmModeSetting.Custom())
+                    }
+                } else {
+                    emit(AlarmMapper.alarmModeToModel(it))
+                }
+            }
         }
+    }
 
     override suspend fun wakeAllAlarm() {
         //모든 알람 가져와서 실행. 알람 객체는 현재 enable 상태 가지고 있고, enable true 상태인 알람만 전부 다시 켜기.

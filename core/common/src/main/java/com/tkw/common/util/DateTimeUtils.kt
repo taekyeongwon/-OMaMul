@@ -85,6 +85,15 @@ object DateTimeUtils {
         return time.format(formatter)
     }
 
+    fun getTime(timeInMillis: Long, hourFormat: String, minFormat: String): String {
+        val formatter = DateTimeFormatter
+            .ofPattern("H'$hourFormat' mm'$minFormat'", Locale.getDefault())
+        val localTime = Instant.ofEpochMilli(timeInMillis)
+            .atZone(ZoneId.systemDefault())
+            .toLocalTime()
+        return localTime.format(formatter)
+    }
+
     fun getTimeFromLocalTime(formatted: String, hourFormat: String, minFormat: String): LocalTime {
         val formatter = DateTimeFormatter
             .ofPattern("H'$hourFormat' mm'$minFormat'", Locale.getDefault())

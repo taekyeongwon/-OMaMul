@@ -46,6 +46,16 @@ class CustomTimePicker
         }
     }
 
+    fun setValue(hour: Int, min: Int) {
+        if(hour == 0) {
+            dataBinding.minute.minValue = minMinuteBy0Hour
+        } else {
+            dataBinding.minute.minValue = minMinute
+        }
+        dataBinding.hour.value = hour
+        dataBinding.minute.value = min
+    }
+
     fun getValue(): String {
         val hour = dataBinding.hour.value
         val minute = dataBinding.minute.value
