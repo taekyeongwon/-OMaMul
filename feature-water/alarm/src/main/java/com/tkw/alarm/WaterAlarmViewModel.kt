@@ -68,6 +68,9 @@ class WaterAlarmViewModel @Inject constructor(
             it.etcSetting
         }.asLiveData()
 
+    private val _modifyMode = MutableLiveData(false)
+    val modifyMode: LiveData<Boolean> = _modifyMode
+
     fun wakeAllAlarm() {
         launch {
             alarmRepository.wakeAllAlarm()
@@ -102,5 +105,9 @@ class WaterAlarmViewModel @Inject constructor(
             )
             alarmRepository.update(newSetting)
         }
+    }
+
+    fun setModifyMode(flag: Boolean) {
+        _modifyMode.value = flag
     }
 }

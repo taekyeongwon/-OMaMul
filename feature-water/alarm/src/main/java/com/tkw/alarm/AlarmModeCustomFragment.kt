@@ -2,13 +2,17 @@ package com.tkw.alarm
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.withResumed
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.tkw.alarm.adapter.AlarmListAdapter
@@ -17,6 +21,7 @@ import com.tkw.alarm.dialog.AlarmTimeBottomDialog
 import com.tkw.common.autoCleared
 import com.tkw.common.util.DateTimeUtils
 import com.tkw.domain.model.Alarm
+import com.tkw.domain.model.AlarmModeSetting
 import com.tkw.ui.ItemTouchHelperCallback
 import com.tkw.ui.OnItemDrag
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,6 +31,9 @@ import java.time.LocalTime
 @AndroidEntryPoint
 class AlarmModeCustomFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentAlarmModeCustomBinding>()
+    private val viewModel: WaterAlarmViewModel by hiltNavGraphViewModels(R.id.alarm_nav_graph)
+    private var custom: AlarmModeSetting.Custom? = null
+
     private lateinit var alarmListAdapter: AlarmListAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
 
@@ -35,11 +43,13 @@ class AlarmModeCustomFragment: Fragment() {
     }
 
     private val deleteCheckListener: (Int, Boolean) -> Unit = { position, isChecked ->
-
+        alarmListAdapter.currentList[position].isChecked = isChecked
+        setDeleteBtnVisibility()
     }
 
     private val adapterLongClickListener: (Int) -> Unit = { position ->
-
+        alarmListAdapter.currentList[position].isChecked = true
+        viewModel.setModifyMode(true)
     }
 
     private val dragListener = object: OnItemDrag<Alarm> {
@@ -62,7 +72,12 @@ class AlarmModeCustomFragment: Fragment() {
 
     private val callback = object: OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-
+            if(viewModel.modifyMode.value == true) {
+                clearChecked()
+                viewModel.setModifyMode(false)
+            } else {
+                findNavController().navigateUp()
+            }
         }
     }
 
@@ -100,7 +115,21 @@ class AlarmModeCustomFragment: Fragment() {
     }
 
     private fun initObserver() {
+        viewModel.customModeSettingsLiveData.observe(viewLifecycleOwner) {
+            val customAlarm = it as? AlarmModeSetting.Custom
+            //해당 값으로 화면 구성
+            custom = customAlarm
+            customAlarm?.let { custom ->
+                dataBinding.alarmWeek.setChecked(custom.selectedDate)
+                alarmListAdapter.submitList(custom.alarmList) {
+                    dataChanged()
+                }
+            }
+        }
 
+        viewModel.modifyMode.observe(viewLifecycleOwner) {
+            modeChanged(it)
+        }
     }
 
     private fun initListener() {
@@ -116,8 +145,14 @@ class AlarmModeCustomFragment: Fragment() {
             showTimeDialog(alarm)
         }
 
-        dataBinding.ivEdit.setOnClickListener {
+        dataBinding.alarmWeek.setCheckListListener {
+            it.forEach {
+                Log.d("week", it.toString())
+            }
+        }
 
+        dataBinding.ivEdit.setOnClickListener {
+            viewModel.setModifyMode(true)
         }
     }
 
@@ -187,6 +222,7 @@ class AlarmModeCustomFragment: Fragment() {
     private fun showTimeDialog(alarm: Alarm) {
         val dialog = AlarmTimeBottomDialog(
             selectedStart = LocalTime.now(),
+            selectedEnd = LocalTime.now(),
             resultListener = { start, end ->
                 //매개변수로 받은 alarm에 선택한 시간으로 뷰모델 setAlarm 할 수 있도록 구현
             }
