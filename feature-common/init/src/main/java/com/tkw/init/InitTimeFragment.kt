@@ -84,16 +84,14 @@ class InitTimeFragment: Fragment() {
             buttonFlag,
             DateTimeUtils.getTimeFromFormat(dataBinding.tvWakeupTime.text.toString()),
             DateTimeUtils.getTimeFromFormat(dataBinding.tvSleepTime.text.toString()),
-            resultListener
+            resultListener = { wake, sleep ->
+                dataBinding.tvWakeupTime.text = DateTimeUtils.getFormattedTime(wake.hour, wake.minute)
+                dataBinding.tvSleepTime.text = DateTimeUtils.getFormattedTime(sleep!!.hour, sleep.minute)
+            }
         )
     }
 
     private fun showTimePicker() {
         alarmTimeDialog.show(childFragmentManager, alarmTimeDialog.tag)
-    }
-
-    private val resultListener: (String, String?) -> Unit = { wake, sleep ->
-            dataBinding.tvWakeupTime.text = wake
-            dataBinding.tvSleepTime.text = sleep
     }
 }

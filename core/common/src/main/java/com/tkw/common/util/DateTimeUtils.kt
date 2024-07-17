@@ -52,6 +52,10 @@ object DateTimeUtils {
         return LocalTime.of(hour, minute).format(formatter)
     }
 
+    fun getLocalTime(hour: Int, minute: Int): LocalTime {
+        return LocalTime.of(hour, minute)
+    }
+
     fun getFormattedDate(date: LocalDate): String {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         return date.format(formatter)

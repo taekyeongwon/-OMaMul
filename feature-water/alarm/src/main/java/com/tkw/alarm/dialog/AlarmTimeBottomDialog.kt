@@ -16,7 +16,7 @@ class AlarmTimeBottomDialog(
     private val buttonFlag: Boolean = true,
     private val selectedStart: LocalTime? = null,
     private val selectedEnd: LocalTime? = null,
-    private val resultListener: (String, String?) -> Unit
+    private val resultListener: (LocalTime, LocalTime?) -> Unit
     ) : CustomBottomDialog<DialogTimepickerBinding>() {
     override var childBinding by autoCleared<DialogTimepickerBinding>()
     override var buttonCount: Int = 2
@@ -75,12 +75,12 @@ class AlarmTimeBottomDialog(
 
     private fun sendSelectTime() {
         val startTime =
-            DateTimeUtils.getFormattedTime(
+            DateTimeUtils.getLocalTime(
                 childBinding.tpStart.hour,
                 childBinding.tpStart.minute
             )
         val endTime =
-            DateTimeUtils.getFormattedTime(
+            DateTimeUtils.getLocalTime(
                 childBinding.tpEnd.hour,
                 childBinding.tpEnd.minute
             )
