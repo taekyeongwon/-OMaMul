@@ -5,8 +5,10 @@ import com.tkw.database.model.AlarmEtcSettingsEntity
 import com.tkw.database.model.AlarmSettingsEntity
 import com.tkw.database.model.CupEntity
 import com.tkw.database.model.CupListEntity
+import com.tkw.database.model.CustomAlarmListEntity
 import com.tkw.database.model.CustomEntity
 import com.tkw.database.model.DayOfWaterEntity
+import com.tkw.database.model.PeriodAlarmListEntity
 import com.tkw.database.model.PeriodEntity
 import com.tkw.database.model.RingToneModeEntity
 import com.tkw.database.model.WaterEntity
@@ -35,6 +37,8 @@ interface RealmDao<T: RealmObject> {
             RingToneModeEntity::class,
             PeriodEntity::class,
             CustomEntity::class,
+            PeriodAlarmListEntity::class,
+            CustomAlarmListEntity::class,
             AlarmEntity::class,
             AlarmEtcSettingsEntity::class
         ))

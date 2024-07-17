@@ -83,6 +83,12 @@ class WaterAlarmViewModel @Inject constructor(
         }
     }
 
+    fun clearAlarm(mode: AlarmMode) {
+        launch {
+            alarmRepository.allDelete(mode)
+        }
+    }
+
     fun updateRingToneMode(mode: RingToneMode) {
         launch {
             val currentSetting = alarmSettingsFlow.first()
@@ -104,6 +110,18 @@ class WaterAlarmViewModel @Inject constructor(
                 currentSetting.etcSetting
             )
             alarmRepository.update(newSetting)
+        }
+    }
+
+    fun updateAlarmModeSetting(setting: AlarmModeSetting) {
+        launch {
+            alarmRepository.updateAlarmModeSetting(setting)
+        }
+    }
+
+    fun setAlarm(alarmId: Int, startTime: Long, interval: Long) {
+        launch {
+            alarmRepository.setAlarm(alarmId, startTime, interval)
         }
     }
 

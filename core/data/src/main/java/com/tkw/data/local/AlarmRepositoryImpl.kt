@@ -1,10 +1,12 @@
 package com.tkw.data.local
 
 import com.tkw.database.AlarmDao
+import com.tkw.database.model.AlarmModeEntity
 import com.tkw.database.model.AlarmSettingsEntity
 import com.tkw.domain.AlarmRepository
 import com.tkw.domain.IAlarmManager
 import com.tkw.domain.model.Alarm
+import com.tkw.domain.model.AlarmList
 import com.tkw.domain.model.AlarmMode
 import com.tkw.domain.model.AlarmModeSetting
 import com.tkw.domain.model.AlarmSettings
@@ -66,11 +68,17 @@ class AlarmRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getAlarmList(): Flow<AlarmList> {
+        return alarmDao.getAlarmList().map {
+            AlarmMapper.alarmListToModel(it)
+        }
+    }
+
     override suspend fun wakeAllAlarm() {
         //모든 알람 가져와서 실행. 알람 객체는 현재 enable 상태 가지고 있고, enable true 상태인 알람만 전부 다시 켜기.
-        val alarmListEntity = alarmDao.getEnabledAlarmModeSetting()
+        val alarmListEntity = alarmDao.getEnabledAlarmList()
 
-        alarmListEntity?.alarmList?.forEach {
+        alarmListEntity.alarmList.forEach {
             setAlarm(it.alarmId, it.startTime, it.interval)
         }
     }
@@ -82,17 +90,20 @@ class AlarmRepositoryImpl @Inject constructor(
 
     override suspend fun cancelAllAlarm() {
         //모든 알람 객체 가져와서 enable true인 알람 모두 id값 대로 취소 후 enable false 상태로 업데이트.
-        val alarmListEntity = alarmDao.getEnabledAlarmModeSetting()
+        val alarmListEntity = alarmDao.getEnabledAlarmList()
 
-        alarmListEntity?.alarmList?.forEach {
+        alarmListEntity.alarmList.forEach {
             cancelAlarm(it.alarmId)
         }
     }
 
-    override suspend fun deleteAlarm(alarmId: Int) =
+    override suspend fun deleteAlarm(alarmId: Int) {
+        alarmManager.cancelAlarm(alarmId)
         alarmDao.deleteAlarm(alarmId)
+    }
 
-    override suspend fun allDelete() {
-        alarmDao.allDelete()
+    override suspend fun allDelete(mode: AlarmMode) {
+        cancelAllAlarm()
+        alarmDao.allDelete(AlarmMapper.alarmModeToEntity(mode))
     }
 }

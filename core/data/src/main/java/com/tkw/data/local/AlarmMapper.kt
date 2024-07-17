@@ -2,6 +2,7 @@ package com.tkw.data.local
 
 import com.tkw.database.model.AlarmEntity
 import com.tkw.database.model.AlarmEtcSettingsEntity
+import com.tkw.database.model.AlarmListEntity
 import com.tkw.database.model.AlarmModeSettingEntity
 import com.tkw.database.model.AlarmModeEntity
 import com.tkw.database.model.AlarmSettingsEntity
@@ -10,10 +11,10 @@ import com.tkw.database.model.PeriodEntity
 import com.tkw.database.model.RingToneModeEntity
 import com.tkw.domain.model.Alarm
 import com.tkw.domain.model.AlarmEtcSettings
+import com.tkw.domain.model.AlarmList
 import com.tkw.domain.model.AlarmModeSetting
 import com.tkw.domain.model.AlarmMode
 import com.tkw.domain.model.AlarmSettings
-import com.tkw.domain.model.RingTone
 import com.tkw.domain.model.RingToneMode
 import io.realm.kotlin.ext.toRealmList
 import java.time.LocalTime
@@ -50,14 +51,12 @@ object AlarmMapper {
                     this.interval = alarmMode.interval
                     this.alarmStartTime = alarmMode.alarmStartTime.format(formatter)
                     this.alarmEndTime = alarmMode.alarmEndTime.format(formatter)
-                    this.alarmList = alarmListToEntity(alarmMode.alarmList).toRealmList()
                 }
             }
             is AlarmModeSetting.Custom -> {
                 CustomEntity().apply {
                     this.selectedDate = alarmMode.selectedDate.toRealmList()
                     this.interval = alarmMode.interval
-                    this.alarmList = alarmListToEntity(alarmMode.alarmList).toRealmList()
                 }
             }
         }
@@ -71,15 +70,13 @@ object AlarmMapper {
                     alarmModeEntity.selectedDate,
                     alarmModeEntity.interval,
                     LocalTime.parse(alarmModeEntity.alarmStartTime, formatter),
-                    LocalTime.parse(alarmModeEntity.alarmEndTime, formatter),
-                    alarmListToModel(alarmModeEntity.alarmList)
+                    LocalTime.parse(alarmModeEntity.alarmEndTime, formatter)
                 )
             }
             is CustomEntity -> {
                 AlarmModeSetting.Custom(
                     alarmModeEntity.selectedDate,
-                    alarmModeEntity.interval,
-                    alarmListToModel(alarmModeEntity.alarmList)
+                    alarmModeEntity.interval
                 )
             }
             else -> {
@@ -108,6 +105,16 @@ object AlarmMapper {
 
     fun alarmModeToEntity(mode: AlarmMode): AlarmModeEntity {
         return AlarmModeEntity.valueOf(mode.name)
+    }
+
+    fun alarmListToModel(alarmListEntity: AlarmListEntity): AlarmList {
+        val newList = ArrayList<Alarm>()
+        alarmListEntity.alarmList.forEach {
+            val model = alarmToModel(it)
+            newList.add(model)
+        }
+
+        return AlarmList(alarmList = newList)
     }
 
     private fun ringToneToEntity(ringToneMode: RingToneMode): RingToneModeEntity {
@@ -140,25 +147,5 @@ object AlarmMapper {
             alarmEtcSettingsEntity.stopReachedGoal,
             alarmEtcSettingsEntity.delayTomorrow
         )
-    }
-
-    private fun alarmListToEntity(alarmList: List<Alarm>): List<AlarmEntity> {
-        val newList = ArrayList<AlarmEntity>()
-        alarmList.forEach {
-            val entity = alarmToEntity(it)
-            newList.add(entity)
-        }
-
-        return newList
-    }
-
-    private fun alarmListToModel(alarmList: List<AlarmEntity>): List<Alarm> {
-        val newList = ArrayList<Alarm>()
-        alarmList.forEach {
-            val model = alarmToModel(it)
-            newList.add(model)
-        }
-
-        return newList
     }
 }

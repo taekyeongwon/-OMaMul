@@ -1,9 +1,12 @@
 package com.tkw.database
 
 import com.tkw.database.model.AlarmEntity
+import com.tkw.database.model.AlarmListEntity
 import com.tkw.database.model.AlarmModeEntity
 import com.tkw.database.model.AlarmModeSettingEntity
 import com.tkw.database.model.AlarmSettingsEntity
+import com.tkw.database.model.CustomAlarmListEntity
+import com.tkw.database.model.PeriodAlarmListEntity
 import io.realm.kotlin.notifications.ResultsChange
 import kotlinx.coroutines.flow.Flow
 
@@ -29,7 +32,8 @@ interface AlarmDao: RealmDao<AlarmSettingsEntity> {
     suspend fun cancelAlarm(alarmId: Int)
 
     /**
-     * Period/Custom 설정 변경 시 업데이트
+     * Period/Custom 설정 변경 시 업데이트.
+     * alarmList의 경우 setAlarm을 통해서만 업데이트 된다.
      */
     suspend fun updateAlarmModeSetting(alarmModeSettingEntity: AlarmModeSettingEntity)
 
@@ -40,10 +44,14 @@ interface AlarmDao: RealmDao<AlarmSettingsEntity> {
     fun getAlarmModeSetting(mode: AlarmModeEntity): Flow<AlarmModeSettingEntity?>
 
     /**
-     * 현재 설정된 모드에 해당하는
-     * PeriodEntity/CustomEntity 객체 내 alarm.enabled == true 필터링 된 객체 리턴
+     * alarm enable 여부에 상관 없이 Period/CustomAlarmListEntity 객체 리턴
      */
-    fun getEnabledAlarmModeSetting(): AlarmModeSettingEntity?
+    fun getAlarmList(): Flow<AlarmListEntity>
+
+    /**
+     * Period/CustomAlarmListEntity 객체 내 alarm.enabled == true 필터링 된 알람 리스트 리턴
+     */
+    fun getEnabledAlarmList(): AlarmListEntity
 
     /**
      * alarmId에 해당하는 Alarm 객체 제거
@@ -53,5 +61,5 @@ interface AlarmDao: RealmDao<AlarmSettingsEntity> {
     /**
      * 전체 알람 제거 (Period 알람 간격 재 설정 시 호출)
      */
-    suspend fun allDelete()
+    suspend fun allDelete(mode: AlarmModeEntity)
 }

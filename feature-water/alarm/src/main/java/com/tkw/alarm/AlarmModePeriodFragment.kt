@@ -16,13 +16,14 @@ import com.tkw.alarm.dialog.AlarmTimeBottomDialog
 import com.tkw.common.autoCleared
 import com.tkw.common.util.DateTimeUtils
 import com.tkw.domain.model.Alarm
+import com.tkw.domain.model.AlarmMode
 import com.tkw.domain.model.AlarmModeSetting
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalTime
 
 @AndroidEntryPoint
-class AlarmModePeriodFragment: Fragment() {
+class AlarmModePeriodFragment : Fragment() {
     private var dataBinding by autoCleared<FragmentAlarmModePeriodBinding>()
     private val viewModel: WaterAlarmViewModel by hiltNavGraphViewModels(R.id.alarm_nav_graph)
     private var period: AlarmModeSetting.Period? = null
@@ -55,31 +56,42 @@ class AlarmModePeriodFragment: Fragment() {
             //해당 값으로 화면 구성
             periodAlarm?.let { period ->
                 dataBinding.alarmWeek.setChecked(period.selectedDate)
-                dataBinding.alarmWeek.setPeriodTime(DateTimeUtils.getTime(
-                    period.interval,
-                    requireContext().getString(com.tkw.ui.R.string.hour),
-                    requireContext().getString(com.tkw.ui.R.string.minute)
-                ))
+                dataBinding.alarmWeek.setPeriodTime(
+                    DateTimeUtils.getTime(
+                        period.interval,
+                        requireContext().getString(com.tkw.ui.R.string.hour),
+                        requireContext().getString(com.tkw.ui.R.string.minute)
+                    )
+                )
                 dataBinding.tvAlarmTime.text = it.getAlarmTimeRange()
+                //todo 전부 클리어하고 설정된 시간에 interval대로 다시 전부 세팅
+                setAlarm(period)
             }
         }
     }
 
     private fun initListener() {
         dataBinding.alarmWeek.setCheckListListener {
-            it.forEach {
-                Log.d("week", it.toString())
-            }
+            updateModeSetting(
+                period?.copy(selectedDate = it)
+            )
         }
         dataBinding.alarmWeek.setPeriodClickListener {
-            val dialog = AlarmPeriodDialog(
-                DateTimeUtils.getTimeFromLocalTime(
-                    dataBinding.alarmWeek.getPeriodTime(),
+            val currentPeriod = DateTimeUtils.getTimeFromLocalTime(
+                dataBinding.alarmWeek.getPeriodTime(),
+                requireContext().getString(com.tkw.ui.R.string.hour),
+                requireContext().getString(com.tkw.ui.R.string.minute)
+            )
+            val dialog = AlarmPeriodDialog(currentPeriod) {
+                dataBinding.alarmWeek.setPeriodTime(it)
+                val interval = DateTimeUtils.getTimeFromLocalTime(
+                    it,
                     requireContext().getString(com.tkw.ui.R.string.hour),
                     requireContext().getString(com.tkw.ui.R.string.minute)
+                ).toNanoOfDay()
+                updateModeSetting(
+                    period?.copy(interval = interval)
                 )
-            ) {
-                dataBinding.alarmWeek.setPeriodTime(it)
             }
             dialog.show(childFragmentManager, dialog.tag)
         }
@@ -93,9 +105,28 @@ class AlarmModePeriodFragment: Fragment() {
             selectedStart = period?.alarmStartTime ?: LocalTime.now(),
             selectedEnd = period?.alarmEndTime ?: LocalTime.now(),
             resultListener = { start, end ->
-                //todo 전부 클리어하고 설정된 시간에 interval대로 다시 전부 세팅
+                updateModeSetting(
+                    period?.copy(
+                        alarmStartTime = start,
+                        alarmEndTime = end!!
+                    )
+                )
             }
         )
         dialog.show(childFragmentManager, dialog.tag)
+    }
+
+    private fun updateModeSetting(period: AlarmModeSetting.Period?) {
+        period?.let {
+            viewModel.updateAlarmModeSetting(it)
+        }
+    }
+
+    private fun setAlarm(period: AlarmModeSetting.Period) {
+        viewModel.clearAlarm(AlarmMode.PERIOD)
+        if(period.selectedDate.isNotEmpty()) {
+            //todo 테스트용 알람 세팅. 현재 선택된 요일과 알람 시간대에 맞춰서 인터벌대로 알람 호출 필요
+            viewModel.setAlarm(0, System.currentTimeMillis() + 1000 * 60, 1000 * 60)
+        }
     }
 }

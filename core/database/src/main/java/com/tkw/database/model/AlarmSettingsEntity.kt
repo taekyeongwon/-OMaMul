@@ -37,10 +37,3 @@ class AlarmEtcSettingsEntity: EmbeddedRealmObject {
     var stopReachedGoal: Boolean = false
     var delayTomorrow: Boolean = false
 }
-
-class AlarmEntity: EmbeddedRealmObject {
-    var alarmId: Int = -1
-    var startTime: Long = -1L
-    var enabled: Boolean = false
-    var interval: Long = -1L
-}

@@ -12,8 +12,7 @@ sealed class AlarmModeSetting {
         val selectedDate: List<Int> = listOf(),
         val interval: Long = DEFAULT_PERIOD_INTERVAL,
         val alarmStartTime: LocalTime = LocalTime.of(11,0),
-        val alarmEndTime: LocalTime = LocalTime.of(22, 0),
-        val alarmList: List<Alarm> = listOf()
+        val alarmEndTime: LocalTime = LocalTime.of(22, 0)
     ): AlarmModeSetting() {
         fun getAlarmTimeRange(): String {
             val formatter = DateTimeFormatter.ofPattern("a hh:mm")
@@ -26,7 +25,10 @@ sealed class AlarmModeSetting {
 
     data class Custom(
         val selectedDate: List<Int> = listOf(),
-        val interval: Long = DEFAULT_CUSTOM_INTERVAL,
-        val alarmList: List<Alarm> = listOf()
+        val interval: Long = DEFAULT_CUSTOM_INTERVAL
     ): AlarmModeSetting()
 }
+
+data class AlarmList(
+    val alarmList: List<Alarm> = listOf()
+)
