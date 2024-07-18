@@ -125,6 +125,12 @@ class WaterAlarmViewModel @Inject constructor(
         }
     }
 
+    fun deleteAlarm(alarmId: Int) {
+        launch {
+            alarmRepository.deleteAlarm(alarmId)
+        }
+    }
+
     fun setModifyMode(flag: Boolean) {
         _modifyMode.value = flag
     }

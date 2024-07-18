@@ -51,7 +51,7 @@ interface AlarmDao: RealmDao<AlarmSettingsEntity> {
     /**
      * Period/CustomAlarmListEntity 객체 내 alarm.enabled == true 필터링 된 알람 리스트 리턴
      */
-    fun getEnabledAlarmList(): AlarmListEntity
+    suspend fun getEnabledAlarmList(): AlarmListEntity
 
     /**
      * alarmId에 해당하는 Alarm 객체 제거
