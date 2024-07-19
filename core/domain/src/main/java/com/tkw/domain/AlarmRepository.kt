@@ -25,6 +25,8 @@ interface AlarmRepository {
 
     suspend fun cancelAllAlarm()
 
+    suspend fun sleepAlarm()
+
     suspend fun deleteAlarm(alarmId: Int)
 
     suspend fun allDelete(mode: AlarmMode)

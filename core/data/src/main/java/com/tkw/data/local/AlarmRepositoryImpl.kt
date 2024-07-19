@@ -97,6 +97,15 @@ class AlarmRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun sleepAlarm() {
+        //현재 모드로 활성화 된 알람, 즉 알람매니저에 등록된 알람 cancel 처리. wakeAllAlarm() 호출 시 깨어난다.
+        val alarmListEntity = alarmDao.getEnabledAlarmList()
+
+        alarmListEntity.alarmList.forEach {
+            alarmManager.cancelAlarm(it.alarmId)
+        }
+    }
+
     override suspend fun deleteAlarm(alarmId: Int) {
         alarmManager.cancelAlarm(alarmId)
         alarmDao.deleteAlarm(alarmId)

@@ -46,7 +46,8 @@ class AlarmModePeriodFragment : Fragment() {
     }
 
     private fun initView() {
-
+        //wake all period alarm
+        viewModel.wakeAllAlarm()
     }
 
     private fun initObserver() {

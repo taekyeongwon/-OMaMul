@@ -109,6 +109,7 @@ class WaterAlarmViewModel @Inject constructor(
                 mode,
                 currentSetting.etcSetting
             )
+            alarmRepository.sleepAlarm()
             alarmRepository.update(newSetting)
         }
     }

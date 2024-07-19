@@ -145,8 +145,8 @@ class WaterAlarmFragment: Fragment() {
 
                 NotificationManager.isNotificationEnabled(requireContext())
                     .also {
-                        setSwitchButtonCheckedListener(it)
                         setSwitchButtonCheckedWithEnabled(it)
+                        setSwitchButtonCheckedListener(it)
                         checkApi31ExactAlarm()
                     }
             }
