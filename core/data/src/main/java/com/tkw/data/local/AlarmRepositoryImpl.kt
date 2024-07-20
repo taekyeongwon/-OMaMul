@@ -1,8 +1,7 @@
 package com.tkw.data.local
 
+import android.util.Log
 import com.tkw.database.AlarmDao
-import com.tkw.database.model.AlarmModeEntity
-import com.tkw.database.model.AlarmSettingsEntity
 import com.tkw.domain.AlarmRepository
 import com.tkw.domain.IAlarmManager
 import com.tkw.domain.model.Alarm
@@ -10,13 +9,14 @@ import com.tkw.domain.model.AlarmList
 import com.tkw.domain.model.AlarmMode
 import com.tkw.domain.model.AlarmModeSetting
 import com.tkw.domain.model.AlarmSettings
-import com.tkw.domain.model.RingTone
-import com.tkw.domain.model.RingToneMode
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
+import kotlin.math.ceil
 
 class AlarmRepositoryImpl @Inject constructor(
     private val alarmDao: AlarmDao,
@@ -43,9 +43,15 @@ class AlarmRepositoryImpl @Inject constructor(
         if(alarmId != -1) {
             val alarm = Alarm(alarmId, startTime, true, interval)
 
-            alarmManager.setAlarm(alarm)
-            alarmDao.updateAlarm(AlarmMapper.alarmToEntity(alarm))
+            if(startTime > System.currentTimeMillis()) {    //현재 시간 이후의 알람만 울리도록
+                alarmManager.setAlarm(alarm)
+                alarmDao.updateAlarm(AlarmMapper.alarmToEntity(alarm))
+            } else {
+                val x = ceil((System.currentTimeMillis() - startTime).toDouble() / interval).toInt()
+                setAlarm(alarmId, startTime + interval * x, interval)
+            }
         }
+        Log.d("setAlarm", "alarmId : ${alarmId}, startTime : $startTime, ${getDateTimeString(startTime)}")
     }
 
     override suspend fun updateAlarmModeSetting(setting: AlarmModeSetting) {
@@ -114,5 +120,14 @@ class AlarmRepositoryImpl @Inject constructor(
     override suspend fun allDelete(mode: AlarmMode) {
         cancelAllAlarm()
         alarmDao.allDelete(AlarmMapper.alarmModeToEntity(mode))
+    }
+
+    //로그용
+    private fun getDateTimeString(timeInMillis: Long): String {
+        val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+        val localDateTime = Instant.ofEpochMilli(timeInMillis)
+            .atZone(ZoneId.systemDefault())
+            .toLocalDateTime()
+        return localDateTime.format(formatter)
     }
 }

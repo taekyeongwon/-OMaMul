@@ -38,9 +38,9 @@ class WaterAlarmReceiver : BroadcastReceiver() {
                     alarmInterval
                 )
             }
-        }
 
-        Log.d("test", "alarmnoti received")
+            Log.d("test", "alarmnoti received $alarmId")
+        }
 
     }
 }
