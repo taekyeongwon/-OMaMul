@@ -86,6 +86,7 @@ class CupViewModel
     fun deleteCup(cupId: String) {
         launch {
             cupRepository.deleteCup(cupId)
+            _nextEvent.call()
         }
     }
 
@@ -93,13 +94,7 @@ class CupViewModel
 
     fun updateAll(list: List<Cup>) {
         launch {
-            runCatching {   //cancelException도 동일하게 onFailure타므로 주의
-                cupRepository.updateAll(list)
-            }.onSuccess {
-                _nextEvent.call()
-            }.onFailure {   //CoroutineExceptionHandler에서 잡히도록 throw
-                throw it
-            }
+            cupRepository.updateAll(list)
         }
     }
 

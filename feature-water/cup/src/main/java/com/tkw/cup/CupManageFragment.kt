@@ -2,10 +2,12 @@ package com.tkw.cup
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -125,7 +127,9 @@ class CupManageFragment: Fragment() {
             adapter = cupListAdapter
             addItemDecoration(DividerDecoration(10f))
             itemTouchHelper.attachToRecyclerView(this)
-            setHasFixedSize(true)
+//            setHasFixedSize(true)
+        //            -> recyclerview visible gone일 때 submitList한 뒤에
+        //            visible하게 바꾸므로 size를 고정하고 지속적으로 item이 변경 되는 것이 아니므로 true값이 의미가 없음.
         }
     }
 
@@ -143,6 +147,10 @@ class CupManageFragment: Fragment() {
         viewModel.modifyMode.observe(viewLifecycleOwner) {
             modeChanged(it)
         }
+
+        viewModel.nextEvent.observe(viewLifecycleOwner) {
+            viewModel.setModifyMode(false)
+        }
     }
 
     private fun initListener() {
@@ -153,6 +161,14 @@ class CupManageFragment: Fragment() {
 
         dataBinding.btnReorder.setOnClickListener {
             viewModel.setModifyMode(true)
+        }
+
+        dataBinding.btnDelete.setOnClickListener {
+            cupListAdapter.currentList
+                .filter { it.isChecked }
+                .forEach {
+                    viewModel.deleteCup(it.cupId)
+                }
         }
     }
 
@@ -165,7 +181,8 @@ class CupManageFragment: Fragment() {
             dataBinding.tvEmptyCup.visibility = View.GONE
         }
         dataBinding.btnReorder.visibility =
-            if(cupListAdapter.itemCount > 1) View.VISIBLE
+            if(cupListAdapter.itemCount > 1 &&
+                viewModel.modifyMode.value == false) View.VISIBLE
             else View.GONE
     }
 
@@ -178,7 +195,9 @@ class CupManageFragment: Fragment() {
         } else {
             dataBinding.btnDelete.visibility = View.GONE
             dataBinding.btnNext.visibility = View.VISIBLE
-            dataBinding.btnReorder.visibility = View.VISIBLE
+            dataBinding.btnReorder.visibility =
+                if(cupListAdapter.itemCount > 1) View.VISIBLE
+                else View.GONE
         }
     }
 
