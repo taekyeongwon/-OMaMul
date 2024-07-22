@@ -15,6 +15,7 @@ import io.realm.kotlin.ext.query
 import io.realm.kotlin.notifications.ResultsChange
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -187,8 +188,11 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
         }
     }
 
-    override fun getAlarmList(): Flow<AlarmListEntity> {
-        TODO("Not yet implemented")
+    override fun getAlarmList(mode: AlarmModeEntity): Flow<AlarmListEntity> {
+        return when(mode) {
+            AlarmModeEntity.PERIOD -> getPeriodAlarmListEntity
+            AlarmModeEntity.CUSTOM -> getCustomAlarmListEntity
+        }
     }
 
     override suspend fun getEnabledAlarmList(): AlarmListEntity {
@@ -217,10 +221,21 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
         } ?: CustomAlarmListEntity()
     }
 
-    override suspend fun deleteAlarm(alarmId: Int) {
+    override suspend fun deleteAlarm(alarmId: Int, mode: AlarmModeEntity) {
+        val entity = when(mode) {
+            AlarmModeEntity.PERIOD -> {
+                getPeriodAlarm(alarmId)
+            }
+            AlarmModeEntity.CUSTOM -> {
+                getCustomAlarm(alarmId)
+            }
+        }
         realm.write {
-            val entity = this.query<AlarmEntity>("alarmId == $0", alarmId)
-            delete(entity)
+            entity?.let {
+                findLatest(it)?.let {
+                    delete(it)
+                }
+            }
         }
     }
 
@@ -229,6 +244,21 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
             when(mode) {
                 AlarmModeEntity.PERIOD -> delete(PeriodAlarmListEntity::class)
                 AlarmModeEntity.CUSTOM -> delete(CustomAlarmListEntity::class)
+            }
+        }
+    }
+
+    override suspend fun updateAlarmList(list: List<AlarmEntity>, mode: AlarmModeEntity) {
+        val entity = getAlarmList(mode).first()
+        realm.write {
+            val latestObj = when(entity) {
+                is PeriodAlarmListEntity -> findLatest(entity)
+                is CustomAlarmListEntity -> findLatest(entity)
+                else -> null
+            }
+            latestObj?.let {
+                it.alarmList.clear()
+                it.alarmList.addAll(list)
             }
         }
     }

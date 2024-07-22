@@ -74,8 +74,8 @@ class AlarmRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getAlarmList(): Flow<AlarmList> {
-        return alarmDao.getAlarmList().map {
+    override fun getAlarmList(mode: AlarmMode): Flow<AlarmList> {
+        return alarmDao.getAlarmList(AlarmMapper.alarmModeToEntity(mode)).map {
             AlarmMapper.alarmListToModel(it)
         }
     }
@@ -112,14 +112,21 @@ class AlarmRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteAlarm(alarmId: Int) {
+    override suspend fun deleteAlarm(alarmId: Int, mode: AlarmMode) {
         alarmManager.cancelAlarm(alarmId)
-        alarmDao.deleteAlarm(alarmId)
+        alarmDao.deleteAlarm(alarmId, AlarmMapper.alarmModeToEntity(mode))
     }
 
     override suspend fun allDelete(mode: AlarmMode) {
         cancelAllAlarm()
         alarmDao.allDelete(AlarmMapper.alarmModeToEntity(mode))
+    }
+
+    override suspend fun updateList(list: List<Alarm>, mode: AlarmMode) {
+        val mappedList = list.map {
+            AlarmMapper.alarmToEntity(it)
+        }
+        alarmDao.updateAlarmList(mappedList, AlarmMapper.alarmModeToEntity(mode))
     }
 
     //로그용

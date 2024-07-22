@@ -6,9 +6,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import com.tkw.base.BaseViewModel
 import com.tkw.base.launch
+import com.tkw.common.SingleLiveEvent
 import com.tkw.domain.AlarmRepository
 import com.tkw.domain.PrefDataRepository
+import com.tkw.domain.model.Alarm
 import com.tkw.domain.model.AlarmEtcSettings
+import com.tkw.domain.model.AlarmList
 import com.tkw.domain.model.AlarmMode
 import com.tkw.domain.model.AlarmModeSetting
 import com.tkw.domain.model.AlarmSettings
@@ -32,6 +35,9 @@ class WaterAlarmViewModel @Inject constructor(
     private val alarmRepository: AlarmRepository
 ): BaseViewModel() {
 
+    private val _nextEvent = SingleLiveEvent<Unit>()
+    val nextEvent: LiveData<Unit> = _nextEvent
+
     private val isAlarmEnabled = prefDataRepository.fetchAlarmEnableFlag()
     suspend fun getNotificationEnabled() = isAlarmEnabled.first() ?: false
 
@@ -49,6 +55,9 @@ class WaterAlarmViewModel @Inject constructor(
 
     val alarmSettings: LiveData<AlarmSettings> =
         alarmSettingsFlow.asLiveData()
+
+    val customAlarmList: LiveData<AlarmList> =
+        alarmRepository.getAlarmList(AlarmMode.CUSTOM).asLiveData()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val alarmRingTone: LiveData<RingToneMode> =
@@ -128,11 +137,18 @@ class WaterAlarmViewModel @Inject constructor(
 
     fun deleteAlarm(alarmId: Int) {
         launch {
-            alarmRepository.deleteAlarm(alarmId)
+            alarmRepository.deleteAlarm(alarmId, AlarmMode.CUSTOM)
+            _nextEvent.call()
         }
     }
 
     fun setModifyMode(flag: Boolean) {
         _modifyMode.value = flag
+    }
+
+    fun updateList(list: List<Alarm>) {
+        launch {
+            alarmRepository.updateList(list, AlarmMode.CUSTOM)
+        }
     }
 }

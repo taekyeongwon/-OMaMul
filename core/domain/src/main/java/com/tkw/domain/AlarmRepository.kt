@@ -1,5 +1,6 @@
 package com.tkw.domain
 
+import com.tkw.domain.model.Alarm
 import com.tkw.domain.model.AlarmList
 import com.tkw.domain.model.AlarmModeSetting
 import com.tkw.domain.model.AlarmMode
@@ -17,7 +18,7 @@ interface AlarmRepository {
 
     fun getAlarmModeSetting(mode: AlarmMode): Flow<AlarmModeSetting>
 
-    fun getAlarmList(): Flow<AlarmList>
+    fun getAlarmList(mode: AlarmMode): Flow<AlarmList>
 
     suspend fun wakeAllAlarm()
 
@@ -27,7 +28,9 @@ interface AlarmRepository {
 
     suspend fun sleepAlarm()
 
-    suspend fun deleteAlarm(alarmId: Int)
+    suspend fun deleteAlarm(alarmId: Int, mode: AlarmMode)
 
     suspend fun allDelete(mode: AlarmMode)
+
+    suspend fun updateList(list: List<Alarm>, mode: AlarmMode)
 }

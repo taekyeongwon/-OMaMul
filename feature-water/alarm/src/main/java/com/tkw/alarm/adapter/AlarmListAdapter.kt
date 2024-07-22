@@ -59,7 +59,7 @@ class AlarmListAdapter(
 
     override fun onItemMove(from: Int, to: Int) {
         val current = currentList[from]
-        submitList(currentList.apply {
+        submitList(currentList.toMutableList().apply {
             removeAt(from)
             add(to, current)
         })

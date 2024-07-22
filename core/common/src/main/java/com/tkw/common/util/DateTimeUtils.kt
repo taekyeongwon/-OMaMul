@@ -56,6 +56,12 @@ object DateTimeUtils {
         return LocalTime.of(hour, minute)
     }
 
+    fun getLocalTime(timeInMillis: Long): LocalTime {
+        return Instant.ofEpochMilli(timeInMillis)
+            .atZone(ZoneId.systemDefault())
+            .toLocalTime()
+    }
+
     fun getFormattedDate(date: LocalDate): String {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         return date.format(formatter)

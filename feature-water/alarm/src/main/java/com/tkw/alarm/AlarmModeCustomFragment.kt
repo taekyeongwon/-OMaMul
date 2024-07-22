@@ -1,6 +1,7 @@
 package com.tkw.alarm
 
 import android.content.Context
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -24,6 +25,7 @@ import com.tkw.domain.model.Alarm
 import com.tkw.domain.model.AlarmModeSetting
 import com.tkw.ui.ItemTouchHelperCallback
 import com.tkw.ui.OnItemDrag
+import com.tkw.ui.VerticalSpaceItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalTime
@@ -58,7 +60,7 @@ class AlarmModeCustomFragment: Fragment() {
         }
 
         override fun onStopDrag(list: List<Alarm>) {
-
+            viewModel.updateList(list)
         }
     }
 
@@ -112,6 +114,8 @@ class AlarmModeCustomFragment: Fragment() {
         dataBinding.alarmWeek.setPeriodLayoutVisibility(false)  //커스텀 화면은 알람 간격 안보이게 처리
         initAdapter()
         initRecyclerView()
+        //wake all custom alarm
+        viewModel.wakeAllAlarm()
     }
 
     private fun initObserver() {
@@ -121,14 +125,25 @@ class AlarmModeCustomFragment: Fragment() {
             custom = customAlarm
             customAlarm?.let { custom ->
                 dataBinding.alarmWeek.setChecked(custom.selectedDate)
-                alarmListAdapter.submitList(custom.alarmList) {
-                    dataChanged()
-                }
+            }
+        }
+
+        viewModel.customAlarmList.observe(viewLifecycleOwner) {
+            val list = ArrayList<Alarm>()
+            it.alarmList.forEach {
+                list.add(it.copy())
+            }
+            alarmListAdapter.submitList(list) {
+                dataChanged()
             }
         }
 
         viewModel.modifyMode.observe(viewLifecycleOwner) {
             modeChanged(it)
+        }
+
+        viewModel.nextEvent.observe(viewLifecycleOwner) {
+            viewModel.setModifyMode(false)
         }
     }
 
@@ -142,6 +157,7 @@ class AlarmModeCustomFragment: Fragment() {
                 currentTime,
                 true
             )
+//            viewModel.setAlarm(++i, System.currentTimeMillis() + 1000 * 60, 1000 * 600)
             showTimeDialog(alarm)
         }
 
@@ -153,6 +169,14 @@ class AlarmModeCustomFragment: Fragment() {
 
         dataBinding.ivEdit.setOnClickListener {
             viewModel.setModifyMode(true)
+        }
+
+        dataBinding.btnDelete.setOnClickListener {
+            alarmListAdapter.currentList
+                .filter { it.isChecked }
+                .forEach {
+                    viewModel.deleteAlarm(it.alarmId)
+                }
         }
     }
 
@@ -172,7 +196,8 @@ class AlarmModeCustomFragment: Fragment() {
         dataBinding.rvAlarm.apply {
             adapter = alarmListAdapter
             itemTouchHelper.attachToRecyclerView(this)
-            setHasFixedSize(true)
+            addItemDecoration(VerticalSpaceItemDecoration(20))
+//            setHasFixedSize(true)
         }
     }
 
@@ -185,7 +210,8 @@ class AlarmModeCustomFragment: Fragment() {
             dataBinding.tvEmptyAlarm.visibility = View.GONE
         }
         dataBinding.ivEdit.visibility =
-            if (alarmListAdapter.itemCount > 1) View.VISIBLE
+            if (alarmListAdapter.itemCount > 1 &&
+                viewModel.modifyMode.value == false) View.VISIBLE
             else View.INVISIBLE
     }
 
@@ -194,11 +220,13 @@ class AlarmModeCustomFragment: Fragment() {
         if(isModified) {
             setDeleteBtnVisibility()
             dataBinding.btnAdd.visibility = View.GONE
-            dataBinding.ivEdit.visibility = View.GONE
+            dataBinding.ivEdit.visibility = View.INVISIBLE
         } else {
             dataBinding.btnDelete.visibility = View.GONE
             dataBinding.btnAdd.visibility = View.VISIBLE
-            dataBinding.ivEdit.visibility = View.VISIBLE
+            dataBinding.ivEdit.visibility =
+                if (alarmListAdapter.itemCount > 1) View.VISIBLE
+                else View.INVISIBLE
         }
     }
 
@@ -221,9 +249,8 @@ class AlarmModeCustomFragment: Fragment() {
 
     private fun showTimeDialog(alarm: Alarm) {
         val dialog = AlarmTimeBottomDialog(
-            selectedStart = LocalTime.now(),
-            selectedEnd = LocalTime.now(),
-            resultListener = { start, end ->
+            selectedStart = DateTimeUtils.getLocalTime(alarm.startTime),
+            resultListener = { start, _ ->
                 //매개변수로 받은 alarm에 선택한 시간으로 뷰모델 setAlarm 할 수 있도록 구현
             }
         )
