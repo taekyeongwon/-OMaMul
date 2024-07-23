@@ -24,6 +24,7 @@ import com.tkw.domain.model.RingToneMode
 object NotificationManager {
     private const val NOTI_CH = "NOTI_CH"
     private const val MUTE_CH = "MUTE_CH"
+    private const val DEFAULT_CH = "DEFAULT_CH"
     private const val NOTIFICATION_GROUP_NAME = "GROUP_NAME"
     private lateinit var homeIntent: PendingIntent
     const val TIMEOUT: Long = 1000 * 30
@@ -44,11 +45,17 @@ object NotificationManager {
             setSound(null, null)
             enableVibration(false)
         }
+        val defaultChannel = NotificationChannel(DEFAULT_CH, name, NotificationManager.IMPORTANCE_DEFAULT).apply {
+            this.description = description
+            setSound(null, null)
+            enableVibration(false)
+        }
 
         val notificationManager: NotificationManager =
             context.getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
         notificationManager.createNotificationChannel(muteChannel)
+        notificationManager.createNotificationChannel(defaultChannel)
     }
 
     private fun buildNotification(
@@ -141,7 +148,7 @@ object NotificationManager {
             R.drawable.noti_foreground,
             context.getString(R.string.notification_title),
             context.getString(R.string.notification_text),
-            MUTE_CH
+            DEFAULT_CH
         )
         val notificationManager: NotificationManager =
             context.getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager
