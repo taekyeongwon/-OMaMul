@@ -10,6 +10,8 @@ import android.content.Intent
 import android.media.AudioAttributes
 import android.media.RingtoneManager
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -82,9 +84,9 @@ object NotificationManager {
         contentView.setTextViewText(R.id.tv_title, title)
         contentView.setTextViewText(R.id.tv_content, text)
 
-        setCustomHeadsUpContentView(contentView)
+//        setCustomHeadsUpContentView(contentView)
         setFullScreenIntent(getFullScreenIntent(context), true)
-        setTimeoutAfter(TIMEOUT)
+//        setTimeoutAfter(TIMEOUT)
         return this
     }
 
@@ -128,6 +130,22 @@ object NotificationManager {
             context.getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(notificationId, builder.build())
         play(ringtoneMode.getCurrentMode().name, context)
+        Handler(Looper.getMainLooper()).postDelayed({
+            notifyIfFullScreen(context, notificationId)
+        }, 5000)
+    }
+
+    private fun notifyIfFullScreen(context: Context, notificationId: Int) {
+        val builder = buildNotification(
+            context,
+            R.drawable.noti_foreground,
+            context.getString(R.string.notification_title),
+            context.getString(R.string.notification_text),
+            MUTE_CH
+        )
+        val notificationManager: NotificationManager =
+            context.getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(notificationId, builder.build())
     }
 
     private fun canUseFullScreenIntent(context: Context): Boolean {
