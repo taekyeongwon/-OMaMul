@@ -46,8 +46,8 @@ data class AlarmEtcSettings(
 data class Alarm(
     val alarmId: Int,   //HHmm
     val startTime: Long,
-    val enabled: Boolean,
-    val interval: Long = -1L
+    val interval: Long,
+    val enabled: Boolean = false
 ) {
     var isChecked: Boolean = false
 

@@ -89,8 +89,8 @@ object AlarmMapper {
         return AlarmEntity().apply {
             this.alarmId = alarm.alarmId
             this.startTime = alarm.startTime
-            this.enabled = alarm.enabled
             this.interval = alarm.interval
+            this.enabled = alarm.enabled
         }
     }
 
@@ -98,8 +98,8 @@ object AlarmMapper {
         return Alarm(
             alarm.alarmId,
             alarm.startTime,
-            alarm.enabled,
-            alarm.interval
+            alarm.interval,
+            alarm.enabled
         )
     }
 

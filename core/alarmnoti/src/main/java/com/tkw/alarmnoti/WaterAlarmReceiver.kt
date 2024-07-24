@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.tkw.domain.AlarmRepository
+import com.tkw.domain.model.Alarm
 import com.tkw.domain.model.RingToneMode
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -33,9 +34,12 @@ class WaterAlarmReceiver : BroadcastReceiver() {
                 NotificationManager.notify(context, ringtone)
 
                 alarmRepository.setAlarm(
-                    alarmId,
-                    startTime,
-                    alarmInterval
+                    Alarm(
+                        alarmId,
+                        startTime,
+                        alarmInterval,
+                        true    //todo 다음 알람 설정 시 week값 판단해서 설정해야 함.
+                    )
                 )
             }
 

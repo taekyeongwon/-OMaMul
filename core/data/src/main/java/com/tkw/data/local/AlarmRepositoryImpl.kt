@@ -39,19 +39,21 @@ class AlarmRepositoryImpl @Inject constructor(
     override suspend fun update(setting: AlarmSettings) =
         alarmDao.updateSetting(AlarmMapper.alarmSettingToEntity(setting))
 
-    override suspend fun setAlarm(alarmId: Int, startTime: Long, interval: Long) {
-        if(alarmId != -1) {
-            val alarm = Alarm(alarmId, startTime, true, interval)
+    override suspend fun setAlarm(alarm: Alarm) {
+        with(alarm) {
+            if(alarmId != -1) {
+//                val alarm = Alarm(alarmId, startTime, interval, true)
 
-            if(startTime > System.currentTimeMillis()) {    //현재 시간 이후의 알람만 울리도록
-                alarmManager.setAlarm(alarm)
-                alarmDao.updateAlarm(AlarmMapper.alarmToEntity(alarm))
-            } else {
-                val x = ceil((System.currentTimeMillis() - startTime).toDouble() / interval).toInt()
-                setAlarm(alarmId, startTime + interval * x, interval)
+                if(startTime > System.currentTimeMillis()) {    //현재 시간 이후의 알람만 울리도록
+                    alarmManager.setAlarm(alarm)
+                    alarmDao.updateAlarm(AlarmMapper.alarmToEntity(alarm))
+                } else {
+                    val x = ceil((System.currentTimeMillis() - startTime).toDouble() / interval).toInt()
+                    setAlarm(alarm.copy(startTime = startTime + interval * x))
+                }
             }
+            Log.d("setAlarm", "alarmId : ${alarmId}, startTime : $startTime, ${getDateTimeString(startTime)}")
         }
-        Log.d("setAlarm", "alarmId : ${alarmId}, startTime : $startTime, ${getDateTimeString(startTime)}")
     }
 
     override suspend fun updateAlarmModeSetting(setting: AlarmModeSetting) {
@@ -85,7 +87,7 @@ class AlarmRepositoryImpl @Inject constructor(
         val alarmListEntity = alarmDao.getEnabledAlarmList()
 
         alarmListEntity.alarmList.forEach {
-            setAlarm(it.alarmId, it.startTime, it.interval)
+            setAlarm(AlarmMapper.alarmToModel(it))
         }
     }
 

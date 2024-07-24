@@ -12,7 +12,7 @@ interface AlarmRepository {
 
     suspend fun update(setting: AlarmSettings)
 
-    suspend fun setAlarm(alarmId: Int, startTime: Long, interval: Long)
+    suspend fun setAlarm(alarm: Alarm)
 
     suspend fun updateAlarmModeSetting(setting: AlarmModeSetting)
 

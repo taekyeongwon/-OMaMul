@@ -129,9 +129,9 @@ class WaterAlarmViewModel @Inject constructor(
         }
     }
 
-    fun setAlarm(alarmId: Int, startTime: Long, interval: Long) {
+    fun setAlarm(alarm: Alarm) {
         launch {
-            alarmRepository.setAlarm(alarmId, startTime, interval)
+            alarmRepository.setAlarm(alarm)
         }
     }
 

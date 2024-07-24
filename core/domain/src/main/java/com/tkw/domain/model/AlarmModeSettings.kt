@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter
 
 sealed class AlarmModeSetting {
     companion object {
-        const val DEFAULT_PERIOD_INTERVAL: Long = 1000 * 60 * 60
+        const val DEFAULT_PERIOD_INTERVAL: Long = 1000 * 60 * 2
         const val DEFAULT_CUSTOM_INTERVAL: Long = 1000 * 60 * 5 //임시 5분 처리. 추후 24시간으로 변경
     }
     data class Period(
