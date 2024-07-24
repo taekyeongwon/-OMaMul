@@ -12,6 +12,7 @@
             android:excludeFromRecents="true"/>
 
         <receiver android:name=".WaterAlarmReceiver" android:exported="false"/>
+        <receiver android:name=".NotificationDismissedReceiver" android:exported="false"/>
     </application>
 
 </manifest>

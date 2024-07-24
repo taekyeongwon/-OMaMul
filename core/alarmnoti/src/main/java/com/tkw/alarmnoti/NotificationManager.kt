@@ -27,7 +27,7 @@ object NotificationManager {
     private const val DEFAULT_CH = "DEFAULT_CH"
     private const val NOTIFICATION_GROUP_NAME = "GROUP_NAME"
     private lateinit var homeIntent: PendingIntent
-    const val TIMEOUT: Long = 1000 * 30
+    const val TIMEOUT: Long = 1000 * 5
 
     fun setContentClickPendingIntent(intent: PendingIntent) {
         homeIntent = intent
@@ -86,15 +86,14 @@ object NotificationManager {
         context: Context,
         title: String,
         text: String
-    ): NotificationCompat.Builder {
+    ) {
         val contentView = RemoteViews(context.packageName, R.layout.custom_notification)
         contentView.setTextViewText(R.id.tv_title, title)
         contentView.setTextViewText(R.id.tv_content, text)
 
 //        setCustomHeadsUpContentView(contentView)
         setFullScreenIntent(getFullScreenIntent(context), true)
-//        setTimeoutAfter(TIMEOUT)
-        return this
+        setTimeoutAfter(TIMEOUT)
     }
 
     /**
@@ -113,6 +112,7 @@ object NotificationManager {
     }
 
     fun notify(context: Context, ringtoneMode: RingToneMode) {
+        val notificationId = "${System.currentTimeMillis()}".hashCode()
         val builder = buildNotification(
             context,
             R.drawable.noti_foreground,
@@ -126,23 +126,41 @@ object NotificationManager {
             builder.setSilent(true)
         }
         if (canUseFullScreenIntent(context)) {
+            notifyIfFullScreen(context, notificationId)
             builder.fullScreenBuilder(
                 context,
                 context.getString(R.string.notification_title),
                 context.getString(R.string.notification_text)
             )
         }
-        val notificationId = "${System.currentTimeMillis()}".hashCode()
+//        builder.setDismissListener(context, notificationId)
+
         val notificationManager: NotificationManager =
             context.getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(notificationId, builder.build())
         play(ringtoneMode.getCurrentMode().name, context)
-        Handler(Looper.getMainLooper()).postDelayed({
-            notifyIfFullScreen(context, notificationId)
-        }, 5000)
     }
 
-    private fun notifyIfFullScreen(context: Context, notificationId: Int) {
+    /**
+     * 알림을 직접 swipe해서 제거할 때 호출할 리시버 등록용 메서드
+     */
+    private fun NotificationCompat.Builder.setDismissListener(context: Context, notificationId: Int) {
+        val deleteIntent = Intent(context, NotificationDismissedReceiver::class.java)
+        deleteIntent.putExtra("notification_id", notificationId)
+        setDeleteIntent(
+            PendingIntent.getBroadcast(
+                context,
+                notificationId,
+                deleteIntent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        )
+    }
+
+    /**
+     * 헤드업 알람은 swipe하면 상태창에서 알람이 사라짐. 상태창에 알람 유지가 필요한 경우 호출
+     */
+    fun notifyIfFullScreen(context: Context, notificationId: Int) {
         val builder = buildNotification(
             context,
             R.drawable.noti_foreground,
@@ -152,7 +170,10 @@ object NotificationManager {
         )
         val notificationManager: NotificationManager =
             context.getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(notificationId, builder.build())
+        if(notificationId != -1) {
+            //tag를 통해 헤드업 알람이 setTimeoutAfter로 제거된 이후에도 따로 그룹으로 쌓일 수 있음.
+            notificationManager.notify("tag", notificationId, builder.build())
+        }
     }
 
     private fun canUseFullScreenIntent(context: Context): Boolean {
