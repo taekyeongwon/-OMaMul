@@ -149,6 +149,12 @@ object DateTimeUtils {
         return formattedDateTime.toInt()
     }
 
+    fun LocalTime.toEpochMilli(zoneId: ZoneId = ZoneId.systemDefault()): Long {
+        val currentDate = LocalDate.now(zoneId)
+        val instant = this.atDate(currentDate).atZone(zoneId).toInstant()
+        return instant.toEpochMilli()
+    }
+
     fun addWeek(date: String, add: Long): String {
         val day = if(add > 0) getDateFromFormat(date).plusWeeks(add)
         else getDateFromFormat(date).minusWeeks(add)

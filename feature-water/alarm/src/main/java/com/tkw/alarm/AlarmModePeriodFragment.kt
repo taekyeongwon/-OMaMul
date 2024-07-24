@@ -26,7 +26,7 @@ import java.time.LocalTime
 class AlarmModePeriodFragment : Fragment() {
     private var dataBinding by autoCleared<FragmentAlarmModePeriodBinding>()
     private val viewModel: WaterAlarmViewModel by hiltNavGraphViewModels(R.id.alarm_nav_graph)
-    private var period: AlarmModeSetting.Period? = null
+    private var period: AlarmModeSetting.Period = AlarmModeSetting.Period()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,9 +53,10 @@ class AlarmModePeriodFragment : Fragment() {
     private fun initObserver() {
         viewModel.periodModeSettingsLiveData.observe(viewLifecycleOwner) {
             val periodAlarm = it as? AlarmModeSetting.Period
-            period = periodAlarm
+
             //해당 값으로 화면 구성
             periodAlarm?.let { period ->
+                this@AlarmModePeriodFragment.period = period
                 dataBinding.alarmWeek.setChecked(period.selectedDate)
                 dataBinding.alarmWeek.setPeriodTime(
                     DateTimeUtils.getTime(
@@ -66,7 +67,7 @@ class AlarmModePeriodFragment : Fragment() {
                 )
                 dataBinding.tvAlarmTime.text = it.getAlarmTimeRange()
                 //todo 전부 클리어하고 설정된 시간에 interval대로 다시 전부 세팅
-                setAlarm(period)
+                setAlarm()
             }
         }
     }
@@ -74,7 +75,7 @@ class AlarmModePeriodFragment : Fragment() {
     private fun initListener() {
         dataBinding.alarmWeek.setCheckListListener {
             updateModeSetting(
-                period?.copy(selectedDate = it)
+                period.copy(selectedDate = it)
             )
         }
         dataBinding.alarmWeek.setPeriodClickListener {
@@ -91,7 +92,7 @@ class AlarmModePeriodFragment : Fragment() {
                     requireContext().getString(com.tkw.ui.R.string.minute)
                 ).toNanoOfDay()
                 updateModeSetting(
-                    period?.copy(interval = interval)
+                    period.copy(interval = interval)
                 )
             }
             dialog.show(childFragmentManager, dialog.tag)
@@ -103,11 +104,11 @@ class AlarmModePeriodFragment : Fragment() {
 
     private fun showTimeDialog() {
         val dialog = AlarmTimeBottomDialog(
-            selectedStart = period?.alarmStartTime ?: LocalTime.now(),
-            selectedEnd = period?.alarmEndTime ?: LocalTime.now(),
+            selectedStart = period.alarmStartTime,
+            selectedEnd = period.alarmEndTime,
             resultListener = { start, end ->
                 updateModeSetting(
-                    period?.copy(
+                    period.copy(
                         alarmStartTime = start,
                         alarmEndTime = end!!
                     )
@@ -123,11 +124,12 @@ class AlarmModePeriodFragment : Fragment() {
         }
     }
 
-    private fun setAlarm(period: AlarmModeSetting.Period) {
+    private fun setAlarm() {
         viewModel.clearAlarm(AlarmMode.PERIOD)
-        if(period.selectedDate.isNotEmpty()) {
+        if(dataBinding.alarmWeek.getCheckedList().isNotEmpty()) {
             //todo 테스트용 알람 세팅. 현재 선택된 요일과 알람 시간대에 맞춰서 인터벌대로 알람 호출 필요
-            viewModel.setAlarm(0, System.currentTimeMillis() + 1000 * 60, 1000 * 60)
+            val alarm = Alarm(0, System.currentTimeMillis(), 1000 * 60, true)
+            viewModel.setAlarm(alarm)
         }
     }
 }

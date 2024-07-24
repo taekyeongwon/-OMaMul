@@ -21,6 +21,7 @@ import com.tkw.alarm.databinding.FragmentAlarmModeCustomBinding
 import com.tkw.alarm.dialog.AlarmTimeBottomDialog
 import com.tkw.common.autoCleared
 import com.tkw.common.util.DateTimeUtils
+import com.tkw.common.util.DateTimeUtils.toEpochMilli
 import com.tkw.domain.model.Alarm
 import com.tkw.domain.model.AlarmModeSetting
 import com.tkw.ui.ItemTouchHelperCallback
@@ -28,13 +29,17 @@ import com.tkw.ui.OnItemDrag
 import com.tkw.ui.VerticalSpaceItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalTime
+import java.time.ZoneId
+import java.time.ZoneOffset
 
 @AndroidEntryPoint
 class AlarmModeCustomFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentAlarmModeCustomBinding>()
     private val viewModel: WaterAlarmViewModel by hiltNavGraphViewModels(R.id.alarm_nav_graph)
-    private var custom: AlarmModeSetting.Custom? = null
+    private var custom: AlarmModeSetting.Custom = AlarmModeSetting.Custom()
 
     private lateinit var alarmListAdapter: AlarmListAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
@@ -62,6 +67,11 @@ class AlarmModeCustomFragment: Fragment() {
         override fun onStopDrag(list: List<Alarm>) {
             viewModel.updateList(list)
         }
+    }
+
+    private val alarmOnOffListener = { position: Int, isChecked: Boolean ->
+        val alarm = alarmListAdapter.currentList[position]
+        setAlarm(alarm.copy(enabled = isChecked))
     }
 
     private val positionObserver = object: RecyclerView.AdapterDataObserver() {
@@ -122,8 +132,9 @@ class AlarmModeCustomFragment: Fragment() {
         viewModel.customModeSettingsLiveData.observe(viewLifecycleOwner) {
             val customAlarm = it as? AlarmModeSetting.Custom
             //해당 값으로 화면 구성
-            custom = customAlarm
+
             customAlarm?.let { custom ->
+                this@AlarmModeCustomFragment.custom = custom
                 dataBinding.alarmWeek.setChecked(custom.selectedDate)
             }
         }
@@ -155,16 +166,15 @@ class AlarmModeCustomFragment: Fragment() {
             val alarm = Alarm(
                 alarmId,
                 currentTime,
-                true
+                custom.interval
             )
-//            viewModel.setAlarm(++i, System.currentTimeMillis() + 1000 * 60, 1000 * 600)
             showTimeDialog(alarm)
         }
 
         dataBinding.alarmWeek.setCheckListListener {
-            it.forEach {
-                Log.d("week", it.toString())
-            }
+            updateModeSetting(
+                custom.copy(selectedDate = it)
+            )
         }
 
         dataBinding.ivEdit.setOnClickListener {
@@ -185,7 +195,8 @@ class AlarmModeCustomFragment: Fragment() {
             editListener = adapterEditListener,
             deleteCheckListener = deleteCheckListener,
             longClickListener = adapterLongClickListener,
-            dragListener = dragListener
+            dragListener = dragListener,
+            alarmOnOffListener = alarmOnOffListener
         )
         alarmListAdapter.registerAdapterDataObserver(positionObserver)
 
@@ -251,7 +262,9 @@ class AlarmModeCustomFragment: Fragment() {
         val dialog = AlarmTimeBottomDialog(
             selectedStart = DateTimeUtils.getLocalTime(alarm.startTime),
             resultListener = { start, _ ->
-                //매개변수로 받은 alarm에 선택한 시간으로 뷰모델 setAlarm 할 수 있도록 구현
+                setAlarm(
+                    alarm.copy(startTime = start.toEpochMilli())
+                )
             }
         )
         dialog.show(childFragmentManager, dialog.tag)
@@ -260,5 +273,17 @@ class AlarmModeCustomFragment: Fragment() {
                 dialog.setRadioButtonVisibility(false)
             }
         }
+    }
+
+    private fun updateModeSetting(custom: AlarmModeSetting.Custom?) {
+        custom?.let {
+            viewModel.updateAlarmModeSetting(it)
+        }
+    }
+
+    private fun setAlarm(alarm: Alarm) {
+        val enabled = dataBinding.alarmWeek.getCheckedList().isNotEmpty()
+        //수정이나 추가에 따라 setAlarm할 때 선택한 요일이 맞으면 true, 아니면 false로 알람 등록.
+        viewModel.setAlarm(alarm.copy(enabled = true))
     }
 }

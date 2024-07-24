@@ -16,9 +16,10 @@ import com.tkw.ui.OnItemDrag
 
 class AlarmListAdapter(
     private val editListener: (Int) -> Unit = {},
-    private val deleteCheckListener: (Int, Boolean) -> Unit = {_, _ -> },
+    private val deleteCheckListener: (Int, Boolean) -> Unit = { _, _ -> },
     private val longClickListener: (Int) -> Unit = {},
-    private val dragListener: OnItemDrag<Alarm>? = null
+    private val dragListener: OnItemDrag<Alarm>? = null,
+    private val alarmOnOffListener: (Int, Boolean) -> Unit = { _, _ -> }
 ): ListAdapter<Alarm, RecyclerView.ViewHolder>(AlarmDiffCallback()),
     ItemMoveListener {
 
@@ -32,7 +33,7 @@ class AlarmListAdapter(
                     parent,
                     false
                 )
-                AlarmListViewHolder(binding, editListener, longClickListener)
+                AlarmListViewHolder(binding, editListener, longClickListener, alarmOnOffListener)
             }
             C.AlarmListViewType.DRAG -> {
                 val binding = ItemAlarmEditBinding.inflate(
@@ -76,7 +77,8 @@ class AlarmListAdapter(
     class AlarmListViewHolder(
         private val binding: ItemAlarmBinding,
         editListener: (Int) -> Unit,
-        longClickListener: (Int) -> Unit
+        longClickListener: (Int) -> Unit,
+        alarmOnOffListener: (Int, Boolean) -> Unit
     ): RecyclerView.ViewHolder(binding.root) {
 
         init {
@@ -85,6 +87,9 @@ class AlarmListAdapter(
                 root.setOnLongClickListener {
                     longClickListener(adapterPosition)
                     return@setOnLongClickListener true
+                }
+                svSwitch.setCheckedChangeListener { _, isChecked ->
+                    alarmOnOffListener(adapterPosition, isChecked)
                 }
             }
         }
