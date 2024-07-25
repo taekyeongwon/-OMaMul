@@ -1,32 +1,37 @@
 package com.tkw.domain.model
 
+import java.time.DayOfWeek
+import java.time.Instant
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-sealed class AlarmModeSetting {
+data class AlarmModeSetting(
+    val selectedDate: List<Int> = listOf(),
+    val interval: Long = DEFAULT_PERIOD_INTERVAL
+) {
     companion object {
-        const val DEFAULT_PERIOD_INTERVAL: Long = 1000 * 60 * 2
+        const val DEFAULT_PERIOD_INTERVAL: Long = 1000 * 60 * 2 //한 시간으로 변경 필요. period 수정할 때 설정한 알람 간격 값임.
         const val DEFAULT_CUSTOM_INTERVAL: Long = 1000 * 60 * 5 //임시 5분 처리. 추후 24시간으로 변경
     }
-    data class Period(
-        val selectedDate: List<Int> = listOf(),
-        val interval: Long = DEFAULT_PERIOD_INTERVAL,
-        val alarmStartTime: LocalTime = LocalTime.of(11,0),
-        val alarmEndTime: LocalTime = LocalTime.of(22, 0)
-    ): AlarmModeSetting() {
-        fun getAlarmTimeRange(): String {
-            val formatter = DateTimeFormatter.ofPattern("a hh:mm")
-            val startTime = alarmStartTime.format(formatter)
-            val endTime = alarmEndTime.format(formatter)
+}
 
-            return "$startTime - $endTime"
-        }
+data class Alarm(
+    val alarmId: Int,   //HHmm
+    val startTime: Long,
+    val interval: Long = -1,
+    val weekList: List<DayOfWeek>,
+    val enabled: Boolean = false
+) {
+    var isChecked: Boolean = false
+
+    fun getAlarmTime(): String {
+        val formatter = DateTimeFormatter.ofPattern("a hh:mm")
+        val instant = Instant.ofEpochMilli(startTime)
+        val localTime = instant.atZone(ZoneId.systemDefault()).toLocalTime()
+
+        return localTime.format(formatter)
     }
-
-    data class Custom(
-        val selectedDate: List<Int> = listOf(),
-        val interval: Long = DEFAULT_CUSTOM_INTERVAL
-    ): AlarmModeSetting()
 }
 
 data class AlarmList(

@@ -2,14 +2,13 @@ package com.tkw.database
 
 import com.tkw.database.model.AlarmEntity
 import com.tkw.database.model.AlarmEtcSettingsEntity
+import com.tkw.database.model.AlarmModeSettingEntity
 import com.tkw.database.model.AlarmSettingsEntity
 import com.tkw.database.model.CupEntity
 import com.tkw.database.model.CupListEntity
 import com.tkw.database.model.CustomAlarmListEntity
-import com.tkw.database.model.CustomEntity
 import com.tkw.database.model.DayOfWaterEntity
 import com.tkw.database.model.PeriodAlarmListEntity
-import com.tkw.database.model.PeriodEntity
 import com.tkw.database.model.RingToneModeEntity
 import com.tkw.database.model.WaterEntity
 import io.realm.kotlin.MutableRealm
@@ -35,8 +34,9 @@ interface RealmDao<T: RealmObject> {
             CupEntity::class,
             AlarmSettingsEntity::class,
             RingToneModeEntity::class,
-            PeriodEntity::class,
-            CustomEntity::class,
+            AlarmModeSettingEntity::class,
+//            PeriodEntity::class,
+//            CustomEntity::class,
             PeriodAlarmListEntity::class,
             CustomAlarmListEntity::class,
             AlarmEntity::class,

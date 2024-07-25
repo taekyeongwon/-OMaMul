@@ -27,7 +27,7 @@ interface AlarmDao: RealmDao<AlarmSettingsEntity> {
     /**
      * alarmId에 해당하는 Alarm 객체의 enabled를 false로 변경
      */
-    suspend fun cancelAlarm(alarmId: Int)
+    suspend fun cancelAlarm(alarmId: Int, mode: AlarmModeEntity)
 
     /**
      * Period/Custom 설정 변경 시 업데이트.

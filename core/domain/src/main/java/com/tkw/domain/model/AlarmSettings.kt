@@ -1,10 +1,5 @@
 package com.tkw.domain.model
 
-import java.io.Serializable
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-
 data class AlarmSettings(
     val ringToneMode: RingToneMode = RingToneMode(),
     val alarmMode: AlarmMode = AlarmMode.PERIOD,
@@ -42,20 +37,3 @@ data class AlarmEtcSettings(
     val stopReachedGoal: Boolean = false,
     val delayTomorrow: Boolean = false
 )
-
-data class Alarm(
-    val alarmId: Int,   //HHmm
-    val startTime: Long,
-    val interval: Long,
-    val enabled: Boolean = false
-) {
-    var isChecked: Boolean = false
-
-    fun getAlarmTime(): String {
-        val formatter = DateTimeFormatter.ofPattern("a hh:mm")
-        val instant = Instant.ofEpochMilli(startTime)
-        val localTime = instant.atZone(ZoneId.systemDefault()).toLocalTime()
-
-        return localTime.format(formatter)
-    }
-}

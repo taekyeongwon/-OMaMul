@@ -7,9 +7,7 @@ import com.tkw.database.model.AlarmModeSettingEntity
 import com.tkw.database.model.AlarmModeEntity
 import com.tkw.database.model.AlarmSettingsEntity
 import com.tkw.database.model.CustomAlarmListEntity
-import com.tkw.database.model.CustomEntity
 import com.tkw.database.model.PeriodAlarmListEntity
-import com.tkw.database.model.PeriodEntity
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.notifications.ResultsChange
@@ -80,15 +78,9 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
             }
     }
 
-    private val periodFlow =
+    private val alarmModeFlow =
         this.find(
-            PeriodEntity::class,
-            "id == $0", AlarmSettingsEntity.DEFAULT_SETTING_ID
-        ).asFlow()
-
-    private val customFlow =
-        this.find(
-            CustomEntity::class,
+            AlarmModeSettingEntity::class,
             "id == $0", AlarmSettingsEntity.DEFAULT_SETTING_ID
         ).asFlow()
 
@@ -117,11 +109,13 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
         }
     }
 
-    private suspend fun updateAlarm(from: AlarmEntity, to: AlarmEntity) {
+    private suspend fun updateAlarm(currentAlarm: AlarmEntity, newAlarm: AlarmEntity) {
         realm.write {
-            findLatest(from)?.apply {
-                this.startTime = to.startTime
-                this.enabled = to.enabled
+            findLatest(currentAlarm)?.apply {
+                this.startTime = newAlarm.startTime
+                this.interval = newAlarm.interval
+                this.selectedDates = newAlarm.selectedDates
+                this.enabled = newAlarm.enabled
             }
         }
     }
@@ -148,11 +142,18 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
         }
     }
 
-    override suspend fun cancelAlarm(alarmId: Int) {
-        val alarm = this.find(AlarmEntity::class, "alarmId == $0", alarmId).firstOrNull()
-        alarm?.let {
+    override suspend fun cancelAlarm(alarmId: Int, mode: AlarmModeEntity) {
+        val entity = when(mode) {
+            AlarmModeEntity.PERIOD -> {
+                getPeriodAlarm(alarmId)
+            }
+            AlarmModeEntity.CUSTOM -> {
+                getCustomAlarm(alarmId)
+            }
+        }
+        entity?.let {
             realm.write {
-                findLatest(alarm)?.apply {
+                findLatest(entity)?.apply {
                     enabled = false
                 }
             }
@@ -160,31 +161,12 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
     }
 
     override suspend fun updateAlarmModeSetting(alarmModeSettingEntity: AlarmModeSettingEntity) {
-        when(alarmModeSettingEntity) {
-            is PeriodEntity -> {
-                this.upsert(alarmModeSettingEntity)
-            }
-            is CustomEntity -> {
-                this.upsert(alarmModeSettingEntity)
-            }
-            else -> {
-                //nothing
-            }
-        }
+        this.upsert(alarmModeSettingEntity)
     }
 
     override fun getAlarmModeSetting(mode: AlarmModeEntity): Flow<AlarmModeSettingEntity?> {
-        return when (mode) {
-            AlarmModeEntity.PERIOD -> {
-                periodFlow.map {
-                    it.list.firstOrNull()
-                }
-            }
-            AlarmModeEntity.CUSTOM -> {
-                customFlow.map {
-                    it.list.firstOrNull()
-                }
-            }
+        return alarmModeFlow.map {
+            it.list.firstOrNull()
         }
     }
 
