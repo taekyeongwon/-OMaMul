@@ -87,6 +87,12 @@ object AlarmMapper {
         return AlarmList(alarmList = newList)
     }
 
+    fun alarmListToEntity(alarmList: List<Alarm>): List<AlarmEntity> {
+        return alarmList.map {
+            alarmToEntity(it)
+        }
+    }
+
     private fun ringToneToEntity(ringToneMode: RingToneMode): RingToneModeEntity {
         return RingToneModeEntity().apply {
             this.isBell = ringToneMode.isBell

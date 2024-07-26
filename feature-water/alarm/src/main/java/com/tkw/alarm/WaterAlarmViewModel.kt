@@ -7,6 +7,8 @@ import androidx.lifecycle.asLiveData
 import com.tkw.base.BaseViewModel
 import com.tkw.base.launch
 import com.tkw.common.SingleLiveEvent
+import com.tkw.common.util.DateTimeUtils
+import com.tkw.common.util.DateTimeUtils.toEpochMilli
 import com.tkw.domain.AlarmRepository
 import com.tkw.domain.PrefDataRepository
 import com.tkw.domain.model.Alarm
@@ -43,6 +45,19 @@ class WaterAlarmViewModel @Inject constructor(
 
     suspend fun setNotificationEnabled(flag: Boolean) {
         prefDataRepository.saveAlarmEnableFlag(flag)
+    }
+
+    val alarmTime = prefDataRepository.fetchAlarmWakeTime()
+        .combine(prefDataRepository.fetchAlarmSleepTime()) { wake, sleep ->
+            if(wake != null && sleep != null) {
+                val wakeTime = DateTimeUtils.getTimeFromFormat(wake)
+                val sleepTime = DateTimeUtils.getTimeFromFormat(sleep)
+                Pair(wakeTime, sleepTime)
+            } else null
+    }.asLiveData()
+
+    suspend fun setAlarmTime(start: String, end: String) {
+        prefDataRepository.saveAlarmTime(start, end)
     }
 
     private val alarmSettingsFlow: Flow<AlarmSettings> = alarmRepository.getAlarmSetting()
@@ -92,7 +107,7 @@ class WaterAlarmViewModel @Inject constructor(
         }
     }
 
-    fun clearAlarm(mode: AlarmMode) {
+    suspend fun clearAlarm(mode: AlarmMode) {
         launch {
             alarmRepository.allDelete(mode)
         }
@@ -129,9 +144,39 @@ class WaterAlarmViewModel @Inject constructor(
         }
     }
 
-    fun setAlarm(alarm: Alarm) {
+    suspend fun setPeriodAlarm(period: AlarmModeSetting) {
+        clearAlarm(AlarmMode.PERIOD)
+
+        if(period.selectedDate.isNotEmpty()) {
+            var start = alarmTime.value?.first?.toEpochMilli() ?: 0
+            val end = alarmTime.value?.second?.toEpochMilli() ?: 0
+            val interval = period.interval * 1000
+            val alarmList = ArrayList<Alarm>()
+
+            while(start < end) {
+                alarmList.add(
+                    Alarm(
+                        DateTimeUtils.getTimeHHmm(start),
+                        start,
+                        period.selectedDate,
+                        true
+                    )
+                )
+                start += interval
+            }
+            setAlarmList(alarmList)
+        }
+    }
+
+    private suspend fun setAlarm(alarm: Alarm) {
         launch {
             alarmRepository.setAlarm(alarm)
+        }
+    }
+
+    private suspend fun setAlarmList(list: List<Alarm>) {
+        launch {
+            alarmRepository.setAlarmList(list)
         }
     }
 

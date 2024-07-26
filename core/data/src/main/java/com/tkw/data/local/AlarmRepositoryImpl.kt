@@ -1,6 +1,5 @@
 package com.tkw.data.local
 
-import android.util.Log
 import com.tkw.database.AlarmDao
 import com.tkw.domain.AlarmRepository
 import com.tkw.domain.IAlarmManager
@@ -10,18 +9,16 @@ import com.tkw.domain.model.AlarmMode
 import com.tkw.domain.model.AlarmModeSetting
 import com.tkw.domain.model.AlarmSettings
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
-import kotlin.math.ceil
 
 class AlarmRepositoryImpl @Inject constructor(
     private val alarmDao: AlarmDao,
     private val alarmManager: IAlarmManager
 ): AlarmRepository {
+
     override fun getAlarmSetting(): Flow<AlarmSettings> {
         val setting = alarmDao.getSetting()
         return flow {
@@ -41,19 +38,45 @@ class AlarmRepositoryImpl @Inject constructor(
 
     override suspend fun setAlarm(alarm: Alarm) {
         with(alarm) {
-            if(alarmId != -1) {
-//                val alarm = Alarm(alarmId, startTime, interval, true)
+            val currentMode = getAlarmSetting().first().alarmMode
 
-                if(startTime > System.currentTimeMillis()) {    //현재 시간 이후의 알람만 울리도록
-                    alarmManager.setAlarm(alarm)
-                    alarmDao.updateAlarm(AlarmMapper.alarmToEntity(alarm))
-                } else {
-                    val x = ceil((System.currentTimeMillis() - startTime).toDouble() / interval).toInt()
-                    setAlarm(alarm.copy(startTime = startTime + interval * x))
-                }
+            val calculatedInterval = alarm.getIntervalByNextDayOfWeek()
+            if(calculatedInterval == -1) {  //선택된 요일이 없는 경우 enabled false로 저장
+                alarmDao.setAlarm(
+                    AlarmMapper.alarmToEntity(alarm.copy(enabled = false)),
+                    AlarmMapper.alarmModeToEntity(currentMode)
+                )
+            } else {    //선택한 요일이 있으면 해당 요일 까지 지연
+                val newAlarm = alarm.copy(startTime = startTime + calculatedInterval)   //todo 1주일 이상 enabled false인 상태에서 true로 변경하면?
+                alarmManager.setAlarm(newAlarm)
+                alarmDao.setAlarm(
+                    AlarmMapper.alarmToEntity(newAlarm),
+                    AlarmMapper.alarmModeToEntity(currentMode)
+                )
             }
-            Log.d("setAlarm", "alarmId : ${alarmId}, startTime : $startTime, ${getDateTimeString(startTime)}")
+
         }
+    }
+
+    override suspend fun setAlarmList(alarmList: List<Alarm>) {
+        val currentMode = getAlarmSetting().first().alarmMode
+
+        val newList = alarmList.map {
+            val calculatedInterval = it.getIntervalByNextDayOfWeek()
+            if(calculatedInterval == -1) {
+                it.copy(enabled = false)
+            } else {
+                it.copy(startTime = it.startTime + calculatedInterval)
+            }
+        }
+
+        newList.forEach {
+            alarmManager.setAlarm(it)
+        }
+        alarmDao.setAlarmList(
+            AlarmMapper.alarmListToEntity(newList),
+            AlarmMapper.alarmModeToEntity(currentMode)
+        )
     }
 
     override suspend fun updateAlarmModeSetting(setting: AlarmModeSetting) {
@@ -124,7 +147,7 @@ class AlarmRepositoryImpl @Inject constructor(
     }
 
     override suspend fun allDelete(mode: AlarmMode) {
-        cancelAllAlarm(mode)
+        sleepAlarm(mode)
         alarmDao.allDelete(AlarmMapper.alarmModeToEntity(mode))
     }
 
@@ -133,14 +156,5 @@ class AlarmRepositoryImpl @Inject constructor(
             AlarmMapper.alarmToEntity(it)
         }
         alarmDao.updateAlarmList(mappedList, AlarmMapper.alarmModeToEntity(mode))
-    }
-
-    //로그용
-    private fun getDateTimeString(timeInMillis: Long): String {
-        val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
-        val localDateTime = Instant.ofEpochMilli(timeInMillis)
-            .atZone(ZoneId.systemDefault())
-            .toLocalDateTime()
-        return localDateTime.format(formatter)
     }
 }

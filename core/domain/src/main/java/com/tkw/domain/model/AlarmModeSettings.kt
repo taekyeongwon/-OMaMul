@@ -35,6 +35,32 @@ data class Alarm(
 
         return localTime.format(formatter)
     }
+
+    fun getIntervalByNextDayOfWeek(): Int {
+        val dateFromStartTime =
+            Instant
+                .ofEpochMilli(startTime)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+
+        val currentDOW = DayOfWeek.from(dateFromStartTime)
+        var daysDifference = runCatching {
+            weekList.minOf {
+                if(it.value == currentDOW.value) {
+                    if(startTime > System.currentTimeMillis()) 0
+                    else 7
+                } else {
+                    (it.value - currentDOW.value + 7) % 7
+                }
+            }
+        }.getOrNull()
+
+        if(daysDifference == 0 && startTime < System.currentTimeMillis()) {
+            daysDifference = 7
+        }
+        return if(daysDifference == null) -1
+        else 1000 * 60 * 60 * 24 * daysDifference
+    }
 }
 
 data class AlarmList(

@@ -22,7 +22,12 @@ interface AlarmDao: RealmDao<AlarmSettingsEntity> {
     /**
      * 알람 id가 존재하면 update, 없으면 insert
      */
-    suspend fun updateAlarm(alarm: AlarmEntity, alarmMode: AlarmModeEntity)
+    suspend fun setAlarm(alarm: AlarmEntity, alarmMode: AlarmModeEntity)
+
+    /**
+     * 알람 리스트로 추가
+     */
+    suspend fun setAlarmList(list: List<AlarmEntity>, alarmMode: AlarmModeEntity)
 
     /**
      * alarmId에 해당하는 Alarm 객체의 enabled를 false로 변경

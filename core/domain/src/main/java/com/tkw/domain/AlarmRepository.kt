@@ -14,6 +14,8 @@ interface AlarmRepository {
 
     suspend fun setAlarm(alarm: Alarm)
 
+    suspend fun setAlarmList(alarmList: List<Alarm>)
+
     suspend fun updateAlarmModeSetting(setting: AlarmModeSetting)
 
     fun getAlarmModeSetting(mode: AlarmMode): Flow<AlarmModeSetting>
