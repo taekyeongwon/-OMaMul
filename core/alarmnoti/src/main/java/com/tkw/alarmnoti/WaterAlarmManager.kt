@@ -21,7 +21,7 @@ class WaterAlarmManager @Inject constructor(
     override fun setAlarm(alarm: Alarm) {
         with(alarm) {
             if(canScheduleExactAlarms()) {
-                setAlarmManager(alarmId, startTime, interval)
+                setAlarmManager(alarm)
                 cancelWorkManager(alarmId)
             } else {
                 setWorkManager(alarmId, startTime)
@@ -43,23 +43,19 @@ class WaterAlarmManager @Inject constructor(
     }
 
     private fun setAlarmManager(
-        alarmId: Int,
-        startTime: Long,
-        interval: Long
+        alarm: Alarm
     ) {
         val intent = Intent(context, WaterAlarmReceiver::class.java)
-        intent.putExtra("ALARM_ID", alarmId)
-        intent.putExtra("ALARM_TIME", startTime)
-        intent.putExtra("ALARM_INTERVAL", interval)
+        intent.putExtra("ALARM", alarm)
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            alarmId,
+            alarm.alarmId,
             intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         val alarmClock = AlarmManager.AlarmClockInfo(
-            startTime,
+            alarm.startTime,
             pendingIntent
         )
 
