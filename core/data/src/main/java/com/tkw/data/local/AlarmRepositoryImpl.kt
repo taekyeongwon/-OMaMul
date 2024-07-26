@@ -65,10 +65,7 @@ class AlarmRepositoryImpl @Inject constructor(
         return flow {
             alarmModeSetting.collect {
                 if(it == null) {
-                    when(mode) {
-                        AlarmMode.PERIOD -> updateAlarmModeSetting(AlarmModeSetting.Period())
-                        AlarmMode.CUSTOM -> updateAlarmModeSetting(AlarmModeSetting.Custom())
-                    }
+                    updateAlarmModeSetting(AlarmModeSetting())
                 } else {
                     emit(AlarmMapper.alarmModeToModel(it))
                 }
@@ -84,30 +81,37 @@ class AlarmRepositoryImpl @Inject constructor(
 
     override suspend fun wakeAllAlarm() {
         //모든 알람 가져와서 실행. 알람 객체는 현재 enable 상태 가지고 있고, enable true 상태인 알람만 전부 다시 켜기.
-        val alarmListEntity = alarmDao.getEnabledAlarmList()
+        val currentMode = getAlarmSetting().first().alarmMode
+        val alarmListEntity = alarmDao.getEnabledAlarmList(
+            AlarmMapper.alarmModeToEntity(currentMode)
+        )
 
         alarmListEntity.alarmList.forEach {
-            setAlarm(AlarmMapper.alarmToModel(it))
+            alarmManager.setAlarm(AlarmMapper.alarmToModel(it))
         }
     }
 
-    override suspend fun cancelAlarm(alarmId: Int) {
+    override suspend fun cancelAlarm(alarmId: Int, mode: AlarmMode) {
         alarmManager.cancelAlarm(alarmId)
-        alarmDao.cancelAlarm(alarmId)
+        alarmDao.cancelAlarm(alarmId, AlarmMapper.alarmModeToEntity(mode))
     }
 
-    override suspend fun cancelAllAlarm() {
+    override suspend fun cancelAllAlarm(mode: AlarmMode) {
         //모든 알람 객체 가져와서 enable true인 알람 모두 id값 대로 취소 후 enable false 상태로 업데이트.
-        val alarmListEntity = alarmDao.getEnabledAlarmList()
+        val alarmListEntity = alarmDao.getEnabledAlarmList(
+            AlarmMapper.alarmModeToEntity(mode)
+        )
 
         alarmListEntity.alarmList.forEach {
-            cancelAlarm(it.alarmId)
+            cancelAlarm(it.alarmId, mode)
         }
     }
 
-    override suspend fun sleepAlarm() {
+    override suspend fun sleepAlarm(mode: AlarmMode) {
         //현재 모드로 활성화 된 알람, 즉 알람매니저에 등록된 알람 cancel 처리. wakeAllAlarm() 호출 시 깨어난다.
-        val alarmListEntity = alarmDao.getEnabledAlarmList()
+        val alarmListEntity = alarmDao.getEnabledAlarmList(
+            AlarmMapper.alarmModeToEntity(mode)
+        )
 
         alarmListEntity.alarmList.forEach {
             alarmManager.cancelAlarm(it.alarmId)
@@ -120,7 +124,7 @@ class AlarmRepositoryImpl @Inject constructor(
     }
 
     override suspend fun allDelete(mode: AlarmMode) {
-        cancelAllAlarm()
+        cancelAllAlarm(mode)
         alarmDao.allDelete(AlarmMapper.alarmModeToEntity(mode))
     }
 

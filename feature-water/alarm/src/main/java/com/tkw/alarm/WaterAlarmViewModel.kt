@@ -50,8 +50,8 @@ class WaterAlarmViewModel @Inject constructor(
     val periodModeSettingsLiveData: LiveData<AlarmModeSetting> =
         alarmRepository.getAlarmModeSetting(AlarmMode.PERIOD).asLiveData()
 
-    val customModeSettingsLiveData: LiveData<AlarmModeSetting> =
-        alarmRepository.getAlarmModeSetting(AlarmMode.CUSTOM).asLiveData()
+//    val customModeSettingsLiveData: LiveData<AlarmModeSetting> =
+//        alarmRepository.getAlarmModeSetting(AlarmMode.CUSTOM).asLiveData()
 
     val alarmSettings: LiveData<AlarmSettings> =
         alarmSettingsFlow.asLiveData()
@@ -88,7 +88,7 @@ class WaterAlarmViewModel @Inject constructor(
 
     fun cancelAllAlarm() {
         launch {
-            alarmRepository.cancelAllAlarm()
+            alarmRepository.cancelAllAlarm(alarmSettingsFlow.first().alarmMode)
         }
     }
 
@@ -118,7 +118,7 @@ class WaterAlarmViewModel @Inject constructor(
                 mode,
                 currentSetting.etcSetting
             )
-            alarmRepository.sleepAlarm()
+            alarmRepository.sleepAlarm(mode)
             alarmRepository.update(newSetting)
         }
     }

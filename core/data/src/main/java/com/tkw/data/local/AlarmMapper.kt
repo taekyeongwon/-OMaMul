@@ -41,15 +41,15 @@ object AlarmMapper {
 
     fun alarmModeToEntity(alarmMode: AlarmModeSetting): AlarmModeSettingEntity {
         return AlarmModeSettingEntity().apply {
-            this.selectedDate = alarmMode.selectedDate.toRealmList()
+            this.selectedDate = alarmMode.selectedDate.map { it.value }.toRealmList()
             this.interval = alarmMode.interval
         }
     }
 
-    fun alarmModeToModel(alarmModeEntity: AlarmModeSettingEntity?): AlarmModeSetting {
+    fun alarmModeToModel(alarmModeEntity: AlarmModeSettingEntity): AlarmModeSetting {
         return AlarmModeSetting(
-            alarmModeEntity?.selectedDate ?: listOf(),
-            alarmModeEntity?.interval ?: AlarmModeSetting.DEFAULT_PERIOD_INTERVAL
+            alarmModeEntity.selectedDate.map { DayOfWeek.of(it) },
+            alarmModeEntity.interval
         )
     }
 
@@ -57,7 +57,7 @@ object AlarmMapper {
         return AlarmEntity().apply {
             this.alarmId = alarm.alarmId
             this.startTime = alarm.startTime
-            this.interval = alarm.interval
+//            this.interval = alarm.interval
             this.selectedDates = alarm.weekList.map { it.value }.toRealmList()
             this.enabled = alarm.enabled
         }
@@ -67,7 +67,7 @@ object AlarmMapper {
         return Alarm(
             alarm.alarmId,
             alarm.startTime,
-            alarm.interval,
+//            alarm.interval,
             alarm.selectedDates.map { DayOfWeek.of(it) },
             alarm.enabled
         )

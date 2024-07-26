@@ -23,11 +23,12 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
     override val realm: Realm = Realm.open(getRealmConfiguration())
     override val clazz: KClass<AlarmSettingsEntity> = AlarmSettingsEntity::class
 
-    private fun getAlarmMode(): AlarmModeEntity {
-        val alarmMode = this.findBy(
-            "id == $0", AlarmSettingsEntity.DEFAULT_SETTING_ID
-        ).firstOrNull()
-        return alarmMode?.alarmModeEnum ?: AlarmModeEntity.PERIOD
+//    private fun getAlarmMode(): AlarmModeEntity {
+//        val alarmMode = this.findBy(
+//            "id == $0", AlarmSettingsEntity.DEFAULT_SETTING_ID
+//        ).firstOrNull()
+//        return alarmMode?.alarmModeEnum ?: AlarmModeEntity.PERIOD
+//    }
     }
 
     private val getPeriodAlarmListEntity: Flow<PeriodAlarmListEntity> = flow {
@@ -92,8 +93,7 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
         return this.stream(this.findBy("id == $0", AlarmSettingsEntity.DEFAULT_SETTING_ID))
     }
 
-    override suspend fun updateAlarm(alarm: AlarmEntity) {
-        val alarmMode = getAlarmMode()
+    override suspend fun updateAlarm(alarm: AlarmEntity, alarmMode: AlarmModeEntity) {
         val alarmEntity = when(alarmMode) {
             AlarmModeEntity.PERIOD -> {
                 getPeriodAlarm(alarm.alarmId)
@@ -105,7 +105,7 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
         if(alarmEntity != null) {
             updateAlarm(alarmEntity, alarm)
         } else {
-            setAlarm(alarm)
+            setAlarm(alarm, alarmMode)
         }
     }
 
@@ -113,15 +113,14 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
         realm.write {
             findLatest(currentAlarm)?.apply {
                 this.startTime = newAlarm.startTime
-                this.interval = newAlarm.interval
+//                this.interval = newAlarm.interval
                 this.selectedDates = newAlarm.selectedDates
                 this.enabled = newAlarm.enabled
             }
         }
     }
 
-    private suspend fun setAlarm(alarm: AlarmEntity) {
-        val alarmMode = getAlarmMode()
+    private suspend fun setAlarm(alarm: AlarmEntity, alarmMode: AlarmModeEntity) {
         when(alarmMode) {
             AlarmModeEntity.PERIOD -> {   //PeriodEntity 조회해서 업데이트
                 val period = getPeriodAlarmListEntity.first()
@@ -177,8 +176,7 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
         }
     }
 
-    override suspend fun getEnabledAlarmList(): AlarmListEntity {
-        val alarmMode = getAlarmMode()
+    override suspend fun getEnabledAlarmList(alarmMode: AlarmModeEntity): AlarmListEntity {
         return when (alarmMode) {
             AlarmModeEntity.PERIOD -> getEnabledPeriodAlarmList()
             AlarmModeEntity.CUSTOM -> getEnabledCustomAlarmList()
