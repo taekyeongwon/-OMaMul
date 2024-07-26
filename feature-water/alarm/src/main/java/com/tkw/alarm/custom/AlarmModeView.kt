@@ -8,6 +8,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.tkw.alarm.R
 import com.tkw.alarm.databinding.CustomAlarmModeBinding
 import com.tkw.ui.CustomCheckBox
+import java.time.DayOfWeek
 
 class AlarmModeView
 @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
@@ -29,23 +30,23 @@ class AlarmModeView
         }
     }
 
-    fun setChecked(list: List<Int>) {
+    fun setChecked(list: List<DayOfWeek>) {
         list.forEach {
-            weekList[it].setChecked(true)
+            weekList[it.value].setChecked(true)
         }
     }
 
-    fun setCheckListListener(block: (ArrayList<Int>) -> Unit) {
+    fun setCheckListListener(block: (ArrayList<DayOfWeek>) -> Unit) {
         weekList.forEach {
             it.setCheckBoxClickListener { block(getCheckedList()) }
         }
     }
 
-    fun getCheckedList(): ArrayList<Int> {
-        val result = ArrayList<Int>()
+    fun getCheckedList(): ArrayList<DayOfWeek> {
+        val result = ArrayList<DayOfWeek>()
         for(i in 0 until weekList.size) {
             if(weekList[i].getChecked()) {
-                result.add(i)
+                result.add(DayOfWeek.of(i))
             }
         }
         return result
