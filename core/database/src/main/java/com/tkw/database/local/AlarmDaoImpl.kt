@@ -154,7 +154,6 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
         realm.write {
             findLatest(currentAlarm)?.apply {
                 this.startTime = newAlarm.startTime
-//                this.interval = newAlarm.interval
                 this.selectedDates = newAlarm.selectedDates
                 this.enabled = newAlarm.enabled
             }

@@ -57,7 +57,6 @@ object AlarmMapper {
         return AlarmEntity().apply {
             this.alarmId = alarm.alarmId
             this.startTime = alarm.startTime
-//            this.interval = alarm.interval
             this.selectedDates = alarm.weekList.map { it.value }.toRealmList()
             this.enabled = alarm.enabled
         }
@@ -67,7 +66,6 @@ object AlarmMapper {
         return Alarm(
             alarm.alarmId,
             alarm.startTime,
-//            alarm.interval,
             alarm.selectedDates.map { DayOfWeek.of(it) },
             alarm.enabled
         )
