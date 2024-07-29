@@ -25,6 +25,9 @@ import kotlin.reflect.KClass
 class AlarmDaoImpl @Inject constructor(): AlarmDao {
     override val realm: Realm = Realm.open(getRealmConfiguration())
     override val clazz: KClass<AlarmSettingsEntity> = AlarmSettingsEntity::class
+    companion object {
+        private const val TAG = "AlarmDao"
+    }
 
     init {
         //알람 리스트 로그용
@@ -33,13 +36,13 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
                 PeriodAlarmListEntity::class,
                 "id == $0", AlarmSettingsEntity.DEFAULT_SETTING_ID
             ).asFlow().collectLatest {
-                Log.d("AlarmDao", "PeriodAlarmList : " + it.list.firstOrNull()?.alarmList?.joinToString(",\n"))
+                Log.d(TAG, "PeriodAlarmList : " + it.list.firstOrNull()?.alarmList?.joinToString(",\n"))
             }
             find(
                 CustomAlarmListEntity::class,
                 "id == $0", AlarmSettingsEntity.DEFAULT_SETTING_ID
             ).asFlow().collectLatest {
-                Log.d("AlarmDao", "CustomAlarmList : " + it.list.firstOrNull()?.alarmList?.joinToString(",\n"))
+                Log.d(TAG, "CustomAlarmList : " + it.list.firstOrNull()?.alarmList?.joinToString(",\n"))
             }
         }
     }
@@ -77,7 +80,7 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
     }
 
     private suspend fun getPeriodAlarm(alarmId: Int): AlarmEntity? {
-        Log.d("AlarmDao", "${::getPeriodAlarm.name} alarmId : $alarmId")
+        Log.d(TAG, "${::getPeriodAlarm.name} alarmId : $alarmId")
         val entity = getPeriodAlarmListEntity.first()
         return entity.alarmList
             .find {
@@ -86,7 +89,7 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
     }
 
     private suspend fun getCustomAlarm(alarmId: Int): AlarmEntity? {
-        Log.d("AlarmDao", "${::getCustomAlarm.name} alarmId : $alarmId")
+        Log.d(TAG, "${::getCustomAlarm.name} alarmId : $alarmId")
         val entity = getCustomAlarmListEntity.first()
         return entity.alarmList
             .find {
@@ -105,7 +108,7 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
     }
 
     override suspend fun updateSetting(setting: AlarmSettingsEntity) {
-        Log.d("AlarmDao", "${::updateSetting.name} " +
+        Log.d(TAG, "${::updateSetting.name} " +
                 "alarmMode : ${setting.alarmModeEnum.name}," +
                 "ringtoneMode : ${setting.ringToneMode}," +
                 "etcSetting : ${setting.etcSetting}")
@@ -119,6 +122,9 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
     }
 
     override suspend fun updateAlarmModeSetting(alarmModeSettingEntity: AlarmModeSettingEntity) {
+        Log.d(TAG, "updateAlarmModeSetting selectedDate : " +
+                alarmModeSettingEntity.selectedDate.joinToString(", ") +
+                " interval : ${alarmModeSettingEntity.interval}")
         this.upsert(alarmModeSettingEntity)
     }
 

@@ -83,6 +83,11 @@ class WaterAlarmViewModel @Inject constructor(
             it.etcSetting
         }.asLiveData()
 
+    //period 모드 화면 변경사항 체크용
+    private val _tmpPeriodMode: MutableLiveData<AlarmModeSetting> = MutableLiveData()
+    val tmpPeriodMode: LiveData<AlarmModeSetting> = _tmpPeriodMode
+
+    //custom 모드 리스트 수정모드 관찰 변수
     private val _modifyMode = MutableLiveData(false)
     val modifyMode: LiveData<Boolean> = _modifyMode
 
@@ -129,10 +134,8 @@ class WaterAlarmViewModel @Inject constructor(
         }
     }
 
-    fun updateAlarmModeSetting(setting: AlarmModeSetting) {
-        launch {
-            alarmRepository.updateAlarmModeSetting(setting)
-        }
+    suspend fun updateAlarmModeSetting(setting: AlarmModeSetting) {
+        alarmRepository.updateAlarmModeSetting(setting)
     }
 
     suspend fun setPeriodAlarm(period: AlarmModeSetting) {
@@ -158,15 +161,11 @@ class WaterAlarmViewModel @Inject constructor(
     }
 
     private suspend fun setAlarm(alarm: Alarm) {
-        launch {
-            alarmRepository.setAlarm(alarm)
-        }
+        alarmRepository.setAlarm(alarm)
     }
 
     private suspend fun setAlarmList(list: List<Alarm>) {
-        launch {
-            alarmRepository.setAlarmList(list)
-        }
+        alarmRepository.setAlarmList(list)
     }
 
     fun deleteAlarm(alarmId: Int) {
@@ -176,13 +175,17 @@ class WaterAlarmViewModel @Inject constructor(
         }
     }
 
-    fun setModifyMode(flag: Boolean) {
-        _modifyMode.value = flag
-    }
-
     fun updateList(list: List<Alarm>) {
         launch {
             alarmRepository.updateList(list, AlarmMode.CUSTOM)
         }
+    }
+
+    fun setTmpPeriodMode(period: AlarmModeSetting) {
+        _tmpPeriodMode.value = period
+    }
+
+    fun setModifyMode(flag: Boolean) {
+        _modifyMode.value = flag
     }
 }

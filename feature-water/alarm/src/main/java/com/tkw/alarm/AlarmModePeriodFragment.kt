@@ -1,7 +1,6 @@
 package com.tkw.alarm
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,16 +9,11 @@ import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
 import com.tkw.alarm.databinding.FragmentAlarmModePeriodBinding
 import com.tkw.alarm.dialog.AlarmPeriodDialog
-import com.tkw.alarm.dialog.AlarmTimeBottomDialog
 import com.tkw.common.autoCleared
 import com.tkw.common.util.DateTimeUtils
-import com.tkw.common.util.DateTimeUtils.toEpochMilli
-import com.tkw.domain.model.Alarm
-import com.tkw.domain.model.AlarmMode
 import com.tkw.domain.model.AlarmModeSetting
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.time.DayOfWeek
 
 @AndroidEntryPoint
 class AlarmModePeriodFragment : Fragment() {
@@ -55,6 +49,7 @@ class AlarmModePeriodFragment : Fragment() {
             //해당 값으로 화면 구성
             it?.let { period ->
                 periodMode = period
+                viewModel.setTmpPeriodMode(period)
                 dataBinding.alarmWeek.setChecked(period.selectedDate)
                 dataBinding.alarmWeek.setPeriodTime(
                     DateTimeUtils.getTime(
@@ -63,16 +58,21 @@ class AlarmModePeriodFragment : Fragment() {
                         requireContext().getString(com.tkw.ui.R.string.minute)
                     )
                 )
-                setAlarm(period)
+            }
+        }
+
+        viewModel.tmpPeriodMode.observe(viewLifecycleOwner) {
+            if(it != periodMode) {
+                dataBinding.btnSave.visibility = View.VISIBLE
+            } else {
+                dataBinding.btnSave.visibility = View.GONE
             }
         }
     }
 
     private fun initListener() {
         dataBinding.alarmWeek.setCheckListListener {
-            updateModeSetting(
-                periodMode.copy(selectedDate = it)
-            )
+            viewModel.setTmpPeriodMode(periodMode.copy(selectedDate = it))
         }
         dataBinding.alarmWeek.setPeriodClickListener {
             val currentPeriod = DateTimeUtils.getTimeFromLocalTime(
@@ -87,24 +87,28 @@ class AlarmModePeriodFragment : Fragment() {
                     requireContext().getString(com.tkw.ui.R.string.hour),
                     requireContext().getString(com.tkw.ui.R.string.minute)
                 ).toSecondOfDay()
-                updateModeSetting(
-                    periodMode.copy(interval = interval)
-                )
+                viewModel.setTmpPeriodMode(periodMode.copy(interval = interval))
             }
             dialog.show(childFragmentManager, dialog.tag)
         }
+        dataBinding.btnSave.setOnClickListener {
+            viewModel.tmpPeriodMode.value?.let {
+                lifecycleScope.launch {
+                    updateModeSetting(it)
+                    setAlarm(it)
+                }
+            }
 
+        }
     }
 
-    private fun updateModeSetting(period: AlarmModeSetting?) {
+    private suspend fun updateModeSetting(period: AlarmModeSetting?) {
         period?.let {
             viewModel.updateAlarmModeSetting(it)
         }
     }
 
-    private fun setAlarm(period: AlarmModeSetting) {
-        lifecycleScope.launch {
-            viewModel.setPeriodAlarm(period)
-        }
+    private suspend fun setAlarm(period: AlarmModeSetting) {
+        viewModel.setPeriodAlarm(period)
     }
 }
