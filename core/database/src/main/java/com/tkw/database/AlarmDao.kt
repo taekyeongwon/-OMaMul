@@ -10,41 +10,26 @@ import kotlinx.coroutines.flow.Flow
 
 interface AlarmDao: RealmDao<AlarmSettingsEntity> {
     /**
-     * 알람 설정 객체 업데이트
-     */
-    suspend fun updateSetting(setting: AlarmSettingsEntity)
-
-    /**
      * 알람 설정 객체 요청
      */
     fun getSetting(): Flow<ResultsChange<AlarmSettingsEntity>>
 
     /**
-     * 알람 id가 존재하면 update, 없으면 insert
+     * 알람 설정 객체 업데이트
      */
-    suspend fun setAlarm(alarm: AlarmEntity, alarmMode: AlarmModeEntity)
-
-    /**
-     * 알람 리스트로 추가
-     */
-    suspend fun setAlarmList(list: List<AlarmEntity>, alarmMode: AlarmModeEntity)
-
-    /**
-     * alarmId에 해당하는 Alarm 객체의 enabled를 false로 변경
-     */
-    suspend fun cancelAlarm(alarmId: Int, mode: AlarmModeEntity)
-
-    /**
-     * Period/Custom 설정 변경 시 업데이트.
-     * alarmList의 경우 setAlarm을 통해서만 업데이트 된다.
-     */
-    suspend fun updateAlarmModeSetting(alarmModeSettingEntity: AlarmModeSettingEntity)
+    suspend fun updateSetting(setting: AlarmSettingsEntity)
 
     /**
      * 현재 설정된 모드에 해당하는
      * PeriodEntity/CustomEntity 객체 리턴
      */
     fun getAlarmModeSetting(mode: AlarmModeEntity): Flow<AlarmModeSettingEntity?>
+
+    /**
+     * Period/Custom 설정 변경 시 업데이트.
+     * alarmList의 경우 setAlarm을 통해서만 업데이트 된다.
+     */
+    suspend fun updateAlarmModeSetting(alarmModeSettingEntity: AlarmModeSettingEntity)
 
     /**
      * alarm enable 여부에 상관 없이 Period/CustomAlarmListEntity 객체 리턴
@@ -57,6 +42,21 @@ interface AlarmDao: RealmDao<AlarmSettingsEntity> {
     suspend fun getEnabledAlarmList(alarmMode: AlarmModeEntity): AlarmListEntity
 
     /**
+     * 알람 id가 존재하면 update, 없으면 insert
+     */
+    suspend fun setAlarm(alarm: AlarmEntity, alarmMode: AlarmModeEntity)
+
+    /**
+     * 알람 리스트 업데이트
+     */
+    suspend fun setAlarmList(list: List<AlarmEntity>, mode: AlarmModeEntity)
+
+    /**
+     * alarmId에 해당하는 Alarm 객체의 enabled를 false로 변경
+     */
+    suspend fun cancelAlarm(alarmId: Int, mode: AlarmModeEntity)
+
+    /**
      * alarmId에 해당하는 Alarm 객체 제거
      */
     suspend fun deleteAlarm(alarmId: Int, mode: AlarmModeEntity)
@@ -64,10 +64,5 @@ interface AlarmDao: RealmDao<AlarmSettingsEntity> {
     /**
      * 전체 알람 제거 (Period 알람 간격 재 설정 시 호출)
      */
-    suspend fun allDelete(mode: AlarmModeEntity)
-
-    /**
-     * 알람 순서 변경
-     */
-    suspend fun updateAlarmList(list: List<AlarmEntity>, mode: AlarmModeEntity)
+    suspend fun deleteAllAlarm(mode: AlarmModeEntity)
 }

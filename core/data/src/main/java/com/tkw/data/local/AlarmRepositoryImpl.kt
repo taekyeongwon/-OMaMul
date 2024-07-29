@@ -25,7 +25,7 @@ class AlarmRepositoryImpl @Inject constructor(
             setting.collect {
                 val settingList = it.list.firstOrNull()
                 if(settingList == null) {
-                    update(AlarmSettings())
+                    updateAlarmSetting(AlarmSettings())
                 } else {
                     emit(AlarmMapper.alarmSettingToModel(settingList))
                 }
@@ -33,55 +33,8 @@ class AlarmRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun update(setting: AlarmSettings) =
+    override suspend fun updateAlarmSetting(setting: AlarmSettings) =
         alarmDao.updateSetting(AlarmMapper.alarmSettingToEntity(setting))
-
-    override suspend fun setAlarm(alarm: Alarm) {
-        with(alarm) {
-            val currentMode = getAlarmSetting().first().alarmMode
-
-            val calculatedInterval = alarm.getIntervalByNextDayOfWeek()
-            if(calculatedInterval == -1) {  //선택된 요일이 없는 경우 enabled false로 저장
-                alarmDao.setAlarm(
-                    AlarmMapper.alarmToEntity(alarm.copy(enabled = false)),
-                    AlarmMapper.alarmModeToEntity(currentMode)
-                )
-            } else {    //선택한 요일이 있으면 해당 요일 까지 지연
-                val newAlarm = alarm.copy(startTime = startTime + calculatedInterval)   //todo 1주일 이상 enabled false인 상태에서 true로 변경하면?
-                alarmManager.setAlarm(newAlarm)
-                alarmDao.setAlarm(
-                    AlarmMapper.alarmToEntity(newAlarm),
-                    AlarmMapper.alarmModeToEntity(currentMode)
-                )
-            }
-
-        }
-    }
-
-    override suspend fun setAlarmList(alarmList: List<Alarm>) {
-        val currentMode = getAlarmSetting().first().alarmMode
-
-        val newList = alarmList.map {
-            val calculatedInterval = it.getIntervalByNextDayOfWeek()
-            if(calculatedInterval == -1) {
-                it.copy(enabled = false)
-            } else {
-                it.copy(startTime = it.startTime + calculatedInterval)
-            }
-        }
-
-        newList.forEach {
-            alarmManager.setAlarm(it)
-        }
-        alarmDao.setAlarmList(
-            AlarmMapper.alarmListToEntity(newList),
-            AlarmMapper.alarmModeToEntity(currentMode)
-        )
-    }
-
-    override suspend fun updateAlarmModeSetting(setting: AlarmModeSetting) {
-        alarmDao.updateAlarmModeSetting(AlarmMapper.alarmModeToEntity(setting))
-    }
 
     override fun getAlarmModeSetting(mode: AlarmMode): Flow<AlarmModeSetting> {
         val alarmModeSetting = alarmDao.getAlarmModeSetting(AlarmMapper.alarmModeToEntity(mode))
@@ -96,9 +49,74 @@ class AlarmRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun updateAlarmModeSetting(setting: AlarmModeSetting) {
+        alarmDao.updateAlarmModeSetting(AlarmMapper.alarmModeToEntity(setting))
+    }
+
     override fun getAlarmList(mode: AlarmMode): Flow<AlarmList> {
         return alarmDao.getAlarmList(AlarmMapper.alarmModeToEntity(mode)).map {
             AlarmMapper.alarmListToModel(it)
+        }
+    }
+
+    override suspend fun setAlarm(alarm: Alarm) {
+        with(alarm) {
+            val currentMode = getAlarmSetting().first().alarmMode
+            val calculatedInterval = alarm.getIntervalByNextDayOfWeek()
+
+            val newAlarm = if(calculatedInterval == -1) {   //선택된 요일이 없는 경우 enabled false로 저장
+                alarm.copy(enabled = false)
+            } else {    //선택한 요일이 있으면 해당 요일 까지 지연
+                alarm.copy(startTime = startTime + calculatedInterval)  //todo 1주일 이상 enabled false인 상태에서 true로 변경하면?
+            }
+            alarmDao.setAlarm(
+                AlarmMapper.alarmToEntity(newAlarm),
+                AlarmMapper.alarmModeToEntity(currentMode)
+            )
+            if(newAlarm.enabled) {
+                wakeAlarm(newAlarm)
+            } else {
+                sleepAlarm(newAlarm.alarmId)
+            }
+        }
+    }
+
+    override suspend fun setAlarmList(alarmList: List<Alarm>) {
+        val currentMode = getAlarmSetting().first().alarmMode
+
+        val newList = alarmList.map {
+            val calculatedInterval = it.getIntervalByNextDayOfWeek()
+            if(calculatedInterval == -1) {
+                it.copy(enabled = false)
+            } else {
+                it.copy(startTime = it.startTime + calculatedInterval)
+            }
+        }
+        alarmDao.setAlarmList(
+            AlarmMapper.alarmListToEntity(newList),
+            AlarmMapper.alarmModeToEntity(currentMode)
+        )
+        newList.forEach {
+            if(it.enabled) {
+                wakeAlarm(it)
+            } else {
+                sleepAlarm(it.alarmId)
+            }
+        }
+    }
+
+    override suspend fun updateList(list: List<Alarm>, mode: AlarmMode) {
+        val mappedList = list.map {
+            AlarmMapper.alarmToEntity(it)
+        }
+        alarmDao.setAlarmList(mappedList, AlarmMapper.alarmModeToEntity(mode))
+    }
+
+    override suspend fun wakeAlarm(alarm: Alarm) {
+        if(alarm.startTime < System.currentTimeMillis()) {
+            setAlarm(alarm.copy(startTime = alarm.setLocalDateTimeToCurrentDate()))
+        } else {
+            alarmManager.setAlarm(alarm)
         }
     }
 
@@ -110,12 +128,12 @@ class AlarmRepositoryImpl @Inject constructor(
         )
 
         alarmListEntity.alarmList.forEach {
-            alarmManager.setAlarm(AlarmMapper.alarmToModel(it))
+            wakeAlarm(AlarmMapper.alarmToModel(it))
         }
     }
 
     override suspend fun cancelAlarm(alarmId: Int, mode: AlarmMode) {
-        alarmManager.cancelAlarm(alarmId)
+        sleepAlarm(alarmId)
         alarmDao.cancelAlarm(alarmId, AlarmMapper.alarmModeToEntity(mode))
     }
 
@@ -130,31 +148,28 @@ class AlarmRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun sleepAlarm(mode: AlarmMode) {
+    override suspend fun sleepAlarm(alarmId: Int) {
+        alarmManager.cancelAlarm(alarmId)
+    }
+
+    override suspend fun sleepAllAlarm(mode: AlarmMode) {
         //현재 모드로 활성화 된 알람, 즉 알람매니저에 등록된 알람 cancel 처리. wakeAllAlarm() 호출 시 깨어난다.
         val alarmListEntity = alarmDao.getEnabledAlarmList(
             AlarmMapper.alarmModeToEntity(mode)
         )
 
         alarmListEntity.alarmList.forEach {
-            alarmManager.cancelAlarm(it.alarmId)
+            sleepAlarm(it.alarmId)
         }
     }
 
     override suspend fun deleteAlarm(alarmId: Int, mode: AlarmMode) {
-        alarmManager.cancelAlarm(alarmId)
+        sleepAlarm(alarmId)
         alarmDao.deleteAlarm(alarmId, AlarmMapper.alarmModeToEntity(mode))
     }
 
-    override suspend fun allDelete(mode: AlarmMode) {
-        sleepAlarm(mode)
-        alarmDao.allDelete(AlarmMapper.alarmModeToEntity(mode))
-    }
-
-    override suspend fun updateList(list: List<Alarm>, mode: AlarmMode) {
-        val mappedList = list.map {
-            AlarmMapper.alarmToEntity(it)
-        }
-        alarmDao.updateAlarmList(mappedList, AlarmMapper.alarmModeToEntity(mode))
+    override suspend fun deleteAllAlarm(mode: AlarmMode) {
+        sleepAllAlarm(mode)
+        alarmDao.deleteAllAlarm(AlarmMapper.alarmModeToEntity(mode))
     }
 }

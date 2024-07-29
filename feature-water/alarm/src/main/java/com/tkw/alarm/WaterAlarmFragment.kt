@@ -200,7 +200,7 @@ class WaterAlarmFragment: Fragment() {
     }
 
     private fun alarmOff() {
-        viewModel.cancelAllAlarm()
+        viewModel.sleepAllAlarm()
     }
 
     private fun setRingtoneTitle(ringtone: RingTone) {

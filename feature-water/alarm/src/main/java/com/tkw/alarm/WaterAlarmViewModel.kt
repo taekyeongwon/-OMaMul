@@ -1,6 +1,5 @@
 package com.tkw.alarm
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
@@ -17,18 +16,13 @@ import com.tkw.domain.model.AlarmList
 import com.tkw.domain.model.AlarmMode
 import com.tkw.domain.model.AlarmModeSetting
 import com.tkw.domain.model.AlarmSettings
-import com.tkw.domain.model.RingTone
 import com.tkw.domain.model.RingToneMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapLatest
-import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 @HiltViewModel
@@ -65,9 +59,6 @@ class WaterAlarmViewModel @Inject constructor(
     val periodModeSettingsLiveData: LiveData<AlarmModeSetting> =
         alarmRepository.getAlarmModeSetting(AlarmMode.PERIOD).asLiveData()
 
-//    val customModeSettingsLiveData: LiveData<AlarmModeSetting> =
-//        alarmRepository.getAlarmModeSetting(AlarmMode.CUSTOM).asLiveData()
-
     val alarmSettings: LiveData<AlarmSettings> =
         alarmSettingsFlow.asLiveData()
 
@@ -101,15 +92,15 @@ class WaterAlarmViewModel @Inject constructor(
         }
     }
 
-    fun cancelAllAlarm() {
+    fun sleepAllAlarm() {
         launch {
-            alarmRepository.cancelAllAlarm(alarmSettingsFlow.first().alarmMode)
+            alarmRepository.sleepAllAlarm(alarmSettingsFlow.first().alarmMode)
         }
     }
 
     suspend fun clearAlarm(mode: AlarmMode) {
         launch {
-            alarmRepository.allDelete(mode)
+            alarmRepository.deleteAllAlarm(mode)
         }
     }
 
@@ -121,7 +112,7 @@ class WaterAlarmViewModel @Inject constructor(
                 currentSetting.alarmMode,
                 currentSetting.etcSetting
             )
-            alarmRepository.update(newSetting)
+            alarmRepository.updateAlarmSetting(newSetting)
         }
     }
 
@@ -133,8 +124,8 @@ class WaterAlarmViewModel @Inject constructor(
                 mode,
                 currentSetting.etcSetting
             )
-            alarmRepository.sleepAlarm(mode)
-            alarmRepository.update(newSetting)
+            alarmRepository.sleepAllAlarm(mode)
+            alarmRepository.updateAlarmSetting(newSetting)
         }
     }
 
@@ -145,8 +136,6 @@ class WaterAlarmViewModel @Inject constructor(
     }
 
     suspend fun setPeriodAlarm(period: AlarmModeSetting) {
-        clearAlarm(AlarmMode.PERIOD)
-
         if(period.selectedDate.isNotEmpty()) {
             var start = alarmTime.value?.first?.toEpochMilli() ?: 0
             val end = alarmTime.value?.second?.toEpochMilli() ?: 0

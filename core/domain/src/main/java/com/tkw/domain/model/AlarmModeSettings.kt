@@ -3,6 +3,7 @@ package com.tkw.domain.model
 import java.io.Serializable
 import java.time.DayOfWeek
 import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -14,7 +15,7 @@ data class AlarmModeSetting(
     val interval: Int = DEFAULT_PERIOD_INTERVAL
 ) {
     companion object {
-        const val DEFAULT_PERIOD_INTERVAL: Int = 1000 * 60 * 2 //한 시간으로 변경 필요. period 수정할 때 설정한 알람 간격 값임.
+        const val DEFAULT_PERIOD_INTERVAL: Int = 1000 * 60 * 60
         const val DEFAULT_CUSTOM_INTERVAL: Int = 1000 * 60 * 5 //임시 5분 처리. 추후 24시간으로 변경
     }
 }
@@ -41,10 +42,10 @@ data class Alarm(
             Instant
                 .ofEpochMilli(startTime)
                 .atZone(ZoneId.systemDefault())
-                .toLocalDate()
+                .toLocalDateTime()
 
         val currentDOW = DayOfWeek.from(dateFromStartTime)
-        var daysDifference = runCatching {
+        val daysDifference = runCatching {
             weekList.minOf {
                 if(it.value == currentDOW.value) {
                     if(startTime > System.currentTimeMillis()) 0
@@ -53,13 +54,27 @@ data class Alarm(
                     (it.value - currentDOW.value + 7) % 7
                 }
             }
-        }.getOrNull()
+        }.getOrNull()   //todo weekList 없이 setAlarm 등록 테스트 필요(커스텀)
 
-        if(daysDifference == 0 && startTime < System.currentTimeMillis()) {
-            daysDifference = 7
-        }
         return if(daysDifference == null) -1
         else 1000 * 60 * 60 * 24 * daysDifference
+    }
+
+    fun setLocalDateTimeToCurrentDate(): Long {
+        val dateFromStartTime =
+            Instant
+                .ofEpochMilli(startTime)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime()
+        val currentDate = LocalDate.now()
+        dateFromStartTime.withDayOfMonth(currentDate.dayOfMonth)
+        dateFromStartTime.withMonth(currentDate.monthValue)
+        dateFromStartTime.withYear(currentDate.year)
+
+        return dateFromStartTime
+            .atZone(ZoneId.systemDefault())
+            .toInstant()
+            .toEpochMilli()
     }
 }
 
