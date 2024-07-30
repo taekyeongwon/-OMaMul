@@ -29,23 +29,11 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
         private const val TAG = "AlarmDao"
     }
 
-    init {
-        //알람 리스트 로그용
-        CoroutineScope(Dispatchers.IO).launch {
-            find(
-                PeriodAlarmListEntity::class,
-                "id == $0", AlarmSettingsEntity.DEFAULT_SETTING_ID
-            ).asFlow().collectLatest {
-                Log.d(TAG, "PeriodAlarmList : " + it.list.firstOrNull()?.alarmList?.joinToString(",\n"))
-            }
-            find(
-                CustomAlarmListEntity::class,
-                "id == $0", AlarmSettingsEntity.DEFAULT_SETTING_ID
-            ).asFlow().collectLatest {
-                Log.d(TAG, "CustomAlarmList : " + it.list.firstOrNull()?.alarmList?.joinToString(",\n"))
-            }
-        }
-    }
+    private val alarmModeFlow =
+        this.find(
+            AlarmModeSettingEntity::class,
+            "id == $0", AlarmSettingsEntity.DEFAULT_SETTING_ID
+        ).asFlow()
 
     private val getPeriodAlarmListEntity: Flow<PeriodAlarmListEntity> = flow {
         val query = find(
@@ -79,6 +67,22 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
         }
     }
 
+    init {
+        //알람 리스트 로그용
+        CoroutineScope(Dispatchers.IO).launch {
+            launch {
+                getPeriodAlarmListEntity.collectLatest {
+                    Log.d(TAG, "PeriodAlarmList : " + it.alarmList.joinToString(",\n"))
+                }
+            }
+            launch {
+                getCustomAlarmListEntity.collectLatest {
+                    Log.d(TAG, "CustomAlarmList : " + it.alarmList.joinToString(",\n"))
+                }
+            }
+        }
+    }
+
     private suspend fun getPeriodAlarm(alarmId: Int): AlarmEntity? {
         Log.d(TAG, "${::getPeriodAlarm.name} alarmId : $alarmId")
         val entity = getPeriodAlarmListEntity.first()
@@ -96,12 +100,6 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
                 it.alarmId == alarmId
             }
     }
-
-    private val alarmModeFlow =
-        this.find(
-            AlarmModeSettingEntity::class,
-            "id == $0", AlarmSettingsEntity.DEFAULT_SETTING_ID
-        ).asFlow()
 
     override fun getSetting(): Flow<ResultsChange<AlarmSettingsEntity>> {
         return this.stream(this.findBy("id == $0", AlarmSettingsEntity.DEFAULT_SETTING_ID))
@@ -154,7 +152,9 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
             }
         }
         if(alarmEntity != null) {
-            updateAlarm(alarmEntity, alarm)
+            if(alarmEntity != alarm) {
+                updateAlarm(alarmEntity, alarm)
+            }
         } else {
             this.addAlarm(alarm, alarmMode)
         }

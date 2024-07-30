@@ -36,6 +36,15 @@ class AlarmEntity: EmbeddedRealmObject {
                 "}"
     }
 
+    override fun equals(other: Any?): Boolean {
+        val otherEntity = other as? AlarmEntity
+        return (alarmId == otherEntity?.alarmId
+                && startTime == otherEntity.startTime
+                && selectedDates == otherEntity.selectedDates
+                && enabled == otherEntity.enabled
+                )
+    }
+
     //로그용
     private fun getDateTimeString(timeInMillis: Long): String {
         val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
@@ -43,6 +52,14 @@ class AlarmEntity: EmbeddedRealmObject {
             .atZone(ZoneId.systemDefault())
             .toLocalDateTime()
         return localDateTime.format(formatter)
+    }
+
+    override fun hashCode(): Int {
+        var result = alarmId
+        result = 31 * result + startTime.hashCode()
+        result = 31 * result + selectedDates.hashCode()
+        result = 31 * result + enabled.hashCode()
+        return result
     }
 }
 

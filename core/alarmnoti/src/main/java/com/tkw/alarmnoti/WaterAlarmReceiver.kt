@@ -42,11 +42,9 @@ class WaterAlarmReceiver : BroadcastReceiver() {
 
                 if(alarm != null) {
                     alarmRepository.setAlarm(alarm)
-                    Log.d("test", "alarmnoti received ${alarm.alarmId}")
+                    Log.d("AlarmReceiver", "Notification received. alarmId : ${alarm.alarmId}")
                 }
             }
-
-
         }
 
     }

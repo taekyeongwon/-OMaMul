@@ -23,7 +23,6 @@ data class AlarmModeSetting(
 data class Alarm(
     val alarmId: Int,   //HHmm
     val startTime: Long,
-//    val interval: Long = -1,
     val weekList: List<DayOfWeek>,
     val enabled: Boolean = false
 ): Serializable {

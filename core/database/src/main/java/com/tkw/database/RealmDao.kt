@@ -35,8 +35,6 @@ interface RealmDao<T: RealmObject> {
             AlarmSettingsEntity::class,
             RingToneModeEntity::class,
             AlarmModeSettingEntity::class,
-//            PeriodEntity::class,
-//            CustomEntity::class,
             PeriodAlarmListEntity::class,
             CustomAlarmListEntity::class,
             AlarmEntity::class,
