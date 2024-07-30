@@ -74,50 +74,5 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/tv_friday"
         app:layout_constraintRight_toRightOf="parent"/>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_period"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_saturday"
-        app:layout_constraintRight_toRightOf="@id/tv_saturday"
-        app:layout_constraintLeft_toLeftOf="@id/tv_sunday">
-        <View
-            android:id="@+id/divider2"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            app:layout_constraintTop_toTopOf="parent" />
-        <TextView
-            android:id="@+id/tv_alarm_interval"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/alarm_interval"
-            android:textColor="@color/black"
-            android:padding="16dp"
-            app:layout_constraintTop_toBottomOf="@id/divider2"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/tv_interval_set"/>
-        <TextView
-            android:id="@+id/tv_interval_set"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:padding="16dp"
-            app:layout_constraintTop_toTopOf="@id/tv_alarm_interval"
-            app:layout_constraintBottom_toBottomOf="@id/tv_alarm_interval"
-            app:layout_constraintRight_toLeftOf="@id/tv_icon"/>
-        <ImageView
-            android:id="@+id/tv_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/right_arrow"
-            android:layout_margin="16dp"
-            app:layout_constraintTop_toTopOf="@id/tv_alarm_interval"
-            app:layout_constraintBottom_toBottomOf="@id/tv_alarm_interval"
-            app:layout_constraintRight_toRightOf="parent"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

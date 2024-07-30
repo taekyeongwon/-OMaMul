@@ -51,12 +51,10 @@ class AlarmModePeriodFragment : Fragment() {
                 periodMode = period
                 viewModel.setTmpPeriodMode(period)
                 dataBinding.alarmWeek.setChecked(period.selectedDate)
-                dataBinding.alarmWeek.setPeriodTime(
-                    DateTimeUtils.getTime(
-                        period.interval.toLong(),
-                        requireContext().getString(com.tkw.ui.R.string.hour),
-                        requireContext().getString(com.tkw.ui.R.string.minute)
-                    )
+                dataBinding.tvIntervalSet.text = DateTimeUtils.getTime(
+                    period.interval.toLong(),
+                    requireContext().getString(com.tkw.ui.R.string.hour),
+                    requireContext().getString(com.tkw.ui.R.string.minute)
                 )
             }
         }
@@ -74,14 +72,14 @@ class AlarmModePeriodFragment : Fragment() {
         dataBinding.alarmWeek.setCheckListListener {
             viewModel.setTmpPeriodMode(periodMode.copy(selectedDate = it))
         }
-        dataBinding.alarmWeek.setPeriodClickListener {
+        dataBinding.clPeriod.setOnClickListener {
             val currentPeriod = DateTimeUtils.getTimeFromLocalTime(
-                dataBinding.alarmWeek.getPeriodTime(),
+                dataBinding.tvIntervalSet.text.toString(),
                 requireContext().getString(com.tkw.ui.R.string.hour),
                 requireContext().getString(com.tkw.ui.R.string.minute)
             )
             val dialog = AlarmPeriodDialog(currentPeriod) {
-                dataBinding.alarmWeek.setPeriodTime(it)
+                dataBinding.tvIntervalSet.text = it
                 val interval = DateTimeUtils.getTimeFromLocalTime(
                     it,
                     requireContext().getString(com.tkw.ui.R.string.hour),

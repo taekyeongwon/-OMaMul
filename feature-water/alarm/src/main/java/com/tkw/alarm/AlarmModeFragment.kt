@@ -25,6 +25,7 @@ class AlarmModeFragment: Fragment() {
     private val viewModel: WaterAlarmViewModel by hiltNavGraphViewModels(R.id.alarm_nav_graph)
     private var alarmStartTime: String = ""
     private var alarmEndTime: String = ""
+    private var currentMode: AlarmMode? = null
 
     private val fragmentList by lazy {
         listOf(
@@ -58,6 +59,7 @@ class AlarmModeFragment: Fragment() {
             //현재 뷰모델 setting에서 가져온 모드로 replace
             it?.let {
                 setAlarmModeText(it)
+                currentMode = it
 
                 when(it) {
                     AlarmMode.PERIOD -> {
@@ -99,7 +101,7 @@ class AlarmModeFragment: Fragment() {
 
     private fun initListener() {
         dataBinding.tvAlarmMode.setOnClickListener {
-            val dialog = AlarmModeBottomDialog {
+            val dialog = AlarmModeBottomDialog(currentMode!!) {
                 viewModel.updateAlarmMode(it)
             }
             dialog.show(childFragmentManager, dialog.tag)

@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -19,6 +20,7 @@ class WaterAlarmManager @Inject constructor(
 ): IAlarmManager {
 
     override fun setAlarm(alarm: Alarm) {
+        Log.d("AlarmManager", "setAlarm : $alarm")
         with(alarm) {
             if(canScheduleExactAlarms()) {
                 setAlarmManager(alarm)
