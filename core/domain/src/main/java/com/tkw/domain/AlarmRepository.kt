@@ -34,15 +34,15 @@ interface AlarmRepository {
 
     suspend fun wakeAllAlarm()
 
-    suspend fun cancelAlarm(alarmId: Int, mode: AlarmMode)
+    suspend fun cancelAlarm(alarmId: String, mode: AlarmMode)
 
     suspend fun cancelAllAlarm(mode: AlarmMode)
 
-    suspend fun sleepAlarm(alarmId: Int)
+    suspend fun sleepAlarm(alarmId: String)
 
     suspend fun sleepAllAlarm(mode: AlarmMode)
 
-    suspend fun deleteAlarm(alarmId: Int, mode: AlarmMode)
+    suspend fun deleteAlarm(alarmId: String, mode: AlarmMode)
 
     suspend fun deleteAllAlarm(mode: AlarmMode)
 }

@@ -148,7 +148,7 @@ class WaterAlarmViewModel @Inject constructor(
             while(start < end) {
                 alarmList.add(
                     Alarm(
-                        DateTimeUtils.getTimeHHmm(start),
+                        DateTimeUtils.getDateTimeInt(start),
                         start,
                         period.selectedDate,
                         true
@@ -168,7 +168,7 @@ class WaterAlarmViewModel @Inject constructor(
         alarmRepository.setAlarmList(list)
     }
 
-    fun deleteAlarm(alarmId: Int) {
+    fun deleteAlarm(alarmId: String) {
         launch {
             alarmRepository.deleteAlarm(alarmId, AlarmMode.CUSTOM)
             _nextEvent.call()

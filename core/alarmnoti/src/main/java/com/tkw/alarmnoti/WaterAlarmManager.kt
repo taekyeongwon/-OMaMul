@@ -32,7 +32,7 @@ class WaterAlarmManager @Inject constructor(
         }
     }
 
-    override fun cancelAlarm(alarmId: Int) {
+    override fun cancelAlarm(alarmId: String) {
         cancelAlarmManager(alarmId)
         cancelWorkManager(alarmId)
     }
@@ -51,7 +51,7 @@ class WaterAlarmManager @Inject constructor(
         intent.putExtra("ALARM", alarm)
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            alarm.alarmId,
+            alarm.alarmId.hashCode(),
             intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
@@ -67,7 +67,7 @@ class WaterAlarmManager @Inject constructor(
         )
     }
 
-    private fun setWorkManager(alarmId: Int, startTime: Long) {
+    private fun setWorkManager(alarmId: String, startTime: Long) {
         val oneTimeWorkRequest = OneTimeWorkRequestBuilder<ScheduledWorkManager>()
             .setInitialDelay(ScheduledWorkManager.getCertainTime(), TimeUnit.MILLISECONDS)
 //            .setInputData(
@@ -83,19 +83,19 @@ class WaterAlarmManager @Inject constructor(
         )
     }
 
-    private fun cancelAlarmManager(alarmId: Int) {
+    private fun cancelAlarmManager(alarmId: String) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, WaterAlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            alarmId,
+            alarmId.hashCode(),
             intent,
             PendingIntent.FLAG_IMMUTABLE
         )
         alarmManager.cancel(pendingIntent)
     }
 
-    private fun cancelWorkManager(alarmId: Int) {
+    private fun cancelWorkManager(alarmId: String) {
         WorkManager.getInstance(context).cancelUniqueWork(ScheduledWorkManager.WORK_NAME)
     }
 }

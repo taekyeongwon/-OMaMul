@@ -132,7 +132,7 @@ class AlarmRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun cancelAlarm(alarmId: Int, mode: AlarmMode) {
+    override suspend fun cancelAlarm(alarmId: String, mode: AlarmMode) {
         sleepAlarm(alarmId)
         alarmDao.cancelAlarm(alarmId, AlarmMapper.alarmModeToEntity(mode))
     }
@@ -148,7 +148,7 @@ class AlarmRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun sleepAlarm(alarmId: Int) {
+    override suspend fun sleepAlarm(alarmId: String) {
         alarmManager.cancelAlarm(alarmId)
     }
 
@@ -163,7 +163,7 @@ class AlarmRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteAlarm(alarmId: Int, mode: AlarmMode) {
+    override suspend fun deleteAlarm(alarmId: String, mode: AlarmMode) {
         sleepAlarm(alarmId)
         alarmDao.deleteAlarm(alarmId, AlarmMapper.alarmModeToEntity(mode))
     }

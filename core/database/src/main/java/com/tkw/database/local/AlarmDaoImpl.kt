@@ -83,7 +83,7 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
         }
     }
 
-    private suspend fun getPeriodAlarm(alarmId: Int): AlarmEntity? {
+    private suspend fun getPeriodAlarm(alarmId: String): AlarmEntity? {
         Log.d(TAG, "${::getPeriodAlarm.name} alarmId : $alarmId")
         val entity = getPeriodAlarmListEntity.first()
         return entity.alarmList
@@ -92,7 +92,7 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
             }
     }
 
-    private suspend fun getCustomAlarm(alarmId: Int): AlarmEntity? {
+    private suspend fun getCustomAlarm(alarmId: String): AlarmEntity? {
         Log.d(TAG, "${::getCustomAlarm.name} alarmId : $alarmId")
         val entity = getCustomAlarmListEntity.first()
         return entity.alarmList
@@ -120,7 +120,7 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
     }
 
     override suspend fun updateAlarmModeSetting(alarmModeSettingEntity: AlarmModeSettingEntity) {
-        Log.d(TAG, "updateAlarmModeSetting selectedDate : " +
+        Log.d(TAG, "${::updateAlarmModeSetting} selectedDate : " +
                 alarmModeSettingEntity.selectedDate.joinToString(", ") +
                 " interval : ${alarmModeSettingEntity.interval}")
         this.upsert(alarmModeSettingEntity)
@@ -209,7 +209,7 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
         }
     }
 
-    override suspend fun cancelAlarm(alarmId: Int, mode: AlarmModeEntity) {
+    override suspend fun cancelAlarm(alarmId: String, mode: AlarmModeEntity) {
         Log.d("AlarmDao", "${::cancelAlarm.name} alarmId : $alarmId, mode : ${mode.name}")
         val entity = when(mode) {
             AlarmModeEntity.PERIOD -> {
@@ -228,7 +228,7 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
         }
     }
 
-    override suspend fun deleteAlarm(alarmId: Int, mode: AlarmModeEntity) {
+    override suspend fun deleteAlarm(alarmId: String, mode: AlarmModeEntity) {
         Log.d("AlarmDao", "${::deleteAlarm.name} mode : ${mode.name}")
         val entity = when(mode) {
             AlarmModeEntity.PERIOD -> {

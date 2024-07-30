@@ -15,13 +15,12 @@ data class AlarmModeSetting(
     val interval: Int = DEFAULT_PERIOD_INTERVAL
 ) {
     companion object {
-        const val DEFAULT_PERIOD_INTERVAL: Int = 1000 * 60 * 60
-        const val DEFAULT_CUSTOM_INTERVAL: Int = 1000 * 60 * 5 //임시 5분 처리. 추후 24시간으로 변경
+        const val DEFAULT_PERIOD_INTERVAL: Int = 60 * 60    //interval의 경우 toSecondOfDay와 ofSecondOfDay 사용하므로 밀리초 단위 제거
     }
 }
 
 data class Alarm(
-    val alarmId: Int,   //HHmm
+    val alarmId: String,   //yyMMddHHmmss   DateTimeUtils - getDateTimeInt()
     val startTime: Long,
     val weekList: List<DayOfWeek>,
     val enabled: Boolean = false

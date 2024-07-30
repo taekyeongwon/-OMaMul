@@ -129,22 +129,20 @@ object DateTimeUtils {
         return startOfMonth to endOfMonth
     }
 
-    fun getDateTimeInt(timeInMillis: Long): Int {
+    fun getDateTimeInt(timeInMillis: Long): String {
         val formatter = DateTimeFormatter.ofPattern("yyMMddHHmmss")
         val dateTime = Instant.ofEpochMilli(timeInMillis)
             .atZone(ZoneId.systemDefault())
             .toLocalDateTime()
-        val formattedDateTime = dateTime.format(formatter)
-        return formattedDateTime.toInt()
+        return dateTime.format(formatter)
     }
 
-    fun getTimeHHmm(timeInMillis: Long): Int {
+    fun getTimeHHmm(timeInMillis: Long): String {
         val formatter = DateTimeFormatter.ofPattern("HHmm")
         val localTime = Instant.ofEpochMilli(timeInMillis)
             .atZone(ZoneId.systemDefault())
             .toLocalTime()
-        val formattedDateTime = localTime.format(formatter)
-        return formattedDateTime.toInt()
+        return localTime.format(formatter)
     }
 
     fun LocalTime.toEpochMilli(zoneId: ZoneId = ZoneId.systemDefault()): Long {

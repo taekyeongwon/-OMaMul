@@ -54,12 +54,12 @@ interface AlarmDao: RealmDao<AlarmSettingsEntity> {
     /**
      * alarmId에 해당하는 Alarm 객체의 enabled를 false로 변경
      */
-    suspend fun cancelAlarm(alarmId: Int, mode: AlarmModeEntity)
+    suspend fun cancelAlarm(alarmId: String, mode: AlarmModeEntity)
 
     /**
      * alarmId에 해당하는 Alarm 객체 제거
      */
-    suspend fun deleteAlarm(alarmId: Int, mode: AlarmModeEntity)
+    suspend fun deleteAlarm(alarmId: String, mode: AlarmModeEntity)
 
     /**
      * 전체 알람 제거 (Period 알람 간격 재 설정 시 호출)

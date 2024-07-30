@@ -20,7 +20,7 @@ class AlarmModeSettingEntity: RealmObject {
 }
 
 class AlarmEntity: EmbeddedRealmObject {
-    var alarmId: Int = -1
+    var alarmId: String = ""
     var startTime: Long = -1L
 //    var interval: Long = -1L
     var selectedDates: RealmList<Int> = realmListOf()
@@ -55,7 +55,7 @@ class AlarmEntity: EmbeddedRealmObject {
     }
 
     override fun hashCode(): Int {
-        var result = alarmId
+        var result = alarmId.hashCode()
         result = 31 * result + startTime.hashCode()
         result = 31 * result + selectedDates.hashCode()
         result = 31 * result + enabled.hashCode()
