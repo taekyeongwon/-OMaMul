@@ -9,6 +9,7 @@ import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
 import com.tkw.alarm.databinding.FragmentAlarmModePeriodBinding
 import com.tkw.alarm.dialog.AlarmPeriodDialog
+import com.tkw.alarm.dialog.AlarmTimeBottomDialog
 import com.tkw.common.autoCleared
 import com.tkw.common.util.DateTimeUtils
 import com.tkw.domain.model.AlarmModeSetting
@@ -20,6 +21,9 @@ class AlarmModePeriodFragment : Fragment() {
     private var dataBinding by autoCleared<FragmentAlarmModePeriodBinding>()
     private val viewModel: WaterAlarmViewModel by hiltNavGraphViewModels(R.id.alarm_nav_graph)
     private var periodMode: AlarmModeSetting = AlarmModeSetting()
+
+    private var alarmStartTime: String = ""
+    private var alarmEndTime: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,6 +70,19 @@ class AlarmModePeriodFragment : Fragment() {
                 dataBinding.btnSave.visibility = View.GONE
             }
         }
+
+        viewModel.prefSavedAlarmTime.observe(viewLifecycleOwner) {
+            val first = it?.first
+            val second = it?.second
+            if(first != null && second != null) {
+                alarmStartTime = DateTimeUtils.getFormattedTime(first.hour, first.minute)
+                alarmEndTime = DateTimeUtils.getFormattedTime(second.hour, second.minute)
+                dataBinding.tvAlarmTime.text = "$alarmStartTime - $alarmEndTime"
+                dataBinding.ivEdit.visibility = View.VISIBLE
+            } else {
+                dataBinding.ivEdit.visibility = View.GONE
+            }
+        }
     }
 
     private fun initListener() {
@@ -96,7 +113,9 @@ class AlarmModePeriodFragment : Fragment() {
                     setAlarm(it)
                 }
             }
-
+        }
+        dataBinding.clAlarmTimeEdit.setOnClickListener {
+            showTimeDialog()
         }
     }
 
@@ -108,5 +127,21 @@ class AlarmModePeriodFragment : Fragment() {
 
     private suspend fun setAlarm(period: AlarmModeSetting) {
         viewModel.setPeriodAlarm(period)
+    }
+
+    private fun showTimeDialog() {
+        val dialog = AlarmTimeBottomDialog(
+            selectedStart = DateTimeUtils.getTimeFromFormat(alarmStartTime),
+            selectedEnd = DateTimeUtils.getTimeFromFormat(alarmEndTime),
+            resultListener = { wake, sleep ->
+                lifecycleScope.launch {
+                    viewModel.setAlarmTime(
+                        DateTimeUtils.getFormattedTime(wake.hour, wake.minute),
+                        DateTimeUtils.getFormattedTime(sleep!!.hour, sleep.minute)
+                    )
+                }
+            }
+        )
+        dialog.show(childFragmentManager, dialog.tag)
     }
 }

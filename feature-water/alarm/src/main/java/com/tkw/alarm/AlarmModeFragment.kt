@@ -8,14 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.navGraphViewModels
 import com.tkw.alarm.databinding.FragmentAlarmModeBinding
 import com.tkw.alarm.dialog.AlarmModeBottomDialog
 import com.tkw.alarm.dialog.AlarmTimeBottomDialog
 import com.tkw.common.autoCleared
 import com.tkw.common.util.DateTimeUtils
 import com.tkw.domain.model.AlarmMode
-import com.tkw.domain.model.AlarmModeSetting
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -23,8 +21,6 @@ import kotlinx.coroutines.launch
 class AlarmModeFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentAlarmModeBinding>()
     private val viewModel: WaterAlarmViewModel by hiltNavGraphViewModels(R.id.alarm_nav_graph)
-    private var alarmStartTime: String = ""
-    private var alarmEndTime: String = ""
     private var currentMode: AlarmMode? = null
 
     private val fragmentList by lazy {
@@ -72,19 +68,6 @@ class AlarmModeFragment: Fragment() {
             }
         }
 
-        viewModel.alarmTime.observe(viewLifecycleOwner) {
-            val first = it?.first
-            val second = it?.second
-            if(first != null && second != null) {
-                alarmStartTime = DateTimeUtils.getFormattedTime(first.hour, first.minute)
-                alarmEndTime = DateTimeUtils.getFormattedTime(second.hour, second.minute)
-                dataBinding.tvAlarmTime.text = "$alarmStartTime - $alarmEndTime"
-                dataBinding.ivEdit.visibility = View.VISIBLE
-            } else {
-                dataBinding.ivEdit.visibility = View.GONE
-            }
-        }
-
 //        viewModel.alarmModeSettingsLiveData.observe(viewLifecycleOwner) {
 //            it?.let {
 //                when(it) {
@@ -106,10 +89,6 @@ class AlarmModeFragment: Fragment() {
             }
             dialog.show(childFragmentManager, dialog.tag)
         }
-
-        dataBinding.clAlarmTimeEdit.setOnClickListener {
-            showTimeDialog()
-        }
     }
 
     private fun replaceFragment(fragment: Fragment) {
@@ -124,21 +103,5 @@ class AlarmModeFragment: Fragment() {
             AlarmMode.CUSTOM -> getString(com.tkw.ui.R.string.alarm_mode_custom)
         }
         dataBinding.tvAlarmMode.setText(text)
-    }
-
-    private fun showTimeDialog() {
-        val dialog = AlarmTimeBottomDialog(
-            selectedStart = DateTimeUtils.getTimeFromFormat(alarmStartTime),
-            selectedEnd = DateTimeUtils.getTimeFromFormat(alarmEndTime),
-            resultListener = { wake, sleep ->
-                lifecycleScope.launch {
-                    viewModel.setAlarmTime(
-                        DateTimeUtils.getFormattedTime(wake.hour, wake.minute),
-                        DateTimeUtils.getFormattedTime(sleep!!.hour, sleep.minute)
-                    )
-                }
-            }
-        )
-        dialog.show(childFragmentManager, dialog.tag)
     }
 }

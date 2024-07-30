@@ -23,12 +23,5 @@
             android:timePickerMode="spinner"
             app:layout_constraintTop_toTopOf="parent"
             />
-        <TimePicker
-            android:id="@+id/tp_end"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:timePickerMode="spinner"
-            android:visibility="gone"
-            app:layout_constraintTop_toTopOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
