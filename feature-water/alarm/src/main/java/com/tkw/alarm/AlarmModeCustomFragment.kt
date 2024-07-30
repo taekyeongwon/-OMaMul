@@ -1,9 +1,7 @@
 package com.tkw.alarm
 
 import android.content.Context
-import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,42 +9,33 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.withResumed
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.tkw.alarm.adapter.AlarmListAdapter
 import com.tkw.alarm.databinding.FragmentAlarmModeCustomBinding
-import com.tkw.alarm.dialog.AlarmTimeBottomDialog
+import com.tkw.alarm.dialog.CustomAlarmBottomDialog
 import com.tkw.common.autoCleared
 import com.tkw.common.util.DateTimeUtils
 import com.tkw.common.util.DateTimeUtils.toEpochMilli
 import com.tkw.domain.model.Alarm
-import com.tkw.domain.model.AlarmModeSetting
 import com.tkw.ui.ItemTouchHelperCallback
 import com.tkw.ui.OnItemDrag
 import com.tkw.ui.VerticalSpaceItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.time.Instant
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.ZoneId
-import java.time.ZoneOffset
 
 @AndroidEntryPoint
 class AlarmModeCustomFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentAlarmModeCustomBinding>()
     private val viewModel: WaterAlarmViewModel by hiltNavGraphViewModels(R.id.alarm_nav_graph)
-    private var custom: AlarmModeSetting.Custom = AlarmModeSetting.Custom()
 
     private lateinit var alarmListAdapter: AlarmListAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
 
     private val adapterEditListener: (Int) -> Unit = { position ->
         val currentAlarm = alarmListAdapter.currentList[position]
-        showTimeDialog(currentAlarm)
+        showCustomAlarmDialog(currentAlarm)
     }
 
     private val deleteCheckListener: (Int, Boolean) -> Unit = { position, isChecked ->
@@ -121,24 +110,13 @@ class AlarmModeCustomFragment: Fragment() {
     }
 
     private fun initView() {
-        dataBinding.alarmWeek.setPeriodLayoutVisibility(false)  //커스텀 화면은 알람 간격 안보이게 처리
         initAdapter()
         initRecyclerView()
         //wake all custom alarm
-        viewModel.wakeAllAlarm()
+//        viewModel.wakeAllAlarm()  //alarmOnOffListener에서 enabled true인 알람 켜므로 주석처리
     }
 
     private fun initObserver() {
-        viewModel.customModeSettingsLiveData.observe(viewLifecycleOwner) {
-            val customAlarm = it as? AlarmModeSetting.Custom
-            //해당 값으로 화면 구성
-
-            customAlarm?.let { custom ->
-                this@AlarmModeCustomFragment.custom = custom
-                dataBinding.alarmWeek.setChecked(custom.selectedDate)
-            }
-        }
-
         viewModel.customAlarmList.observe(viewLifecycleOwner) {
             val list = ArrayList<Alarm>()
             it.alarmList.forEach {
@@ -162,19 +140,13 @@ class AlarmModeCustomFragment: Fragment() {
         dataBinding.btnAdd.setOnClickListener {
             //새로 추가할 알람 객체 생성
             val currentTime = System.currentTimeMillis()
-            val alarmId = DateTimeUtils.getTimeHHmm(currentTime)
+            val alarmId = DateTimeUtils.getDateTimeInt(currentTime)
             val alarm = Alarm(
                 alarmId,
                 currentTime,
-                custom.interval
+                weekList = listOf()
             )
-            showTimeDialog(alarm)
-        }
-
-        dataBinding.alarmWeek.setCheckListListener {
-            updateModeSetting(
-                custom.copy(selectedDate = it)
-            )
+            showCustomAlarmDialog(alarm)
         }
 
         dataBinding.ivEdit.setOnClickListener {
@@ -258,32 +230,19 @@ class AlarmModeCustomFragment: Fragment() {
             }
     }
 
-    private fun showTimeDialog(alarm: Alarm) {
-        val dialog = AlarmTimeBottomDialog(
-            selectedStart = DateTimeUtils.getLocalTime(alarm.startTime),
-            resultListener = { start, _ ->
-                setAlarm(
-                    alarm.copy(startTime = start.toEpochMilli())
-                )
+    private fun showCustomAlarmDialog(alarm: Alarm) {
+        val dialog = CustomAlarmBottomDialog(
+            alarm = alarm,
+            resultListener = { result ->
+                setAlarm(result)
             }
         )
         dialog.show(childFragmentManager, dialog.tag)
-        lifecycleScope.launch {
-            dialog.withResumed {
-                dialog.setRadioButtonVisibility(false)
-            }
-        }
-    }
-
-    private fun updateModeSetting(custom: AlarmModeSetting.Custom?) {
-        custom?.let {
-            viewModel.updateAlarmModeSetting(it)
-        }
     }
 
     private fun setAlarm(alarm: Alarm) {
-        val enabled = dataBinding.alarmWeek.getCheckedList().isNotEmpty()
-        //수정이나 추가에 따라 setAlarm할 때 선택한 요일이 맞으면 true, 아니면 false로 알람 등록.
-        viewModel.setAlarm(alarm.copy(enabled = true))
+        lifecycleScope.launch {
+            viewModel.setCustomAlarm(alarm)
+        }
     }
 }

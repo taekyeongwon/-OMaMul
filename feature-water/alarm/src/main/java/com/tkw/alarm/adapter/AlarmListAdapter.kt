@@ -83,10 +83,12 @@ class AlarmListAdapter(
 
         init {
             with(binding) {
-                ibEdit.setOnClickListener { editListener(adapterPosition) }
                 root.setOnLongClickListener {
                     longClickListener(adapterPosition)
                     return@setOnLongClickListener true
+                }
+                root.setOnClickListener {
+                    editListener(adapterPosition)
                 }
                 svSwitch.setCheckedChangeListener { _, isChecked ->
                     alarmOnOffListener(adapterPosition, isChecked)

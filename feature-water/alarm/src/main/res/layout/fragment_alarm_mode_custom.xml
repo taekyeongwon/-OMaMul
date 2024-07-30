@@ -5,12 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <com.tkw.alarm.custom.AlarmModeView
-        android:id="@+id/alarm_week"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_rect"
-        app:layout_constraintTop_toTopOf="parent"/>
     <ImageView
         android:id="@+id/iv_edit"
         android:layout_width="wrap_content"
@@ -18,7 +12,7 @@
         android:src="@drawable/edit"
         android:padding="8dp"
         android:visibility="invisible"
-        app:layout_constraintTop_toBottomOf="@id/alarm_week"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_alarm"
