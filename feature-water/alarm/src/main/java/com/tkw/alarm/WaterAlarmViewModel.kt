@@ -157,6 +157,8 @@ class WaterAlarmViewModel @Inject constructor(
                 start += interval
             }
             setAlarmList(alarmList)
+        } else {
+            clearAlarm(AlarmMode.PERIOD)
         }
     }
 
