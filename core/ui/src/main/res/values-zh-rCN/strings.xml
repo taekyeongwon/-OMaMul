@@ -76,6 +76,7 @@
     <string name="hour">小时</string>
     <string name="minute">分钟</string>
     <string name="second">秒</string>
+    <string name="remaining"> 剩余。</string>
     <string name="exact_alarm_content">即使在屏幕锁定状态下，也请允许接收准确的警报。\n选择移动按钮将进入设置画面。</string>
     <string name="do_not_show_again">不再显示</string>
     <string name="move">移动</string>

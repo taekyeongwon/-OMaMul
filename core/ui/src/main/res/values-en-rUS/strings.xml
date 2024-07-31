@@ -76,6 +76,7 @@
     <string name="hour">hour</string>
     <string name="minute">minute</string>
     <string name="second">second</string>
+    <string name="remaining"> remaining.</string>
     <string name="exact_alarm_content">Please allow the permission to receive accurate alarms even when the screen is locked.\nSelecting the Move button will take you to the settings screen.</string>
     <string name="do_not_show_again">Do not show again</string>
     <string name="move">Move</string>

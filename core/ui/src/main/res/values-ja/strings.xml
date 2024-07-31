@@ -76,6 +76,7 @@
     <string name="hour">時間</string>
     <string name="minute">分</string>
     <string name="second">秒</string>
+    <string name="remaining"> 残りです。</string>
     <string name="exact_alarm_content">画面がロックされている状態でも正確なアラームを受信するために、権限を許可してください。\n移動ボタンを選択すると設定画面に移動します。</string>
     <string name="do_not_show_again">再び表示しない</string>
     <string name="move">移動</string>

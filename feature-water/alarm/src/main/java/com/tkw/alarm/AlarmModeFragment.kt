@@ -54,6 +54,11 @@ class AlarmModeFragment: Fragment() {
     }
 
     private fun initView() {
+        dataBinding.run {
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = this@AlarmModeFragment.viewModel
+            executePendingBindings()
+        }
     }
 
     private fun initObserver() {
@@ -73,29 +78,6 @@ class AlarmModeFragment: Fragment() {
                 }
             }
         }
-
-        viewModel.timeTickerFlow.observe(viewLifecycleOwner) {
-            val text = StringBuilder()
-
-            val days = it / (1000 * 60 * 60 * 24)
-            val hour = (it / (1000 * 60 * 60)) % 24
-            val minute = (it / (1000 * 60)) % 60
-            val second = (it / 1000) % 60
-
-            if(days != 0L) {
-                text.append(days).append(getString(com.tkw.ui.R.string.day))
-            }
-            if(hour != 0L) {
-                text.append(hour).append(getString(com.tkw.ui.R.string.hour))
-            }
-            if(minute != 0L) {
-                text.append(minute).append(getString(com.tkw.ui.R.string.minute))
-            }
-            text.append(second).append(getString(com.tkw.ui.R.string.second))
-
-            dataBinding.tvAlarmRemain.text = text.toString()
-        }
-
     }
 
     private fun initListener() {
