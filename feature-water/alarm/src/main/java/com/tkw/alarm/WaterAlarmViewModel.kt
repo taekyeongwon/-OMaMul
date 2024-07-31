@@ -1,8 +1,13 @@
 package com.tkw.alarm
 
+import android.app.Application
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.asLiveData
+import com.tkw.base.BaseAppViewModel
 import com.tkw.base.BaseViewModel
 import com.tkw.base.launch
 import com.tkw.common.SingleLiveEvent
@@ -18,11 +23,21 @@ import com.tkw.domain.model.AlarmModeSetting
 import com.tkw.domain.model.AlarmSettings
 import com.tkw.domain.model.RingToneMode
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapLatest
+import java.lang.StringBuilder
 import javax.inject.Inject
 
 @HiltViewModel
@@ -90,6 +105,38 @@ class WaterAlarmViewModel @Inject constructor(
     //custom 모드 리스트 수정모드 관찰 변수
     private val _modifyMode = MutableLiveData(false)
     val modifyMode: LiveData<Boolean> = _modifyMode
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val remainAlarmTime: Flow<Long> = alarmMode.asFlow()
+        .flatMapLatest {
+            alarmRepository.getAlarmList(it)
+        }
+        .flatMapLatest { result ->
+            flow {
+                if(result.alarmList.none { it.enabled }) {
+                    emit(-1)
+                } else {
+                    val closestAlarm = result.alarmList
+                        .filter { it.enabled }
+                        .minOf {
+                            it.startTime - System.currentTimeMillis()
+                        }
+                    emit(closestAlarm)
+                }
+            }
+        }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val timeTickerFlow: LiveData<Long> = remainAlarmTime.flatMapLatest<Long, Long> {
+        flow {
+            var remainTime = it
+            while(remainTime > 0) {
+                remainTime -= 1000
+                emit(remainTime)
+                delay(1000)
+            }
+        }
+    }.asLiveData()
 
     fun wakeAllAlarm() {
         launch {

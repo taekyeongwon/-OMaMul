@@ -1,6 +1,7 @@
 package com.tkw.alarm
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +16,12 @@ import com.tkw.common.autoCleared
 import com.tkw.common.util.DateTimeUtils
 import com.tkw.domain.model.AlarmMode
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.lang.StringBuilder
 
 @AndroidEntryPoint
 class AlarmModeFragment: Fragment() {
@@ -68,18 +74,28 @@ class AlarmModeFragment: Fragment() {
             }
         }
 
-//        viewModel.alarmModeSettingsLiveData.observe(viewLifecycleOwner) {
-//            it?.let {
-//                when(it) {
-//                    is AlarmModeSetting.Period -> {
-//                        //현재 설정된 알람 몇 분 남았는지 세팅
-//                    }
-//                    is AlarmModeSetting.Custom -> {
-//                        //현재 설정된 알람 몇 분 남았는지 세팅
-//                    }
-//                }
-//            }
-//        }
+        viewModel.timeTickerFlow.observe(viewLifecycleOwner) {
+            val text = StringBuilder()
+
+            val days = it / (1000 * 60 * 60 * 24)
+            val hour = (it / (1000 * 60 * 60)) % 24
+            val minute = (it / (1000 * 60)) % 60
+            val second = (it / 1000) % 60
+
+            if(days != 0L) {
+                text.append(days).append(getString(com.tkw.ui.R.string.day))
+            }
+            if(hour != 0L) {
+                text.append(hour).append(getString(com.tkw.ui.R.string.hour))
+            }
+            if(minute != 0L) {
+                text.append(minute).append(getString(com.tkw.ui.R.string.minute))
+            }
+            text.append(second).append(getString(com.tkw.ui.R.string.second))
+
+            dataBinding.tvAlarmRemain.text = text.toString()
+        }
+
     }
 
     private fun initListener() {
