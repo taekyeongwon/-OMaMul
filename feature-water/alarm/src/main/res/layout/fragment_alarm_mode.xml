@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:textSize="23sp"
             android:textColor="@color/black"
-            android:text="@{viewModel.timeTickerFlow}"
+            android:text="@{viewModel.timeTickerLiveData}"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/alarm_detail_empty"/>
 

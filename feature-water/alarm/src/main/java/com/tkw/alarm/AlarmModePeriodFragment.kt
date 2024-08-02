@@ -14,6 +14,7 @@ import com.tkw.common.autoCleared
 import com.tkw.common.util.DateTimeUtils
 import com.tkw.domain.model.AlarmModeSetting
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -126,7 +127,7 @@ class AlarmModePeriodFragment : Fragment() {
     }
 
     private suspend fun initNotification() {
-        if(viewModel.isNotificationEnabled()) {
+        if(viewModel.isNotificationEnabled().first()) {
             viewModel.wakeAllAlarm()
         }
     }

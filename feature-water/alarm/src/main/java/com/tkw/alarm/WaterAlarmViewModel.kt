@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asFlow
 import androidx.lifecycle.asLiveData
+import com.tkw.alarmnoti.NotificationManager
 import com.tkw.base.BaseViewModel
 import com.tkw.base.launch
 import com.tkw.common.SingleLiveEvent
@@ -52,8 +52,14 @@ class WaterAlarmViewModel @Inject constructor(
     private val isAlarmEnabled = prefDataRepository.fetchAlarmEnableFlag()
     suspend fun getNotificationEnabled() = isAlarmEnabled.first() ?: false
 
-    suspend fun isNotificationEnabled() = NotificationManager.isNotificationEnabled(context)
-            && getNotificationEnabled()
+    //알람 및 설정에서 알람 허용했는지 여부
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun isNotificationEnabled() = isAlarmEnabled.flatMapLatest {
+        flow {
+            val isEnabled = NotificationManager.isNotificationEnabled(context)
+            emit(it == true && isEnabled)
+        }
+    }
 
     suspend fun setNotificationEnabled(flag: Boolean) {
         prefDataRepository.saveAlarmEnableFlag(flag)
@@ -114,49 +120,35 @@ class WaterAlarmViewModel @Inject constructor(
     private val _modifyMode = MutableLiveData(false)
     val modifyMode: LiveData<Boolean> = _modifyMode
 
+    //알람 변경에 따라 remainTime 재요청
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val timeTickerLiveData = isNotificationEnabled()
+        .flatMapLatest { timeTickerFlow }
+        .asLiveData()
+
     //남은 시간을 텍스트 포맷으로 변경
     @OptIn(ExperimentalCoroutinesApi::class)
-    val timeTickerFlow: LiveData<String> = alarmRepository.getRemainAlarmTime().flatMapLatest {
+    private val timeTickerFlow: Flow<String> = alarmRepository.getRemainAlarmTime().flatMapLatest {
         flow {
             var remainTime = it
             if(it == -1L) {
                 emit(getCustomString(com.tkw.ui.R.string.alarm_detail_empty))
-            } else if(!isNotificationEnabled()) {
+            } else if(!isNotificationEnabled().first()) {
                 emit(getCustomString(com.tkw.ui.R.string.alarm_detail_switch_off))
             } else {
                 while (remainTime > 0) {
-                    val text = StringBuilder()
-
-                    val days = remainTime / (1000 * 60 * 60 * 24)
-                    val hour = (remainTime / (1000 * 60 * 60)) % 24
-                    val minute = (remainTime / (1000 * 60)) % 60
-                    val second = (remainTime / 1000) % 60
-
-                    if (days != 0L) {
-                        text.append(days)
-                            .append(getCustomString(com.tkw.ui.R.string.day))
-                            .append(" ")
-                    }
-                    if (hour != 0L) {
-                        text.append(hour)
-                            .append(getCustomString(com.tkw.ui.R.string.hour))
-                            .append(" ")
-                    }
-                    if (minute != 0L) {
-                        text.append(minute)
-                            .append(getCustomString(com.tkw.ui.R.string.minute))
-                            .append(" ")
-                    }
-                    text.append(second)
-                        .append(getCustomString(com.tkw.ui.R.string.second))
-
-                    emit(String.format(getCustomString(com.tkw.ui.R.string.alarm_detail_remain), text.toString()))
+                    emit(
+                        String.format(
+                            getCustomString(com.tkw.ui.R.string.alarm_detail_remain),
+                            getRemainTimeString(remainTime)
+                        )
+                    )
                     remainTime -= TIME_UNIT_SECONDS
                     delay(TIME_UNIT_SECONDS)
                 }
             }
         }
-    }.asLiveData()
+    }
 
     fun wakeAllAlarm() {
         launch {
@@ -265,6 +257,35 @@ class WaterAlarmViewModel @Inject constructor(
 
     fun setModifyMode(flag: Boolean) {
         _modifyMode.value = flag
+    }
+
+    private fun getRemainTimeString(remainTime: Long): String {
+        val text = StringBuilder()
+
+        val days = remainTime / (1000 * 60 * 60 * 24)
+        val hour = (remainTime / (1000 * 60 * 60)) % 24
+        val minute = (remainTime / (1000 * 60)) % 60
+        val second = (remainTime / 1000) % 60
+
+        if (days != 0L) {
+            text.append(days)
+                .append(getCustomString(com.tkw.ui.R.string.day))
+                .append(" ")
+        }
+        if (hour != 0L) {
+            text.append(hour)
+                .append(getCustomString(com.tkw.ui.R.string.hour))
+                .append(" ")
+        }
+        if (minute != 0L) {
+            text.append(minute)
+                .append(getCustomString(com.tkw.ui.R.string.minute))
+                .append(" ")
+        }
+        text.append(second)
+            .append(getCustomString(com.tkw.ui.R.string.second))
+
+        return text.toString()
     }
 
     private fun getCustomString(id: Int): String {
