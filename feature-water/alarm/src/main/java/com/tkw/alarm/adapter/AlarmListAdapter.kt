@@ -72,6 +72,7 @@ class AlarmListAdapter(
 
     fun setDraggable(isDraggable: Boolean) {
         draggable = isDraggable
+        notifyDataSetChanged()
     }
 
     class AlarmListViewHolder(
