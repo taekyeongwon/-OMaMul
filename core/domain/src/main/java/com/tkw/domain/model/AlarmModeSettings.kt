@@ -4,6 +4,7 @@ import java.io.Serializable
 import java.time.DayOfWeek
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -52,24 +53,20 @@ data class Alarm(
                     (it.value - currentDOW.value + 7) % 7
                 }
             }
-        }.getOrNull()   //todo weekList 없이 setAlarm 등록 테스트 필요(커스텀)
+        }.getOrNull()
 
         return if(daysDifference == null) -1
         else 1000 * 60 * 60 * 24 * daysDifference
     }
 
-    fun setLocalDateTimeToCurrentDate(): Long {
+    fun setLocalDateTimeTo(date: LocalDate): Long {
         val dateFromStartTime =
             Instant
                 .ofEpochMilli(startTime)
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime()
-        val currentDate = LocalDate.now()
-        dateFromStartTime.withDayOfMonth(currentDate.dayOfMonth)
-        dateFromStartTime.withMonth(currentDate.monthValue)
-        dateFromStartTime.withYear(currentDate.year)
 
-        return dateFromStartTime
+        return dateFromStartTime.with(date)
             .atZone(ZoneId.systemDefault())
             .toInstant()
             .toEpochMilli()

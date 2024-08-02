@@ -135,7 +135,8 @@ class AlarmRepositoryImpl @Inject constructor(
 
     override suspend fun wakeAlarm(alarm: Alarm) {
         if(alarm.startTime < System.currentTimeMillis()) {
-            setAlarm(alarm.copy(startTime = alarm.setLocalDateTimeToCurrentDate()))
+            val currentDate = LocalDate.now()
+            setAlarm(alarm.copy(startTime = alarm.setLocalDateTimeTo(currentDate)))
         } else {
             alarmManager.setAlarm(alarm)
         }
