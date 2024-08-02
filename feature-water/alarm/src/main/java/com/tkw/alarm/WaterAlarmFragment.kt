@@ -223,8 +223,10 @@ class WaterAlarmFragment: Fragment() {
     }
 
     private fun setEtcSetting(etcSettings: AlarmEtcSettings) {
-        dataBinding.tvAlarmEtcStop.setSwitch(etcSettings.stopReachedGoal) { _, isChecekd ->
-            //todo 목표 도달 시 알람 멈추기 기능 구현 필요
+        dataBinding.tvAlarmEtcStop.setSwitch(etcSettings.stopReachedGoal) { _, isChecked ->
+            lifecycleScope.launch {
+                viewModel.updateEtcSetting(etcSettings.copy(stopReachedGoal = isChecked))
+            }
         }
     }
 }

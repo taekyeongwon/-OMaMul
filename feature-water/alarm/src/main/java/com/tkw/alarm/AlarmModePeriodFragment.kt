@@ -87,7 +87,9 @@ class AlarmModePeriodFragment : Fragment() {
 
     private fun initListener() {
         dataBinding.alarmWeek.setCheckListListener {
-            viewModel.setTmpPeriodMode(periodMode.copy(selectedDate = it))
+            viewModel.tmpPeriodMode.value?.let { setting ->
+                viewModel.setTmpPeriodMode(setting.copy(selectedDate = it))
+            }
         }
         dataBinding.clPeriod.setOnClickListener {
             val currentPeriod = DateTimeUtils.getTimeFromLocalTime(
@@ -102,7 +104,9 @@ class AlarmModePeriodFragment : Fragment() {
                     requireContext().getString(com.tkw.ui.R.string.hour),
                     requireContext().getString(com.tkw.ui.R.string.minute)
                 ).toSecondOfDay()
-                viewModel.setTmpPeriodMode(periodMode.copy(interval = interval))
+                viewModel.tmpPeriodMode.value?.let { setting ->
+                    viewModel.setTmpPeriodMode(setting.copy(interval = interval))
+                }
             }
             dialog.show(childFragmentManager, dialog.tag)
         }

@@ -97,15 +97,14 @@ class WaterAlarmViewModel @Inject constructor(
             it.etcSetting
         }.asLiveData()
 
-    //period 모드 화면 변경사항 체크용
-    private val _tmpPeriodMode: MutableLiveData<AlarmModeSetting> = MutableLiveData()
-    val tmpPeriodMode: LiveData<AlarmModeSetting> = _tmpPeriodMode
-
-
     @OptIn(ExperimentalCoroutinesApi::class)
             flow {
             }
         }
+
+    //period 모드 화면 변경사항 체크용
+    private val _tmpPeriodMode: MutableLiveData<AlarmModeSetting> = MutableLiveData()
+    val tmpPeriodMode: LiveData<AlarmModeSetting> = _tmpPeriodMode
 
     //custom 모드 리스트 수정모드 관찰 변수
     private val _modifyMode = MutableLiveData(false)
@@ -192,6 +191,18 @@ class WaterAlarmViewModel @Inject constructor(
                 currentSetting.etcSetting
             )
             alarmRepository.sleepAllAlarm(mode)
+            alarmRepository.updateAlarmSetting(newSetting)
+        }
+    }
+
+    suspend fun updateEtcSetting(etcSettings: AlarmEtcSettings) {
+        launch {
+            val currentSetting = alarmSettingsFlow.first()
+            val newSetting = AlarmSettings(
+                currentSetting.ringToneMode,
+                currentSetting.alarmMode,
+                etcSettings
+            )
             alarmRepository.updateAlarmSetting(newSetting)
         }
     }

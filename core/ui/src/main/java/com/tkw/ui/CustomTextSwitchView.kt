@@ -47,8 +47,8 @@ class CustomTextSwitchView
     }
 
     fun setSwitch(flag: Boolean, block: (CompoundButton, Boolean) -> Unit) {
-        dataBinding.svSwitch.setCheckedChangeListener(block)
         dataBinding.svSwitch.setChecked(flag)
+        dataBinding.svSwitch.setCheckedChangeListener(block)
     }
 
     fun clear() {
