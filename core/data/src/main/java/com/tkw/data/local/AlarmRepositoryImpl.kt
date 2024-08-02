@@ -60,6 +60,26 @@ class AlarmRepositoryImpl @Inject constructor(
     }
 
     override suspend fun setAlarm(alarm: Alarm) {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getRemainAlarmTime(): Flow<Long> =
+        getAlarmSetting().mapLatest {
+            it.alarmMode
+        }.flatMapLatest {
+            getAlarmList(it)
+        }.flatMapLatest { result ->
+            flow {
+                if (result.alarmList.none { it.enabled }) {
+                    emit(-1L)
+                } else {
+                    val closestAlarm = result.alarmList
+                        .filter { it.enabled }
+                        .minOf {
+                            it.startTime - System.currentTimeMillis()
+                        }
+                    emit(closestAlarm)
+                }
+            }
+        }
         with(alarm) {
             val currentMode = getAlarmSetting().first().alarmMode
             val calculatedInterval = alarm.getIntervalByNextDayOfWeek()

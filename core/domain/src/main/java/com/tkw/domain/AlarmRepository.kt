@@ -19,6 +19,10 @@ interface AlarmRepository {
     fun getAlarmList(mode: AlarmMode): Flow<AlarmList>
 
     suspend fun setAlarm(alarm: Alarm)
+    /**
+     * 현재 선택된 모드에서 가장 남은시간이 가까운 알람 가져오기
+     */
+    fun getRemainAlarmTime(): Flow<Long>
 
     /**
      * 알람 리스트 추가 및 알람매니저 등록

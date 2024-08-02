@@ -102,24 +102,8 @@ class WaterAlarmViewModel @Inject constructor(
     val tmpPeriodMode: LiveData<AlarmModeSetting> = _tmpPeriodMode
 
 
-    //현재 선택된 모드에서 가장 남은시간이 가까운 알람 가져오기
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val remainAlarmTime: Flow<Long> = alarmMode.asFlow()
-        .flatMapLatest {
-            alarmRepository.getAlarmList(it)
-        }
-        .flatMapLatest { result ->
             flow {
-                if(result.alarmList.none { it.enabled }) {
-                    emit(-1L)
-                } else {
-                    val closestAlarm = result.alarmList
-                        .filter { it.enabled }
-                        .minOf {
-                            it.startTime - System.currentTimeMillis()
-                        }
-                    emit(closestAlarm)
-                }
             }
         }
 
@@ -129,7 +113,7 @@ class WaterAlarmViewModel @Inject constructor(
 
     //남은 시간을 텍스트 포맷으로 변경
     @OptIn(ExperimentalCoroutinesApi::class)
-    val timeTickerFlow: LiveData<String> = remainAlarmTime.flatMapLatest {
+    val timeTickerFlow: LiveData<String> = alarmRepository.getRemainAlarmTime().flatMapLatest {
         flow {
             var remainTime = it
             if(it == -1L) {
