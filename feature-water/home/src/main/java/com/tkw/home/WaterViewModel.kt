@@ -28,7 +28,6 @@ class WaterViewModel
 @Inject constructor(
     private val waterRepository: WaterRepository,
     private val cupRepository: CupRepository,
-    private val alarmRepository: AlarmRepository,
     private val prefDataRepository: PrefDataRepository,
     private val savedStateHandle: SavedStateHandle
 ): BaseViewModel() {
@@ -37,9 +36,6 @@ class WaterViewModel
     private val initFlag = prefDataRepository.fetchInitialFlag()
     suspend fun getInitFlag(): Boolean = initFlag.first() ?: false
 
-    //알람 권한 허용 여부
-    private val isAlarmEnabled = prefDataRepository.fetchAlarmEnableFlag()
-    suspend fun getNotificationEnabled() = isAlarmEnabled.first() ?: false
 
     //현재 날짜
     private val dateStringFlow = MutableStateFlow(DateTimeUtils.getTodayDate())

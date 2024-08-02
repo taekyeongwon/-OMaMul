@@ -48,8 +48,12 @@ class WaterAlarmViewModel @Inject constructor(
     private val _nextEvent = SingleLiveEvent<Unit>()
     val nextEvent: LiveData<Unit> = _nextEvent
 
+    //알람 권한 허용 여부
     private val isAlarmEnabled = prefDataRepository.fetchAlarmEnableFlag()
     suspend fun getNotificationEnabled() = isAlarmEnabled.first() ?: false
+
+    suspend fun isNotificationEnabled() = NotificationManager.isNotificationEnabled(context)
+            && getNotificationEnabled()
 
     suspend fun setNotificationEnabled(flag: Boolean) {
         prefDataRepository.saveAlarmEnableFlag(flag)
@@ -117,37 +121,39 @@ class WaterAlarmViewModel @Inject constructor(
             var remainTime = it
             if(it == -1L) {
                 emit(getCustomString(com.tkw.ui.R.string.alarm_detail_empty))
-            }
-            while(remainTime > 0) {
-                val text = StringBuilder()
+            } else if(!isNotificationEnabled()) {
+                emit(getCustomString(com.tkw.ui.R.string.alarm_detail_switch_off))
+            } else {
+                while (remainTime > 0) {
+                    val text = StringBuilder()
 
-                val days = remainTime / (1000 * 60 * 60 * 24)
-                val hour = (remainTime / (1000 * 60 * 60)) % 24
-                val minute = (remainTime / (1000 * 60)) % 60
-                val second = (remainTime / 1000) % 60
+                    val days = remainTime / (1000 * 60 * 60 * 24)
+                    val hour = (remainTime / (1000 * 60 * 60)) % 24
+                    val minute = (remainTime / (1000 * 60)) % 60
+                    val second = (remainTime / 1000) % 60
 
-                if(days != 0L) {
-                    text.append(days)
-                        .append(getCustomString(com.tkw.ui.R.string.day))
-                        .append(" ")
-                }
-                if(hour != 0L) {
-                    text.append(hour)
-                        .append(getCustomString(com.tkw.ui.R.string.hour))
-                        .append(" ")
-                }
-                if(minute != 0L) {
-                    text.append(minute)
-                        .append(getCustomString(com.tkw.ui.R.string.minute))
-                        .append(" ")
-                }
-                text.append(second)
-                    .append(getCustomString(com.tkw.ui.R.string.second))
-                    .append(getCustomString(com.tkw.ui.R.string.remaining))
+                    if (days != 0L) {
+                        text.append(days)
+                            .append(getCustomString(com.tkw.ui.R.string.day))
+                            .append(" ")
+                    }
+                    if (hour != 0L) {
+                        text.append(hour)
+                            .append(getCustomString(com.tkw.ui.R.string.hour))
+                            .append(" ")
+                    }
+                    if (minute != 0L) {
+                        text.append(minute)
+                            .append(getCustomString(com.tkw.ui.R.string.minute))
+                            .append(" ")
+                    }
+                    text.append(second)
+                        .append(getCustomString(com.tkw.ui.R.string.second))
 
-                emit(text.toString())
-                remainTime -= TIME_UNIT_SECONDS
-                delay(TIME_UNIT_SECONDS)
+                    emit(String.format(getCustomString(com.tkw.ui.R.string.alarm_detail_remain), text.toString()))
+                    remainTime -= TIME_UNIT_SECONDS
+                    delay(TIME_UNIT_SECONDS)
+                }
             }
         }
     }.asLiveData()

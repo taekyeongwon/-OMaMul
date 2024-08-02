@@ -69,9 +69,9 @@ class WaterFragment: Fragment() {
     private fun initView() {
         initViewPager()
         initItemMenu()
-        lifecycleScope.launch {
-            initNotification()
-        }
+//        lifecycleScope.launch {
+//            initNotification()
+//        }
     }
 
     private fun initObserver() {
@@ -148,15 +148,6 @@ class WaterFragment: Fragment() {
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-    }
-
-    private suspend fun initNotification() {
-        if(
-            NotificationManager.isNotificationEnabled(requireContext())
-            && viewModel.getNotificationEnabled()
-        ) {
-            viewModel.resetAlarm()
-        }
     }
 
     private val clickScrollListener: (Int) -> Unit = { position ->
