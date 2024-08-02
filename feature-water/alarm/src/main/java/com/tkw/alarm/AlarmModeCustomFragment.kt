@@ -17,7 +17,6 @@ import com.tkw.alarm.databinding.FragmentAlarmModeCustomBinding
 import com.tkw.alarm.dialog.CustomAlarmBottomDialog
 import com.tkw.common.autoCleared
 import com.tkw.common.util.DateTimeUtils
-import com.tkw.common.util.DateTimeUtils.toEpochMilli
 import com.tkw.domain.model.Alarm
 import com.tkw.ui.ItemTouchHelperCallback
 import com.tkw.ui.OnItemDrag
@@ -130,10 +129,6 @@ class AlarmModeCustomFragment: Fragment() {
         viewModel.modifyMode.observe(viewLifecycleOwner) {
             modeChanged(it)
         }
-
-        viewModel.nextEvent.observe(viewLifecycleOwner) {
-            viewModel.setModifyMode(false)
-        }
     }
 
     private fun initListener() {
@@ -158,6 +153,8 @@ class AlarmModeCustomFragment: Fragment() {
                 .filter { it.isChecked }
                 .forEach {
                     viewModel.deleteAlarm(it.alarmId)
+                }.also {
+                    viewModel.setModifyMode(false)
                 }
         }
     }

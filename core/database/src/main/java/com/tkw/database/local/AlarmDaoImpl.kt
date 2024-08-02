@@ -169,10 +169,7 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
                 is CustomAlarmListEntity -> findLatest(entity)
                 else -> null
             }
-            latestObj?.let {
-                it.alarmList.clear()
-                it.alarmList.addAll(list)
-            }
+            latestObj?.alarmList?.addAll(list)
         }
     }
 

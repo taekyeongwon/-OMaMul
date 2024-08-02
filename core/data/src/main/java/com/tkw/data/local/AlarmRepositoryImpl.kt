@@ -83,6 +83,7 @@ class AlarmRepositoryImpl @Inject constructor(
 
     override suspend fun setAlarmList(alarmList: List<Alarm>) {
         val currentMode = getAlarmSetting().first().alarmMode
+        deleteAllAlarm(currentMode)
 
         val newList = alarmList.map {
             val calculatedInterval = it.getIntervalByNextDayOfWeek()

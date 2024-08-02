@@ -101,9 +101,6 @@ class WaterAlarmViewModel @Inject constructor(
     private val _tmpPeriodMode: MutableLiveData<AlarmModeSetting> = MutableLiveData()
     val tmpPeriodMode: LiveData<AlarmModeSetting> = _tmpPeriodMode
 
-    //custom 모드 리스트 수정모드 관찰 변수
-    private val _modifyMode = MutableLiveData(false)
-    val modifyMode: LiveData<Boolean> = _modifyMode
 
     //현재 선택된 모드에서 가장 남은시간이 가까운 알람 가져오기
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -125,6 +122,10 @@ class WaterAlarmViewModel @Inject constructor(
                 }
             }
         }
+
+    //custom 모드 리스트 수정모드 관찰 변수
+    private val _modifyMode = MutableLiveData(false)
+    val modifyMode: LiveData<Boolean> = _modifyMode
 
     //남은 시간을 텍스트 포맷으로 변경
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -234,8 +235,6 @@ class WaterAlarmViewModel @Inject constructor(
                 start += interval
             }
             setAlarmList(alarmList)
-        } else {
-            clearAlarm(AlarmMode.PERIOD)
         }
     }
 
@@ -250,7 +249,6 @@ class WaterAlarmViewModel @Inject constructor(
     fun deleteAlarm(alarmId: String) {
         launch {
             alarmRepository.deleteAlarm(alarmId, AlarmMode.CUSTOM)
-            _nextEvent.call()
         }
     }
 
