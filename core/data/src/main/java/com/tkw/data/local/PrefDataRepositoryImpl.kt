@@ -31,6 +31,12 @@ class PrefDataRepositoryImpl
 
     override fun fetchIntakeAmount(): Flow<Int?> = dataSource.fetchData(INTAKE_AMOUNT_KEY)
 
+    override suspend fun saveReachedGoal(isReached: Boolean) {
+        dataSource.saveData(REACHED_GOAL_KEY, isReached)
+    }
+
+    override fun fetchReachedGoal(): Flow<Boolean?> = dataSource.fetchData(REACHED_GOAL_KEY)
+
     override suspend fun saveInitialFlag(flag: Boolean) {
         dataSource.saveData(INIT_FLAG_KEY, flag)
     }
@@ -48,6 +54,7 @@ class PrefDataRepositoryImpl
         val ALARM_WAKE_TIME_KEY = stringPreferencesKey("alarm_wake_time")
         val ALARM_SLEEP_TIME_KEY = stringPreferencesKey("alarm_sleep_time")
         val INTAKE_AMOUNT_KEY = intPreferencesKey("intake_amount")
+        val REACHED_GOAL_KEY = booleanPreferencesKey("reached_goal")
         val INIT_FLAG_KEY = booleanPreferencesKey("init_flag")
         val ALARM_ENABLED_KEY = booleanPreferencesKey("alarm_enabled")
     }

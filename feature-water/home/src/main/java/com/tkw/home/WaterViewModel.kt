@@ -17,8 +17,10 @@ import com.tkw.domain.model.DayOfWater
 import com.tkw.domain.model.Water
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapLatest
 import javax.inject.Inject
@@ -36,6 +38,7 @@ class WaterViewModel
     private val initFlag = prefDataRepository.fetchInitialFlag()
     suspend fun getInitFlag(): Boolean = initFlag.first() ?: false
 
+    private val defaultIntakeAmount = 2000
 
     //현재 날짜
     private val dateStringFlow = MutableStateFlow(DateTimeUtils.getTodayDate())
@@ -77,19 +80,13 @@ class WaterViewModel
         }
     }
 
-    suspend fun getIntakeAmount(default: Int): Int =
-        prefDataRepository.fetchIntakeAmount().first() ?: default
+    suspend fun getIntakeAmount(default: Int? = null): Int =
+        prefDataRepository.fetchIntakeAmount().firstOrNull() ?: default ?: defaultIntakeAmount
 
     fun saveIntakeAmount(amount: Int) {
         launch {
             prefDataRepository.saveIntakeAmount(amount)
             _amountSaveEvent.call()
-        }
-    }
-
-    fun resetAlarm() {
-        launch {
-            alarmRepository.wakeAllAlarm()
         }
     }
 }

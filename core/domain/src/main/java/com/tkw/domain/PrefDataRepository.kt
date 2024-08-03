@@ -13,6 +13,9 @@ interface PrefDataRepository {
     suspend fun saveIntakeAmount(amount: Int)
     fun fetchIntakeAmount(): Flow<Int?>
 
+    suspend fun saveReachedGoal(isReached: Boolean)
+    fun fetchReachedGoal(): Flow<Boolean?>
+
     suspend fun saveInitialFlag(flag: Boolean)
     fun fetchInitialFlag(): Flow<Boolean?>
 

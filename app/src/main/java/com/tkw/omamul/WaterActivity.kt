@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -19,6 +20,7 @@ import com.tkw.omamul.databinding.ActivityWaterBinding
 import com.tkw.home.WaterViewModel
 import com.tkw.record.LogViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -46,6 +48,7 @@ class WaterActivity : AppCompatActivity() {
         installSplashScreen()
         initBinding()
         initView()
+        initObserver()
     }
 
     override fun onResume() {
@@ -72,6 +75,25 @@ class WaterActivity : AppCompatActivity() {
         setContentView(dataBinding.root)
         setSupportActionBar(dataBinding.toolbar)
         initNavigate()
+    }
+
+    private fun initObserver() {
+        waterViewModel.amountLiveData.observe(this) {
+            lifecycleScope.launch {
+                if(it.getTotalWaterAmount() >= waterViewModel.getIntakeAmount()) {
+                    alarmViewModel.saveReachedGoal(true)
+                    Toast.makeText(this@WaterActivity, getString(com.tkw.ui.R.string.intake_complete), Toast.LENGTH_SHORT).show()
+                } else {
+                    alarmViewModel.saveReachedGoal(false)
+                }
+            }
+        }
+        alarmViewModel.isReachedGoal.observe(this) {
+            lifecycleScope.launch {
+                val isNotificationEnabled = alarmViewModel.isNotificationEnabled().first()
+                alarmViewModel.delayAllAlarm(it, isNotificationEnabled)
+            }
+        }
     }
 
     private fun initNavigate() {

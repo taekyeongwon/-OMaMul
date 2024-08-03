@@ -2,6 +2,7 @@ package com.tkw.alarm
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
@@ -26,9 +27,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import java.lang.StringBuilder
 import javax.inject.Inject
@@ -108,9 +111,18 @@ class WaterAlarmViewModel @Inject constructor(
         }.asLiveData()
 
     @OptIn(ExperimentalCoroutinesApi::class)
+    private val isStopWhenReachedGoal: Flow<Boolean> =
+        alarmSettingsFlow.flatMapLatest {
             flow {
+                emit(it.etcSetting.stopReachedGoal)
             }
         }
+
+    val isReachedGoal: LiveData<Boolean> = prefDataRepository.fetchReachedGoal().map { it ?: false }
+        .combine(isStopWhenReachedGoal) { isReachedGoal, stopReachedFlag ->
+            Log.d("test", "$isReachedGoal $stopReachedFlag")
+            isReachedGoal && stopReachedFlag
+        }.distinctUntilChanged().asLiveData()
 
     //period 모드 화면 변경사항 체크용
     private val _tmpPeriodMode: MutableLiveData<AlarmModeSetting> = MutableLiveData()
@@ -153,6 +165,12 @@ class WaterAlarmViewModel @Inject constructor(
     fun wakeAllAlarm() {
         launch {
             alarmRepository.wakeAllAlarm()
+        }
+    }
+
+    suspend fun delayAllAlarm(isDelayed: Boolean, isNotificationEnabled: Boolean = true) {
+        launch {
+            alarmRepository.delayAllAlarm(isDelayed, isNotificationEnabled)
         }
     }
 
@@ -232,11 +250,11 @@ class WaterAlarmViewModel @Inject constructor(
     }
 
     suspend fun setCustomAlarm(alarm: Alarm) {
-        alarmRepository.setAlarm(alarm)
+        alarmRepository.setAlarm(alarm, isNotificationEnabled().first(), isReachedGoal.value ?: false)
     }
 
     private suspend fun setAlarmList(list: List<Alarm>) {
-        alarmRepository.setAlarmList(list)
+        alarmRepository.setAlarmList(list, isNotificationEnabled().first(), isReachedGoal.value ?: false)
     }
 
     fun deleteAlarm(alarmId: String) {
@@ -257,6 +275,12 @@ class WaterAlarmViewModel @Inject constructor(
 
     fun setModifyMode(flag: Boolean) {
         _modifyMode.value = flag
+    }
+
+    fun saveReachedGoal(isReached: Boolean) {
+        launch {
+            prefDataRepository.saveReachedGoal(isReached)
+        }
     }
 
     private fun getRemainTimeString(remainTime: Long): String {

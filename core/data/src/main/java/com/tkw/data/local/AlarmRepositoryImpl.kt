@@ -8,10 +8,14 @@ import com.tkw.domain.model.AlarmList
 import com.tkw.domain.model.AlarmMode
 import com.tkw.domain.model.AlarmModeSetting
 import com.tkw.domain.model.AlarmSettings
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
+import java.time.LocalDate
 import javax.inject.Inject
 
 class AlarmRepositoryImpl @Inject constructor(
@@ -59,7 +63,6 @@ class AlarmRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun setAlarm(alarm: Alarm) {
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getRemainAlarmTime(): Flow<Long> =
         getAlarmSetting().mapLatest {
@@ -80,20 +83,28 @@ class AlarmRepositoryImpl @Inject constructor(
                 }
             }
         }
+
+    override suspend fun setAlarm(alarm: Alarm, isNotificationEnabled: Boolean, isReachedGoal: Boolean) {
         with(alarm) {
             val currentMode = getAlarmSetting().first().alarmMode
-            val calculatedInterval = alarm.getIntervalByNextDayOfWeek()
+            val calculatedInterval = if(isReachedGoal) {
+                val nextDate = LocalDate.now().plusDays(1)
+                alarm.copy(startTime = alarm.setLocalDateTimeTo(nextDate))
+                    .getIntervalByNextDayOfWeek()
+            } else {
+                alarm.getIntervalByNextDayOfWeek()
+            }
 
             val newAlarm = if(calculatedInterval == -1) {   //선택된 요일이 없는 경우 enabled false로 저장
                 alarm.copy(enabled = false)
             } else {    //선택한 요일이 있으면 해당 요일 까지 지연
-                alarm.copy(startTime = startTime + calculatedInterval)  //todo 1주일 이상 enabled false인 상태에서 true로 변경하면?
+                alarm.copy(startTime = startTime + calculatedInterval)
             }
             alarmDao.setAlarm(
                 AlarmMapper.alarmToEntity(newAlarm),
                 AlarmMapper.alarmModeToEntity(currentMode)
             )
-            if(newAlarm.enabled) {
+            if(newAlarm.enabled && isNotificationEnabled) {
                 wakeAlarm(newAlarm)
             } else {
                 sleepAlarm(newAlarm.alarmId)
@@ -101,12 +112,18 @@ class AlarmRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun setAlarmList(alarmList: List<Alarm>) {
+    override suspend fun setAlarmList(alarmList: List<Alarm>, isNotificationEnabled: Boolean, isReachedGoal: Boolean) {
         val currentMode = getAlarmSetting().first().alarmMode
         deleteAllAlarm(currentMode)
 
         val newList = alarmList.map {
-            val calculatedInterval = it.getIntervalByNextDayOfWeek()
+            val calculatedInterval = if(isReachedGoal) {
+                val nextDate = LocalDate.now().plusDays(1)
+                it.copy(startTime = it.setLocalDateTimeTo(nextDate))
+                    .getIntervalByNextDayOfWeek()
+            } else {
+                it.getIntervalByNextDayOfWeek()
+            }
             if(calculatedInterval == -1) {
                 it.copy(enabled = false)
             } else {
@@ -118,7 +135,7 @@ class AlarmRepositoryImpl @Inject constructor(
             AlarmMapper.alarmModeToEntity(currentMode)
         )
         newList.forEach {
-            if(it.enabled) {
+            if(it.enabled && isNotificationEnabled) {
                 wakeAlarm(it)
             } else {
                 sleepAlarm(it.alarmId)
@@ -152,6 +169,21 @@ class AlarmRepositoryImpl @Inject constructor(
         alarmListEntity.alarmList.forEach {
             wakeAlarm(AlarmMapper.alarmToModel(it))
         }
+    }
+
+    override suspend fun delayAllAlarm(isDelayed: Boolean, isNotificationEnabled: Boolean) {
+        //만약 reached면 전체 알람 다 가져와서(enabled 상관 없이) startTime date를 내일로 설정.
+        //reached가 아니면 startTime date 오늘로 설정
+        //이후 전부 setAlarm호출
+        val currentMode = getAlarmSetting().first().alarmMode
+        val mappedList = getAlarmList(currentMode).map {
+            it.alarmList.map {
+                val nextDate = if(isDelayed) LocalDate.now().plusDays(1)
+                else LocalDate.now()
+                it.copy(startTime = it.setLocalDateTimeTo(nextDate))
+            }
+        }.first()
+        setAlarmList(mappedList, isNotificationEnabled)
     }
 
     override suspend fun cancelAlarm(alarmId: String, mode: AlarmMode) {

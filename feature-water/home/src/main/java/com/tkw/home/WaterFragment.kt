@@ -13,10 +13,8 @@ import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
-import com.tkw.alarmnoti.NotificationManager
 import com.tkw.common.autoCleared
 import com.tkw.common.util.DateTimeUtils
 import com.tkw.common.util.DimenUtils
@@ -27,7 +25,6 @@ import com.tkw.home.dialog.WaterIntakeDialog
 import com.tkw.navigation.DeepLinkDestination
 import com.tkw.navigation.deepLinkNavigateTo
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class WaterFragment: Fragment() {
@@ -69,9 +66,6 @@ class WaterFragment: Fragment() {
     private fun initView() {
         initViewPager()
         initItemMenu()
-//        lifecycleScope.launch {
-//            initNotification()
-//        }
     }
 
     private fun initObserver() {

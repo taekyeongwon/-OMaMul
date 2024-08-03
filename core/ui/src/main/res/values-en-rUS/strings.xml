@@ -88,5 +88,5 @@
     <string name="alarm_detail_mode_custom_desc">Set the alarm reception time manually.</string>
     <string name="alarm_custom_empty_title">Please add an alarm.</string>
     <string name="alarm_custom_add">+ Add new alarm</string>
-
+    <string name="intake_complete">Goal achieved!</string>
 </resources>

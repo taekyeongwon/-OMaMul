@@ -88,5 +88,5 @@
     <string name="alarm_detail_mode_custom_desc">手动设置闹钟接收时间。</string>
     <string name="alarm_custom_empty_title">请添加一个闹钟。</string>
     <string name="alarm_custom_add">+ 添加新闹钟</string>
-
+    <string name="intake_complete">目标达成了!</string>
 </resources>
