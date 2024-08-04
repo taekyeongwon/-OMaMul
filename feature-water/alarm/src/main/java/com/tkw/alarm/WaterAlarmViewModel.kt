@@ -128,10 +128,6 @@ class WaterAlarmViewModel @Inject constructor(
     private val _tmpPeriodMode: MutableLiveData<AlarmModeSetting> = MutableLiveData()
     val tmpPeriodMode: LiveData<AlarmModeSetting> = _tmpPeriodMode
 
-    //custom 모드 리스트 수정모드 관찰 변수
-    private val _modifyMode = MutableLiveData(false)
-    val modifyMode: LiveData<Boolean> = _modifyMode
-
     //알람 변경에 따라 remainTime 재요청
     @OptIn(ExperimentalCoroutinesApi::class)
     val timeTickerLiveData = isNotificationEnabled()
@@ -271,10 +267,6 @@ class WaterAlarmViewModel @Inject constructor(
 
     fun setTmpPeriodMode(period: AlarmModeSetting) {
         _tmpPeriodMode.value = period
-    }
-
-    fun setModifyMode(flag: Boolean) {
-        _modifyMode.value = flag
     }
 
     fun saveReachedGoal(isReached: Boolean) {

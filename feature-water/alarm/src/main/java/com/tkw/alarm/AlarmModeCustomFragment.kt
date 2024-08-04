@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
 class AlarmModeCustomFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentAlarmModeCustomBinding>()
     private val viewModel: WaterAlarmViewModel by hiltNavGraphViewModels(R.id.alarm_nav_graph)
+    private var isModified = false
 
     private lateinit var alarmListAdapter: AlarmListAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
@@ -44,7 +45,7 @@ class AlarmModeCustomFragment: Fragment() {
 
     private val adapterLongClickListener: (Int) -> Unit = { position ->
         alarmListAdapter.currentList[position].isChecked = true
-        viewModel.setModifyMode(true)
+        modeChanged(true)
     }
 
     private val dragListener = object: OnItemDrag<Alarm> {
@@ -72,9 +73,9 @@ class AlarmModeCustomFragment: Fragment() {
 
     private val callback = object: OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            if(viewModel.modifyMode.value == true) {
+            if(isModified) {
                 clearChecked()
-                viewModel.setModifyMode(false)
+                modeChanged(false)
             } else {
                 findNavController().navigateUp()
             }
@@ -122,12 +123,9 @@ class AlarmModeCustomFragment: Fragment() {
                 list.add(it.copy())
             }
             alarmListAdapter.submitList(list) {
+                modeChanged(false)
                 dataChanged()
             }
-        }
-
-        viewModel.modifyMode.observe(viewLifecycleOwner) {
-            modeChanged(it)
         }
     }
 
@@ -145,7 +143,7 @@ class AlarmModeCustomFragment: Fragment() {
         }
 
         dataBinding.ivEdit.setOnClickListener {
-            viewModel.setModifyMode(true)
+            modeChanged(true)
         }
 
         dataBinding.btnDelete.setOnClickListener {
@@ -188,12 +186,12 @@ class AlarmModeCustomFragment: Fragment() {
             dataBinding.tvEmptyAlarm.visibility = View.GONE
         }
         dataBinding.ivEdit.visibility =
-            if (alarmListAdapter.itemCount > 1 &&
-                viewModel.modifyMode.value == false) View.VISIBLE
+            if (alarmListAdapter.itemCount > 1 && !isModified) View.VISIBLE
             else View.INVISIBLE
     }
 
     private fun modeChanged(isModified: Boolean) {
+        this.isModified = isModified
         alarmListAdapter.setDraggable(isModified)
         if(isModified) {
             setDeleteBtnVisibility()
