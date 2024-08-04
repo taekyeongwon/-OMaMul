@@ -202,7 +202,7 @@ class WaterAlarmViewModel @Inject constructor(
                 mode,
                 currentSetting.etcSetting
             )
-            alarmRepository.sleepAllAlarm(mode)
+            alarmRepository.sleepAllAlarm(currentSetting.alarmMode) //모드 변경 시 이전 모드의 알람 전부 알람매니저에서 해제
             alarmRepository.updateAlarmSetting(newSetting)
         }
     }
