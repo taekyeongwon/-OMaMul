@@ -30,7 +30,11 @@ class WeekListView
 
     fun setChecked(list: List<DayOfWeek>) {
         list.forEach {
-            weekList[it.value].setChecked(true)
+            if(it == DayOfWeek.SUNDAY) {
+                weekList[0].setChecked(true)
+            } else {
+                weekList[it.value].setChecked(true)
+            }
         }
     }
 
@@ -44,7 +48,11 @@ class WeekListView
         val result = ArrayList<DayOfWeek>()
         for(i in 0 until weekList.size) {
             if(weekList[i].getChecked()) {
-                result.add(DayOfWeek.of(i))
+                if(i == 0) {    //DayOfWeek는 월요일을 1로 시작해서 일요일이 7이다.
+                    result.add(DayOfWeek.SUNDAY)
+                } else {
+                    result.add(DayOfWeek.of(i))
+                }
             }
         }
         return result
