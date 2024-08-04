@@ -217,9 +217,11 @@ class AlarmRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteAlarm(alarmId: String, mode: AlarmMode) {
-        sleepAlarm(alarmId)
-        alarmDao.deleteAlarm(alarmId, AlarmMapper.alarmModeToEntity(mode))
+    override suspend fun deleteAlarm(list: List<Alarm>, mode: AlarmMode) {
+        list.forEach {
+            sleepAlarm(it.alarmId)
+        }
+        alarmDao.deleteAlarm(AlarmMapper.alarmListToEntity(list), AlarmMapper.alarmModeToEntity(mode))
     }
 
     override suspend fun deleteAllAlarm(mode: AlarmMode) {

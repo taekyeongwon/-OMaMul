@@ -151,10 +151,8 @@ class AlarmModeCustomFragment: Fragment() {
         dataBinding.btnDelete.setOnClickListener {
             alarmListAdapter.currentList
                 .filter { it.isChecked }
-                .forEach {
-                    viewModel.deleteAlarm(it.alarmId)
-                }.also {
-                    viewModel.setModifyMode(false)
+                .also {
+                    viewModel.deleteAlarm(it)
                 }
         }
     }

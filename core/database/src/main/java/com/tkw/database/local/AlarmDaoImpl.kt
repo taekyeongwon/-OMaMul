@@ -225,21 +225,15 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
         }
     }
 
-    override suspend fun deleteAlarm(alarmId: String, mode: AlarmModeEntity) {
-        Log.d("AlarmDao", "${::deleteAlarm.name} mode : ${mode.name}")
-        val entity = when(mode) {
-            AlarmModeEntity.PERIOD -> {
-                getPeriodAlarm(alarmId)
-            }
-            AlarmModeEntity.CUSTOM -> {
-                getCustomAlarm(alarmId)
-            }
-        }
+    override suspend fun deleteAlarm(list: List<AlarmEntity>, mode: AlarmModeEntity) {
+        Log.d("AlarmDao", "${::deleteAlarm.name} mode : ${mode.name} list : ${list.joinToString(",\n")}")
+        val queriedList = when(mode) {
+            AlarmModeEntity.PERIOD -> getPeriodAlarmListEntity
+            AlarmModeEntity.CUSTOM -> getCustomAlarmListEntity
+        }.first()
         realm.write {
-            entity?.let {
-                findLatest(it)?.let {
-                    delete(it)
-                }
+            findLatest(queriedList)?.apply {
+                alarmList.removeAll(list)
             }
         }
     }

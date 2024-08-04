@@ -257,9 +257,9 @@ class WaterAlarmViewModel @Inject constructor(
         alarmRepository.setAlarmList(list, isNotificationEnabled().first(), isReachedGoal.value ?: false)
     }
 
-    fun deleteAlarm(alarmId: String) {
+    fun deleteAlarm(list: List<Alarm>) {
         launch {
-            alarmRepository.deleteAlarm(alarmId, AlarmMode.CUSTOM)
+            alarmRepository.deleteAlarm(list, AlarmMode.CUSTOM)
         }
     }
 
