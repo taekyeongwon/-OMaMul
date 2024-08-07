@@ -114,7 +114,7 @@ class AlarmRepositoryImpl @Inject constructor(
 
     override suspend fun setAlarmList(alarmList: List<Alarm>, isNotificationEnabled: Boolean, isReachedGoal: Boolean) {
         val currentMode = getAlarmSetting().first().alarmMode
-        deleteAllAlarm(currentMode)
+        sleepAllAlarm(currentMode)
 
         val newList = alarmList.map {
             val calculatedInterval = if(isReachedGoal) {
