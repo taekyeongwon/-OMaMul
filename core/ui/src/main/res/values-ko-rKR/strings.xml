@@ -89,4 +89,5 @@
     <string name="alarm_custom_empty_title">알람을 추가해 주세요.</string>
     <string name="alarm_custom_add">+ 새 알람 추가하기</string>
     <string name="intake_complete">목표를 달성했습니다!</string>
+    <string name="alarm_ringing_soon">알람이 곧 울립니다.</string>
 </resources>

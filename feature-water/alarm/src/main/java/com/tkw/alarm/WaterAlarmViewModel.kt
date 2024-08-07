@@ -145,12 +145,17 @@ class WaterAlarmViewModel @Inject constructor(
                 emit(getCustomString(com.tkw.ui.R.string.alarm_detail_switch_off))
             } else {
                 while (remainTime > 0) {
-                    emit(
-                        String.format(
-                            getCustomString(com.tkw.ui.R.string.alarm_detail_remain),
-                            getRemainTimeString(remainTime)
+                    val text = getRemainTimeString(remainTime)
+                    if(text.isEmpty()) {
+                        emit(getCustomString(com.tkw.ui.R.string.alarm_ringing_soon))
+                    } else {
+                        emit(
+                            String.format(
+                                getCustomString(com.tkw.ui.R.string.alarm_detail_remain),
+                                text
+                            )
                         )
-                    )
+                    }
                     remainTime -= TIME_UNIT_SECONDS
                     delay(TIME_UNIT_SECONDS)
                 }
@@ -281,7 +286,6 @@ class WaterAlarmViewModel @Inject constructor(
         val days = remainTime / (1000 * 60 * 60 * 24)
         val hour = (remainTime / (1000 * 60 * 60)) % 24
         val minute = (remainTime / (1000 * 60)) % 60
-        val second = (remainTime / 1000) % 60
 
         if (days != 0L) {
             text.append(days)
@@ -298,8 +302,6 @@ class WaterAlarmViewModel @Inject constructor(
                 .append(getCustomString(com.tkw.ui.R.string.minute))
                 .append(" ")
         }
-        text.append(second)
-            .append(getCustomString(com.tkw.ui.R.string.second))
 
         return text.toString()
     }

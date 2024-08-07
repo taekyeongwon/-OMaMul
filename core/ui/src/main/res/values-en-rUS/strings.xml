@@ -89,4 +89,5 @@
     <string name="alarm_custom_empty_title">Please add an alarm.</string>
     <string name="alarm_custom_add">+ Add new alarm</string>
     <string name="intake_complete">Goal achieved!</string>
+    <string name="alarm_ringing_soon">The alarm will ring soon.</string>
 </resources>
