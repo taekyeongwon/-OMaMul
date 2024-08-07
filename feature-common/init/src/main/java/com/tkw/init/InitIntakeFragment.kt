@@ -81,6 +81,7 @@ class InitIntakeFragment: Fragment() {
                 }
             )
             dialog.show(childFragmentManager, dialog.tag)
+            dialog.isCancelable = false
         } else {
             viewModel.setEvent(InitContract.Event.SaveInitialFlag(true))
         }

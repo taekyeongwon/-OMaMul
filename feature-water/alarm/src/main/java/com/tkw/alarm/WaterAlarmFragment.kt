@@ -147,7 +147,7 @@ class WaterAlarmFragment: Fragment() {
                     .also {
                         setSwitchButtonCheckedWithEnabled(it)
                         setSwitchButtonCheckedListener(it)
-                        checkApi31ExactAlarm()
+//                        checkApi31ExactAlarm()
                     }
             }
 
