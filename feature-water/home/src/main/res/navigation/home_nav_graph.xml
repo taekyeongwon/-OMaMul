@@ -7,6 +7,7 @@
     <fragment
         android:id="@+id/waterFragment"
         android:name="com.tkw.home.WaterFragment"
+        android:label="@string/title_main"
         tools:layout="@layout/fragment_water">
         <!--        <action-->
         <!--            android:id="@+id/action_waterIntakeFragment"-->

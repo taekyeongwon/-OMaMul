@@ -6,10 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".WaterActivity">
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:titleCentered="true"
         app:layout_constraintTop_toTopOf="parent"/>
     <androidx.fragment.app.FragmentContainerView
         android:layout_width="match_parent"

@@ -90,4 +90,11 @@
     <string name="alarm_custom_add">+ 添加新闹钟</string>
     <string name="intake_complete">目标达成了!</string>
     <string name="alarm_ringing_soon">闹钟很快就会响。</string>
+
+    <string name="title_main">今天喝的水</string>
+    <string name="title_cup_manage">杯子管理</string>
+    <string name="title_cup_add">杯子添加/修改</string>
+    <string name="title_alarm_setting">闹钟设置</string>
+    <string name="title_alarm_mode">闹钟模式</string>
+
 </resources>

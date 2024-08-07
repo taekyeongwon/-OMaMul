@@ -90,4 +90,10 @@
     <string name="alarm_custom_add">+ 새 알람 추가하기</string>
     <string name="intake_complete">목표를 달성했습니다!</string>
     <string name="alarm_ringing_soon">알람이 곧 울립니다.</string>
+
+    <string name="title_main">오마물</string>
+    <string name="title_cup_manage">컵 관리</string>
+    <string name="title_cup_add">컵 추가/수정</string>
+    <string name="title_alarm_setting">알람 설정</string>
+    <string name="title_alarm_mode">알람 모드</string>
 </resources>

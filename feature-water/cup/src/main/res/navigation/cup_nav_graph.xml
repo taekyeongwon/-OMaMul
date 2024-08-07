@@ -8,6 +8,7 @@
     <fragment
         android:id="@+id/cupManageFragment"
         android:name="com.tkw.cup.CupManageFragment"
+        android:label="@string/title_cup_manage"
         tools:layout="@layout/fragment_cup_manage">
 
         <action
@@ -28,6 +29,7 @@
     <fragment
         android:id="@+id/cupCreateFragment"
         android:name="com.tkw.cup.CupCreateFragment"
+        android:label="@string/title_cup_add"
         tools:layout="@layout/fragment_cup_create">
 
 

@@ -8,7 +8,6 @@
     <fragment
         android:id="@+id/waterLogFragment"
         android:name="com.tkw.record.WaterLogFragment"
-        android:label="WaterLogFragment"
         tools:layout="@layout/fragment_water_log">
     </fragment>
 </navigation>

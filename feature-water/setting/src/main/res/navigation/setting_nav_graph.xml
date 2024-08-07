@@ -8,7 +8,6 @@
     <fragment
         android:id="@+id/settingFragment"
         android:name="com.tkw.setting.WaterSettingFragment"
-        android:label="SettingFragment"
         tools:layout="@layout/fragment_setting">
 
     </fragment>

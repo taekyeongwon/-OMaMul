@@ -104,6 +104,13 @@ class WaterActivity : AppCompatActivity() {
             dataBinding.bottomNav.visibility =
                 if(mainFragmentSet.contains(destination.id)) View.VISIBLE
                 else View.GONE
+            //로그, 설정 화면은 타이틀 안보이게 처리
+            if(destination.id == com.tkw.record.R.id.waterLogFragment ||
+                destination.id == com.tkw.setting.R.id.settingFragment) {
+                supportActionBar?.hide()
+            } else {
+                supportActionBar?.show()
+            }
         }
 
         val appBarConfiguration = AppBarConfiguration(mainFragmentSet.plus(com.tkw.init.R.id.initLanguageFragment))

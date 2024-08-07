@@ -90,4 +90,11 @@
     <string name="alarm_custom_add">+ 新しいアラームを追加</string>
     <string name="intake_complete">目標を達成しました!</string>
     <string name="alarm_ringing_soon">まもなくアラームが鳴ります。</string>
+
+    <string name="title_main">今日飲んだ水</string>
+    <string name="title_cup_manage">カップ管理</string>
+    <string name="title_cup_add">カップ追加/修正</string>
+    <string name="title_alarm_setting">アラーム設定</string>
+    <string name="title_alarm_mode">アラームモード</string>
+
 </resources>

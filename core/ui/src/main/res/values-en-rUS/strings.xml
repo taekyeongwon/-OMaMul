@@ -90,4 +90,11 @@
     <string name="alarm_custom_add">+ Add new alarm</string>
     <string name="intake_complete">Goal achieved!</string>
     <string name="alarm_ringing_soon">The alarm will ring soon.</string>
+
+    <string name="title_main">Today\'s Water Intake</string>
+    <string name="title_cup_manage">Cup Management</string>
+    <string name="title_cup_add">Add/Edit Cup</string>
+    <string name="title_alarm_setting">Alarm Settings</string>
+    <string name="title_alarm_mode">Alarm Mode</string>
+
 </resources>
