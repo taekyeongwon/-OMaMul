@@ -34,6 +34,13 @@ class WaterActivity : AppCompatActivity() {
         com.tkw.record.R.id.waterLogFragment,
         com.tkw.setting.R.id.settingFragment
     )
+    private val hideTitleFragmentSet = setOf(
+        com.tkw.init.R.id.initLanguageFragment,
+        com.tkw.init.R.id.initIntakeFragment,
+        com.tkw.init.R.id.initTimeFragment,
+        com.tkw.record.R.id.waterLogFragment,
+        com.tkw.setting.R.id.settingFragment
+    )
 
     private val broadcastReceiver = DateChangeReceiver {
         waterViewModel.setToday()
@@ -104,9 +111,8 @@ class WaterActivity : AppCompatActivity() {
             dataBinding.bottomNav.visibility =
                 if(mainFragmentSet.contains(destination.id)) View.VISIBLE
                 else View.GONE
-            //로그, 설정 화면은 타이틀 안보이게 처리
-            if(destination.id == com.tkw.record.R.id.waterLogFragment ||
-                destination.id == com.tkw.setting.R.id.settingFragment) {
+            //최초 진입 화면, 로그, 설정 화면은 타이틀 안보이게 처리
+            if(hideTitleFragmentSet.contains(destination.id)) {
                 supportActionBar?.hide()
             } else {
                 supportActionBar?.show()
