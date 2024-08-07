@@ -41,6 +41,7 @@ class WaterActivity : AppCompatActivity() {
         com.tkw.record.R.id.waterLogFragment,
         com.tkw.setting.R.id.settingFragment
     )
+    private var prevAmount: Int = 0
 
     private val broadcastReceiver = DateChangeReceiver {
         waterViewModel.setToday()
@@ -87,12 +88,20 @@ class WaterActivity : AppCompatActivity() {
     private fun initObserver() {
         waterViewModel.amountLiveData.observe(this) {
             lifecycleScope.launch {
+                val prev = prevAmount
                 if(it.getTotalWaterAmount() >= waterViewModel.getIntakeAmount()) {
+                    if(prev < waterViewModel.getIntakeAmount()) {
+                        Toast.makeText(
+                            this@WaterActivity,
+                            getString(com.tkw.ui.R.string.intake_complete),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                     alarmViewModel.saveReachedGoal(true)
-                    Toast.makeText(this@WaterActivity, getString(com.tkw.ui.R.string.intake_complete), Toast.LENGTH_SHORT).show()
                 } else {
                     alarmViewModel.saveReachedGoal(false)
                 }
+                prevAmount = it.getTotalWaterAmount()
             }
         }
         alarmViewModel.isReachedGoal.observe(this) {
