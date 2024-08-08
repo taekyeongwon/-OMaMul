@@ -51,6 +51,7 @@
     <string name="empty_day_list">물 섭취 기록이 없습니다.</string>
     <string name="empty_cup_list">컵을 추가해 주세요.</string>
     <string name="delete">제거하기</string>
+    <string name="alarm_delay">내일 다시 켜기</string>
     <string name="alarm_sound_title">벨소리 및 진동</string>
     <string name="alarm_sound_device">폰 설정과 동일</string>
     <string name="alarm_sound_vibe">진동</string>

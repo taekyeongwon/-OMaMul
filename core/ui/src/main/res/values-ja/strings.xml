@@ -51,6 +51,7 @@
     <string name="empty_day_list">水分摂取記録がありません。</string>
     <string name="empty_cup_list">カップを追加してください。</string>
     <string name="delete">削除</string>
+    <string name="alarm_delay">明日再びオンにする</string>
     <string name="alarm_sound_title">着信音とバイブレーション</string>
     <string name="alarm_sound_device">電話設定と同じ</string>
     <string name="alarm_sound_vibe">バイブレーション</string>

@@ -51,6 +51,7 @@
     <string name="empty_day_list">No water intake records.</string>
     <string name="empty_cup_list">Please add a cup.</string>
     <string name="delete">Remove</string>
+    <string name="alarm_delay">Turn on again tomorrow</string>
     <string name="alarm_sound_title">Ringtone and Vibration</string>
     <string name="alarm_sound_device">Same as phone settings</string>
     <string name="alarm_sound_vibe">Vibration</string>

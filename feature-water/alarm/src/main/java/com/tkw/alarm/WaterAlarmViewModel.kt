@@ -118,7 +118,6 @@ class WaterAlarmViewModel @Inject constructor(
 
     val isReachedGoal: LiveData<Boolean> = prefDataRepository.fetchReachedGoal()
         .combine(isStopWhenReachedGoal) { isReachedGoal, stopReachedFlag ->
-            Log.d("test", "$isReachedGoal $stopReachedFlag")
             isReachedGoal && stopReachedFlag
         }.distinctUntilChanged().asLiveData()
 

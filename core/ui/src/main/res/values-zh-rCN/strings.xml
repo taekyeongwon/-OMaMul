@@ -51,6 +51,7 @@
     <string name="empty_day_list">没有饮水记录。</string>
     <string name="empty_cup_list">请添加一个杯子。</string>
     <string name="delete">删除</string>
+    <string name="alarm_delay">明天再次开启</string>
     <string name="alarm_sound_title">铃声和振动</string>
     <string name="alarm_sound_device">与手机设置相同</string>
     <string name="alarm_sound_vibe">振动</string>

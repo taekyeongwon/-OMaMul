@@ -97,6 +97,13 @@ class WaterAlarmFragment: Fragment() {
             findNavController().navigate(WaterAlarmFragmentDirections
                 .actionWaterAlarmFragmentToAlarmModeFragment())
         }
+        dataBinding.tvAlarmDelay.setOnClickListener {
+            lifecycleScope.launch {
+                viewModel.delayAllAlarm(true, true)
+                toolbarSwitchView.setChecked(true)
+                it.visibility = View.GONE
+            }
+        }
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             dataBinding.tvFullscreenSetting.setOnClickListener {
@@ -165,7 +172,10 @@ class WaterAlarmFragment: Fragment() {
             if(isChecked) {
                 if(!isNotificationEnabled) showAlert()
                 else alarmOn() //알람 설정
-            } else alarmOff() //알람 cancel
+            } else {
+                dataBinding.tvAlarmDelay.visibility = View.VISIBLE
+                alarmOff()  //알람 cancel
+            }
         }
     }
 
