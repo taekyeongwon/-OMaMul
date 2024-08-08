@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface PrefDataSource {
     suspend fun <T> saveData(key: Preferences.Key<T>, value: T)
-    fun <T> fetchData(key: Preferences.Key<T>): Flow<T?>
+    fun <T> fetchData(key: Preferences.Key<T>, defaultValue: T): Flow<T>
 }

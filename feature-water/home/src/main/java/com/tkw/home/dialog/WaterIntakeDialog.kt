@@ -38,8 +38,7 @@ class WaterIntakeDialog : CustomDialog() {
         setView(dataBinding.root)
 
         lifecycleScope.launch {
-            val current = dataBinding.npAmount.getCurrentValue()
-            dataBinding.npAmount.setValue(viewModel.getIntakeAmount(current))
+            dataBinding.npAmount.setValue(viewModel.getIntakeAmount())
         }
     }
 

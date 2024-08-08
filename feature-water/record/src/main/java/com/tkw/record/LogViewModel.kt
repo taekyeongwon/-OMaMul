@@ -30,10 +30,7 @@ class LogViewModel
 <LogContract.Event, LogContract.State, LogContract.SideEffect>() {
 
     //목표 섭취량
-    suspend fun getIntakeAmount() = prefDataRepository.fetchIntakeAmount().first()?.toFloat() ?: 2000f
-
-    private val week = WeekLog()
-    private val month = MonthLog()
+    suspend fun getIntakeAmount() = prefDataRepository.fetchIntakeAmount().first().toFloat()
 
     private val today = MutableStateFlow(DateTimeUtils.getTodayDate())
     val dateLiveData = MutableStateFlow(today.value)

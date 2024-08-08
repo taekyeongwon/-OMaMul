@@ -16,8 +16,8 @@ class PrefLocalDataSourceImpl
         }
     }
 
-    override fun <T> fetchData(key: Preferences.Key<T>): Flow<T?> =
+    override fun <T> fetchData(key: Preferences.Key<T>, defaultValue: T): Flow<T> =
         dataStore.data.map {//return type이 nullable이므로 Flow<T?>와 같이 nullable 타입으로 리턴
-            it[key]
+            it[key] ?: defaultValue
         }
 }

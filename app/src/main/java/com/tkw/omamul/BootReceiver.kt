@@ -27,10 +27,9 @@ class BootReceiver: BroadcastReceiver() {
             if(intent.action == Intent.ACTION_BOOT_COMPLETED) {
                 if (
                     NotificationManager.isNotificationEnabled(context)
-                    && prefRepository.fetchAlarmEnableFlag().first() == true
+                    && prefRepository.fetchAlarmEnableFlag().first()
                 ) {
                     alarmRepository.wakeAllAlarm()
-//                    WaterAlarmManager.setAlarm(context, 0, 0)
                 }
             }
         }

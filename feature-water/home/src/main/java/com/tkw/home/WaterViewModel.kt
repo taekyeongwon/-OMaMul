@@ -36,9 +36,7 @@ class WaterViewModel
 
     //최초 진입 여부
     private val initFlag = prefDataRepository.fetchInitialFlag()
-    suspend fun getInitFlag(): Boolean = initFlag.first() ?: false
-
-    private val defaultIntakeAmount = 2000
+    suspend fun getInitFlag(): Boolean = initFlag.first()
 
     //현재 날짜
     private val dateStringFlow = MutableStateFlow(DateTimeUtils.getTodayDate())
@@ -80,8 +78,8 @@ class WaterViewModel
         }
     }
 
-    suspend fun getIntakeAmount(default: Int? = null): Int =
-        prefDataRepository.fetchIntakeAmount().firstOrNull() ?: default ?: defaultIntakeAmount
+    suspend fun getIntakeAmount(): Int =
+        prefDataRepository.fetchIntakeAmount().first()
 
     fun saveIntakeAmount(amount: Int) {
         launch {

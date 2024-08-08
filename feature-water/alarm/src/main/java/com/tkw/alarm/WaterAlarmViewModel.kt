@@ -53,14 +53,14 @@ class WaterAlarmViewModel @Inject constructor(
 
     //알람 권한 허용 여부
     private val isAlarmEnabled = prefDataRepository.fetchAlarmEnableFlag()
-    suspend fun getNotificationEnabled() = isAlarmEnabled.first() ?: false
+    suspend fun getNotificationEnabled() = isAlarmEnabled.first()
 
     //알람 및 설정에서 알람 허용했는지 여부
     @OptIn(ExperimentalCoroutinesApi::class)
     fun isNotificationEnabled() = isAlarmEnabled.flatMapLatest {
         flow {
             val isEnabled = NotificationManager.isNotificationEnabled(context)
-            emit(it == true && isEnabled)
+            emit(it && isEnabled)
         }
     }
 
@@ -70,11 +70,9 @@ class WaterAlarmViewModel @Inject constructor(
 
     val prefSavedAlarmTime = prefDataRepository.fetchAlarmWakeTime()
         .combine(prefDataRepository.fetchAlarmSleepTime()) { wake, sleep ->
-            if(wake != null && sleep != null) {
-                val wakeTime = DateTimeUtils.getTimeFromFormat(wake)
-                val sleepTime = DateTimeUtils.getTimeFromFormat(sleep)
-                Pair(wakeTime, sleepTime)
-            } else null
+            val wakeTime = DateTimeUtils.getTimeFromFormat(wake)
+            val sleepTime = DateTimeUtils.getTimeFromFormat(sleep)
+            Pair(wakeTime, sleepTime)
     }.asLiveData()
 
     suspend fun setAlarmTime(start: String, end: String) {
@@ -118,7 +116,7 @@ class WaterAlarmViewModel @Inject constructor(
             }
         }
 
-    val isReachedGoal: LiveData<Boolean> = prefDataRepository.fetchReachedGoal().map { it ?: false }
+    val isReachedGoal: LiveData<Boolean> = prefDataRepository.fetchReachedGoal()
         .combine(isStopWhenReachedGoal) { isReachedGoal, stopReachedFlag ->
             Log.d("test", "$isReachedGoal $stopReachedFlag")
             isReachedGoal && stopReachedFlag

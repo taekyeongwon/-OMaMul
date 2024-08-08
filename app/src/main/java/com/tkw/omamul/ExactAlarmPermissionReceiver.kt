@@ -30,10 +30,9 @@ class ExactAlarmPermissionReceiver: BroadcastReceiver() {
                 CoroutineScope(Dispatchers.Main).launch {
                     if (
                         NotificationManager.isNotificationEnabled(context)
-                        && prefRepository.fetchAlarmEnableFlag().first() == true
+                        && prefRepository.fetchAlarmEnableFlag().first()
                     ) {
                         alarmRepository.wakeAllAlarm()
-//                    WaterAlarmManager.setAlarm(context, 0, 0)
                     }
                 }
             }

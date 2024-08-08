@@ -75,16 +75,10 @@ class AlarmModePeriodFragment : Fragment() {
         }
 
         viewModel.prefSavedAlarmTime.observe(viewLifecycleOwner) {
-            val first = it?.first
-            val second = it?.second
-            if(first != null && second != null) {
-                alarmStartTime = DateTimeUtils.getFormattedTime(first.hour, first.minute)
-                alarmEndTime = DateTimeUtils.getFormattedTime(second.hour, second.minute)
-                dataBinding.tvAlarmTime.text = "$alarmStartTime - $alarmEndTime"
-                dataBinding.ivEdit.visibility = View.VISIBLE
-            } else {
-                dataBinding.ivEdit.visibility = View.GONE
-            }
+            alarmStartTime = DateTimeUtils.getFormattedTime(it.first.hour, it.first.minute)
+            alarmEndTime = DateTimeUtils.getFormattedTime(it.second.hour, it.second.minute)
+            dataBinding.tvAlarmTime.text = "$alarmStartTime - $alarmEndTime"
+            dataBinding.ivEdit.visibility = View.VISIBLE
         }
     }
 
