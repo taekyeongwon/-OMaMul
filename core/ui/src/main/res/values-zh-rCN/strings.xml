@@ -21,6 +21,11 @@
     <string name="cancel">取消</string>
     <string name="save">保存</string>
     <string name="ok">确认</string>
+    <string name="menu_intake">摄取量更改</string>
+    <string name="menu_alarm_setting">闹钟设置</string>
+    <string name="menu_bottom_home">主页</string>
+    <string name="menu_bottom_log">日志</string>
+    <string name="menu_bottom_setting">设置</string>
     <string name="unit_ml">（ml）</string>
     <string name="unit_liter">（L）</string>
     <string name="unit_ml_no_bracket">ml</string>

@@ -3,9 +3,9 @@
 
     <item
         android:id="@+id/waterIntakeDialog"
-        android:title="섭취량 변경"/>
+        android:title="@string/menu_intake"/>
 
     <item
         android:id="@+id/alarm_nav_graph"
-        android:title="알람 변경"/>
+        android:title="@string/menu_alarm_setting"/>
 </menu>

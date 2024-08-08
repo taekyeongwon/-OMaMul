@@ -4,13 +4,13 @@
     <item
         android:id="@+id/home_nav_graph"
         android:icon="@drawable/ic_launcher_foreground"
-        android:title="홈"/>
+        android:title="@string/menu_bottom_home"/>
     <item
         android:id="@+id/record_nav_graph"
         android:icon="@drawable/ic_launcher_foreground"
-        android:title="로그"/>
+        android:title="@string/menu_bottom_log"/>
     <item
         android:id="@+id/setting_nav_graph"
         android:icon="@drawable/ic_launcher_foreground"
-        android:title="설정"/>
+        android:title="@string/menu_bottom_setting"/>
 </menu>

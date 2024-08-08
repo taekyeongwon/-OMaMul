@@ -21,6 +21,11 @@
     <string name="cancel">취소</string>
     <string name="save">저장</string>
     <string name="ok">확인</string>
+    <string name="menu_intake">섭취량 변경</string>
+    <string name="menu_alarm_setting">알람 설정</string>
+    <string name="menu_bottom_home">홈</string>
+    <string name="menu_bottom_log">로그</string>
+    <string name="menu_bottom_setting">설정</string>
     <string name="unit_ml">(ml)</string>
     <string name="unit_liter">(L)</string>
     <string name="unit_ml_no_bracket">ml</string>

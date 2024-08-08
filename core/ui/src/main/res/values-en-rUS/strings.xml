@@ -21,6 +21,11 @@
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="ok">OK</string>
+    <string name="menu_intake">Change Intake</string>
+    <string name="menu_alarm_setting">Alarm Settings</string>
+    <string name="menu_bottom_home">Home</string>
+    <string name="menu_bottom_log">Log</string>
+    <string name="menu_bottom_setting">Settings</string>
     <string name="unit_ml">(ml)</string>
     <string name="unit_liter">(L)</string>
     <string name="unit_ml_no_bracket">ml</string>
