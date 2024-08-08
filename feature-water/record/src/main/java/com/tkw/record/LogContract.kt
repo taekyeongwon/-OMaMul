@@ -11,6 +11,7 @@ class LogContract {
         class DayAmountEvent(val move: Move): Event()
         class WeekAmountEvent(val move: Move): Event()
         class MonthAmountEvent(val move: Move): Event()
+        class DayAmountEventByDate(val date: String): Event()
         object ShowAddDialog: Event()
         class ShowEditDialog(val water: Water): Event()
         class RemoveDayAmount(val water: Water): Event()

@@ -25,7 +25,8 @@ class WaterRepositoryImpl @Inject constructor(private val waterDao: WaterDao): W
                     entity.dayOfList.isNotEmpty() ||
                             entity.date == today
                 }
-                emit(list.map {
+                val sortedList = list.sortedBy { it.date }
+                emit(sortedList.map {
                     WaterMapper.dayOfWaterToModel(it)
                 })
             }

@@ -33,7 +33,7 @@
                 android:id="@+id/tv_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                weekDays="@{viewModel.weekLiveData}"
+                weekDays="@{viewModel.weekStateFlow}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/ib_day_left"

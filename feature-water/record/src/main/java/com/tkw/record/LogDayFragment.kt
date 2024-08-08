@@ -11,12 +11,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.tkw.common.autoCleared
+import com.tkw.common.util.DateTimeUtils
 import com.tkw.common.util.animateByMaxValue
 import com.tkw.domain.model.DayOfWater
 import com.tkw.domain.model.Water
 import com.tkw.record.adapter.DayListAdapter
 import com.tkw.record.databinding.FragmentLogDayBinding
 import com.tkw.record.dialog.LogEditBottomDialog
+import com.tkw.ui.CustomDatePicker
 import com.tkw.ui.DividerDecoration
 import com.tkw.ui.chart.marker.MarkerType
 import dagger.hilt.android.AndroidEntryPoint
@@ -118,6 +120,19 @@ class LogDayFragment: Fragment() {
 
         dataBinding.ibDayRight.setOnClickListener {
             viewModel.setEvent(LogContract.Event.DayAmountEvent(LogContract.Move.RIGHT))
+        }
+
+        dataBinding.tvDate.setOnClickListener {
+            val dialog = CustomDatePicker(
+                DateTimeUtils.getDateFromFormat(dataBinding.tvDate.text.toString())
+            ) {
+                viewModel.setEvent(
+                    LogContract.Event.DayAmountEventByDate(
+                        DateTimeUtils.getFormattedDate(it)
+                    )
+                )
+            }
+            dialog.show(childFragmentManager, dialog.tag)
         }
     }
 
