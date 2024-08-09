@@ -6,17 +6,22 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import com.tkw.domain.AlarmRepository
+import com.tkw.domain.PrefDataRepository
 import com.tkw.domain.model.Alarm
 import com.tkw.domain.model.RingToneMode
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class WaterAlarmReceiver : BroadcastReceiver() {
+    @Inject
+    lateinit var prefRepository: PrefDataRepository
+
     @Inject
     lateinit var alarmRepository: AlarmRepository
 
@@ -38,10 +43,16 @@ class WaterAlarmReceiver : BroadcastReceiver() {
             CoroutineScope(Dispatchers.Main).launch {
                 val alarmSettings = alarmRepository.getAlarmSetting().firstOrNull()
                 val ringtone = alarmSettings?.ringToneMode ?: RingToneMode()
-                NotificationManager.notify(context, ringtone)
+                val isNotificationEnabled =
+                    NotificationManager.isNotificationEnabled(context)
+                            && prefRepository.fetchAlarmEnableFlag().first()
+
+                if(isNotificationEnabled) {
+                    NotificationManager.notify(context, ringtone)
+                }
 
                 if(alarm != null) {
-                    alarmRepository.setAlarm(alarm)
+                    alarmRepository.setAlarm(alarm, isNotificationEnabled)
                     Log.d("AlarmReceiver", "Notification received. alarmId : ${alarm.alarmId}")
                 }
             }

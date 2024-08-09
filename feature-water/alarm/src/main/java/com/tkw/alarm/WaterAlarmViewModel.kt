@@ -2,7 +2,6 @@ package com.tkw.alarm
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
@@ -26,12 +25,12 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import java.lang.StringBuilder
 import javax.inject.Inject
@@ -54,19 +53,22 @@ class WaterAlarmViewModel @Inject constructor(
     //알람 권한 허용 여부
     private val isAlarmEnabled = prefDataRepository.fetchAlarmEnableFlag()
     suspend fun getNotificationEnabled() = isAlarmEnabled.first()
+    suspend fun setAlarmEnabled(flag: Boolean) {
+        prefDataRepository.saveAlarmEnableFlag(flag)
+    }
+
+    //설정에서 알람 허용 여부
+    private val isNotificationEnabled = MutableStateFlow(false)
+    fun setNotificationEnabled(flag: Boolean) {
+        isNotificationEnabled.value = flag
+    }
 
     //알람 및 설정에서 알람 허용했는지 여부
     @OptIn(ExperimentalCoroutinesApi::class)
-    fun isNotificationEnabled() = isAlarmEnabled.flatMapLatest {
-        flow {
-            val isEnabled = NotificationManager.isNotificationEnabled(context)
-            emit(it && isEnabled)
+    fun isNotificationAlarmEnabled() = isAlarmEnabled
+        .combine(isNotificationEnabled) { isAlarm, isNoti ->
+            isAlarm && isNoti
         }
-    }
-
-    suspend fun setNotificationEnabled(flag: Boolean) {
-        prefDataRepository.saveAlarmEnableFlag(flag)
-    }
 
     val prefSavedAlarmTime = prefDataRepository.fetchAlarmWakeTime()
         .combine(prefDataRepository.fetchAlarmSleepTime()) { wake, sleep ->
@@ -127,7 +129,7 @@ class WaterAlarmViewModel @Inject constructor(
 
     //알람 변경에 따라 remainTime 재요청
     @OptIn(ExperimentalCoroutinesApi::class)
-    val timeTickerLiveData = isNotificationEnabled()
+    val timeTickerLiveData = isNotificationAlarmEnabled()
         .flatMapLatest { timeTickerFlow }
         .asLiveData()
 
@@ -138,7 +140,7 @@ class WaterAlarmViewModel @Inject constructor(
             var remainTime = it
             if(it == -1L) {
                 emit(getCustomString(com.tkw.ui.R.string.alarm_detail_empty))
-            } else if(!isNotificationEnabled().first()) {
+            } else if(!isNotificationAlarmEnabled().first()) {
                 emit(getCustomString(com.tkw.ui.R.string.alarm_detail_switch_off))
             } else {
                 while (remainTime > 0) {
@@ -248,11 +250,11 @@ class WaterAlarmViewModel @Inject constructor(
     }
 
     suspend fun setCustomAlarm(alarm: Alarm) {
-        alarmRepository.setAlarm(alarm, isNotificationEnabled().first(), isReachedGoal.value ?: false)
+        alarmRepository.setAlarm(alarm, isNotificationAlarmEnabled().first(), isReachedGoal.value ?: false)
     }
 
     private suspend fun setAlarmList(list: List<Alarm>) {
-        alarmRepository.setAlarmList(list, isNotificationEnabled().first(), isReachedGoal.value ?: false)
+        alarmRepository.setAlarmList(list, isNotificationAlarmEnabled().first(), isReachedGoal.value ?: false)
     }
 
     fun deleteAlarm(list: List<Alarm>) {

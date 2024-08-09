@@ -121,7 +121,7 @@ class AlarmModePeriodFragment : Fragment() {
     }
 
     private suspend fun initNotification() {
-        if(viewModel.isNotificationEnabled().first()) {
+        if(viewModel.isNotificationAlarmEnabled().first()) {
             viewModel.wakeAllAlarm()
         }
     }

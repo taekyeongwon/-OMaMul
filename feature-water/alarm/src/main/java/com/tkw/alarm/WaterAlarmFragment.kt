@@ -99,7 +99,7 @@ class WaterAlarmFragment: Fragment() {
         }
         dataBinding.tvAlarmDelay.setOnClickListener {
             lifecycleScope.launch {
-                viewModel.delayAllAlarm(true, true)
+                viewModel.delayAllAlarm(true, false)    //스위치 변경하면서 wakeAllAlarm 호출하기 때문에 isNotificationEnabled false로 설정
                 toolbarSwitchView.setChecked(true)
                 it.visibility = View.GONE
             }
@@ -152,8 +152,11 @@ class WaterAlarmFragment: Fragment() {
 
                 NotificationManager.isNotificationEnabled(requireContext())
                     .also {
-                        setSwitchButtonCheckedWithEnabled(it)
-                        setSwitchButtonCheckedListener(it)
+                        lifecycleScope.launch {
+                            viewModel.setNotificationEnabled(it)
+                            setSwitchButtonCheckedWithEnabled(it)
+                            setSwitchButtonCheckedListener(it)
+                        }
 //                        checkApi31ExactAlarm()
                     }
             }
@@ -164,29 +167,36 @@ class WaterAlarmFragment: Fragment() {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    private fun setSwitchButtonCheckedListener(isNotificationEnabled: Boolean) {
-        toolbarSwitchView.setCheckedChangeListener { _, isChecked ->
-            lifecycleScope.launch {
-                viewModel.setNotificationEnabled(isChecked)
-            }
-            if(isChecked) {
-                if(!isNotificationEnabled) showAlert()
-                else alarmOn() //알람 설정
+    private fun setSwitchButtonCheckedWithEnabled(isNotificationEnabled: Boolean) {
+        lifecycleScope.launch {
+            val isEnabled = isNotificationEnabled && viewModel.getNotificationEnabled()
+            if(isEnabled) {
+                alarmOn()
             } else {
-                dataBinding.tvAlarmDelay.visibility = View.VISIBLE
-                alarmOff()  //알람 cancel
+                alarmOff()
             }
+            viewModel.setAlarmEnabled(isEnabled)
+            toolbarSwitchView.setChecked(isEnabled)
         }
     }
 
-    private fun setSwitchButtonCheckedWithEnabled(isNotificationEnabled: Boolean) {
-        lifecycleScope.launch {
-            if(!isNotificationEnabled) {
-                alarmOff()
+    private fun setSwitchButtonCheckedListener(isNotificationEnabled: Boolean) {
+        toolbarSwitchView.setCheckedChangeListener { _, isChecked ->
+            lifecycleScope.launch {
+                viewModel.setAlarmEnabled(isChecked)
             }
-            toolbarSwitchView.setChecked(
-                isNotificationEnabled && viewModel.getNotificationEnabled()
-            )
+            if(isChecked) {
+                if(!isNotificationEnabled) showAlert()
+                else {
+                    alarmOn()   //알람 설정
+                    dataBinding.tvAlarmDelay.visibility = View.GONE
+                }
+            } else {
+                alarmOff()  //알람 cancel
+                if(isNotificationEnabled) {
+                    dataBinding.tvAlarmDelay.visibility = View.VISIBLE
+                }
+            }
         }
     }
 

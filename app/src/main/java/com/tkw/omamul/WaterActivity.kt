@@ -15,6 +15,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.tkw.alarm.WaterAlarmViewModel
+import com.tkw.alarmnoti.NotificationManager
 import com.tkw.common.LocaleHelper
 import com.tkw.omamul.databinding.ActivityWaterBinding
 import com.tkw.home.WaterViewModel
@@ -62,6 +63,7 @@ class WaterActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         registerReceiver(broadcastReceiver, receiveFilter)
+        alarmViewModel.setNotificationEnabled(NotificationManager.isNotificationEnabled(this))
     }
 
     override fun onPause() {
@@ -106,7 +108,7 @@ class WaterActivity : AppCompatActivity() {
         }
         alarmViewModel.isReachedGoal.observe(this) {
             lifecycleScope.launch {
-                val isNotificationEnabled = alarmViewModel.isNotificationEnabled().first()
+                val isNotificationEnabled = alarmViewModel.isNotificationAlarmEnabled().first()
                 alarmViewModel.delayAllAlarm(it, isNotificationEnabled)
             }
         }

@@ -3,7 +3,6 @@ package com.tkw.alarm
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -21,23 +20,16 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import com.tkw.alarm.databinding.FragmentAlarmModeBinding
 import com.tkw.alarm.dialog.AlarmModeBottomDialog
-import com.tkw.alarm.dialog.AlarmTimeBottomDialog
 import com.tkw.alarm.dialog.ExactAlarmDialog
 import com.tkw.alarmnoti.NotificationManager
 import com.tkw.common.PermissionHelper
 import com.tkw.common.autoCleared
-import com.tkw.common.util.DateTimeUtils
 import com.tkw.domain.IAlarmManager
 import com.tkw.domain.model.AlarmMode
 import com.tkw.ui.CustomSwitchView
 import com.tkw.ui.dialog.SettingDialog
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.lang.StringBuilder
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -132,8 +124,11 @@ class AlarmModeFragment: Fragment() {
 
                 NotificationManager.isNotificationEnabled(requireContext())
                     .also {
-                        setSwitchButtonCheckedWithEnabled(it)
-                        setSwitchButtonCheckedListener(it)
+                        lifecycleScope.launch {
+                            viewModel.setNotificationEnabled(it)
+                            setSwitchButtonCheckedWithEnabled(it)
+                            setSwitchButtonCheckedListener(it)
+                        }
 //                        checkApi31ExactAlarm()
                     }
             }
@@ -144,26 +139,26 @@ class AlarmModeFragment: Fragment() {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
+    private suspend fun setSwitchButtonCheckedWithEnabled(isNotificationEnabled: Boolean) {
+        val isEnabled = isNotificationEnabled && viewModel.getNotificationEnabled()
+        if(isEnabled) {
+            alarmOn()
+        } else {
+            alarmOff()
+        }
+        viewModel.setAlarmEnabled(isEnabled)
+        toolbarSwitchView.setChecked(isEnabled)
+    }
+
     private fun setSwitchButtonCheckedListener(isNotificationEnabled: Boolean) {
         toolbarSwitchView.setCheckedChangeListener { _, isChecked ->
             lifecycleScope.launch {
-                viewModel.setNotificationEnabled(isChecked)
+                viewModel.setAlarmEnabled(isChecked)
             }
             if(isChecked) {
                 if(!isNotificationEnabled) showAlert()
                 else alarmOn() //알람 설정
             } else alarmOff() //알람 cancel
-        }
-    }
-
-    private fun setSwitchButtonCheckedWithEnabled(isNotificationEnabled: Boolean) {
-        lifecycleScope.launch {
-            if(!isNotificationEnabled) {
-                alarmOff()
-            }
-            toolbarSwitchView.setChecked(
-                isNotificationEnabled && viewModel.getNotificationEnabled()
-            )
         }
     }
 
