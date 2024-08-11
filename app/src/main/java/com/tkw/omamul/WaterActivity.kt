@@ -23,6 +23,7 @@ import com.tkw.record.LogViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 @AndroidEntryPoint
 class WaterActivity : AppCompatActivity() {
@@ -82,9 +83,9 @@ class WaterActivity : AppCompatActivity() {
     }
 
     private fun initView() {
+        initNavigate()
         setContentView(dataBinding.root)
         setSupportActionBar(dataBinding.toolbar)
-        initNavigate()
     }
 
     private fun initObserver() {
@@ -141,7 +142,10 @@ class WaterActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        lifecycleScope.launch {
+        // getInitFlag 요청 지연되는 동안 프래그먼트가 생성되어
+        // navGraphViewModel 접근 시 IllegalArgumentException: The current destination is null
+        // 에러 발생 방지하기 위해 블로킹으로 호출
+        runBlocking {
             setStartDestination(navController)
         }
     }
