@@ -20,21 +20,17 @@ class WaterAlarmManager @Inject constructor(
 ): IAlarmManager {
 
     override fun setAlarm(alarm: Alarm) {
-        Log.d("AlarmManager", "setAlarm : $alarm")
-        with(alarm) {
-            if(canScheduleExactAlarms()) {
-                setAlarmManager(alarm)
-                cancelWorkManager(alarmId)
-            } else {
-                setWorkManager(alarmId, startTime)
-                cancelAlarmManager(alarmId)
-            }
+        if(canScheduleExactAlarms()) {
+            Log.d("AlarmManager", "setExactAlarm : $alarm")
+            setAlarmManager(alarm)
+        } else {
+            Log.d("AlarmManager", "setInexactAlarm : $alarm")
+            setInexactAlarm(alarm)
         }
     }
 
     override fun cancelAlarm(alarmId: String) {
         cancelAlarmManager(alarmId)
-        cancelWorkManager(alarmId)
     }
 
     override fun canScheduleExactAlarms(): Boolean {
@@ -47,14 +43,7 @@ class WaterAlarmManager @Inject constructor(
     private fun setAlarmManager(
         alarm: Alarm
     ) {
-        val intent = Intent(context, WaterAlarmReceiver::class.java)
-        intent.putExtra("ALARM", alarm)
-        val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            alarm.alarmId.hashCode(),
-            intent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
+        val pendingIntent = getAlarmPendingIntent(alarm)
 
         val alarmClock = AlarmManager.AlarmClockInfo(
             alarm.startTime,
@@ -64,6 +53,30 @@ class WaterAlarmManager @Inject constructor(
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.setAlarmClock(
             alarmClock, pendingIntent
+        )
+    }
+
+    private fun setInexactAlarm(
+        alarm: Alarm
+    ) {
+        val pendingIntent = getAlarmPendingIntent(alarm)
+
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.setAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            alarm.startTime,
+            pendingIntent
+        )
+    }
+
+    private fun getAlarmPendingIntent(alarm: Alarm): PendingIntent {
+        val intent = Intent(context, WaterAlarmReceiver::class.java)
+        intent.putExtra("ALARM", alarm)
+        return PendingIntent.getBroadcast(
+            context,
+            alarm.alarmId.hashCode(),
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
     }
 
