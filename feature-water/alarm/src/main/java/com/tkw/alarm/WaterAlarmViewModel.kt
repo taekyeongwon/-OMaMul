@@ -70,17 +70,6 @@ class WaterAlarmViewModel @Inject constructor(
             isAlarm && isNoti
         }
 
-    val prefSavedAlarmTime = prefDataRepository.fetchAlarmWakeTime()
-        .combine(prefDataRepository.fetchAlarmSleepTime()) { wake, sleep ->
-            val wakeTime = DateTimeUtils.getTimeFromFormat(wake)
-            val sleepTime = DateTimeUtils.getTimeFromFormat(sleep)
-            Pair(wakeTime, sleepTime)
-    }.asLiveData()
-
-    suspend fun setAlarmTime(start: String, end: String) {
-        prefDataRepository.saveAlarmTime(start, end)
-    }
-
     private val alarmSettingsFlow: Flow<AlarmSettings> = alarmRepository.getAlarmSetting()
 
     val periodModeSettingsLiveData: LiveData<AlarmModeSetting> =
@@ -229,8 +218,8 @@ class WaterAlarmViewModel @Inject constructor(
 
     suspend fun setPeriodAlarm(period: AlarmModeSetting) {
         if(period.selectedDate.isNotEmpty()) {
-            var start = prefSavedAlarmTime.value?.first?.toEpochMilli() ?: 0
-            val end = prefSavedAlarmTime.value?.second?.toEpochMilli() ?: 0
+            var start = period.startTime.toEpochMilli()
+            val end = period.endTime.toEpochMilli()
             val interval = period.interval * 1000
             val alarmList = ArrayList<Alarm>()
 

@@ -12,6 +12,8 @@ import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 data class AlarmModeSetting(
+    val startTime: LocalTime = LocalTime.of(8, 0),
+    val endTime: LocalTime = LocalTime.of(22, 0),
     val selectedDate: List<DayOfWeek> = listOf(),
     val interval: Int = DEFAULT_PERIOD_INTERVAL
 ) {

@@ -2,15 +2,19 @@ package com.tkw.init
 
 import androidx.lifecycle.viewModelScope
 import com.tkw.base.IntentBaseViewModel
+import com.tkw.common.util.DateTimeUtils
+import com.tkw.domain.AlarmRepository
 import com.tkw.domain.PrefDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class InitViewModel
 @Inject constructor(
-    private val prefDataRepository: PrefDataRepository
+    private val prefDataRepository: PrefDataRepository,
+    private val alarmRepository: AlarmRepository
 ): IntentBaseViewModel
 <InitContract.Event, InitContract.State, InitContract.SideEffect>() {
     override fun createInitialState(): InitContract.State {
@@ -37,7 +41,13 @@ class InitViewModel
 
     private fun saveTime(wakeTime: String, sleepTime: String) {
         save(InitContract.SideEffect.OnMoveNext) {
-            prefDataRepository.saveAlarmTime(wakeTime, sleepTime)
+            val currentModeSetting = alarmRepository.getAlarmModeSetting().first()
+            alarmRepository.updateAlarmModeSetting(
+                currentModeSetting.copy(
+                    startTime = DateTimeUtils.getTimeFromFormat(wakeTime),
+                    endTime = DateTimeUtils.getTimeFromFormat(sleepTime)
+                )
+            )
         }
     }
 

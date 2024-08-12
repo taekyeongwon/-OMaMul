@@ -14,8 +14,6 @@ class PrefDataRepositoryImpl
 @Inject constructor(private val dataSource: PrefDataSource): PrefDataRepository {
     companion object {
         private val LANG_KEY = stringPreferencesKey("language")
-        private val ALARM_WAKE_TIME_KEY = stringPreferencesKey("alarm_wake_time")
-        private val ALARM_SLEEP_TIME_KEY = stringPreferencesKey("alarm_sleep_time")
         private val INTAKE_AMOUNT_KEY = intPreferencesKey("intake_amount")
         private val REACHED_GOAL_KEY = booleanPreferencesKey("reached_goal")
         private val INIT_FLAG_KEY = booleanPreferencesKey("init_flag")
@@ -23,8 +21,6 @@ class PrefDataRepositoryImpl
     }
     private val defaultLang = "ko"
     private val defaultIntakeAmount = 2000
-    private val defaultWakeUpTime = getFormattedTime(8, 0)
-    private val defaultSleepTime = getFormattedTime(23, 0)
     private val defaultReachedGoal = false
     private val defaultInitFlag = false
     private val defaultAlarmEnabled = false
@@ -34,15 +30,6 @@ class PrefDataRepositoryImpl
     }
 
     override fun fetchLanguage(): Flow<String> = dataSource.fetchData(LANG_KEY, defaultLang)
-
-    override suspend fun saveAlarmTime(wake: String, sleep: String) {
-        dataSource.saveData(ALARM_WAKE_TIME_KEY, wake)
-        dataSource.saveData(ALARM_SLEEP_TIME_KEY, sleep)
-    }
-
-    override fun fetchAlarmWakeTime(): Flow<String> = dataSource.fetchData(ALARM_WAKE_TIME_KEY, defaultWakeUpTime)
-
-    override fun fetchAlarmSleepTime(): Flow<String> = dataSource.fetchData(ALARM_SLEEP_TIME_KEY, defaultSleepTime)
 
     override suspend fun saveIntakeAmount(amount: Int) {
         dataSource.saveData(INTAKE_AMOUNT_KEY, amount)
@@ -67,9 +54,4 @@ class PrefDataRepositoryImpl
     }
 
     override fun fetchAlarmEnableFlag(): Flow<Boolean> = dataSource.fetchData(ALARM_ENABLED_KEY, defaultAlarmEnabled)
-
-    private fun getFormattedTime(hour: Int, minute: Int): String {
-        val formatter = DateTimeFormatter.ofPattern("a hh:mm")
-        return LocalTime.of(hour, minute).format(formatter)
-    }
 }

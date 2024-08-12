@@ -23,9 +23,6 @@ class AlarmModePeriodFragment : Fragment() {
     private val viewModel: WaterAlarmViewModel by hiltNavGraphViewModels(R.id.alarm_nav_graph)
     private var periodMode: AlarmModeSetting = AlarmModeSetting()
 
-    private var alarmStartTime: String = ""
-    private var alarmEndTime: String = ""
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -63,6 +60,10 @@ class AlarmModePeriodFragment : Fragment() {
                     requireContext().getString(com.tkw.ui.R.string.hour),
                     requireContext().getString(com.tkw.ui.R.string.minute)
                 )
+                val startTime = DateTimeUtils.getFormattedTime(period.startTime.hour, period.startTime.minute)
+                val endTime = DateTimeUtils.getFormattedTime(period.endTime.hour, period.endTime.minute)
+                dataBinding.tvAlarmTime.text = "$startTime - $endTime"
+                dataBinding.ivEdit.visibility = View.VISIBLE
             }
         }
 
@@ -72,13 +73,6 @@ class AlarmModePeriodFragment : Fragment() {
             } else {
                 dataBinding.btnSave.visibility = View.GONE
             }
-        }
-
-        viewModel.prefSavedAlarmTime.observe(viewLifecycleOwner) {
-            alarmStartTime = DateTimeUtils.getFormattedTime(it.first.hour, it.first.minute)
-            alarmEndTime = DateTimeUtils.getFormattedTime(it.second.hour, it.second.minute)
-            dataBinding.tvAlarmTime.text = "$alarmStartTime - $alarmEndTime"
-            dataBinding.ivEdit.visibility = View.VISIBLE
         }
     }
 
@@ -138,15 +132,15 @@ class AlarmModePeriodFragment : Fragment() {
 
     private fun showTimeDialog() {
         val dialog = AlarmTimeBottomDialog(
-            selectedStart = DateTimeUtils.getTimeFromFormat(alarmStartTime),
-            selectedEnd = DateTimeUtils.getTimeFromFormat(alarmEndTime),
+            selectedStart = periodMode.startTime,
+            selectedEnd = periodMode.endTime,
             resultListener = { wake, sleep ->
-                lifecycleScope.launch {
-                    viewModel.setAlarmTime(
-                        DateTimeUtils.getFormattedTime(wake.hour, wake.minute),
-                        DateTimeUtils.getFormattedTime(sleep!!.hour, sleep.minute)
-                    )
+                viewModel.tmpPeriodMode.value?.let { setting ->
+                    viewModel.setTmpPeriodMode(setting.copy(startTime = wake, endTime = sleep))
                 }
+                val startTime = DateTimeUtils.getFormattedTime(wake.hour, wake.minute)
+                val endTime = DateTimeUtils.getFormattedTime(sleep.hour, sleep.minute)
+                dataBinding.tvAlarmTime.text = "$startTime - $endTime"
             }
         )
         dialog.show(childFragmentManager, dialog.tag)
