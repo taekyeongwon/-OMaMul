@@ -175,8 +175,8 @@ class WaterAlarmFragment: Fragment() {
             } else {
                 alarmOff()
             }
-            viewModel.setAlarmEnabled(isEnabled)
             toolbarSwitchView.setChecked(isEnabled)
+            viewModel.setAlarmEnabled(isEnabled)
         }
     }
 

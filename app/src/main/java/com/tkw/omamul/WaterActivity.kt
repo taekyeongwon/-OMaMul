@@ -86,6 +86,7 @@ class WaterActivity : AppCompatActivity() {
         initNavigate()
         setContentView(dataBinding.root)
         setSupportActionBar(dataBinding.toolbar)
+        setNavBackListener()    //툴바 설정 후 호출
     }
 
     private fun initObserver() {
@@ -135,13 +136,6 @@ class WaterActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(dataBinding.toolbar, navController, appBarConfiguration)
         NavigationUI.setupWithNavController(dataBinding.bottomNav, navController)
 
-        dataBinding.toolbar.setNavigationOnClickListener {
-            // 시스템 back key 동작과 동일하게 설정.
-            // CupManageFragment 등 특정 flag에서 백 키 또는 업 버튼 눌렀을 때 백스택 이동 제어하기 위해 설정.
-            // 다른 프래그먼트에서 onBackPressedDispatcher에 콜백을 설정함으로써 백스택 이동을 제어할 수 있음.
-            onBackPressedDispatcher.onBackPressed()
-        }
-
         // getInitFlag 요청 지연되는 동안 프래그먼트가 생성되어
         // navGraphViewModel 접근 시 IllegalArgumentException: The current destination is null
         // 에러 발생 방지하기 위해 블로킹으로 호출
@@ -159,5 +153,14 @@ class WaterActivity : AppCompatActivity() {
             navGraph.setStartDestination(com.tkw.init.R.id.init_nav_graph)
         }
         nav.graph = navGraph
+    }
+
+    private fun setNavBackListener() {
+        dataBinding.toolbar.setNavigationOnClickListener {
+            // 시스템 back key 동작과 동일하게 설정.
+            // CupManageFragment 등 특정 flag에서 백 키 또는 업 버튼 눌렀을 때 백스택 이동 제어하기 위해 설정.
+            // 다른 프래그먼트에서 onBackPressedDispatcher에 콜백을 설정함으로써 백스택 이동을 제어할 수 있음.
+            onBackPressedDispatcher.onBackPressed()
+        }
     }
 }

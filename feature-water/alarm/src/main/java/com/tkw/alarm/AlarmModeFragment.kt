@@ -146,8 +146,8 @@ class AlarmModeFragment: Fragment() {
         } else {
             alarmOff()
         }
-        viewModel.setAlarmEnabled(isEnabled)
         toolbarSwitchView.setChecked(isEnabled)
+        viewModel.setAlarmEnabled(isEnabled)
     }
 
     private fun setSwitchButtonCheckedListener(isNotificationEnabled: Boolean) {

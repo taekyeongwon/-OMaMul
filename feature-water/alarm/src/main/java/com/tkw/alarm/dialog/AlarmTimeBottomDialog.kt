@@ -16,7 +16,7 @@ class AlarmTimeBottomDialog(
     private val buttonFlag: Boolean = true,
     private val selectedStart: LocalTime? = null,
     private val selectedEnd: LocalTime? = null,
-    private val resultListener: (LocalTime, LocalTime?) -> Unit
+    private val resultListener: (LocalTime, LocalTime) -> Unit
     ) : CustomBottomDialog<DialogTimepickerBinding>() {
     override var childBinding by autoCleared<DialogTimepickerBinding>()
     override var buttonCount: Int = 2
@@ -85,11 +85,7 @@ class AlarmTimeBottomDialog(
                 childBinding.tpEnd.minute
             )
 
-        if(childBinding.rgSelector.visibility == View.GONE) {
-            resultListener(startTime, null)
-        } else {
-            resultListener(startTime, endTime)
-        }
+        resultListener(startTime, endTime)
     }
 
     private val onCheckedChangeListener =
@@ -106,10 +102,4 @@ class AlarmTimeBottomDialog(
                 }
             }
         }
-
-    fun setRadioButtonVisibility(isVisible: Boolean) {
-        childBinding.rgSelector.visibility =
-            if (isVisible) View.VISIBLE
-            else View.GONE
-    }
 }
