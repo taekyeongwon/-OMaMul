@@ -113,7 +113,7 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
         this.upsert(setting)
     }
 
-    override fun getAlarmModeSetting(mode: AlarmModeEntity): Flow<AlarmModeSettingEntity?> {
+    override fun getAlarmModeSetting(): Flow<AlarmModeSettingEntity?> {
         return alarmModeFlow.map {
             it.list.firstOrNull()
         }

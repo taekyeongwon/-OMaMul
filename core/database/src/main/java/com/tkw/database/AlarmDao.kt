@@ -23,7 +23,7 @@ interface AlarmDao: RealmDao<AlarmSettingsEntity> {
      * 현재 설정된 모드에 해당하는
      * PeriodEntity/CustomEntity 객체 리턴
      */
-    fun getAlarmModeSetting(mode: AlarmModeEntity): Flow<AlarmModeSettingEntity?>
+    fun getAlarmModeSetting(): Flow<AlarmModeSettingEntity?>
 
     /**
      * Period/Custom 설정 변경 시 업데이트.

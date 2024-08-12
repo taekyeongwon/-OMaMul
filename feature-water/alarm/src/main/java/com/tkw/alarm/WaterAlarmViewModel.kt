@@ -73,7 +73,7 @@ class WaterAlarmViewModel @Inject constructor(
     private val alarmSettingsFlow: Flow<AlarmSettings> = alarmRepository.getAlarmSetting()
 
     val periodModeSettingsLiveData: LiveData<AlarmModeSetting> =
-        alarmRepository.getAlarmModeSetting(AlarmMode.PERIOD).asLiveData()
+        alarmRepository.getAlarmModeSetting().asLiveData()
 
     val alarmSettings: LiveData<AlarmSettings> =
         alarmSettingsFlow.asLiveData()

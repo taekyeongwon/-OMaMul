@@ -40,8 +40,8 @@ class AlarmRepositoryImpl @Inject constructor(
     override suspend fun updateAlarmSetting(setting: AlarmSettings) =
         alarmDao.updateSetting(AlarmMapper.alarmSettingToEntity(setting))
 
-    override fun getAlarmModeSetting(mode: AlarmMode): Flow<AlarmModeSetting> {
-        val alarmModeSetting = alarmDao.getAlarmModeSetting(AlarmMapper.alarmModeToEntity(mode))
+    override fun getAlarmModeSetting(): Flow<AlarmModeSetting> {
+        val alarmModeSetting = alarmDao.getAlarmModeSetting()
         return flow {
             alarmModeSetting.collect {
                 if(it == null) {

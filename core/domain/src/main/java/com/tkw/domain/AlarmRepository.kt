@@ -12,7 +12,7 @@ interface AlarmRepository {
 
     suspend fun updateAlarmSetting(setting: AlarmSettings)
 
-    fun getAlarmModeSetting(mode: AlarmMode): Flow<AlarmModeSetting>
+    fun getAlarmModeSetting(): Flow<AlarmModeSetting>
 
     suspend fun updateAlarmModeSetting(setting: AlarmModeSetting)
 
