@@ -2,6 +2,8 @@ package com.tkw.alarm
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +24,8 @@ import com.tkw.ui.ItemTouchHelperCallback
 import com.tkw.ui.OnItemDrag
 import com.tkw.ui.VerticalSpaceItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -32,6 +36,8 @@ class AlarmModeCustomFragment: Fragment() {
 
     private lateinit var alarmListAdapter: AlarmListAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
+
+    private val draggedList: ArrayList<Alarm> = ArrayList()
 
     private val adapterEditListener: (Int) -> Unit = { position ->
         val currentAlarm = alarmListAdapter.currentList[position]
@@ -54,6 +60,8 @@ class AlarmModeCustomFragment: Fragment() {
         }
 
         override fun onStopDrag(list: List<Alarm>) {
+            draggedList.clear()
+            draggedList.addAll(list)
             viewModel.updateList(list)
         }
     }
@@ -118,14 +126,15 @@ class AlarmModeCustomFragment: Fragment() {
 
     private fun initObserver() {
         viewModel.customAlarmList.observe(viewLifecycleOwner) {
-            val list = ArrayList<Alarm>()
-            it.alarmList.forEach {
-                list.add(it.copy())
-            }
-            alarmListAdapter.submitList(list) {
-                modeChanged(false)
+            val list = draggedList.ifEmpty { it.alarmList }
+            alarmListAdapter.submitList(list.map { it.copy() }) {
+                draggedList.clear()
                 dataChanged()
             }
+        }
+
+        viewModel.nextEvent.observe(viewLifecycleOwner) {
+            modeChanged(false)
         }
     }
 
@@ -173,6 +182,7 @@ class AlarmModeCustomFragment: Fragment() {
             adapter = alarmListAdapter
             itemTouchHelper.attachToRecyclerView(this)
             addItemDecoration(VerticalSpaceItemDecoration(20))
+            itemAnimator = null
 //            setHasFixedSize(true)
         }
     }

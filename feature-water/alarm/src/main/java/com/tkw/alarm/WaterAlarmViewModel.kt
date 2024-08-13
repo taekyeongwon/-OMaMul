@@ -249,6 +249,7 @@ class WaterAlarmViewModel @Inject constructor(
     fun deleteAlarm(list: List<Alarm>) {
         launch {
             alarmRepository.deleteAlarm(list, AlarmMode.CUSTOM)
+            _nextEvent.call()
         }
     }
 
