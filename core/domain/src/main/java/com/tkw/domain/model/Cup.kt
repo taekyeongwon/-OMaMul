@@ -15,6 +15,11 @@ data class Cup(
     var createMode: Boolean = true
     var isChecked: Boolean = false
 
+    fun copy(): Cup = Cup(cupId, cupName, cupAmount).apply {
+        createMode = this@Cup.createMode
+        isChecked = this@Cup.isChecked
+    }
+
 //    fun toMapEntity() = CupEntity().apply {
 //        cupId = this@Cup.cupId
 //        cupName = this@Cup.cupName

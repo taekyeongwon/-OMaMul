@@ -30,6 +30,10 @@ data class Alarm(
 ): Serializable {
     var isChecked: Boolean = false
 
+    fun copy(): Alarm = Alarm(alarmId, startTime, weekList, enabled).apply {
+        isChecked = this@Alarm.isChecked
+    }
+
     fun getAlarmTime(): String {
         val formatter = DateTimeFormatter.ofPattern("a hh:mm")
         val instant = Instant.ofEpochMilli(startTime)

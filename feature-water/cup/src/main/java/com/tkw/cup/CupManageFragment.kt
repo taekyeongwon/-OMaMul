@@ -2,12 +2,10 @@ package com.tkw.cup
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -36,6 +34,8 @@ class CupManageFragment: Fragment() {
     private lateinit var cupListAdapter: CupListAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
 
+    private val draggedList: ArrayList<Cup> = ArrayList()
+
     private val adapterEditListener: (Int) -> Unit = { position ->
         val currentItem = cupListAdapter.currentList[position]
             .apply { this.createMode = false }
@@ -59,6 +59,8 @@ class CupManageFragment: Fragment() {
         }
 
         override fun onStopDrag(list: List<Cup>) {
+            draggedList.clear()
+            draggedList.addAll(list)
             viewModel.updateAll(list)
         }
     }
@@ -135,11 +137,9 @@ class CupManageFragment: Fragment() {
 
     private fun initObserver() {
         viewModel.cupListLiveData.observe(viewLifecycleOwner) {
-            val list = ArrayList<Cup>()
-            it.forEach { cup ->
-                list.add(cup.copy()) //copy()가 얕은 복사이나 Cup 파라미터가 모두 Primitive 타입이여서 사용함.
-            }
-            cupListAdapter.submitList(list) {
+            val list = draggedList.ifEmpty { it }
+            cupListAdapter.submitList(list.map { it.copy() }) {
+                draggedList.clear()
                 dataChanged()
             }
         }

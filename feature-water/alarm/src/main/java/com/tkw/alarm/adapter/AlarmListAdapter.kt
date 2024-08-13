@@ -92,7 +92,13 @@ class AlarmListAdapter(
                     editListener(adapterPosition)
                 }
                 svSwitch.setCheckedChangeListener { _, isChecked ->
-                    alarmOnOffListener(adapterPosition, isChecked)
+                    if(binding.svSwitch.getChecked() != alarm?.enabled) {   //toggle로 변경한 후 submit되어 onBind() 다시 불릴 때 중복으로 리스너 값 전달하지 않도록
+                        if (alarm?.weekList?.isNotEmpty() == true) {
+                            alarmOnOffListener(adapterPosition, isChecked)
+                        } else {
+                            binding.svSwitch.setChecked(false)
+                        }
+                    }
                 }
             }
         }
