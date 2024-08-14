@@ -2,6 +2,8 @@
 
 오늘 마신 물 - 물마시기 알람 어플
 
+figma : https://www.figma.com/file/lVwqflAHVccX6FwVZXrS5I/물-알람?type=design&node-id=0%3A1&mode=design&t=pUhQSM9tTUkQRQRL-1
+
 **환경**
 
 Android Studio : Android Studio Iguana | 2023.2.1 Patch 2
@@ -28,6 +30,6 @@ Flow 및 LiveData 적용
 
 **멀티 모듈 구조**
 
-![omamul drawio (3)](https://github.com/taekyeongwon/OMaMul/assets/24698972/a0e5998d-7320-4d18-821f-ae5148bf800c)
+![omamul drawio (4)](https://github.com/user-attachments/assets/b8d7f199-44e2-404c-adbc-091fc817f4a3)
 
 
