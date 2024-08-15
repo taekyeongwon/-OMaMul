@@ -1,7 +1,7 @@
 [versions]
 core-ktx = "1.8.0"
-appcompat = "1.6.1"
-material = "1.5.0"
+appcompat = "1.7.0"
+material = "1.12.0"
 constraintlayout = "2.1.4"
 junit = "4.13.2"
 ext-junit = "1.1.5"
