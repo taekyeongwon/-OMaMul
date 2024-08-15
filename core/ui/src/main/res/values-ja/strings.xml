@@ -96,6 +96,24 @@
     <string name="alarm_custom_add">+ 新しいアラームを追加</string>
     <string name="intake_complete">目標を達成しました!</string>
     <string name="alarm_ringing_soon">まもなくアラームが鳴ります。</string>
+    <string name="setting_sync">データ同期 ></string>
+    <string name="setting_last_sync">最後の同期 %s</string>
+    <string name="setting_total_intake">総摂取量</string>
+    <string name="setting_total_achieve">総達成</string>
+    <string name="setting_intake_setting_title">摂取量設定</string>
+    <string name="setting_intake_title">目標摂取量</string>
+    <string name="setting_cup_manage_title">カップ管理</string>
+    <string name="setting_unit_title">単位</string>
+    <string name="setting_alarm_setting_title">アラーム設定</string>
+    <string name="setting_alarm_title">アラーム</string>
+    <string name="setting_alarm_mode_title">アラームモード</string>
+    <string name="setting_alarm_schedule_title">アラームスケジュール</string>
+    <string name="setting_alarm_time_title">アラーム時間</string>
+    <string name="setting_alarm_sound_title">音と振動</string>
+    <string name="setting_etc_setting_title">その他の設定</string>
+    <string name="setting_language_title">言語設定</string>
+    <string name="setting_advertise_title">広告を削除</string>
+    <string name="setting_logout">ログアウト</string>
 
     <string name="title_main">今日飲んだ水</string>
     <string name="title_cup_manage">カップ管理</string>

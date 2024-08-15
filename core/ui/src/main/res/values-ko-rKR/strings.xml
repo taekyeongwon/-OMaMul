@@ -96,6 +96,24 @@
     <string name="alarm_custom_add">+ 새 알람 추가하기</string>
     <string name="intake_complete">목표를 달성했습니다!</string>
     <string name="alarm_ringing_soon">알람이 곧 울립니다.</string>
+    <string name="setting_sync">데이터 동기화 ></string>
+    <string name="setting_last_sync">마지막 동기화 %s</string>
+    <string name="setting_total_intake">총 음수량</string>
+    <string name="setting_total_achieve">총 달성</string>
+    <string name="setting_intake_setting_title">섭취량 설정</string>
+    <string name="setting_intake_title">목표 섭취량</string>
+    <string name="setting_cup_manage_title">컵 관리</string>
+    <string name="setting_unit_title">단위</string>
+    <string name="setting_alarm_setting_title">알람 설정</string>
+    <string name="setting_alarm_title">알람</string>
+    <string name="setting_alarm_mode_title">알람 모드</string>
+    <string name="setting_alarm_schedule_title">알람 일정</string>
+    <string name="setting_alarm_time_title">알람 시간</string>
+    <string name="setting_alarm_sound_title">소리 및 진동</string>
+    <string name="setting_etc_setting_title">기타 설정</string>
+    <string name="setting_language_title">언어 설정</string>
+    <string name="setting_advertise_title">광고 제거</string>
+    <string name="setting_logout">로그아웃</string>
 
     <string name="title_main">오마물</string>
     <string name="title_cup_manage">컵 관리</string>

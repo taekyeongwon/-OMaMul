@@ -96,6 +96,24 @@
     <string name="alarm_custom_add">+ Add new alarm</string>
     <string name="intake_complete">Goal achieved!</string>
     <string name="alarm_ringing_soon">The alarm will ring soon.</string>
+    <string name="setting_sync">Data Sync ></string>
+    <string name="setting_last_sync">Last Sync %s</string>
+    <string name="setting_total_intake">Total Water Intake</string>
+    <string name="setting_total_achieve">Total Achievement</string>
+    <string name="setting_intake_setting_title">Intake Setting</string>
+    <string name="setting_intake_title">Target Intake</string>
+    <string name="setting_cup_manage_title">Cup Management</string>
+    <string name="setting_unit_title">Unit</string>
+    <string name="setting_alarm_setting_title">Alarm Setting</string>
+    <string name="setting_alarm_title">Alarm</string>
+    <string name="setting_alarm_mode_title">Alarm Mode</string>
+    <string name="setting_alarm_schedule_title">Alarm Schedule</string>
+    <string name="setting_alarm_time_title">Alarm Time</string>
+    <string name="setting_alarm_sound_title">Sound and Vibration</string>
+    <string name="setting_etc_setting_title">Other Settings</string>
+    <string name="setting_language_title">Language Setting</string>
+    <string name="setting_advertise_title">Remove Ads</string>
+    <string name="setting_logout">Logout</string>
 
     <string name="title_main">Today\'s Water Intake</string>
     <string name="title_cup_manage">Cup Management</string>

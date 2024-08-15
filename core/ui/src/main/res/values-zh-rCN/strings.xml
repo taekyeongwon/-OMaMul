@@ -96,6 +96,24 @@
     <string name="alarm_custom_add">+ 添加新闹钟</string>
     <string name="intake_complete">目标达成了!</string>
     <string name="alarm_ringing_soon">闹钟很快就会响。</string>
+    <string name="setting_sync">数据同步 ></string>
+    <string name="setting_last_sync">最后同步 %s</string>
+    <string name="setting_total_intake">总饮水量</string>
+    <string name="setting_total_achieve">总成就</string>
+    <string name="setting_intake_setting_title">摄入量设置</string>
+    <string name="setting_intake_title">目标摄入量</string>
+    <string name="setting_cup_manage_title">杯子管理</string>
+    <string name="setting_unit_title">单位</string>
+    <string name="setting_alarm_setting_title">闹钟设置</string>
+    <string name="setting_alarm_title">闹钟</string>
+    <string name="setting_alarm_mode_title">闹钟模式</string>
+    <string name="setting_alarm_schedule_title">闹钟时间表</string>
+    <string name="setting_alarm_time_title">闹钟时间</string>
+    <string name="setting_alarm_sound_title">声音和振动</string>
+    <string name="setting_etc_setting_title">其他设置</string>
+    <string name="setting_language_title">语言设置</string>
+    <string name="setting_advertise_title">移除广告</string>
+    <string name="setting_logout">退出登录</string>
 
     <string name="title_main">今天喝的水</string>
     <string name="title_cup_manage">杯子管理</string>
