@@ -28,6 +28,10 @@ class WaterSettingFragment: Fragment() {
     }
 
     private fun initView() {
-
+        dataBinding.run {
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = this@WaterSettingFragment.viewModel
+            executePendingBindings()
+        }
     }
 }

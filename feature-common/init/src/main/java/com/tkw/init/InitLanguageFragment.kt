@@ -20,6 +20,7 @@ import com.tkw.common.autoCleared
 import com.tkw.init.databinding.FragmentInitLanguageBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 @AndroidEntryPoint
 class InitLanguageFragment: Fragment() {
@@ -90,11 +91,11 @@ class InitLanguageFragment: Fragment() {
     private fun initListener() {
         dataBinding.rgLanguage.setOnCheckedChangeListener { group, checkedId ->
             val lang = when(checkedId) {
-                R.id.rb_ko -> "ko"
-                R.id.rb_en -> "en"
-                R.id.rb_jp -> "ja"
-                R.id.rb_cn -> "zh"
-                else -> "ko"
+                R.id.rb_ko -> Locale.KOREAN.language
+                R.id.rb_en -> Locale.ENGLISH.language
+                R.id.rb_jp -> Locale.JAPANESE.language
+                R.id.rb_cn -> Locale.CHINESE.language
+                else -> Locale.KOREAN.language
             }
             LocaleHelper.setApplicationLocales(requireActivity(), lang)
         }
@@ -102,11 +103,11 @@ class InitLanguageFragment: Fragment() {
         dataBinding.btnNext.setOnClickListener {
             if(dataBinding.rgLanguage.checkedRadioButtonId != -1) {
                 val lang = when (dataBinding.rgLanguage.checkedRadioButtonId) {
-                    R.id.rb_ko -> "ko"
-                    R.id.rb_en -> "en"
-                    R.id.rb_jp -> "ja"
-                    R.id.rb_cn -> "zh"
-                    else -> "ko"
+                    R.id.rb_ko -> Locale.KOREAN.language
+                    R.id.rb_en -> Locale.ENGLISH.language
+                    R.id.rb_jp -> Locale.JAPANESE.language
+                    R.id.rb_cn -> Locale.CHINESE.language
+                    else -> Locale.KOREAN.language
                 }
                 viewModel.setEvent(InitContract.Event.SaveLanguage(lang))
             }

@@ -44,7 +44,11 @@ class CupCreateFragment: Fragment() {
     }
 
     private fun initView() {
-        dataBinding.viewModel = viewModel
+        dataBinding.run {
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = this@CupCreateFragment.viewModel
+            executePendingBindings()
+        }
     }
 
     private fun initObserver() {
