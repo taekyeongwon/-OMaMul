@@ -18,12 +18,14 @@ class PrefDataRepositoryImpl
         private val REACHED_GOAL_KEY = booleanPreferencesKey("reached_goal")
         private val INIT_FLAG_KEY = booleanPreferencesKey("init_flag")
         private val ALARM_ENABLED_KEY = booleanPreferencesKey("alarm_enabled")
+        private val UNIT_KEY = intPreferencesKey("unit")
     }
     private val defaultLang = "ko"
     private val defaultIntakeAmount = 2000
     private val defaultReachedGoal = false
     private val defaultInitFlag = false
     private val defaultAlarmEnabled = false
+    private val defaultUnit = 0
 
     override suspend fun saveLanguage(lang: String) {
         dataSource.saveData(LANG_KEY, lang)
@@ -54,4 +56,10 @@ class PrefDataRepositoryImpl
     }
 
     override fun fetchAlarmEnableFlag(): Flow<Boolean> = dataSource.fetchData(ALARM_ENABLED_KEY, defaultAlarmEnabled)
+
+    override suspend fun saveUnit(unit: Int) {
+        dataSource.saveData(UNIT_KEY, unit)
+    }
+
+    override fun fetchUnit(): Flow<Int> = dataSource.fetchData(UNIT_KEY, defaultUnit)
 }

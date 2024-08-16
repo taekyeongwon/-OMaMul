@@ -17,4 +17,9 @@ interface PrefDataRepository {
 
     suspend fun saveAlarmEnableFlag(flag: Boolean)
     fun fetchAlarmEnableFlag(): Flow<Boolean>
+
+    // 0: ml, L
+    // 1: fl.oz
+    suspend fun saveUnit(unit: Int)
+    fun fetchUnit(): Flow<Int>
 }

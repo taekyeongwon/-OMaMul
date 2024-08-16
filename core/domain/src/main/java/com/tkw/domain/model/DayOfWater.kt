@@ -7,7 +7,7 @@ data class DayOfWater(
     val date: String,
     val dayOfList: List<Water>
 ) {
-    fun getTotalWaterAmount(): Int {
+    fun getTotalIntakeByDate(): Int {
         return dayOfList.sumOf { water ->
             water.amount
         }
@@ -50,6 +50,10 @@ data class DayOfWaterList(
     fun getArray(transformer: DayTransformer): List<Pair<String, DayOfWaterList>> {
         return transformer.onTransform(list)
     }
+
+    fun getTotalIntake() = list.sumOf { it.getTotalIntakeByDate() }
+
+    fun getTotalAchieve(goal: Int) = list.filter { it.getTotalIntakeByDate() >= goal }.size
 }
 
 interface DayTransformer {

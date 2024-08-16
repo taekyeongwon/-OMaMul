@@ -14,6 +14,7 @@ import com.tkw.common.autoCleared
 import com.tkw.common.util.DateTimeUtils
 import com.tkw.common.util.animateByMaxValue
 import com.tkw.domain.model.DayOfWater
+import com.tkw.domain.model.DayOfWaterList
 import com.tkw.record.databinding.FragmentLogWeekBinding
 import com.tkw.ui.chart.marker.MarkerType
 import dagger.hilt.android.AndroidEntryPoint
@@ -66,7 +67,7 @@ class LogWeekFragment: Fragment() {
                 when(it) {
                     is LogContract.State.Complete -> {
                         if(it.unit == LogContract.DateUnit.WEEK) {
-                            val dayOfWaterList = it.data.list
+                            val dayOfWaterList = it.data
                             setChartData(dayOfWaterList)
                         }
                     }
@@ -101,12 +102,13 @@ class LogWeekFragment: Fragment() {
         }
     }
 
-    private fun setChartData(list: List<DayOfWater>) {
+    private fun setChartData(dayOfWaterList: DayOfWaterList) {
+        val list = dayOfWaterList.list
         with(dataBinding) {
             val result = list.map {
                 barChart.parsingChartData(
                     DateTimeUtils.getIndexOfWeek(it.date).toFloat(),
-                    it.getTotalWaterAmount().toFloat() / 1000
+                    it.getTotalIntakeByDate().toFloat() / 1000
                 )
             }
             if(list.isNotEmpty()) {
@@ -114,7 +116,7 @@ class LogWeekFragment: Fragment() {
             }
 
             barChart.setChartData(result)
-            tvTotalAmount.animateByMaxValue(list.sumOf { it.getTotalWaterAmount() } / 1000f)
+            tvTotalAmount.animateByMaxValue(dayOfWaterList.getTotalIntake() / 1000f)
         }
     }
 

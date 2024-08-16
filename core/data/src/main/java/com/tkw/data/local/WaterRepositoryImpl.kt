@@ -1,13 +1,17 @@
 package com.tkw.data.local
 
+import com.tkw.common.util.DateTimeUtils
 import com.tkw.database.WaterDao
 import com.tkw.database.model.DayOfWaterEntity
 import com.tkw.database.model.WaterEntity
 import com.tkw.domain.WaterRepository
 import com.tkw.domain.model.DayOfWater
+import com.tkw.domain.model.DayOfWaterList
 import com.tkw.domain.model.Water
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import javax.inject.Inject
 
 
@@ -16,14 +20,28 @@ class WaterRepositoryImpl @Inject constructor(private val waterDao: WaterDao): W
         WaterMapper.dayOfWaterToModel(it)
     }
 
-    override fun getAllDayEntity(today: String): Flow<List<DayOfWater>> {
+    override fun getAllDay(): Flow<List<DayOfWater>> {
         val allDayOfWater = waterDao.getAllDayOfWater()
         return flow {
             allDayOfWater.collect {
-                //마신 물이 있거나 오늘 날짜인 경우만 차트에 표시하기 위해 필터링
+                val dayOfWater = it.list.toList()
+                emit(
+                    dayOfWater.map {
+                        WaterMapper.dayOfWaterToModel(it)
+                    }
+                )
+            }
+        }
+    }
+
+    override fun getFilteringDayOfWaterList(includeDate: String): Flow<List<DayOfWater>> {
+        val allDayOfWater = waterDao.getAllDayOfWater()
+        return flow {
+            allDayOfWater.collect {
+                //마신 물이 있거나 없더라도 표시할 날짜를 차트에 표시하기 위해 필터링
                 val list = it.list.filter { entity ->
                     entity.dayOfList.isNotEmpty() ||
-                            entity.date == today
+                            entity.date == includeDate
                 }
                 val sortedList = list.sortedBy { it.date }
                 emit(sortedList.map {

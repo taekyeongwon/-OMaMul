@@ -1,6 +1,5 @@
 package com.tkw.record
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.tkw.base.IntentBaseViewModel
 import com.tkw.base.launch
@@ -42,7 +41,7 @@ class LogViewModel
     @OptIn(ExperimentalCoroutinesApi::class)
     private val dayFlow: StateFlow<DayOfWaterList> =
         today.flatMapLatest {
-            waterRepository.getAllDayEntity(it).mapLatest { list ->
+            waterRepository.getFilteringDayOfWaterList(it).mapLatest { list ->
                 DayOfWaterList(list)
             }
         }.stateIn(

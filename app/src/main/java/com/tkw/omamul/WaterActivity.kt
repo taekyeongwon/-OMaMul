@@ -101,7 +101,7 @@ class WaterActivity : AppCompatActivity() {
         waterViewModel.amountLiveData.observe(this) {
             lifecycleScope.launch {
                 val prev = prevAmount
-                if(it.getTotalWaterAmount() >= waterViewModel.getIntakeAmount()) {
+                if(it.getTotalIntakeByDate() >= waterViewModel.getIntakeAmount()) {
                     if(prev < waterViewModel.getIntakeAmount()) {
                         Toast.makeText(
                             this@WaterActivity,
@@ -113,7 +113,7 @@ class WaterActivity : AppCompatActivity() {
                 } else {
                     alarmViewModel.saveReachedGoal(false)
                 }
-                prevAmount = it.getTotalWaterAmount()
+                prevAmount = it.getTotalIntakeByDate()
             }
         }
         alarmViewModel.isReachedGoal.observe(this) {
