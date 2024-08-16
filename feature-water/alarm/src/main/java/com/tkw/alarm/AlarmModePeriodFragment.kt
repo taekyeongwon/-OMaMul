@@ -16,6 +16,7 @@ import com.tkw.domain.model.AlarmModeSetting
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.time.LocalTime
 
 @AndroidEntryPoint
 class AlarmModePeriodFragment : Fragment() {
@@ -60,9 +61,7 @@ class AlarmModePeriodFragment : Fragment() {
                     requireContext().getString(com.tkw.ui.R.string.hour),
                     requireContext().getString(com.tkw.ui.R.string.minute)
                 )
-                val startTime = DateTimeUtils.getFormattedTime(period.startTime.hour, period.startTime.minute)
-                val endTime = DateTimeUtils.getFormattedTime(period.endTime.hour, period.endTime.minute)
-                dataBinding.tvAlarmTime.text = "$startTime - $endTime"
+                dataBinding.tvAlarmTime.text = period.getTimeRange()
                 dataBinding.ivEdit.visibility = View.VISIBLE
             }
         }
@@ -136,11 +135,10 @@ class AlarmModePeriodFragment : Fragment() {
             selectedEnd = periodMode.endTime,
             resultListener = { wake, sleep ->
                 viewModel.tmpPeriodMode.value?.let { setting ->
-                    viewModel.setTmpPeriodMode(setting.copy(startTime = wake, endTime = sleep))
+                    val newSetting = setting.copy(startTime = wake, endTime = sleep)
+                    viewModel.setTmpPeriodMode(newSetting)
+                    dataBinding.tvAlarmTime.text = newSetting.getTimeRange()
                 }
-                val startTime = DateTimeUtils.getFormattedTime(wake.hour, wake.minute)
-                val endTime = DateTimeUtils.getFormattedTime(sleep.hour, sleep.minute)
-                dataBinding.tvAlarmTime.text = "$startTime - $endTime"
             }
         )
         dialog.show(childFragmentManager, dialog.tag)

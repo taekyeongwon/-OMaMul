@@ -103,19 +103,21 @@ class SettingViewModel
 
     val alarmSchedule = alarmModeSetting.flatMapLatest {
         flow {
-            emit(
-                it.selectedDate.map {
-                    it.getDisplayName(TextStyle.SHORT, Locale.getDefault())
-                }.joinToString(", ")
-            )
+            if(it.selectedDate.isEmpty()) {
+                emit("-")
+            } else {
+                emit(
+                    it.selectedDate.joinToString(", ") {
+                        it.getDisplayName(TextStyle.SHORT, Locale.getDefault())
+                    }
+                )
+            }
         }
     }.asLiveData()
 
     val alarmTime = alarmModeSetting.flatMapLatest {
         flow {
-            val startTime = DateTimeUtils.getFormattedTime(it.startTime.hour, it.startTime.minute)
-            val endTime = DateTimeUtils.getFormattedTime(it.endTime.hour, it.endTime.minute)
-            emit("$startTime - $endTime")
+            emit(it.getTimeRange())
         }
     }.asLiveData()
 

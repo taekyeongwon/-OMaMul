@@ -20,6 +20,11 @@ data class AlarmModeSetting(
     companion object {
         const val DEFAULT_PERIOD_INTERVAL: Int = 60 * 60    //interval의 경우 toSecondOfDay와 ofSecondOfDay 사용하므로 밀리초 단위 제거
     }
+
+    fun getTimeRange(): String {
+        val formatter = DateTimeFormatter.ofPattern("a hh:mm")
+        return "${startTime.format(formatter)} - ${endTime.format(formatter)}"
+    }
 }
 
 data class Alarm(
