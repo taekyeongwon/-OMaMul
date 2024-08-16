@@ -81,6 +81,7 @@ class InitLanguageFragment: Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.sideEffect.collect {
                 if(it is InitContract.SideEffect.OnMoveNext) {
+                    requireActivity().recreate()
                     findNavController().navigate(R.id.initTimeFragment)
                 }
             }
