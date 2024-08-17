@@ -1,0 +1,25 @@
+package com.tkw.ui
+
+import android.content.Context
+import android.util.AttributeSet
+import android.widget.NumberPicker
+
+class UnitPicker
+@JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = android.R.attr.numberPickerStyle
+) : NumberPicker(context, attrs, defStyle) {
+
+    init {
+        minValue = 0
+        maxValue = 1
+        wrapSelectorWheel = false
+        descendantFocusability = FOCUS_BLOCK_DESCENDANTS
+        displayedValues = arrayOf("ml, L", "fl oz")
+    }
+
+    fun getCurrentValue(): String {
+        return displayedValues[super.getValue()]
+    }
+}

@@ -1,8 +1,11 @@
 package com.tkw.setting
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import com.tkw.base.BaseViewModel
+import com.tkw.base.launch
+import com.tkw.common.SingleLiveEvent
 import com.tkw.common.util.DateTimeUtils
 import com.tkw.domain.AlarmRepository
 import com.tkw.domain.PrefDataRepository
@@ -30,8 +33,11 @@ class SettingViewModel
 //    settingRepository: SettingRepository,
     waterRepository: WaterRepository,
     alarmRepository: AlarmRepository,
-    prefDataRepository: PrefDataRepository
+    private val prefDataRepository: PrefDataRepository
 ): BaseViewModel() {
+
+    private val _nextEvent = SingleLiveEvent<Unit>()
+    val nextEvent: LiveData<Unit> = _nextEvent
 
     //todo settingRepo에서 구글 계정 가져오기
 
@@ -47,7 +53,7 @@ class SettingViewModel
 
     val totalAchieve = getAllDay.flatMapLatest {
         flow {
-            emit("${it.getTotalAchieve(getIntakeAmount.first())}일")
+            emit("${it.getTotalAchieve(getIntakeAmount.first())}${getCustomString(com.tkw.ui.R.string.day)}")
         }
     }.asLiveData()
 
@@ -56,7 +62,8 @@ class SettingViewModel
         "${it}ml"
     }.asLiveData()
 
-    val currentLang = prefDataRepository.fetchLanguage().mapLatest {
+    val currentLangFlow = prefDataRepository.fetchLanguage()
+    val currentLang = currentLangFlow.mapLatest {
         when(it) {
             Locale.KOREAN.language -> getCustomString(com.tkw.ui.R.string.lang_ko)
             Locale.ENGLISH.language -> getCustomString(com.tkw.ui.R.string.lang_en)
@@ -66,7 +73,8 @@ class SettingViewModel
         }
     }.asLiveData()
 
-    val unit = prefDataRepository.fetchUnit().mapLatest {
+    val unitFlow = prefDataRepository.fetchUnit()
+    val unit = unitFlow.mapLatest {
         when(it) {
             0 -> "ml, L"
             1 -> "fl.oz"
@@ -120,6 +128,20 @@ class SettingViewModel
             emit(it.getTimeRange())
         }
     }.asLiveData()
+
+    fun saveUnit(unit: Int) {
+        launch {
+            prefDataRepository.saveUnit(unit)
+            _nextEvent.call()
+        }
+    }
+
+    fun saveLanguage(lang: String) {
+        launch {
+            prefDataRepository.saveLanguage(lang)
+            _nextEvent.call()
+        }
+    }
 
     private fun getCustomString(id: Int): String {
         return context.getString(id)

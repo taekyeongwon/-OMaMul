@@ -114,6 +114,7 @@
     <string name="setting_language_title">언어 설정</string>
     <string name="setting_advertise_title">광고 제거</string>
     <string name="setting_logout">로그아웃</string>
+    <string name="setting_language_restart_info">* 언어 변경 후 저장 버튼을 누르면 앱이 재실행 됩니다.</string>
 
     <string name="title_main">오마물</string>
     <string name="title_cup_manage">컵 관리</string>

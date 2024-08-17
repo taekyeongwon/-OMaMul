@@ -43,12 +43,12 @@ object AlarmMapper {
     fun alarmModeToEntity(alarmMode: AlarmModeSetting): AlarmModeSettingEntity {
         return AlarmModeSettingEntity().apply {
             this.startTime = DateTimeUtils
-                .getFormattedTime(
+                .getMillisFromTime(
                     alarmMode.startTime.hour,
                     alarmMode.startTime.minute
                 )
             this.endTime = DateTimeUtils
-                .getFormattedTime(
+                .getMillisFromTime(
                     alarmMode.endTime.hour,
                     alarmMode.endTime.minute
                 )
@@ -59,8 +59,8 @@ object AlarmMapper {
 
     fun alarmModeToModel(alarmModeEntity: AlarmModeSettingEntity): AlarmModeSetting {
         return AlarmModeSetting(
-            DateTimeUtils.getTimeFromFormat(alarmModeEntity.startTime),
-            DateTimeUtils.getTimeFromFormat(alarmModeEntity.endTime),
+            DateTimeUtils.getTimeFromMillis(alarmModeEntity.startTime),
+            DateTimeUtils.getTimeFromMillis(alarmModeEntity.endTime),
             alarmModeEntity.selectedDate.map { DayOfWeek.of(it) },
             alarmModeEntity.interval
         )

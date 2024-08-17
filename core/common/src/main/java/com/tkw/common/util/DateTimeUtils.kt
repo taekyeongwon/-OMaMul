@@ -87,6 +87,16 @@ object DateTimeUtils {
         return LocalTime.parse(formatted, formatter)
     }
 
+    fun getTimeFromMillis(timeInMillis: Long): LocalTime {
+        return Instant.ofEpochMilli(timeInMillis)
+            .atZone(ZoneId.systemDefault())
+            .toLocalTime()
+    }
+
+    fun getMillisFromTime(hour: Int, minute: Int): Long {
+        return getLocalTime(hour, minute).toEpochMilli()
+    }
+
     fun getTime(hour: Int, minute: Int, hourFormat: String, minFormat: String): String {
         val formatter = DateTimeFormatter
             .ofPattern("H'$hourFormat' mm'$minFormat'", Locale.getDefault())

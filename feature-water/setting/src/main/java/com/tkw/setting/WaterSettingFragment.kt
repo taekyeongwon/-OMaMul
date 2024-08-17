@@ -7,12 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.tkw.common.autoCleared
 import com.tkw.home.dialog.WaterIntakeDialog
 import com.tkw.navigation.DeepLinkDestination
 import com.tkw.navigation.deepLinkNavigateTo
 import com.tkw.setting.databinding.FragmentSettingBinding
+import com.tkw.setting.dialog.LanguageDialog
+import com.tkw.setting.dialog.UnitDialog
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.launch
 
 class WaterSettingFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentSettingBinding>()
@@ -50,6 +56,10 @@ class WaterSettingFragment: Fragment() {
             findNavController().deepLinkNavigateTo(requireContext(), DeepLinkDestination.Cup)
         }
         dataBinding.settingWater.clWaterSettingUnit.setOnClickListener {
+            lifecycleScope.launch {
+                val dialog = UnitDialog(viewModel.unitFlow.firstOrNull() ?: 0)
+                dialog.show(childFragmentManager, dialog.tag)
+            }
 
         }
 
@@ -58,7 +68,10 @@ class WaterSettingFragment: Fragment() {
         }
 
         dataBinding.settingEtc.clEtcSettingLanguage.setOnClickListener {
-
+            lifecycleScope.launch {
+                val dialog = LanguageDialog(viewModel.currentLangFlow.firstOrNull() ?: "")
+                dialog.show(childFragmentManager, dialog.tag)
+            }
         }
     }
 }

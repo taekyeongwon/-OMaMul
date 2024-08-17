@@ -15,8 +15,8 @@ import java.time.format.DateTimeFormatter
 class AlarmModeSettingEntity: RealmObject {
     @PrimaryKey
     var id: Int = AlarmSettingsEntity.DEFAULT_SETTING_ID
-    var startTime: String = ""
-    var endTime: String = ""
+    var startTime: Long = -1L
+    var endTime: Long = -1L
     var selectedDate: RealmList<Int> = realmListOf()
     var interval: Int = -1
 }
