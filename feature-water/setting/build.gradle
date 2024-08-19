@@ -2,6 +2,7 @@ plugins {
     alias libs.plugins.android.library
     alias libs.plugins.jetbrains.kotlin.android
     alias libs.plugins.hilt
+    alias libs.plugins.google.services
     id 'kotlin-kapt'
 }
 
@@ -15,6 +16,17 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+    }
+
+    flavorDimensions = ["app-dev"]
+    productFlavors {
+        prod {
+            dimension "app-dev"
+        }
+
+        dev {
+            dimension "app-dev"
+        }
     }
 
     buildTypes {
@@ -43,13 +55,14 @@ dependencies {
     implementation project(':core:domain')
     implementation project(':core:ui')
     implementation project(':core:navigation')
+    implementation project(':core:firebase')
     implementation project(':feature-common:base')
+    implementation project(':feature-water:home')
 
     implementation libs.androidx.core
     implementation libs.androidx.appcompat
     implementation libs.android.material
     implementation libs.androidx.constraintlayout
-    implementation project(':feature-water:home')
     testImplementation libs.junit
     androidTestImplementation libs.androidx.test.junit
     androidTestImplementation libs.androidx.test.espresso
@@ -70,6 +83,9 @@ dependencies {
     implementation libs.hilt
     // KAPT(Kotlin Annotation Processing Tools), 어노테이션 사용, annotationProcessor의 대체
     kapt libs.hilt.compiler
+
+    //glide
+    implementation libs.glide
 }
 
 kapt {

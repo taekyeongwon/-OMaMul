@@ -114,6 +114,7 @@
     <string name="setting_language_title">Language Setting</string>
     <string name="setting_advertise_title">Remove Ads</string>
     <string name="setting_logout">Logout</string>
+    <string name="setting_logout_confirm">Are you sure you want to log out?</string>
     <string name="setting_language_restart_info">* After changing the language, pressing the save button will restart the app.</string>
 
     <string name="title_main">Today\'s Water Intake</string>

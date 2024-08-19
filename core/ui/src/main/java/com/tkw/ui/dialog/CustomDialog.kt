@@ -42,6 +42,12 @@ open class CustomDialog: DialogFragment(), DialogResize by DialogResizeImpl() {
         dataBinding.tvMessage.text = message
     }
 
+    fun setTextView(message: String) {
+        dataBinding.clTextView.visibility = View.VISIBLE
+        dataBinding.tvTitle.visibility = View.GONE
+        dataBinding.tvMessage.text = message
+    }
+
     fun setButtonListener(
         cancelButtonTitle: String = "",
         confirmButtonTitle: String = "",

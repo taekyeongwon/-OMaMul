@@ -114,6 +114,7 @@
     <string name="setting_language_title">言語設定</string>
     <string name="setting_advertise_title">広告を削除</string>
     <string name="setting_logout">ログアウト</string>
+    <string name="setting_logout_confirm">本当にログアウトしますか？</string>
     <string name="setting_language_restart_info">* 言語を変更して保存ボタンを押すと、アプリが再起動します。</string>
 
     <string name="title_main">今日飲んだ水</string>

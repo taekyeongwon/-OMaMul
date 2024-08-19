@@ -1,26 +1,20 @@
 plugins {
-    alias libs.plugins.android.application
-    alias libs.plugins.jetbrains.kotlin.android
-    alias libs.plugins.navigation.safeargs
-    alias libs.plugins.realm.kotlin
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.jetbrains.kotlin.android)
     alias libs.plugins.hilt
     alias libs.plugins.google.services
-    id 'kotlin-parcelize'
     id 'kotlin-kapt'
 }
 
 android {
-    namespace 'com.tkw.omamul'
+    namespace 'com.tkw.firebase'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.tkw.omamul"
         minSdk 26
-        targetSdk 34
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     flavorDimensions = ["app-dev"]
@@ -31,8 +25,6 @@ android {
 
         dev {
             dimension "app-dev"
-            applicationIdSuffix '.dev'
-            versionNameSuffix "-dev"
         }
     }
 
@@ -49,11 +41,6 @@ android {
         }
     }
 
-    buildFeatures {
-        dataBinding = true
-        viewBinding = true
-    }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -64,46 +51,29 @@ android {
 }
 
 dependencies {
-    implementation project(':core:data')
     implementation project(':core:domain')
-    implementation project(':core:common')
-    implementation project(':core:alarmnoti')
-
-    implementation project(':feature-common:base')
-    implementation project(':feature-common:init')
-    implementation project(':feature-water:alarm')
-    implementation project(':feature-water:cup')
-    implementation project(':feature-water:home')
-    implementation project(':feature-water:record')
-    implementation project(':feature-water:setting')
 
     implementation libs.androidx.core
     implementation libs.androidx.appcompat
     implementation libs.android.material
-    implementation libs.androidx.constraintlayout
     testImplementation libs.junit
     androidTestImplementation libs.androidx.test.junit
     androidTestImplementation libs.androidx.test.espresso
-
-    implementation libs.androidx.navigation.fragment
-    implementation libs.androidx.navigation.ui
-    implementation libs.androidx.splash
-
-    //by viewModels
-    implementation libs.androidx.activity.ktx
-
-    //by activityViewModels
-    implementation libs.androidx.fragment.ktx
-
-    //retrofit
-    implementation libs.bundles.retrofit
 
     //hilt
     implementation libs.hilt
     // KAPT(Kotlin Annotation Processing Tools), 어노테이션 사용, annotationProcessor의 대체
     kapt libs.hilt.compiler
 
-    implementation libs.androidx.work.runtime.ktx
+    //firebase
+    implementation platform(libs.firebase.bom)
+    implementation libs.firebase.analytics
+    implementation libs.firebase.auth.ktx
+    implementation libs.play.services.auth
+
+    implementation libs.credentials
+    implementation libs.credentials.play.services.auth
+    implementation libs.googleid
 }
 
 kapt {

@@ -114,6 +114,7 @@
     <string name="setting_language_title">语言设置</string>
     <string name="setting_advertise_title">移除广告</string>
     <string name="setting_logout">退出登录</string>
+    <string name="setting_logout_confirm">您确定要退出登录吗？</string>
     <string name="setting_language_restart_info">* 更改语言后，点击保存按钮，应用程序将重新启动。</string>
 
     <string name="title_main">今天喝的水</string>
