@@ -1,20 +1,27 @@
 package com.tkw.setting
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.withCreated
 import androidx.lifecycle.withStarted
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.gms.auth.api.identity.AuthorizationResult
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.common.api.ApiException
 import com.tkw.common.autoCleared
 import com.tkw.domain.Authentication
+import com.tkw.domain.BackupManager
+import com.tkw.domain.DriveAuthorize
+import com.tkw.firebase.CloudStorage
 import com.tkw.home.dialog.WaterIntakeDialog
 import com.tkw.navigation.DeepLinkDestination
 import com.tkw.navigation.deepLinkNavigateTo
@@ -23,8 +30,11 @@ import com.tkw.setting.dialog.LanguageDialog
 import com.tkw.setting.dialog.UnitDialog
 import com.tkw.ui.dialog.CustomDialog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -34,6 +44,25 @@ class WaterSettingFragment: Fragment() {
 
     @Inject
     lateinit var oAuth: Authentication
+
+    @Inject
+    lateinit var googleDrive: BackupManager
+
+    @Inject
+    lateinit var googleDriveAuth: DriveAuthorize<ActivityResultLauncher<IntentSenderRequest>, AuthorizationResult>
+
+    private val googleDriveResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
+            if(it != null) {
+                try {
+                    val authorizationResult = Identity.getAuthorizationClient(requireActivity())
+                        .getAuthorizationResultFromIntent(it.data)
+                    upload(authorizationResult.accessToken)
+                } catch (e: ApiException) {
+                    e.printStackTrace()
+                }
+            }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,6 +99,10 @@ class WaterSettingFragment: Fragment() {
         }
         dataBinding.btnLogout.setOnClickListener {
             showLogoutDialog()
+        }
+        dataBinding.settingInfo.ivSync.setOnClickListener {
+//            cloudStorageUpload()
+            googleDriveUpload()
         }
 
         dataBinding.settingWater.clWaterSettingIntake.setOnClickListener {
@@ -121,6 +154,7 @@ class WaterSettingFragment: Fragment() {
     }
 
     private fun doLogin() {
+        oAuth.signOut()
         oAuth.signIn {
             if(it) {
                 updateUI(true)
@@ -146,6 +180,29 @@ class WaterSettingFragment: Fragment() {
                     }
                 )
             }
+        }
+    }
+
+    private fun cloudStorageUpload() {
+        val storage = CloudStorage()
+        val file = File(requireContext().filesDir, "default.realm")
+        storage.upload(oAuth.fetchInfo()?.uId ?: "", file)
+    }
+
+    private fun googleDriveUpload() {
+        googleDriveAuth
+            .authorize(googleDriveResultLauncher) {
+                if (it.isSuccess) {
+                    upload(it.getOrNull()!!.accessToken)
+                } else {
+
+                }
+            }
+    }
+
+    private fun upload(accessToken: String?) {
+        CoroutineScope(Dispatchers.IO).launch {
+            googleDrive.upload(accessToken, File(""))
         }
     }
 }

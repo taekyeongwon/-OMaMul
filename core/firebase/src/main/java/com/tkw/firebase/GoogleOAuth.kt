@@ -38,6 +38,11 @@ class GoogleOAuth @Inject constructor(
     override fun signIn(result: (Boolean) -> Unit) {
         val credentialManager = CredentialManager.create(context)
 
+        //이전 ui로 구글 로그인 표시하는 경우
+//        val googleIdOption = GetSignInWithGoogleOption
+//            .Builder(context.getString(R.string.google_web_client_id))
+//            .build()
+
         val googleIdOption = GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(true)
             .setAutoSelectEnabled(true)

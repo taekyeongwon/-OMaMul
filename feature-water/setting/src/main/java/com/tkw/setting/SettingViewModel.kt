@@ -6,10 +6,8 @@ import androidx.lifecycle.asLiveData
 import com.tkw.base.BaseViewModel
 import com.tkw.base.launch
 import com.tkw.common.SingleLiveEvent
-import com.tkw.common.util.DateTimeUtils
 import com.tkw.domain.AlarmRepository
 import com.tkw.domain.PrefDataRepository
-import com.tkw.domain.SettingRepository
 import com.tkw.domain.WaterRepository
 import com.tkw.domain.model.AlarmMode
 import com.tkw.domain.model.DayOfWaterList
