@@ -4,5 +4,5 @@ import java.io.File
 
 interface BackupManager {
     fun upload(token: String?, file: File): String
-    fun download()
+    fun download(token: String?, destFile: File)
 }

@@ -51,7 +51,7 @@ class WaterSettingFragment: Fragment() {
     @Inject
     lateinit var googleDriveAuth: DriveAuthorize<ActivityResultLauncher<IntentSenderRequest>, AuthorizationResult>
 
-    private val googleDriveResultLauncher =
+    private val googleDriveUploadResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
             if(it != null) {
                 try {
@@ -191,7 +191,7 @@ class WaterSettingFragment: Fragment() {
 
     private fun googleDriveUpload() {
         googleDriveAuth
-            .authorize(googleDriveResultLauncher) {
+            .authorize(googleDriveUploadResultLauncher) {
                 if (it.isSuccess) {
                     upload(it.getOrNull()!!.accessToken)
                 } else {
@@ -201,8 +201,13 @@ class WaterSettingFragment: Fragment() {
     }
 
     private fun upload(accessToken: String?) {
+        val file = File(requireContext().filesDir, "default.realm")
         CoroutineScope(Dispatchers.IO).launch {
-            googleDrive.upload(accessToken, File(""))
+            runCatching {
+                googleDrive.upload(accessToken, file)
+            }.onFailure {
+                it.printStackTrace()
+            }
         }
     }
 }

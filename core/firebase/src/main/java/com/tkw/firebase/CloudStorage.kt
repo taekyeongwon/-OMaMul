@@ -25,7 +25,7 @@ class CloudStorage: BackupManager {
         return ""
     }
 
-    override fun download() {
+    override fun download(token: String?, destFile: File) {
         TODO("Not yet implemented")
     }
 }
