@@ -8,6 +8,7 @@ import com.tkw.base.launch
 import com.tkw.common.SingleLiveEvent
 import com.tkw.domain.AlarmRepository
 import com.tkw.domain.PrefDataRepository
+import com.tkw.domain.SettingRepository
 import com.tkw.domain.WaterRepository
 import com.tkw.domain.model.AlarmMode
 import com.tkw.domain.model.DayOfWaterList
@@ -19,6 +20,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapLatest
+import java.io.File
 import java.time.format.TextStyle
 import java.util.Locale
 import javax.inject.Inject
@@ -31,13 +33,12 @@ class SettingViewModel
 //    settingRepository: SettingRepository,
     waterRepository: WaterRepository,
     alarmRepository: AlarmRepository,
+    private val settingRepository: SettingRepository,
     private val prefDataRepository: PrefDataRepository
 ): BaseViewModel() {
 
     private val _nextEvent = SingleLiveEvent<Unit>()
     val nextEvent: LiveData<Unit> = _nextEvent
-
-    //todo settingRepo에서 구글 계정 가져오기
 
     private val getAllDay = waterRepository.getAllDay().mapLatest { list ->
         DayOfWaterList(list)
@@ -139,6 +140,10 @@ class SettingViewModel
             prefDataRepository.saveLanguage(lang)
             _nextEvent.call()
         }
+    }
+
+    suspend fun merge(sourceFile: File, destFile: File) {
+        settingRepository.merge(sourceFile, destFile)
     }
 
     private fun getCustomString(id: Int): String {

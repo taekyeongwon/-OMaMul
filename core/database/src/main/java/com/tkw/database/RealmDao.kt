@@ -40,7 +40,7 @@ interface RealmDao<T: RealmObject> {
             AlarmEntity::class,
             AlarmEtcSettingsEntity::class
         ))
-            .deleteRealmIfMigrationNeeded()
+//            .deleteRealmIfMigrationNeeded()
             .build()
     }
 

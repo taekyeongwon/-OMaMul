@@ -51,13 +51,13 @@ class WaterSettingFragment: Fragment() {
     @Inject
     lateinit var googleDriveAuth: DriveAuthorize<ActivityResultLauncher<IntentSenderRequest>, AuthorizationResult>
 
-    private val googleDriveUploadResultLauncher =
+    private val googleDriveSyncLauncher =
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
             if(it != null) {
                 try {
                     val authorizationResult = Identity.getAuthorizationClient(requireActivity())
                         .getAuthorizationResultFromIntent(it.data)
-                    upload(authorizationResult.accessToken)
+                    download(authorizationResult.accessToken)
                 } catch (e: ApiException) {
                     e.printStackTrace()
                 }
@@ -102,7 +102,7 @@ class WaterSettingFragment: Fragment() {
         }
         dataBinding.settingInfo.ivSync.setOnClickListener {
 //            cloudStorageUpload()
-            googleDriveUpload()
+            googleDriveStartSync()
         }
 
         dataBinding.settingWater.clWaterSettingIntake.setOnClickListener {
@@ -189,19 +189,32 @@ class WaterSettingFragment: Fragment() {
         storage.upload(oAuth.fetchInfo()?.uId ?: "", file)
     }
 
-    private fun googleDriveUpload() {
+    private fun googleDriveStartSync() {
         googleDriveAuth
-            .authorize(googleDriveUploadResultLauncher) {
+            .authorize(googleDriveSyncLauncher) {
                 if (it.isSuccess) {
-                    upload(it.getOrNull()!!.accessToken)
+                    download(it.getOrNull()!!.accessToken)
                 } else {
 
                 }
             }
     }
 
-    private fun upload(accessToken: String?) {
-        val file = File(requireContext().filesDir, "default.realm")
+    private fun download(accessToken: String?) {
+        val sourceFile = File(requireContext().filesDir, "tmp.realm")
+        val destFile = File(requireContext().filesDir, "default.realm")
+        CoroutineScope(Dispatchers.IO).launch {
+            runCatching {
+                googleDrive.download(accessToken, sourceFile)
+                viewModel.merge(sourceFile, destFile)
+                upload(accessToken, destFile)
+            }.onFailure {
+                it.printStackTrace()
+            }
+        }
+    }
+
+    private fun upload(accessToken: String?, file: File) {
         CoroutineScope(Dispatchers.IO).launch {
             runCatching {
                 googleDrive.upload(accessToken, file)

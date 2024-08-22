@@ -40,7 +40,7 @@ class GoogleDriveBackup @Inject constructor(
 
         return try {
             val fileList = getList(token)
-            val createdFile = if(fileList.isEmpty()) {
+            val createdFile = if(fileList.files.isEmpty()) {
                 // File's metadata.
                 val fileMetadata = File()
                 fileMetadata.setName("default.realm")
@@ -69,7 +69,7 @@ class GoogleDriveBackup @Inject constructor(
         val outputStream = ByteArrayOutputStream()
         try {
             val fileList = getList(token)
-            if(fileList.isNotEmpty()) {
+            if(fileList.files.isNotEmpty()) {
                 service.files().get(fileList.files[0].id)
                     .executeMediaAndDownloadTo(outputStream)
                 println("File ID: " + fileList.files[0].id)
