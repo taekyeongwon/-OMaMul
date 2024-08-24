@@ -1,6 +1,7 @@
 package com.tkw.data.di
 
 import com.tkw.data.local.CupRepositoryImpl
+import com.tkw.data.local.SettingRepositoryImpl
 import com.tkw.data.local.WaterRepositoryImpl
 import com.tkw.database.CupDao
 import com.tkw.database.WaterDao

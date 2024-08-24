@@ -10,6 +10,7 @@ import com.tkw.database.model.CustomAlarmListEntity
 import com.tkw.database.model.DayOfWaterEntity
 import com.tkw.database.model.PeriodAlarmListEntity
 import com.tkw.database.model.RingToneModeEntity
+import com.tkw.database.model.SettingEntity
 import com.tkw.database.model.WaterEntity
 import io.realm.kotlin.MutableRealm
 import io.realm.kotlin.Realm
@@ -38,9 +39,10 @@ interface RealmDao<T: RealmObject> {
             PeriodAlarmListEntity::class,
             CustomAlarmListEntity::class,
             AlarmEntity::class,
-            AlarmEtcSettingsEntity::class
+            AlarmEtcSettingsEntity::class,
+            SettingEntity::class
         ))
-//            .deleteRealmIfMigrationNeeded()
+            .deleteRealmIfMigrationNeeded()
             .build()
     }
 

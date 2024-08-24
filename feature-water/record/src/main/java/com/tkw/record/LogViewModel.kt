@@ -5,6 +5,7 @@ import com.tkw.base.IntentBaseViewModel
 import com.tkw.base.launch
 import com.tkw.common.util.DateTimeUtils
 import com.tkw.domain.PrefDataRepository
+import com.tkw.domain.SettingRepository
 import com.tkw.domain.WaterRepository
 import com.tkw.domain.model.DayOfWater
 import com.tkw.domain.model.DayOfWaterList
@@ -25,12 +26,13 @@ import javax.inject.Inject
 class LogViewModel
 @Inject constructor(
     private val waterRepository: WaterRepository,
+    private val settingRepository: SettingRepository,
     private val prefDataRepository: PrefDataRepository
 ): IntentBaseViewModel
 <LogContract.Event, LogContract.State, LogContract.SideEffect>() {
 
     //목표 섭취량
-    suspend fun getIntakeAmount() = prefDataRepository.fetchIntakeAmount().first().toFloat()
+    suspend fun getIntakeAmount() = settingRepository.getSetting().first().intake.toFloat()
 
     private val today = MutableStateFlow(DateTimeUtils.getTodayDate())
     val dateStateFlow = MutableStateFlow(today.value)

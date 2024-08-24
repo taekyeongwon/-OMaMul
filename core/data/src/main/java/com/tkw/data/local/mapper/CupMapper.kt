@@ -1,4 +1,4 @@
-package com.tkw.data.local
+package com.tkw.data.local.mapper
 
 import com.tkw.database.model.CupEntity
 import com.tkw.database.model.CupListEntity

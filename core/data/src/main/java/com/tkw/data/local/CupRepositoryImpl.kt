@@ -1,5 +1,6 @@
 package com.tkw.data.local
 
+import com.tkw.data.local.mapper.CupMapper
 import com.tkw.database.CupDao
 import com.tkw.database.model.CupEntity
 import com.tkw.domain.CupRepository

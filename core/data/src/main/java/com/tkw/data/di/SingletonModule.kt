@@ -5,8 +5,10 @@ import com.tkw.data.local.PrefDataRepositoryImpl
 import com.tkw.data.local.SettingRepositoryImpl
 import com.tkw.database.AlarmDao
 import com.tkw.database.FileMerger
+import com.tkw.database.SettingDao
 import com.tkw.database.local.AlarmDaoImpl
 import com.tkw.database.local.RealmMerger
+import com.tkw.database.local.SettingDaoImpl
 import com.tkw.datastore.PrefDataSource
 import com.tkw.datastore.local.PrefLocalDataSourceImpl
 import com.tkw.domain.AlarmRepository
@@ -47,4 +49,8 @@ abstract class SingletonModule {
     @Binds
     @Singleton
     abstract fun provideMerger(merger: RealmMerger): FileMerger
+
+    @Binds
+    @Singleton
+    abstract fun provideSettingDao(dao: SettingDaoImpl): SettingDao
 }

@@ -11,6 +11,7 @@ import com.tkw.common.util.DateTimeUtils
 import com.tkw.domain.AlarmRepository
 import com.tkw.domain.CupRepository
 import com.tkw.domain.PrefDataRepository
+import com.tkw.domain.SettingRepository
 import com.tkw.domain.WaterRepository
 import com.tkw.domain.model.Cup
 import com.tkw.domain.model.DayOfWater
@@ -30,6 +31,7 @@ class WaterViewModel
 @Inject constructor(
     private val waterRepository: WaterRepository,
     private val cupRepository: CupRepository,
+    private val settingRepository: SettingRepository,
     private val prefDataRepository: PrefDataRepository,
     private val savedStateHandle: SavedStateHandle
 ): BaseViewModel() {
@@ -79,11 +81,11 @@ class WaterViewModel
     }
 
     suspend fun getIntakeAmount(): Int =
-        prefDataRepository.fetchIntakeAmount().first()
+        settingRepository.getSetting().first().intake
 
     fun saveIntakeAmount(amount: Int) {
         launch {
-            prefDataRepository.saveIntakeAmount(amount)
+            settingRepository.saveIntake(amount)
             _amountSaveEvent.call()
         }
     }

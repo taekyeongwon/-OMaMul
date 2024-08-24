@@ -5,6 +5,7 @@ import com.tkw.base.IntentBaseViewModel
 import com.tkw.common.util.DateTimeUtils
 import com.tkw.domain.AlarmRepository
 import com.tkw.domain.PrefDataRepository
+import com.tkw.domain.SettingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -14,6 +15,7 @@ import javax.inject.Inject
 class InitViewModel
 @Inject constructor(
     private val prefDataRepository: PrefDataRepository,
+    private val settingRepository: SettingRepository,
     private val alarmRepository: AlarmRepository
 ): IntentBaseViewModel
 <InitContract.Event, InitContract.State, InitContract.SideEffect>() {
@@ -53,7 +55,7 @@ class InitViewModel
 
     private fun saveIntake(amount: Int) {
         save(InitContract.State.Complete) {
-            prefDataRepository.saveIntakeAmount(amount)
+            settingRepository.saveIntake(amount)
         }
     }
 

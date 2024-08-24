@@ -1,4 +1,4 @@
-package com.tkw.data.local
+package com.tkw.data.local.mapper
 
 import com.tkw.common.util.DateTimeUtils
 import com.tkw.database.model.AlarmEntity
@@ -59,8 +59,8 @@ object AlarmMapper {
 
     fun alarmModeToModel(alarmModeEntity: AlarmModeSettingEntity): AlarmModeSetting {
         return AlarmModeSetting(
-            DateTimeUtils.getTimeFromMillis(alarmModeEntity.startTime),
-            DateTimeUtils.getTimeFromMillis(alarmModeEntity.endTime),
+            DateTimeUtils.getLocalTime(alarmModeEntity.startTime),
+            DateTimeUtils.getLocalTime(alarmModeEntity.endTime),
             alarmModeEntity.selectedDate.map { DayOfWeek.of(it) },
             alarmModeEntity.interval
         )

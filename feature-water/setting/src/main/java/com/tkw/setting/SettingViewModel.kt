@@ -52,13 +52,13 @@ class SettingViewModel
 
     val totalAchieve = getAllDay.flatMapLatest {
         flow {
-            emit("${it.getTotalAchieve(getIntakeAmount.first())}${getCustomString(com.tkw.ui.R.string.day)}")
+            emit("${it.getTotalAchieve(settings.first().intake)}${getCustomString(com.tkw.ui.R.string.day)}")
         }
     }.asLiveData()
 
-    private val getIntakeAmount = prefDataRepository.fetchIntakeAmount()
-    val goalOfIntake = getIntakeAmount.mapLatest {
-        "${it}ml"
+    private val settings = settingRepository.getSetting()
+    val goalOfIntake = settings.mapLatest {
+        "${it.intake}ml"
     }.asLiveData()
 
     val currentLangFlow = prefDataRepository.fetchLanguage()
@@ -72,14 +72,18 @@ class SettingViewModel
         }
     }.asLiveData()
 
-    val unitFlow = prefDataRepository.fetchUnit()
-    val unit = unitFlow.mapLatest {
-        when(it) {
+    val unitFlow = settings.mapLatest {
+        it.unit
+    }
+    val unit = settings.mapLatest {
+        when(it.unit) {
             0 -> "ml, L"
             1 -> "fl.oz"
             else -> "ml, L"
         }
     }.asLiveData()
+
+    val lastSync = prefDataRepository.fetchLastSync().asLiveData()
 
     private val alarmSetting = alarmRepository.getAlarmSetting()
     private val alarmModeSetting = alarmRepository.getAlarmModeSetting()
@@ -130,7 +134,7 @@ class SettingViewModel
 
     fun saveUnit(unit: Int) {
         launch {
-            prefDataRepository.saveUnit(unit)
+            settingRepository.saveUnit(unit)
             _nextEvent.call()
         }
     }
@@ -139,6 +143,12 @@ class SettingViewModel
         launch {
             prefDataRepository.saveLanguage(lang)
             _nextEvent.call()
+        }
+    }
+
+    fun saveLastSync(time: Long) {
+        launch {
+            prefDataRepository.saveLastSync(time)
         }
     }
 

@@ -2,6 +2,7 @@ package com.tkw.data.local
 
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.tkw.datastore.PrefDataSource
 import com.tkw.domain.PrefDataRepository
@@ -14,30 +15,22 @@ class PrefDataRepositoryImpl
 @Inject constructor(private val dataSource: PrefDataSource): PrefDataRepository {
     companion object {
         private val LANG_KEY = stringPreferencesKey("language")
-        private val INTAKE_AMOUNT_KEY = intPreferencesKey("intake_amount")
         private val REACHED_GOAL_KEY = booleanPreferencesKey("reached_goal")
         private val INIT_FLAG_KEY = booleanPreferencesKey("init_flag")
         private val ALARM_ENABLED_KEY = booleanPreferencesKey("alarm_enabled")
-        private val UNIT_KEY = intPreferencesKey("unit")
+        private val LAST_SYNC_KEY = longPreferencesKey("last_sync")
     }
     private val defaultLang = "ko"
-    private val defaultIntakeAmount = 2000
     private val defaultReachedGoal = false
     private val defaultInitFlag = false
     private val defaultAlarmEnabled = false
-    private val defaultUnit = 0
+    private val defaultLastSync = -1L
 
     override suspend fun saveLanguage(lang: String) {
         dataSource.saveData(LANG_KEY, lang)
     }
 
     override fun fetchLanguage(): Flow<String> = dataSource.fetchData(LANG_KEY, defaultLang)
-
-    override suspend fun saveIntakeAmount(amount: Int) {
-        dataSource.saveData(INTAKE_AMOUNT_KEY, amount)
-    }
-
-    override fun fetchIntakeAmount(): Flow<Int> = dataSource.fetchData(INTAKE_AMOUNT_KEY, defaultIntakeAmount)
 
     override suspend fun saveReachedGoal(isReached: Boolean) {
         dataSource.saveData(REACHED_GOAL_KEY, isReached)
@@ -57,9 +50,9 @@ class PrefDataRepositoryImpl
 
     override fun fetchAlarmEnableFlag(): Flow<Boolean> = dataSource.fetchData(ALARM_ENABLED_KEY, defaultAlarmEnabled)
 
-    override suspend fun saveUnit(unit: Int) {
-        dataSource.saveData(UNIT_KEY, unit)
+    override suspend fun saveLastSync(time: Long) {
+        dataSource.saveData(LAST_SYNC_KEY, time)
     }
 
-    override fun fetchUnit(): Flow<Int> = dataSource.fetchData(UNIT_KEY, defaultUnit)
+    override fun fetchLastSync(): Flow<Long> = dataSource.fetchData(LAST_SYNC_KEY, defaultLastSync)
 }
