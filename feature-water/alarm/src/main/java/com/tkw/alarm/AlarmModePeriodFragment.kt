@@ -131,8 +131,8 @@ class AlarmModePeriodFragment : Fragment() {
 
     private fun showTimeDialog() {
         val dialog = AlarmTimeBottomDialog(
-            selectedStart = periodMode.startTime,
-            selectedEnd = periodMode.endTime,
+            selectedStart = viewModel.tmpPeriodMode.value?.startTime,
+            selectedEnd = viewModel.tmpPeriodMode.value?.endTime,
             resultListener = { wake, sleep ->
                 viewModel.tmpPeriodMode.value?.let { setting ->
                     val newSetting = setting.copy(startTime = wake, endTime = sleep)

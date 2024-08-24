@@ -13,7 +13,7 @@ class CloudStorage: BackupManager {
     private val storage: FirebaseStorage = Firebase.storage
     private val storageRef = storage.reference.child("users")
 
-    override fun upload(uid: String?, file: File): String {    //firebase uid값 전달
+    override fun upload(uid: String?, file: File, backupFileName: String): String {    //firebase uid값 전달
         val fileUri = Uri.fromFile(file)
         val fileRef = storageRef.child(uid!!).child(fileUri.lastPathSegment ?: "")
         val uploadTask = fileRef.putFile(fileUri)
@@ -25,7 +25,7 @@ class CloudStorage: BackupManager {
         return ""
     }
 
-    override fun download(token: String?, destFile: File) {
+    override fun download(token: String?, destFile: File, backupFileName: String) {
         TODO("Not yet implemented")
     }
 }

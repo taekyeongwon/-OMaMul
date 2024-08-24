@@ -12,6 +12,7 @@ import com.tkw.database.model.CustomAlarmListEntity
 import com.tkw.database.model.DayOfWaterEntity
 import com.tkw.database.model.PeriodAlarmListEntity
 import com.tkw.database.model.RingToneModeEntity
+import com.tkw.database.model.SettingEntity
 import com.tkw.database.model.WaterEntity
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
@@ -32,16 +33,18 @@ class RealmMerger @Inject constructor(): FileMerger {
         PeriodAlarmListEntity::class,
         CustomAlarmListEntity::class,
         AlarmEntity::class,
-        AlarmEtcSettingsEntity::class
+        AlarmEtcSettingsEntity::class,
+        SettingEntity::class
     )
 
     override suspend fun onMerge(sourceFile: File, destFile: File) {
         val tmpRealmConfig = RealmConfiguration.Builder(realmEntities)
             .name(sourceFile.name)
+            .deleteRealmIfMigrationNeeded()
             .build()
         val defaultRealmConfig = RealmConfiguration.Builder(realmEntities)
             .name(destFile.name)
-//            .deleteRealmIfMigrationNeeded()
+            .deleteRealmIfMigrationNeeded()
             .build()
         val sourceRealm = Realm.open(tmpRealmConfig)
         val destRealm = Realm.open(defaultRealmConfig)
@@ -49,6 +52,7 @@ class RealmMerger @Inject constructor(): FileMerger {
         mergeWaterDB(sourceRealm, destRealm)
         mergeCupDB(sourceRealm, destRealm)
         mergeAlarmDB(sourceRealm, destRealm)
+        mergeSettingDB(sourceRealm, destRealm)
 
         sourceRealm.close()
         destRealm.close()
@@ -78,9 +82,14 @@ class RealmMerger @Inject constructor(): FileMerger {
     }
 
     private suspend fun mergeCupDB(sourceRealm: Realm, destRealm: Realm) {
-        val dest = destRealm.query(CupListEntity::class).find()
-        sourceRealm.query(CupListEntity::class).find().forEach { sourceEntity ->
-            val destEntity = dest.firstOrNull()
+        val destEntity = destRealm.query(
+            CupListEntity::class,
+            "cupId == $0",
+            CupEntity.DEFAULT_CUP_LIST_ID
+        ).find().firstOrNull()
+        val sourceEntity = sourceRealm.query(CupListEntity::class).find().firstOrNull()
+
+        if(sourceEntity != null) {
             destRealm.write {
                 val copiedSource = sourceEntity.copyFromRealm()
                 if(destEntity != null) {
@@ -103,57 +112,68 @@ class RealmMerger @Inject constructor(): FileMerger {
         mergeCustomAlarm(sourceRealm, destRealm)
     }
 
-    private suspend fun mergeAlarmSetting(sourceRealm: Realm, destRealm: Realm) {
-        sourceRealm.query(AlarmSettingsEntity::class).find().forEach { sourceEntity ->
+    private suspend fun mergeSettingDB(sourceRealm: Realm, destRealm: Realm) {
+        val source = sourceRealm.query(
+            SettingEntity::class,
+            "id == $0", 0
+        ).find().firstOrNull()
+
+        if(source != null) {
             destRealm.write {
-                val copiedSource = sourceEntity.copyFromRealm()
-                copyToRealm(copiedSource, UpdatePolicy.ALL)
+                copyToRealm(source.copyFromRealm(), UpdatePolicy.ALL)
             }
         }
-        sourceRealm.query(AlarmModeSettingEntity::class).find().forEach { sourceEntity ->
+    }
+
+    private suspend fun mergeAlarmSetting(sourceRealm: Realm, destRealm: Realm) {
+        val settingEntity = sourceRealm.query(
+            AlarmSettingsEntity::class,
+            "id == $0",
+            AlarmSettingsEntity.DEFAULT_SETTING_ID
+        ).find().firstOrNull()
+        if(settingEntity != null) {
             destRealm.write {
-                val copiedSource = sourceEntity.copyFromRealm()
-                copyToRealm(copiedSource, UpdatePolicy.ALL)
+                copyToRealm(settingEntity.copyFromRealm(), UpdatePolicy.ALL)
+            }
+        }
+
+        val modeSettingEntity = sourceRealm.query(
+            AlarmModeSettingEntity::class,
+            "id == $0",
+            AlarmSettingsEntity.DEFAULT_SETTING_ID
+        ).find().firstOrNull()
+
+        if(modeSettingEntity != null) {
+            destRealm.write {
+                copyToRealm(modeSettingEntity.copyFromRealm(), UpdatePolicy.ALL)
             }
         }
     }
 
     private suspend fun mergePeriodAlarm(sourceRealm: Realm, destRealm: Realm) {
-        val dest = destRealm.query(PeriodAlarmListEntity::class).find()
-        sourceRealm.query(PeriodAlarmListEntity::class).find().forEach { sourceEntity ->
-            val destEntity = dest.firstOrNull()
+        val periodEntity = sourceRealm.query(
+            PeriodAlarmListEntity::class,
+            "id == $0",
+            AlarmSettingsEntity.DEFAULT_SETTING_ID
+        ).find().firstOrNull()
+
+        if(periodEntity != null) {
             destRealm.write {
-                val copiedSource = sourceEntity.copyFromRealm()
-                if(destEntity != null) {
-                    copiedSource.alarmList.addAll(destEntity.alarmList)
-                    val distinctList = copiedSource.alarmList.distinctBy { it.alarmId }
-                    val newEntity = PeriodAlarmListEntity().apply {
-                        this.alarmList.addAll(distinctList)
-                    }
-                    copyToRealm(newEntity, UpdatePolicy.ALL)
-                } else {
-                    copyToRealm(copiedSource)
-                }
+                copyToRealm(periodEntity.copyFromRealm(), UpdatePolicy.ALL)
             }
         }
     }
 
     private suspend fun mergeCustomAlarm(sourceRealm: Realm, destRealm: Realm) {
-        val dest = destRealm.query(CustomAlarmListEntity::class).find()
-        sourceRealm.query(CustomAlarmListEntity::class).find().forEach { sourceEntity ->
-            val destEntity = dest.firstOrNull()
+        val customEntity = sourceRealm.query(
+            CustomAlarmListEntity::class,
+            "id == $0",
+            AlarmSettingsEntity.DEFAULT_SETTING_ID
+        ).find().firstOrNull()
+
+        if(customEntity != null) {
             destRealm.write {
-                val copiedSource = sourceEntity.copyFromRealm()
-                if(destEntity != null) {
-                    copiedSource.alarmList.addAll(destEntity.alarmList)
-                    val distinctList = copiedSource.alarmList.distinctBy { it.alarmId }
-                    val newEntity = CustomAlarmListEntity().apply {
-                        this.alarmList.addAll(distinctList)
-                    }
-                    copyToRealm(newEntity, UpdatePolicy.ALL)
-                } else {
-                    copyToRealm(copiedSource)
-                }
+                copyToRealm(customEntity.copyFromRealm(), UpdatePolicy.ALL)
             }
         }
     }

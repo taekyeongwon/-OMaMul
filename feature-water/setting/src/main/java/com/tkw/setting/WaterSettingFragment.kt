@@ -18,6 +18,7 @@ import com.google.android.gms.auth.api.identity.AuthorizationResult
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.common.api.ApiException
 import com.tkw.common.autoCleared
+import com.tkw.common.util.DateTimeUtils
 import com.tkw.domain.Authentication
 import com.tkw.domain.BackupManager
 import com.tkw.domain.DriveAuthorize
@@ -32,6 +33,9 @@ import com.tkw.ui.dialog.CustomDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import java.io.File
@@ -57,7 +61,20 @@ class WaterSettingFragment: Fragment() {
                 try {
                     val authorizationResult = Identity.getAuthorizationClient(requireActivity())
                         .getAuthorizationResultFromIntent(it.data)
-                    download(authorizationResult.accessToken)
+                    doBackUp(authorizationResult.accessToken)
+                } catch (e: ApiException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+    private val googleDriveUploadLauncher =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
+            if(it != null) {
+                try {
+                    val authorizationResult = Identity.getAuthorizationClient(requireActivity())
+                        .getAuthorizationResultFromIntent(it.data)
+                    doUpload(authorizationResult.accessToken)
                 } catch (e: ApiException) {
                     e.printStackTrace()
                 }
@@ -77,6 +94,7 @@ class WaterSettingFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initView()
+        initObserver()
         initListener()
     }
 
@@ -93,6 +111,16 @@ class WaterSettingFragment: Fragment() {
         }
     }
 
+    private fun initObserver() {
+        viewModel.lastSync.observe(viewLifecycleOwner) {
+            if(it == -1L) {
+                dataBinding.settingInfo.tvLastSync.text = "버튼을 눌러서 동기화를 시작하세요."
+            } else {
+                dataBinding.settingInfo.tvLastSync.text = DateTimeUtils.getDateTimeString(DateTimeUtils.getDateTimeFromMillis(it))
+            }
+        }
+    }
+
     private fun initListener() {
         dataBinding.settingInfo.tvSync.setOnClickListener {
             doLogin()
@@ -102,7 +130,11 @@ class WaterSettingFragment: Fragment() {
         }
         dataBinding.settingInfo.ivSync.setOnClickListener {
 //            cloudStorageUpload()
-            googleDriveStartSync()
+            if(viewModel.lastSync.value == -1L) {
+                googleDriveStartSync()
+            } else {
+                googleDriveUpload()
+            }
         }
 
         dataBinding.settingWater.clWaterSettingIntake.setOnClickListener {
@@ -114,7 +146,7 @@ class WaterSettingFragment: Fragment() {
         }
         dataBinding.settingWater.clWaterSettingUnit.setOnClickListener {
             lifecycleScope.launch {
-                val dialog = UnitDialog(viewModel.unitFlow.firstOrNull() ?: 0)
+                val dialog = UnitDialog(viewModel.unitFlow.first())
                 dialog.show(childFragmentManager, dialog.tag)
             }
         }
@@ -186,41 +218,60 @@ class WaterSettingFragment: Fragment() {
     private fun cloudStorageUpload() {
         val storage = CloudStorage()
         val file = File(requireContext().filesDir, "default.realm")
-        storage.upload(oAuth.fetchInfo()?.uId ?: "", file)
+        storage.upload(oAuth.fetchInfo()?.uId ?: "", file, file.name)
     }
 
     private fun googleDriveStartSync() {
         googleDriveAuth
             .authorize(googleDriveSyncLauncher) {
                 if (it.isSuccess) {
-                    download(it.getOrNull()!!.accessToken)
+                    doBackUp(it.getOrNull()!!.accessToken)
                 } else {
 
                 }
             }
     }
 
-    private fun download(accessToken: String?) {
-        val sourceFile = File(requireContext().filesDir, "tmp.realm")
-        val destFile = File(requireContext().filesDir, "default.realm")
+    private fun googleDriveUpload() {
+        googleDriveAuth
+            .authorize(googleDriveUploadLauncher) {
+                if(it.isSuccess) {
+                    doUpload(it.getOrNull()!!.accessToken)
+                }
+            }
+    }
+
+    private fun doBackUp(accessToken: String?) {
+        val sourceRealmFile = File(requireContext().filesDir, "tmp.realm")
+        val destRealmFile = File(requireContext().filesDir, "default.realm")
         CoroutineScope(Dispatchers.IO).launch {
             runCatching {
-                googleDrive.download(accessToken, sourceFile)
-                viewModel.merge(sourceFile, destFile)
-                upload(accessToken, destFile)
+                backUpRealm(accessToken, sourceRealmFile, destRealmFile)
             }.onFailure {
                 it.printStackTrace()
+            }.onSuccess {
+                viewModel.saveLastSync(System.currentTimeMillis())
             }
         }
     }
 
-    private fun upload(accessToken: String?, file: File) {
+    private fun doUpload(accessToken: String?) {
+        val destRealmFile = File(requireContext().filesDir, "default.realm")
         CoroutineScope(Dispatchers.IO).launch {
             runCatching {
-                googleDrive.upload(accessToken, file)
+                googleDrive.upload(accessToken, destRealmFile, destRealmFile.name)
             }.onFailure {
                 it.printStackTrace()
+            }.onSuccess {
+                viewModel.saveLastSync(System.currentTimeMillis())
             }
         }
+    }
+
+    private suspend fun backUpRealm(accessToken: String?, sourceFile: File, destFile: File) {
+        val backUpFileName = destFile.name
+        googleDrive.download(accessToken, sourceFile, backUpFileName)
+        viewModel.merge(sourceFile, destFile)
+        googleDrive.upload(accessToken, destFile, backUpFileName)
     }
 }

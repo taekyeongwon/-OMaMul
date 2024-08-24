@@ -34,12 +34,12 @@ class GoogleDriveBackup @Inject constructor(
     private val requestedScopes = listOf(Scope(DriveScopes.DRIVE_FILE), Scope(DriveScopes.DRIVE_APPDATA))
     private val scope = listOf(DriveScopes.DRIVE_FILE, DriveScopes.DRIVE_APPDATA)
 
-    override fun upload(token: String?, file: java.io.File): String {
+    override fun upload(token: String?, file: java.io.File, backupFileName: String): String {
         val service = getDriveService(token)
         val mediaContent = FileContent("application/octet-stream", file)
 
         return try {
-            val backupFile = getFile(token, file.name)
+            val backupFile = getFile(token, backupFileName)
             val createdFile = if(backupFile == null) {
                 // File's metadata.
                 val fileMetadata = File()
@@ -64,11 +64,11 @@ class GoogleDriveBackup @Inject constructor(
         }
     }
 
-    override fun download(token: String?, destFile: java.io.File) {
+    override fun download(token: String?, destFile: java.io.File, backupFileName: String) {
         val service = getDriveService(token)
         val outputStream = ByteArrayOutputStream()
         try {
-            val backupFile = getFile(token, destFile.name)
+            val backupFile = getFile(token, backupFileName)
             if(backupFile != null) {
                 service.files().get(backupFile.id)
                     .executeMediaAndDownloadTo(outputStream)
