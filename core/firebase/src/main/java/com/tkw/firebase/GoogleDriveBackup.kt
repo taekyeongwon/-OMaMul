@@ -39,18 +39,18 @@ class GoogleDriveBackup @Inject constructor(
         val mediaContent = FileContent("application/octet-stream", file)
 
         return try {
-            val fileList = getList(token)
-            val createdFile = if(fileList.files.isEmpty()) {
+            val backupFile = getFile(token, file.name)
+            val createdFile = if(backupFile == null) {
                 // File's metadata.
                 val fileMetadata = File()
-                fileMetadata.setName("default.realm")
+                fileMetadata.setName(file.name)
                 fileMetadata.setParents(Collections.singletonList("appDataFolder"))
 
                 service.files().create(fileMetadata, mediaContent)
                     .setFields("id") // response에서 받을 필드 정의
                     .execute()
             } else {
-                service.files().update(fileList.files[0].id, null, mediaContent)
+                service.files().update(backupFile.id, null, mediaContent)
                     .setFields("id")
                     .execute()
             }
@@ -68,11 +68,11 @@ class GoogleDriveBackup @Inject constructor(
         val service = getDriveService(token)
         val outputStream = ByteArrayOutputStream()
         try {
-            val fileList = getList(token)
-            if(fileList.files.isNotEmpty()) {
-                service.files().get(fileList.files[0].id)
+            val backupFile = getFile(token, destFile.name)
+            if(backupFile != null) {
+                service.files().get(backupFile.id)
                     .executeMediaAndDownloadTo(outputStream)
-                println("File ID: " + fileList.files[0].id)
+                println("File ID: " + backupFile.id)
             }
 
             outputStream.writeTo(FileOutputStream(destFile))
@@ -130,6 +130,16 @@ class GoogleDriveBackup @Inject constructor(
         )
             .setApplicationName("OMaMul App Drive")
             .build()
+    }
+
+    private fun getFile(token: String?, fileName: String): File? {
+        val list = getList(token)
+        list.files.forEach {
+            if(fileName == it.name) {
+                return it
+            }
+        }
+        return null
     }
 
     private fun getList(token: String?): FileList {

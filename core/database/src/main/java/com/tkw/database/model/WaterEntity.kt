@@ -9,7 +9,7 @@ class WaterEntity: EmbeddedRealmObject {
     var amount: Int = 0
 
     fun getNanoOfDate(): Long {
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         return LocalTime.parse(dateTime, formatter).toNanoOfDay()
     }
 }

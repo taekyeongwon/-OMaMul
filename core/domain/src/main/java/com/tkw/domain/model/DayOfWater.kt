@@ -39,7 +39,7 @@ data class Water(
     }
 
     private fun getLocalTime(): LocalTime {
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         return LocalTime.parse(dateTime, formatter)
     }
 }
