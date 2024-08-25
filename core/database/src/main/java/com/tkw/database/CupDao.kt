@@ -5,7 +5,7 @@ import com.tkw.database.model.CupListEntity
 import io.realm.kotlin.notifications.ResultsChange
 import kotlinx.coroutines.flow.Flow
 
-interface CupDao: RealmDao<CupListEntity> {
+interface CupDao: RealmDao {
     fun getCup(id: String): CupEntity?
 
     fun getCupListFlow(): Flow<ResultsChange<CupListEntity>>

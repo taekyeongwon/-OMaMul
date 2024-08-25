@@ -8,7 +8,7 @@ import com.tkw.database.model.AlarmSettingsEntity
 import io.realm.kotlin.notifications.ResultsChange
 import kotlinx.coroutines.flow.Flow
 
-interface AlarmDao: RealmDao<AlarmSettingsEntity> {
+interface AlarmDao: RealmDao {
     /**
      * 알람 설정 객체 요청
      */

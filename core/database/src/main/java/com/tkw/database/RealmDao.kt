@@ -23,9 +23,8 @@ import io.realm.kotlin.types.TypedRealmObject
 import kotlinx.coroutines.flow.Flow
 import kotlin.reflect.KClass
 
-interface RealmDao<T: RealmObject> {
+interface RealmDao {
     val realm: Realm
-    val clazz: KClass<T>
 
     fun getRealmConfiguration(): RealmConfiguration {
         return RealmConfiguration.Builder(setOf(
@@ -46,52 +45,52 @@ interface RealmDao<T: RealmObject> {
             .build()
     }
 
-    fun <K: TypedRealmObject> find(clazz: KClass<K>, query: String, vararg args: Any): RealmResults<K> {
+    fun <T: RealmObject> find(clazz: KClass<T>, query: String, vararg args: Any): RealmResults<T> {
         return realm.query(clazz, query, *args).find()
     }
 
-    fun findBy(query: String, vararg args: Any): RealmResults<T> {
-        return realm.query(clazz, query, *args).find()
-    }
-
-    fun findByOne(query: String, vararg args: Any): T? {
+    fun <T: RealmObject> findByOne(clazz: KClass<T>, query: String, vararg args: Any): T? {
         return realm.query(clazz, query, *args).first().find()
     }
 
-    fun findAll(): RealmResults<T> {
+    fun <T: RealmObject> findAll(clazz: KClass<T>): RealmResults<T> {
         return realm.query(clazz).find()
     }
 
-    fun findFirst(): T? {
+    fun <T: RealmObject> findFirst(clazz: KClass<T>): T? {
         return realm.query(clazz).first().find()
     }
 
-    fun stream(query: RealmResults<T>): Flow<ResultsChange<T>> {
+    fun <T: RealmObject> stream(query: RealmResults<T>): Flow<ResultsChange<T>> {
         return query.asFlow()
     }
 
-    fun <K: TypedRealmObject> copyFromRealm(obj: K?): K? {
+    fun <T: RealmObject> copyFromRealm(obj: T?): T? {
         return if(obj != null) realm.copyFromRealm(obj)
         else null
     }
 
-    suspend fun insert(entity: T) {
+    suspend fun write(block: MutableRealm.() -> Unit) {
+        realm.write(block)
+    }
+
+    suspend fun <T: RealmObject> insert(entity: T) {
         realm.write {
             copyToRealm(entity)
         }
     }
 
-    suspend fun <K: RealmObject> upsert(entity: K) {
+    suspend fun <T: RealmObject> upsert(entity: T) {
         realm.write {
             copyToRealm(entity, UpdatePolicy.ALL)
         }
     }
 
-    fun <K: RealmObject> MutableRealm.upsert(entity: K) {
+    fun <T: RealmObject> MutableRealm.upsert(entity: T) {
         copyToRealm(entity, UpdatePolicy.ALL)
     }
 
-    suspend fun delete(entity: T) {
+    suspend fun <T: RealmObject> delete(entity: T) {
         realm.write {
             findLatest(entity)?.let {
                 delete(it)
@@ -99,7 +98,7 @@ interface RealmDao<T: RealmObject> {
         }
     }
 
-    suspend fun deleteAll() {
+    suspend fun <T: RealmObject> deleteAll(clazz: KClass<T>) {
         realm.write {
             val allOfClass = query(clazz).find()
             delete(allOfClass)

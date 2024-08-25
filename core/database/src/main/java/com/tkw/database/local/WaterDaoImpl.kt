@@ -12,37 +12,36 @@ import kotlin.reflect.KClass
 
 class WaterDaoImpl @Inject constructor(): WaterDao {
     override val realm: Realm = Realm.open(getRealmConfiguration())
-    override val clazz: KClass<DayOfWaterEntity> = DayOfWaterEntity::class
 
     private val amountByDate: MutableRealm.(String) -> DayOfWaterEntity? = {
-        this.query(clazz, "date == $0", it).first().find()
+        this.query(DayOfWaterEntity::class, "date == $0", it).first().find()
     }
 
     override fun getDayOfWater(date: String): DayOfWaterEntity? {
-        return this.findByOne("date == $0", date)
+        return this.findByOne(DayOfWaterEntity::class, "date == $0", date)
     }
 
     override fun getAllDayOfWater(): Flow<ResultsChange<DayOfWaterEntity>> {
-        return this.stream(this.findAll())
+        return this.stream(this.findAll(DayOfWaterEntity::class))
     }
 
     override fun getWater(date: String, dateTime: String): WaterEntity? {
-        return this.findByOne("date == $0", date)?.dayOfList?.findLast { it.dateTime == dateTime }
+        return this.findByOne(DayOfWaterEntity::class, "date == $0", date)?.dayOfList?.findLast { it.dateTime == dateTime }
     }
 
     override fun getAmountFlow(date: String): Flow<ResultsChange<DayOfWaterEntity>> {
-        return this.stream(this.findBy("date == $0", date))
+        return this.stream(this.find(DayOfWaterEntity::class, "date == $0", date))
     }
 
     override suspend fun addAmount(date: String, newObj: WaterEntity) {
-        realm.write {
+        this.write {
             val query = amountByDate(date)
             query?.dayOfList?.add(newObj)
         }
     }
 
     override suspend fun removeAmount(selectedDate: String, dateTime: String) {
-        realm.write {
+        this.write {
             val water = getWater(selectedDate, dateTime)
             val query = amountByDate(selectedDate)
             query?.dayOfList?.remove(water)
@@ -54,7 +53,7 @@ class WaterDaoImpl @Inject constructor(): WaterDao {
         origin: WaterEntity,
         target: WaterEntity
     ) {
-        realm.write {
+        this.write {
             val originWater = getWater(selectedDate, origin.dateTime)
             findLatest(originWater!!)?.apply {
                 amount = target.amount

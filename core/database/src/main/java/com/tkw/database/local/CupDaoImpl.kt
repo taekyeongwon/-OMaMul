@@ -12,18 +12,17 @@ import kotlin.reflect.KClass
 
 class CupDaoImpl @Inject constructor(): CupDao {
     override val realm: Realm = Realm.open(getRealmConfiguration())
-    override val clazz: KClass<CupListEntity> = CupListEntity::class
 
     private val getCupList: MutableRealm.() -> CupListEntity? = {
-        this.query(clazz, "cupId == $0", CupEntity.DEFAULT_CUP_LIST_ID).first().find()
+        this.query(CupListEntity::class, "cupId == $0", CupEntity.DEFAULT_CUP_LIST_ID).first().find()
     }
 
     override fun getCup(id: String): CupEntity? {
-        return this.findFirst()?.cupList?.find { it.cupId == id }
+        return this.findFirst(CupListEntity::class)?.cupList?.find { it.cupId == id }
     }
 
     override fun getCupListFlow(): Flow<ResultsChange<CupListEntity>> {
-        return this.stream(this.findBy("cupId == $0", CupEntity.DEFAULT_CUP_LIST_ID))
+        return this.stream(this.find(CupListEntity::class, "cupId == $0", CupEntity.DEFAULT_CUP_LIST_ID))
     }
 
     override suspend fun createList() {
@@ -31,13 +30,13 @@ class CupDaoImpl @Inject constructor(): CupDao {
     }
 
     override suspend fun insertCup(obj: CupEntity) {
-        realm.write {
+        this.write {
             getCupList()?.cupList?.add(obj)
         }
     }
 
     override suspend fun updateCup(target: CupEntity) {
-        realm.write {
+        this.write {
             val origin = getCup(target.cupId)
             findLatest(origin!!)?.apply {
                 cupName = target.cupName
@@ -47,14 +46,14 @@ class CupDaoImpl @Inject constructor(): CupDao {
     }
 
     override suspend fun updateAll(list: List<CupEntity>) {
-        realm.write {
+        this.write {
             getCupList()?.cupList?.clear()
             getCupList()?.cupList?.addAll(list)
         }
     }
 
     override suspend fun deleteCup(cupId: String) {
-        realm.write {
+        this.write {
             val cup = getCup(cupId)
             getCupList()?.cupList?.remove(cup)
         }

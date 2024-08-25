@@ -24,7 +24,6 @@ import kotlin.reflect.KClass
 
 class AlarmDaoImpl @Inject constructor(): AlarmDao {
     override val realm: Realm = Realm.open(getRealmConfiguration())
-    override val clazz: KClass<AlarmSettingsEntity> = AlarmSettingsEntity::class
     companion object {
         private const val TAG = "AlarmDao"
     }
@@ -102,7 +101,7 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
     }
 
     override fun getSetting(): Flow<ResultsChange<AlarmSettingsEntity>> {
-        return this.stream(this.findBy("id == $0", AlarmSettingsEntity.DEFAULT_SETTING_ID))
+        return this.stream(this.find(AlarmSettingsEntity::class, "id == $0", AlarmSettingsEntity.DEFAULT_SETTING_ID))
     }
 
     override suspend fun updateSetting(setting: AlarmSettingsEntity) {
@@ -163,7 +162,7 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
     override suspend fun setAlarmList(list: List<AlarmEntity>, mode: AlarmModeEntity) {
         Log.d("AlarmDao", "${::setAlarmList.name} list size : ${list.size} mode : ${mode.name}")
         val entity = getAlarmList(mode).first()
-        realm.write {
+        this.write {
             val latestObj = when(entity) {
                 is PeriodAlarmListEntity -> findLatest(entity)
                 is CustomAlarmListEntity -> findLatest(entity)
@@ -178,7 +177,7 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
 
     private suspend fun updateAlarm(currentAlarm: AlarmEntity, newAlarm: AlarmEntity) {
         Log.d("AlarmDao", "${::updateAlarm.name} current : $currentAlarm, new : $newAlarm ")
-        realm.write {
+        this.write {
             findLatest(currentAlarm)?.apply {
                 this.startTime = newAlarm.startTime
                 this.selectedDates = newAlarm.selectedDates
@@ -192,7 +191,7 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
         when(alarmMode) {
             AlarmModeEntity.PERIOD -> {   //PeriodEntity 조회해서 업데이트
                 val period = getPeriodAlarmListEntity.first()
-                realm.write {
+                this.write {
                     findLatest(period)?.apply {
                         alarmList.add(alarm)
                     }
@@ -200,7 +199,7 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
             }
             AlarmModeEntity.CUSTOM -> {   //CustomEntity 조회해서 업데이트
                 val custom = getCustomAlarmListEntity.first()
-                realm.write {
+                this.write {
                     findLatest(custom)?.apply {
                         alarmList.add(alarm)
                     }
@@ -220,7 +219,7 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
             }
         }
         entity?.let {
-            realm.write {
+            this.write {
                 findLatest(entity)?.apply {
                     enabled = false
                 }
@@ -234,7 +233,7 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
             AlarmModeEntity.PERIOD -> getPeriodAlarmListEntity
             AlarmModeEntity.CUSTOM -> getCustomAlarmListEntity
         }.first()
-        realm.write {
+        this.write {
             findLatest(queriedList)?.apply {
                 alarmList.removeAll(list)
             }
@@ -243,7 +242,7 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
 
     override suspend fun deleteAllAlarm(mode: AlarmModeEntity) {
         Log.d("AlarmDao", "${::deleteAllAlarm.name} mode : ${mode.name}")
-        realm.write {
+        this.write {
             when(mode) {
                 AlarmModeEntity.PERIOD -> delete(PeriodAlarmListEntity::class)
                 AlarmModeEntity.CUSTOM -> delete(CustomAlarmListEntity::class)
