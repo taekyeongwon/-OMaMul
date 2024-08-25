@@ -13,13 +13,16 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class BackupForeground: Service() {
-    private val foregroundId = 1
+    companion object {
+        private const val FOREGROUND_ID = 1
+        const val EXTRA_IS_UPDATE = "isUpdate"
+        const val EXTRA_ACCESS_TOKEN = "accessToken"
+    }
 
     @Inject
     lateinit var googleDrive: BackupManager
@@ -38,25 +41,17 @@ class BackupForeground: Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val notification = NotificationManager.notifyService(this, foregroundId)
-        startForeground(foregroundId, notification)
+        val notification = NotificationManager.notifyService(this, FOREGROUND_ID)
+        startForeground(FOREGROUND_ID, notification)
 
         if(intent != null) {
-            val isUpdate = intent.getBooleanExtra("isUpdate", false)
+            val isUpdate = intent.getBooleanExtra(EXTRA_IS_UPDATE, false)
+            val accessToken = intent.getStringExtra(EXTRA_ACCESS_TOKEN)
 
-            googleDriveAuth.authorize {
-                if (it.isSuccess) {
-                    it.getOrNull()?.let { result ->
-                        //백업 시작 브로드캐스트
-                        if (isUpdate) {
-                            doUpload(result.accessToken)
-                        } else {
-                            doBackUp(result.accessToken)
-                        }
-                    } ?: stopSelf()
-                } else {
-                    stopSelf()
-                }
+            if (isUpdate) {
+                doUpload(accessToken)
+            } else {
+                doBackUp(accessToken)
             }
         } else {
             stopSelf()
@@ -68,7 +63,7 @@ class BackupForeground: Service() {
 
     private fun doUpload(accessToken: String?) {
         val destRealmFile = File(applicationContext.filesDir, "default.realm")
-//        val rotateAnim = syncRotateStart(dataBinding.settingInfo.ivSync)
+        //브로드캐스트 날리기
         CoroutineScope(Dispatchers.IO).launch {
             runCatching {
                 googleDrive.upload(accessToken, destRealmFile, destRealmFile.name)
@@ -86,7 +81,7 @@ class BackupForeground: Service() {
     private fun doBackUp(accessToken: String?) {
         val sourceRealmFile = File(applicationContext.filesDir, "tmp.realm")
         val destRealmFile = File(applicationContext.filesDir, "default.realm")
-//        val rotateAnim = syncRotateStart(dataBinding.settingInfo.ivSync)
+        //브로드캐스트 날리기
         CoroutineScope(Dispatchers.IO).launch {
             runCatching {
                 backUpRealm(accessToken, sourceRealmFile, destRealmFile)

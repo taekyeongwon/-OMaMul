@@ -36,14 +36,9 @@ import com.tkw.setting.dialog.LanguageDialog
 import com.tkw.setting.dialog.UnitDialog
 import com.tkw.ui.dialog.CustomDialog
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
 
@@ -67,11 +62,7 @@ class WaterSettingFragment: Fragment() {
                 try {
                     val authorizationResult = Identity.getAuthorizationClient(requireActivity())
                         .getAuthorizationResultFromIntent(it.data)
-//                    doBackUp(authorizationResult.accessToken)
-                    Intent(requireActivity(), BackupForeground::class.java).apply {
-                        putExtra("isUpdate", false)
-                        requireActivity().startForegroundService(this)
-                    }
+                    startBackupService(false, authorizationResult.accessToken)
                 } catch (e: ApiException) {
                     e.printStackTrace()
                 }
@@ -84,11 +75,7 @@ class WaterSettingFragment: Fragment() {
                 try {
                     val authorizationResult = Identity.getAuthorizationClient(requireActivity())
                         .getAuthorizationResultFromIntent(it.data)
-//                    doUpload(authorizationResult.accessToken)
-                    Intent(requireActivity(), BackupForeground::class.java).apply {
-                        putExtra("isUpdate", true)
-                        requireActivity().startForegroundService(this)
-                    }
+                    startBackupService(true, authorizationResult.accessToken)
                 } catch (e: ApiException) {
                     e.printStackTrace()
                 }
@@ -242,46 +229,31 @@ class WaterSettingFragment: Fragment() {
 
     private fun googleDriveStartSync() {
         googleDriveAuth.authorize {
-            if (it.isSuccess) {
-                it.getOrNull()?.let { result ->
-                    googleAuthResult(
-                        googleDriveSyncLauncher,
-                        result
-                    ) {
-                        Intent(requireActivity(), BackupForeground::class.java).apply {
-                            putExtra("isUpdate", false)
-                            requireActivity().startForegroundService(this)
-                        }
-//                            doBackUp(result.accessToken)
-                    }
+            it.onSuccess { result ->
+                googleAuthResultHasResolution(
+                    googleDriveSyncLauncher,
+                    result
+                ) {
+                    startBackupService(false, result.accessToken)
                 }
-            } else {
-
             }
         }
     }
 
     private fun googleDriveUpload() {
         googleDriveAuth.authorize {
-            if (it.isSuccess) {
-                it.getOrNull()?.let { result ->
-                    googleAuthResult(
-                        googleDriveUploadLauncher,
-                        result
-                    ) {
-                        Intent(requireActivity(), BackupForeground::class.java).apply {
-                            putExtra("isUpdate", true)
-                            requireActivity().startForegroundService(this)
-                        }
-
-//                            doUpload(result.accessToken)
-                    }
+            it.onSuccess { result ->
+                googleAuthResultHasResolution(
+                    googleDriveUploadLauncher,
+                    result
+                ) {
+                    startBackupService(true, result.accessToken)
                 }
             }
         }
     }
 
-    private fun googleAuthResult(
+    private fun googleAuthResultHasResolution(
         launcher: ActivityResultLauncher<IntentSenderRequest>,
         result: AuthorizationResult,
         block: () -> Unit
@@ -301,48 +273,12 @@ class WaterSettingFragment: Fragment() {
         }
     }
 
-    private fun doBackUp(accessToken: String?) {
-        val sourceRealmFile = File(requireContext().filesDir, "tmp.realm")
-        val destRealmFile = File(requireContext().filesDir, "default.realm")
-        val rotateAnim = syncRotateStart(dataBinding.settingInfo.ivSync)
-        CoroutineScope(Dispatchers.IO).launch {
-            runCatching {
-                backUpRealm(accessToken, sourceRealmFile, destRealmFile)
-            }.onFailure {
-                it.printStackTrace()
-            }.onSuccess {
-                viewModel.saveLastSync(System.currentTimeMillis())
-            }.also {
-                withContext(Dispatchers.Main) {
-                    syncRotateStop(rotateAnim)
-                }
-            }
+    private fun startBackupService(isUpdate: Boolean, accessToken: String?) {
+        Intent(requireActivity(), BackupForeground::class.java).apply {
+            putExtra(BackupForeground.EXTRA_IS_UPDATE, isUpdate)
+            putExtra(BackupForeground.EXTRA_ACCESS_TOKEN, accessToken)
+            requireActivity().startForegroundService(this)
         }
-    }
-
-    private fun doUpload(accessToken: String?) {
-        val destRealmFile = File(requireContext().filesDir, "default.realm")
-        val rotateAnim = syncRotateStart(dataBinding.settingInfo.ivSync)
-        CoroutineScope(Dispatchers.IO).launch {
-            runCatching {
-                googleDrive.upload(accessToken, destRealmFile, destRealmFile.name)
-            }.onFailure {
-                it.printStackTrace()
-            }.onSuccess {
-                viewModel.saveLastSync(System.currentTimeMillis())
-            }.also {
-                withContext(Dispatchers.Main) {
-                    syncRotateStop(rotateAnim)
-                }
-            }
-        }
-    }
-
-    private suspend fun backUpRealm(accessToken: String?, sourceFile: File, destFile: File) {
-        val backUpFileName = destFile.name
-        googleDrive.download(accessToken, sourceFile, backUpFileName)
-        viewModel.merge(sourceFile, destFile)
-        googleDrive.upload(accessToken, destFile, backUpFileName)
     }
 
     private fun syncRotateStart(view: View): ObjectAnimator {
