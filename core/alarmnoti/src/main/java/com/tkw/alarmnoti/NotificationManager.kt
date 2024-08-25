@@ -176,6 +176,24 @@ object NotificationManager {
         }
     }
 
+    fun notifyService(context: Context, foregroundId: Int): Notification {
+        val builder = buildNotification(
+            context,
+            R.drawable.noti_foreground,
+            context.getString(R.string.notification_title),
+            "백업 실행 중 입니다.",
+            DEFAULT_CH
+        )
+        builder.setOngoing(true)
+        val notificationManager: NotificationManager =
+            context.getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager
+        val notification = builder.build()
+
+        //BackupForeground에서 startForeground할 때 넘겨준 id값과 동일한 id로 notify
+        notificationManager.notify(foregroundId, notification)
+        return notification
+    }
+
     private fun canUseFullScreenIntent(context: Context): Boolean {
         return if(Build.VERSION.SDK_INT >= 34) {
             val notificationManager: NotificationManager =

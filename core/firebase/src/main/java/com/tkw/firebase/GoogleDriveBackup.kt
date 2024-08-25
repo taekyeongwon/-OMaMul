@@ -23,14 +23,15 @@ import com.google.auth.oauth2.GoogleCredentials
 import com.tkw.domain.BackupManager
 import com.tkw.domain.DriveAuthorize
 import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.ByteArrayOutputStream
 import java.io.FileOutputStream
 import java.util.Collections
 import javax.inject.Inject
 
 class GoogleDriveBackup @Inject constructor(
-    @ActivityContext private val context: Context
-): BackupManager, DriveAuthorize<ActivityResultLauncher<IntentSenderRequest>, AuthorizationResult> {
+    @ApplicationContext private val context: Context
+): BackupManager, DriveAuthorize<AuthorizationResult> {
     private val requestedScopes = listOf(Scope(DriveScopes.DRIVE_FILE), Scope(DriveScopes.DRIVE_APPDATA))
     private val scope = listOf(DriveScopes.DRIVE_FILE, DriveScopes.DRIVE_APPDATA)
 
@@ -84,27 +85,12 @@ class GoogleDriveBackup @Inject constructor(
         }
     }
 
-    override fun authorize(
-        launcher: ActivityResultLauncher<IntentSenderRequest>,
-        resultListener: (Result<AuthorizationResult>) -> Unit
-    ) {
+    override fun authorize(resultListener: (Result<AuthorizationResult>) -> Unit) {
         val authorizationRequest = AuthorizationRequest.builder().setRequestedScopes(requestedScopes).build()
         Identity.getAuthorizationClient(context)
             .authorize(authorizationRequest)
             .addOnSuccessListener {
-                if(it.hasResolution()) {
-                    val pendingIntent = it.pendingIntent
-                    try {
-                        val intent = IntentSenderRequest.Builder(pendingIntent!!.intentSender).build()
-                        launcher.launch(intent)
-                    } catch (e: IntentSender.SendIntentException) {
-                        e.printStackTrace()
-                    } catch (npe: NullPointerException) {
-                        npe.printStackTrace()
-                    }
-                } else {
-                    resultListener(Result.success(it))
-                }
+                resultListener(Result.success(it))
             }
             .addOnFailureListener {
                 it.printStackTrace()

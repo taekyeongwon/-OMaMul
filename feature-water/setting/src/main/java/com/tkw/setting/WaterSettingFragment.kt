@@ -2,6 +2,8 @@ package com.tkw.setting
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.content.Intent
+import android.content.IntentSender
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +26,7 @@ import com.tkw.common.util.DateTimeUtils
 import com.tkw.domain.Authentication
 import com.tkw.domain.BackupManager
 import com.tkw.domain.DriveAuthorize
+import com.tkw.firebase.BackupForeground
 import com.tkw.firebase.CloudStorage
 import com.tkw.home.dialog.WaterIntakeDialog
 import com.tkw.navigation.DeepLinkDestination
@@ -56,7 +59,7 @@ class WaterSettingFragment: Fragment() {
     lateinit var googleDrive: BackupManager
 
     @Inject
-    lateinit var googleDriveAuth: DriveAuthorize<ActivityResultLauncher<IntentSenderRequest>, AuthorizationResult>
+    lateinit var googleDriveAuth: DriveAuthorize<AuthorizationResult>
 
     private val googleDriveSyncLauncher =
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
@@ -64,7 +67,11 @@ class WaterSettingFragment: Fragment() {
                 try {
                     val authorizationResult = Identity.getAuthorizationClient(requireActivity())
                         .getAuthorizationResultFromIntent(it.data)
-                    doBackUp(authorizationResult.accessToken)
+//                    doBackUp(authorizationResult.accessToken)
+                    Intent(requireActivity(), BackupForeground::class.java).apply {
+                        putExtra("isUpdate", false)
+                        requireActivity().startForegroundService(this)
+                    }
                 } catch (e: ApiException) {
                     e.printStackTrace()
                 }
@@ -77,7 +84,11 @@ class WaterSettingFragment: Fragment() {
                 try {
                     val authorizationResult = Identity.getAuthorizationClient(requireActivity())
                         .getAuthorizationResultFromIntent(it.data)
-                    doUpload(authorizationResult.accessToken)
+//                    doUpload(authorizationResult.accessToken)
+                    Intent(requireActivity(), BackupForeground::class.java).apply {
+                        putExtra("isUpdate", true)
+                        requireActivity().startForegroundService(this)
+                    }
                 } catch (e: ApiException) {
                     e.printStackTrace()
                 }
@@ -230,23 +241,64 @@ class WaterSettingFragment: Fragment() {
     }
 
     private fun googleDriveStartSync() {
-        googleDriveAuth
-            .authorize(googleDriveSyncLauncher) {
-                if (it.isSuccess) {
-                    doBackUp(it.getOrNull()!!.accessToken)
-                } else {
-
+        googleDriveAuth.authorize {
+            if (it.isSuccess) {
+                it.getOrNull()?.let { result ->
+                    googleAuthResult(
+                        googleDriveSyncLauncher,
+                        result
+                    ) {
+                        Intent(requireActivity(), BackupForeground::class.java).apply {
+                            putExtra("isUpdate", false)
+                            requireActivity().startForegroundService(this)
+                        }
+//                            doBackUp(result.accessToken)
+                    }
                 }
+            } else {
+
             }
+        }
     }
 
     private fun googleDriveUpload() {
-        googleDriveAuth
-            .authorize(googleDriveUploadLauncher) {
-                if(it.isSuccess) {
-                    doUpload(it.getOrNull()!!.accessToken)
+        googleDriveAuth.authorize {
+            if (it.isSuccess) {
+                it.getOrNull()?.let { result ->
+                    googleAuthResult(
+                        googleDriveUploadLauncher,
+                        result
+                    ) {
+                        Intent(requireActivity(), BackupForeground::class.java).apply {
+                            putExtra("isUpdate", true)
+                            requireActivity().startForegroundService(this)
+                        }
+
+//                            doUpload(result.accessToken)
+                    }
                 }
             }
+        }
+    }
+
+    private fun googleAuthResult(
+        launcher: ActivityResultLauncher<IntentSenderRequest>,
+        result: AuthorizationResult,
+        block: () -> Unit
+    ) {
+        if(result.hasResolution()) {
+            val pendingIntent = result.pendingIntent
+            try {
+                val intent = IntentSenderRequest.Builder(pendingIntent!!.intentSender).build()
+                launcher.launch(intent)
+            } catch (e: IntentSender.SendIntentException) {
+                e.printStackTrace()
+            } catch (npe: NullPointerException) {
+                npe.printStackTrace()
+            }
+        } else {
+            block()
+        }
     }
 
     private fun doBackUp(accessToken: String?) {
