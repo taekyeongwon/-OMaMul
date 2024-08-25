@@ -1,5 +1,7 @@
 package com.tkw.setting
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -38,6 +40,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
 
@@ -130,11 +133,16 @@ class WaterSettingFragment: Fragment() {
         }
         dataBinding.settingInfo.ivSync.setOnClickListener {
 //            cloudStorageUpload()
-            if(viewModel.lastSync.value == -1L) {
-                googleDriveStartSync()
-            } else {
-                googleDriveUpload()
+            viewModel.lastSync.value?.let {
+                if(it == -1L) {
+                    googleDriveStartSync()
+                } else {
+                    val currentTime = System.currentTimeMillis()
+                    if(currentTime > it + 1000 * 60)
+                        googleDriveUpload()
+                }
             }
+
         }
 
         dataBinding.settingWater.clWaterSettingIntake.setOnClickListener {
@@ -244,6 +252,7 @@ class WaterSettingFragment: Fragment() {
     private fun doBackUp(accessToken: String?) {
         val sourceRealmFile = File(requireContext().filesDir, "tmp.realm")
         val destRealmFile = File(requireContext().filesDir, "default.realm")
+        val rotateAnim = syncRotateStart(dataBinding.settingInfo.ivSync)
         CoroutineScope(Dispatchers.IO).launch {
             runCatching {
                 backUpRealm(accessToken, sourceRealmFile, destRealmFile)
@@ -251,12 +260,17 @@ class WaterSettingFragment: Fragment() {
                 it.printStackTrace()
             }.onSuccess {
                 viewModel.saveLastSync(System.currentTimeMillis())
+            }.also {
+                withContext(Dispatchers.Main) {
+                    syncRotateStop(rotateAnim)
+                }
             }
         }
     }
 
     private fun doUpload(accessToken: String?) {
         val destRealmFile = File(requireContext().filesDir, "default.realm")
+        val rotateAnim = syncRotateStart(dataBinding.settingInfo.ivSync)
         CoroutineScope(Dispatchers.IO).launch {
             runCatching {
                 googleDrive.upload(accessToken, destRealmFile, destRealmFile.name)
@@ -264,6 +278,10 @@ class WaterSettingFragment: Fragment() {
                 it.printStackTrace()
             }.onSuccess {
                 viewModel.saveLastSync(System.currentTimeMillis())
+            }.also {
+                withContext(Dispatchers.Main) {
+                    syncRotateStop(rotateAnim)
+                }
             }
         }
     }
@@ -273,5 +291,18 @@ class WaterSettingFragment: Fragment() {
         googleDrive.download(accessToken, sourceFile, backUpFileName)
         viewModel.merge(sourceFile, destFile)
         googleDrive.upload(accessToken, destFile, backUpFileName)
+    }
+
+    private fun syncRotateStart(view: View): ObjectAnimator {
+        val currentDegree = view.rotation
+        val anim = ObjectAnimator.ofFloat(view, View.ROTATION, currentDegree, currentDegree + 360f)
+            .setDuration(1000)
+        anim.repeatCount = ValueAnimator.INFINITE
+        anim.start()
+        return anim
+    }
+
+    private fun syncRotateStop(animator: ObjectAnimator) {
+        animator.cancel()
     }
 }

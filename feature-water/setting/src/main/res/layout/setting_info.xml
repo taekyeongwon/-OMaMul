@@ -49,6 +49,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/sync"
             android:visibility="gone"
+            android:layout_marginLeft="6dp"
             app:layout_constraintLeft_toRightOf="@id/tv_last_sync"
             app:layout_constraintTop_toTopOf="@id/tv_last_sync"
             app:layout_constraintBottom_toBottomOf="@id/tv_last_sync"/>
