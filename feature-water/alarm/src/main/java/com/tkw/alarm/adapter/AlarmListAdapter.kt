@@ -105,6 +105,11 @@ class AlarmListAdapter(
 
         fun onBind(alarm: Alarm) {
             binding.alarm = alarm
+            if(alarm.enabled) {
+                binding.root.alpha = 1f
+            } else {
+                binding.root.alpha = 0.5f
+            }
         }
     }
 

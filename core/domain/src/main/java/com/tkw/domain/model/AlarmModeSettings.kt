@@ -47,6 +47,14 @@ data class Alarm(
         return localTime.format(formatter)
     }
 
+    fun getAlarmDate(): String {
+        val formatter = DateTimeFormatter.ofPattern("MM-dd (E)")
+        val instant = Instant.ofEpochMilli(startTime)
+        val localTime = instant.atZone(ZoneId.systemDefault()).toLocalDate()
+
+        return localTime.format(formatter)
+    }
+
     fun getIntervalByNextDayOfWeek(): Int {
         val dateFromStartTime =
             Instant
