@@ -114,7 +114,7 @@ class WaterSettingFragment: Fragment() {
     private fun initObserver() {
         viewModel.lastSync.observe(viewLifecycleOwner) {
             if(it == -1L) {
-                dataBinding.settingInfo.tvLastSync.text = "버튼을 눌러서 동기화를 시작하세요."
+                dataBinding.settingInfo.tvLastSync.text = getString(com.tkw.ui.R.string.setting_last_sync_empty)
             } else {
                 dataBinding.settingInfo.tvLastSync.text = DateTimeUtils.getDateTimeString(DateTimeUtils.getDateTimeFromMillis(it))
             }

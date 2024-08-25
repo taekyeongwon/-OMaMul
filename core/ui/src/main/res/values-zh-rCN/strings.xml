@@ -116,6 +116,7 @@
     <string name="setting_logout">退出登录</string>
     <string name="setting_logout_confirm">您确定要退出登录吗？</string>
     <string name="setting_language_restart_info">* 更改语言后，点击保存按钮，应用程序将重新启动。</string>
+    <string name="setting_last_sync_empty">按下按钮开始同步。</string>
 
     <string name="title_main">今天喝的水</string>
     <string name="title_cup_manage">杯子管理</string>
