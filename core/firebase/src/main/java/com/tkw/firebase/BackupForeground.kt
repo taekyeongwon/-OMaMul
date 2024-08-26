@@ -3,6 +3,7 @@ package com.tkw.firebase
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.gms.auth.api.identity.AuthorizationResult
 import com.tkw.alarmnoti.NotificationManager
 import com.tkw.domain.BackupManager
@@ -22,6 +23,8 @@ class BackupForeground: Service() {
         private const val FOREGROUND_ID = 1
         const val EXTRA_IS_UPDATE = "isUpdate"
         const val EXTRA_ACCESS_TOKEN = "accessToken"
+        const val ACTION_SERVICE_START = "action_service_start"
+        const val ACTION_SERVICE_STOP = "action_service_stop"
     }
 
     @Inject
@@ -63,7 +66,8 @@ class BackupForeground: Service() {
 
     private fun doUpload(accessToken: String?) {
         val destRealmFile = File(applicationContext.filesDir, "default.realm")
-        //브로드캐스트 날리기
+        LocalBroadcastManager.getInstance(applicationContext)
+            .sendBroadcast(Intent(ACTION_SERVICE_START))
         CoroutineScope(Dispatchers.IO).launch {
             runCatching {
                 googleDrive.upload(accessToken, destRealmFile, destRealmFile.name)
@@ -72,7 +76,8 @@ class BackupForeground: Service() {
             }.onSuccess {
                 prefDataRepository.saveLastSync(System.currentTimeMillis())
             }.also {
-                //브로드캐스트 날리기
+                LocalBroadcastManager.getInstance(applicationContext)
+                    .sendBroadcast(Intent(ACTION_SERVICE_STOP))
                 stopSelf()
             }
         }
@@ -81,7 +86,8 @@ class BackupForeground: Service() {
     private fun doBackUp(accessToken: String?) {
         val sourceRealmFile = File(applicationContext.filesDir, "tmp.realm")
         val destRealmFile = File(applicationContext.filesDir, "default.realm")
-        //브로드캐스트 날리기
+        LocalBroadcastManager.getInstance(applicationContext)
+            .sendBroadcast(Intent(ACTION_SERVICE_START))
         CoroutineScope(Dispatchers.IO).launch {
             runCatching {
                 backUpRealm(accessToken, sourceRealmFile, destRealmFile)
@@ -90,7 +96,8 @@ class BackupForeground: Service() {
             }.onSuccess {
                 prefDataRepository.saveLastSync(System.currentTimeMillis())
             }.also {
-                //브로드캐스트 날리기
+                LocalBroadcastManager.getInstance(applicationContext)
+                    .sendBroadcast(Intent(ACTION_SERVICE_STOP))
                 stopSelf()
             }
         }

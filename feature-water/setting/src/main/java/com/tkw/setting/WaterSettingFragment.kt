@@ -2,7 +2,10 @@ package com.tkw.setting
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.IntentSender
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.withStarted
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -82,6 +86,23 @@ class WaterSettingFragment: Fragment() {
             }
         }
 
+    private val broadcastReceiver = object: BroadcastReceiver() {
+        var animator: ObjectAnimator? = null
+        override fun onReceive(context: Context?, intent: Intent?) {
+            when(intent?.action) {
+                BackupForeground.ACTION_SERVICE_START -> {
+                    animator = syncRotateStart(dataBinding.settingInfo.ivSync)
+                }
+                BackupForeground.ACTION_SERVICE_STOP -> {
+                    val anim = animator
+                    if(anim != null && anim.isRunning) {
+                        anim.end()
+                    }
+                }
+            }
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -102,6 +123,21 @@ class WaterSettingFragment: Fragment() {
     override fun onStart() {
         super.onStart()
         updateUI(oAuth.isLoggedIn())
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(BackupForeground.ACTION_SERVICE_START)
+        intentFilter.addAction(BackupForeground.ACTION_SERVICE_STOP)
+        LocalBroadcastManager.getInstance(requireContext())
+            .registerReceiver(broadcastReceiver, intentFilter)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        LocalBroadcastManager.getInstance(requireContext())
+            .unregisterReceiver(broadcastReceiver)
     }
 
     private fun initView() {
