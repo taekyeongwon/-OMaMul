@@ -17,6 +17,11 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.tkw.alarm.WaterAlarmViewModel
 import com.tkw.alarmnoti.NotificationManager
 import com.tkw.common.LocaleHelper
@@ -27,6 +32,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class WaterActivity : AppCompatActivity() {
@@ -95,6 +101,7 @@ class WaterActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
             insets
         }
+        setWorkManager()
     }
 
     private fun initObserver() {
@@ -170,5 +177,33 @@ class WaterActivity : AppCompatActivity() {
             // 다른 프래그먼트에서 onBackPressedDispatcher에 콜백을 설정함으로써 백스택 이동을 제어할 수 있음.
             onBackPressedDispatcher.onBackPressed()
         }
+    }
+
+    private fun setWorkManager() {
+        val constraints = Constraints.Builder()
+            .setRequiresBatteryNotLow(true)
+            .setRequiredNetworkType(NetworkType.UNMETERED)
+            .setRequiresCharging(true)
+            .setRequiresStorageNotLow(true)
+            .build()
+
+
+        val periodicWorkRequest = PeriodicWorkRequestBuilder<ScheduledWorkManager>(
+            15, TimeUnit.MINUTES,
+            5, TimeUnit.MINUTES
+        )
+//            .setInitialDelay(ScheduledWorkManager.getRemainTime(), TimeUnit.MILLISECONDS)  //새벽 3시부터 현재 시간 차이
+//            .setConstraints(constraints)
+            .build()
+
+        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
+            ScheduledWorkManager.WORK_NAME,
+            ExistingPeriodicWorkPolicy.UPDATE,
+            periodicWorkRequest
+        )
+    }
+
+    private fun cancelWorkManager(alarmId: String) {
+        WorkManager.getInstance(this).cancelUniqueWork(ScheduledWorkManager.WORK_NAME)
     }
 }

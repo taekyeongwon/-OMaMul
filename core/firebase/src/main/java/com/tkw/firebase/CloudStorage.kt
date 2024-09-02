@@ -13,9 +13,9 @@ class CloudStorage: BackupManager {
     private val storage: FirebaseStorage = Firebase.storage
     private val storageRef = storage.reference.child("users")
 
-    override fun upload(uid: String?, file: File, backupFileName: String): String {    //firebase uid값 전달
+    override fun upload(token: String?, file: File, backupFileName: String): String {    //firebase uid값 전달
         val fileUri = Uri.fromFile(file)
-        val fileRef = storageRef.child(uid!!).child(fileUri.lastPathSegment ?: "")
+        val fileRef = storageRef.child(token!!).child(fileUri.lastPathSegment ?: "")
         val uploadTask = fileRef.putFile(fileUri)
         uploadTask.addOnSuccessListener {
             Log.d("test", "upload success")

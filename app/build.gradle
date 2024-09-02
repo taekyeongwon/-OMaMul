@@ -73,6 +73,7 @@ dependencies {
     implementation project(':core:domain')
     implementation project(':core:common')
     implementation project(':core:alarmnoti')
+    implementation project(':core:firebase')
 
     implementation project(':feature-common:base')
     implementation project(':feature-common:init')
@@ -109,6 +110,9 @@ dependencies {
     kapt libs.hilt.compiler
 
     implementation libs.androidx.work.runtime.ktx
+
+    //AuthorizationClient
+    implementation libs.play.services.auth
 }
 
 kapt {

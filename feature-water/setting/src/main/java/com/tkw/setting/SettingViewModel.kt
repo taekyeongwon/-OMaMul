@@ -146,16 +146,6 @@ class SettingViewModel
         }
     }
 
-    fun saveLastSync(time: Long) {
-        launch {
-            prefDataRepository.saveLastSync(time)
-        }
-    }
-
-    suspend fun merge(sourceFile: File, destFile: File) {
-        settingRepository.merge(sourceFile, destFile)
-    }
-
     private fun getCustomString(id: Int): String {
         return context.getString(id)
     }

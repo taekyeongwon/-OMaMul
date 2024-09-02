@@ -42,8 +42,6 @@ dependencies {
     androidTestImplementation libs.androidx.test.junit
     androidTestImplementation libs.androidx.test.espresso
 
-    implementation libs.androidx.work.runtime.ktx
-
     //hilt
     implementation libs.hilt
     // KAPT(Kotlin Annotation Processing Tools), 어노테이션 사용, annotationProcessor의 대체

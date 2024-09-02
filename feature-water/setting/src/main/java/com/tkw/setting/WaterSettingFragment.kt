@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.IntentSender
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -28,10 +27,8 @@ import com.google.android.gms.common.api.ApiException
 import com.tkw.common.autoCleared
 import com.tkw.common.util.DateTimeUtils
 import com.tkw.domain.Authentication
-import com.tkw.domain.BackupManager
-import com.tkw.domain.DriveAuthorize
+import com.tkw.firebase.AccessTokenManager
 import com.tkw.firebase.BackupForeground
-import com.tkw.firebase.CloudStorage
 import com.tkw.home.dialog.WaterIntakeDialog
 import com.tkw.navigation.DeepLinkDestination
 import com.tkw.navigation.deepLinkNavigateTo
@@ -43,22 +40,18 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
-import java.io.File
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class WaterSettingFragment: Fragment() {
+class WaterSettingFragment : Fragment()
+    , AccessTokenManager<ActivityResultLauncher<IntentSenderRequest>,
+            AuthorizationResult> by GoogleAccessTokenManager() {
+
     private var dataBinding by autoCleared<FragmentSettingBinding>()
     private val viewModel by activityViewModels<SettingViewModel>()
 
     @Inject
     lateinit var oAuth: Authentication
-
-    @Inject
-    lateinit var googleDrive: BackupManager
-
-    @Inject
-    lateinit var googleDriveAuth: DriveAuthorize<AuthorizationResult>
 
     private val googleDriveSyncLauncher =
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
@@ -257,55 +250,31 @@ class WaterSettingFragment: Fragment() {
         }
     }
 
-    private fun cloudStorageUpload() {
-        val storage = CloudStorage()
-        val file = File(requireContext().filesDir, "default.realm")
-        storage.upload(oAuth.fetchInfo()?.uId ?: "", file, file.name)
-    }
+//    private fun cloudStorageUpload() {
+//        val storage = CloudStorage()
+//        val file = File(requireContext().filesDir, "default.realm")
+//        storage.upload(oAuth.fetchInfo()?.uId ?: "", file, file.name)
+//    }
 
     private fun googleDriveStartSync() {
-        googleDriveAuth.authorize {
-            it.onSuccess { result ->
-                googleAuthResultHasResolution(
-                    googleDriveSyncLauncher,
-                    result
-                ) {
-                    startBackupService(false, result.accessToken)
-                }
+        getAccessTokenAsync(
+            requireContext().applicationContext,
+            googleDriveSyncLauncher
+        ) {
+            if(it.accessToken != null) {
+                startBackupService(false, it.accessToken)
             }
         }
     }
 
     private fun googleDriveUpload() {
-        googleDriveAuth.authorize {
-            it.onSuccess { result ->
-                googleAuthResultHasResolution(
-                    googleDriveUploadLauncher,
-                    result
-                ) {
-                    startBackupService(true, result.accessToken)
-                }
+        getAccessTokenAsync(
+            requireContext().applicationContext,
+            googleDriveUploadLauncher
+        ) {
+            if(it.accessToken != null) {
+                startBackupService(true, it.accessToken)
             }
-        }
-    }
-
-    private fun googleAuthResultHasResolution(
-        launcher: ActivityResultLauncher<IntentSenderRequest>,
-        result: AuthorizationResult,
-        block: () -> Unit
-    ) {
-        if(result.hasResolution()) {
-            val pendingIntent = result.pendingIntent
-            try {
-                val intent = IntentSenderRequest.Builder(pendingIntent!!.intentSender).build()
-                launcher.launch(intent)
-            } catch (e: IntentSender.SendIntentException) {
-                e.printStackTrace()
-            } catch (npe: NullPointerException) {
-                npe.printStackTrace()
-            }
-        } else {
-            block()
         }
     }
 

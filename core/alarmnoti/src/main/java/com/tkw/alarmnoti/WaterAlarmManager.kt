@@ -6,13 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.tkw.domain.IAlarmManager
 import com.tkw.domain.model.Alarm
 import dagger.hilt.android.qualifiers.ApplicationContext
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class WaterAlarmManager @Inject constructor(
@@ -80,22 +76,6 @@ class WaterAlarmManager @Inject constructor(
         )
     }
 
-    private fun setWorkManager(alarmId: String, startTime: Long) {
-        val oneTimeWorkRequest = OneTimeWorkRequestBuilder<ScheduledWorkManager>()
-            .setInitialDelay(ScheduledWorkManager.getCertainTime(), TimeUnit.MILLISECONDS)
-//            .setInputData(
-//                Data.Builder()
-//                    .putString()
-//            )
-            .build()
-
-        WorkManager.getInstance(context).enqueueUniqueWork(
-            ScheduledWorkManager.WORK_NAME,
-            ExistingWorkPolicy.KEEP,
-            oneTimeWorkRequest
-        )
-    }
-
     private fun cancelAlarmManager(alarmId: String) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, WaterAlarmReceiver::class.java)
@@ -106,9 +86,5 @@ class WaterAlarmManager @Inject constructor(
             PendingIntent.FLAG_IMMUTABLE
         )
         alarmManager.cancel(pendingIntent)
-    }
-
-    private fun cancelWorkManager(alarmId: String) {
-        WorkManager.getInstance(context).cancelUniqueWork(ScheduledWorkManager.WORK_NAME)
     }
 }
