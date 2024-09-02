@@ -6,6 +6,7 @@ import android.os.IBinder
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.gms.auth.api.identity.AuthorizationResult
 import com.tkw.alarmnoti.NotificationManager
+import com.tkw.domain.AlarmRepository
 import com.tkw.domain.BackupManager
 import com.tkw.domain.DriveAuthorize
 import com.tkw.domain.PrefDataRepository
@@ -13,6 +14,7 @@ import com.tkw.domain.SettingRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -31,13 +33,13 @@ class BackupForeground: Service() {
     lateinit var googleDrive: BackupManager
 
     @Inject
-    lateinit var googleDriveAuth: DriveAuthorize<AuthorizationResult>
-
-    @Inject
     lateinit var prefDataRepository: PrefDataRepository
 
     @Inject
     lateinit var settingRepository: SettingRepository
+
+    @Inject
+    lateinit var alarmRepository: AlarmRepository
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -60,7 +62,6 @@ class BackupForeground: Service() {
             stopSelf()
         }
 
-
         return START_NOT_STICKY
     }
 
@@ -78,6 +79,7 @@ class BackupForeground: Service() {
             }.also {
                 LocalBroadcastManager.getInstance(applicationContext)
                     .sendBroadcast(Intent(ACTION_SERVICE_STOP))
+                wakeAllAlarm()
                 stopSelf()
             }
         }
@@ -98,6 +100,7 @@ class BackupForeground: Service() {
             }.also {
                 LocalBroadcastManager.getInstance(applicationContext)
                     .sendBroadcast(Intent(ACTION_SERVICE_STOP))
+                wakeAllAlarm()
                 stopSelf()
             }
         }
@@ -108,5 +111,14 @@ class BackupForeground: Service() {
         googleDrive.download(accessToken, sourceFile, backUpFileName)
         settingRepository.merge(sourceFile, destFile)
         googleDrive.upload(accessToken, destFile, backUpFileName)
+    }
+
+    private suspend fun wakeAllAlarm() {
+        if (
+            NotificationManager.isNotificationEnabled(applicationContext)
+            && prefDataRepository.fetchAlarmEnableFlag().first()
+        ) {
+            alarmRepository.wakeAllAlarm()
+        }
     }
 }
