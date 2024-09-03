@@ -189,11 +189,11 @@ class WaterActivity : AppCompatActivity() {
 
 
         val periodicWorkRequest = PeriodicWorkRequestBuilder<ScheduledWorkManager>(
-            15, TimeUnit.MINUTES,
-            5, TimeUnit.MINUTES
+            1, TimeUnit.DAYS,
+            30, TimeUnit.MINUTES
         )
-//            .setInitialDelay(ScheduledWorkManager.getRemainTime(), TimeUnit.MILLISECONDS)  //새벽 3시부터 현재 시간 차이
-//            .setConstraints(constraints)
+            .setInitialDelay(ScheduledWorkManager.getRemainTime(), TimeUnit.MILLISECONDS)  //새벽 3시부터 현재 시간 차이
+            .setConstraints(constraints)
             .build()
 
         WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(

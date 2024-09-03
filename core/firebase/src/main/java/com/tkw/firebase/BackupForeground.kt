@@ -22,11 +22,13 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class BackupForeground: Service() {
     companion object {
-        private const val FOREGROUND_ID = 1
+        const val FOREGROUND_ID = 1
         const val EXTRA_IS_UPDATE = "isUpdate"
         const val EXTRA_ACCESS_TOKEN = "accessToken"
         const val ACTION_SERVICE_START = "action_service_start"
         const val ACTION_SERVICE_STOP = "action_service_stop"
+        const val BACKUP_FILE_NAME = "default.realm"
+        const val DOWNLOAD_FILE_NAME = "tmp.realm"
     }
 
     @Inject
@@ -66,7 +68,7 @@ class BackupForeground: Service() {
     }
 
     private fun doUpload(accessToken: String?) {
-        val destRealmFile = File(applicationContext.filesDir, "default.realm")
+        val destRealmFile = File(applicationContext.filesDir, BACKUP_FILE_NAME)
         LocalBroadcastManager.getInstance(applicationContext)
             .sendBroadcast(Intent(ACTION_SERVICE_START))
         CoroutineScope(Dispatchers.IO).launch {
@@ -86,8 +88,8 @@ class BackupForeground: Service() {
     }
 
     private fun doBackUp(accessToken: String?) {
-        val sourceRealmFile = File(applicationContext.filesDir, "tmp.realm")
-        val destRealmFile = File(applicationContext.filesDir, "default.realm")
+        val sourceRealmFile = File(applicationContext.filesDir, DOWNLOAD_FILE_NAME)
+        val destRealmFile = File(applicationContext.filesDir, BACKUP_FILE_NAME)
         LocalBroadcastManager.getInstance(applicationContext)
             .sendBroadcast(Intent(ACTION_SERVICE_START))
         CoroutineScope(Dispatchers.IO).launch {

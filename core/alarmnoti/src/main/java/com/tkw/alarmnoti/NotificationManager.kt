@@ -194,6 +194,12 @@ object NotificationManager {
         return notification
     }
 
+    fun cancelNotify(context: Context, notificationId: Int) {
+        val notificationManager: NotificationManager =
+            context.getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(notificationId)
+    }
+
     private fun canUseFullScreenIntent(context: Context): Boolean {
         return if(Build.VERSION.SDK_INT >= 34) {
             val notificationManager: NotificationManager =
