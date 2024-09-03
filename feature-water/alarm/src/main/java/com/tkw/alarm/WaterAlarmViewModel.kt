@@ -218,8 +218,8 @@ class WaterAlarmViewModel @Inject constructor(
 
     suspend fun setPeriodAlarm(period: AlarmModeSetting) {
         if(period.selectedDate.isNotEmpty()) {
-            var start = period.startTime.toEpochMilli()
-            val end = period.endTime.toEpochMilli()
+            var start = period.startTime
+            val end = period.endTime
             val interval = period.interval * 1000
             val alarmList = ArrayList<Alarm>()
 

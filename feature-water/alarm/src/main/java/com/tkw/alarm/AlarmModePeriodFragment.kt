@@ -12,10 +12,12 @@ import com.tkw.alarm.dialog.AlarmPeriodDialog
 import com.tkw.alarm.dialog.AlarmTimeBottomDialog
 import com.tkw.common.autoCleared
 import com.tkw.common.util.DateTimeUtils
+import com.tkw.common.util.DateTimeUtils.toEpochMilli
 import com.tkw.domain.model.AlarmModeSetting
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.lang.StringBuilder
 import java.time.LocalTime
 
 @AndroidEntryPoint
@@ -61,7 +63,12 @@ class AlarmModePeriodFragment : Fragment() {
                     requireContext().getString(com.tkw.ui.R.string.hour),
                     requireContext().getString(com.tkw.ui.R.string.minute)
                 )
-                dataBinding.tvAlarmTime.text = period.getTimeRange()
+                dataBinding.tvAlarmTime.text = period.run {
+                    getTimeRange(
+                        DateTimeUtils.getFormattedTime(startTime),
+                        DateTimeUtils.getFormattedTime(endTime)
+                    )
+                }
                 dataBinding.ivEdit.visibility = View.VISIBLE
             }
         }
@@ -130,17 +137,24 @@ class AlarmModePeriodFragment : Fragment() {
     }
 
     private fun showTimeDialog() {
-        val dialog = AlarmTimeBottomDialog(
-            selectedStart = viewModel.tmpPeriodMode.value?.startTime,
-            selectedEnd = viewModel.tmpPeriodMode.value?.endTime,
-            resultListener = { wake, sleep ->
-                viewModel.tmpPeriodMode.value?.let { setting ->
-                    val newSetting = setting.copy(startTime = wake, endTime = sleep)
-                    viewModel.setTmpPeriodMode(newSetting)
-                    dataBinding.tvAlarmTime.text = newSetting.getTimeRange()
+        viewModel.tmpPeriodMode.value?.let {
+            val dialog = AlarmTimeBottomDialog(
+                selectedStart = DateTimeUtils.getLocalTime(it.startTime),
+                selectedEnd = DateTimeUtils.getLocalTime(it.endTime),
+                resultListener = { wake, sleep ->
+                    viewModel.tmpPeriodMode.value?.let { setting ->
+                        val newSetting = setting.copy(startTime = wake.toEpochMilli(), endTime = sleep.toEpochMilli())
+                        viewModel.setTmpPeriodMode(newSetting)
+                        dataBinding.tvAlarmTime.text = newSetting.run {
+                            getTimeRange(
+                                DateTimeUtils.getFormattedTime(startTime),
+                                DateTimeUtils.getFormattedTime(endTime)
+                            )
+                        }
+                    }
                 }
-            }
-        )
-        dialog.show(childFragmentManager, dialog.tag)
+            )
+            dialog.show(childFragmentManager, dialog.tag)
+        }
     }
 }
