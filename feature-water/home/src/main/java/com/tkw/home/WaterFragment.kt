@@ -1,6 +1,9 @@
 package com.tkw.home
 
+import android.animation.ValueAnimator
+import android.graphics.PointF
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -13,11 +16,15 @@ import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
+import com.airbnb.lottie.LottieProperty
+import com.airbnb.lottie.model.KeyPath
 import com.tkw.common.autoCleared
 import com.tkw.common.util.DateTimeUtils
 import com.tkw.common.util.DimenUtils
+import com.tkw.domain.model.DayOfWater
 import com.tkw.domain.model.Water
 import com.tkw.home.adapter.CupPagerAdapter
 import com.tkw.home.databinding.FragmentWaterBinding
@@ -25,6 +32,7 @@ import com.tkw.home.dialog.WaterIntakeDialog
 import com.tkw.navigation.DeepLinkDestination
 import com.tkw.navigation.deepLinkNavigateTo
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class WaterFragment: Fragment() {
@@ -32,6 +40,9 @@ class WaterFragment: Fragment() {
     private val viewModel: WaterViewModel by activityViewModels()
     private var countObject: List<Water>? = null
     private lateinit var cupPagerAdapter: CupPagerAdapter
+
+    private var lottieHeight = 0f
+    private var dayOfWater: DayOfWater? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,6 +77,7 @@ class WaterFragment: Fragment() {
     private fun initView() {
         initViewPager()
         initItemMenu()
+        initLottie()
     }
 
     private fun initObserver() {
@@ -73,7 +85,22 @@ class WaterFragment: Fragment() {
         viewModel.setToday()
 
         viewModel.amountLiveData.observe(viewLifecycleOwner) {
-            countObject = it.dayOfList
+            lifecycleScope.launch {
+                val intakeGoal = viewModel.getIntakeAmount()
+                val prevWater = dayOfWater
+                val currentAmount = minOf(it.getTotalIntakeByDate() / intakeGoal.toFloat(), 1.0f)
+                val dy = lottieHeight * (1 - currentAmount)
+                if(prevWater != null) {
+                    val prevAmount = minOf(prevWater.getTotalIntakeByDate() / intakeGoal.toFloat(), 1.0f)
+                    val prevDy = lottieHeight * (1 - prevAmount)
+                    startWaterAnimation(prevDy, dy)
+                } else {
+                    startWaterAnimation(lottieHeight, dy)
+                }
+
+                dayOfWater = it
+                countObject = it.dayOfList
+            }
         }
 
         viewModel.cupListLiveData.observe(viewLifecycleOwner) {
@@ -142,6 +169,29 @@ class WaterFragment: Fragment() {
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun initLottie() {
+//        dataBinding.lotti.addLottieOnCompositionLoadedListener {
+//            lottieHeight = it.bounds.bottom.toFloat()
+//        }
+        val displayMetrics = resources.displayMetrics
+        val density = displayMetrics.density
+        lottieHeight = density * 200    //애니메이션 픽셀 높이 값 : 200
+    }
+
+    private fun startWaterAnimation(startValue: Float, endValue: Float) {
+        val animator = ValueAnimator.ofFloat(startValue, endValue)
+        animator.addUpdateListener {
+            val animatedValue = it.getAnimatedValue() as Float
+            dataBinding.lotti.addValueCallback(
+                KeyPath("**", "Shape Layer"),
+                LottieProperty.TRANSFORM_POSITION
+            ) {
+                return@addValueCallback PointF(it.startValue.x, animatedValue)
+            }
+        }
+        animator.start()
     }
 
     private val clickScrollListener: (Int) -> Unit = { position ->
