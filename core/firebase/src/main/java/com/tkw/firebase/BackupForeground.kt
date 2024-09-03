@@ -81,7 +81,6 @@ class BackupForeground: Service() {
             }.also {
                 LocalBroadcastManager.getInstance(applicationContext)
                     .sendBroadcast(Intent(ACTION_SERVICE_STOP))
-                wakeAllAlarm()
                 stopSelf()
             }
         }
