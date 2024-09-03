@@ -30,6 +30,7 @@ Flow 및 LiveData 적용
 
 **멀티 모듈 구조**
 
-![omamul drawio (4)](https://github.com/user-attachments/assets/b8d7f199-44e2-404c-adbc-091fc817f4a3)
+![omamul2 drawio](https://github.com/user-attachments/assets/30600811-59f1-4e0e-a825-2268f1caa93e)
+
 
 
