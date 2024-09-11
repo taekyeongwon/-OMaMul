@@ -11,9 +11,8 @@ import androidx.lifecycle.Lifecycle.State
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.tkw.common.autoCleared
-import com.tkw.common.util.DateTimeUtils
+import com.tkw.common.util.DateTimeUtil
 import com.tkw.common.util.animateByMaxValue
-import com.tkw.domain.model.DayOfWater
 import com.tkw.domain.model.DayOfWaterList
 import com.tkw.record.databinding.FragmentLogMonthBinding
 import com.tkw.ui.chart.marker.MarkerType
@@ -112,7 +111,7 @@ class LogMonthFragment: Fragment() {
                 )
             }
             if(list.isNotEmpty()) {
-                val month = DateTimeUtils.getMonthDates(list[0].date)
+                val month = DateTimeUtil.getMonthDates(list[0].date)
                 barChart.setXMinMax(
                     month.first.split("-").last().toFloat(),
                     month.second.split("-").last().toFloat()

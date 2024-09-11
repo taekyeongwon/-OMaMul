@@ -12,8 +12,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.tkw.common.autoCleared
 import com.tkw.common.util.DateTimeUtils
+import com.tkw.common.util.DateTimeUtil
 import com.tkw.common.util.animateByMaxValue
-import com.tkw.domain.model.DayOfWater
 import com.tkw.domain.model.DayOfWaterList
 import com.tkw.record.databinding.FragmentLogWeekBinding
 import com.tkw.ui.chart.marker.MarkerType
@@ -107,7 +107,7 @@ class LogWeekFragment: Fragment() {
         with(dataBinding) {
             val result = list.map {
                 barChart.parsingChartData(
-                    DateTimeUtils.getIndexOfWeek(it.date).toFloat(),
+                    DateTimeUtil.getIndexOfWeek(it.date).toFloat(),
                     it.getTotalIntakeByDate().toFloat() / 1000
                 )
             }
@@ -122,7 +122,7 @@ class LogWeekFragment: Fragment() {
 
     private fun getWeekDateList(date: String): Array<String> {
         val formatter = DateTimeFormatter.ofPattern("MM/dd")
-        val localDate = DateTimeUtils.getDateFromFormat(date)
+        val localDate = DateTimeUtils.Date.getLocalDate(date)
         val week = ArrayList<String>()
         for(i in 1..7) {
             week.add(localDate.with(DayOfWeek.of(i)).format(formatter))

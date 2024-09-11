@@ -2,8 +2,6 @@ package com.tkw.alarm
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,8 +22,6 @@ import com.tkw.ui.ItemTouchHelperCallback
 import com.tkw.ui.OnItemDrag
 import com.tkw.ui.VerticalSpaceItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -142,7 +138,7 @@ class AlarmModeCustomFragment: Fragment() {
         dataBinding.btnAdd.setOnClickListener {
             //새로 추가할 알람 객체 생성
             val currentTime = System.currentTimeMillis()
-            val alarmId = DateTimeUtils.getDateTimeInt(currentTime)
+            val alarmId = DateTimeUtils.DateTime.getFormatTrim(currentTime)
             val alarm = Alarm(
                 alarmId,
                 currentTime,

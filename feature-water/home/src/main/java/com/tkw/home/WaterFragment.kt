@@ -3,7 +3,6 @@ package com.tkw.home
 import android.animation.ValueAnimator
 import android.graphics.PointF
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -115,7 +114,7 @@ class WaterFragment: Fragment() {
             val currentPosition = dataBinding.vpList.currentItem
             if(currentPosition < cupPagerAdapter.itemCount - 1) {
                 val currentCup = cupPagerAdapter.currentList[currentPosition]
-                viewModel.addCount(currentCup.cupAmount, DateTimeUtils.getToday())
+                viewModel.addCount(currentCup.cupAmount, DateTimeUtils.DateTime.getToday())
             }
         }
 

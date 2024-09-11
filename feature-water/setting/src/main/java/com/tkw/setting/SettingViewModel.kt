@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapLatest
-import java.io.File
 import java.time.format.TextStyle
 import java.util.Locale
 import javax.inject.Inject
@@ -131,8 +130,8 @@ class SettingViewModel
         flow {
             emit(it.run {
                 getTimeRange(
-                    DateTimeUtils.getFormattedTime(startTime),
-                    DateTimeUtils.getFormattedTime(endTime))
+                    DateTimeUtils.Time.getFormat(startTime),
+                    DateTimeUtils.Time.getFormat(endTime))
             })
         }
     }.asLiveData()

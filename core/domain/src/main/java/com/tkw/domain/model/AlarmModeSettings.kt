@@ -32,7 +32,7 @@ data class AlarmModeSetting(
 }
 
 data class Alarm(
-    val alarmId: String,   //yyMMddHHmmss   DateTimeUtils - getDateTimeInt()
+    val alarmId: String,   //yyMMddHHmmss
     val startTime: Long,
     val weekList: List<DayOfWeek>,
     val enabled: Boolean = false

@@ -2,14 +2,14 @@ package com.tkw.record
 
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import com.tkw.common.util.DateTimeUtils
+import com.tkw.common.util.DateTimeUtil
 
 object LogBindingAdapter {
     @JvmStatic
     @BindingAdapter("weekDays")
     fun setWeekDays(view: TextView, value: String?) {
         if(value != null) {
-            val week = DateTimeUtils.getWeekDates(value)
+            val week = DateTimeUtil.getWeekDates(value)
             view.text = "${week.first} - ${week.second}"
         }
     }

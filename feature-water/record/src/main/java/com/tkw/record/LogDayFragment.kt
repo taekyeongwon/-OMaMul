@@ -124,11 +124,11 @@ class LogDayFragment: Fragment() {
 
         dataBinding.tvDate.setOnClickListener {
             val dialog = CustomDatePicker(
-                DateTimeUtils.getDateFromFormat(dataBinding.tvDate.text.toString())
+                DateTimeUtils.Date.getLocalDate(dataBinding.tvDate.text.toString())
             ) {
                 viewModel.setEvent(
                     LogContract.Event.DayAmountEventByDate(
-                        DateTimeUtils.getFormattedDate(it)
+                        DateTimeUtils.Date.getFormat(it)
                     )
                 )
             }

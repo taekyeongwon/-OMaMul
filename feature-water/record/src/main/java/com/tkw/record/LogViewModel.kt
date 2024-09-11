@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.tkw.base.IntentBaseViewModel
 import com.tkw.base.launch
 import com.tkw.common.util.DateTimeUtils
+import com.tkw.common.util.DateTimeUtil
 import com.tkw.domain.PrefDataRepository
 import com.tkw.domain.SettingRepository
 import com.tkw.domain.WaterRepository
@@ -34,7 +35,7 @@ class LogViewModel
     //목표 섭취량
     suspend fun getIntakeAmount() = settingRepository.getSetting().first().intake.toFloat()
 
-    private val today = MutableStateFlow(DateTimeUtils.getTodayDate())
+    private val today = MutableStateFlow(DateTimeUtils.Date.getToday())
     val dateStateFlow = MutableStateFlow(today.value)
     val weekStateFlow = MutableStateFlow(today.value)
     val monthStateFlow = MutableStateFlow(today.value)
@@ -62,7 +63,7 @@ class LogViewModel
         }.stateIn(
             initialValue = listOf(
                 Pair(
-                    DateTimeUtils.getWeekDates(today.value).first,
+                    DateTimeUtil.getWeekDates(today.value).first,
                     DayOfWaterList(arrayListOf())
                 )
             ),
@@ -80,7 +81,7 @@ class LogViewModel
         }.stateIn(
             initialValue = listOf(
                 Pair(
-                    DateTimeUtils.getMonthDates(today.value).first,
+                    DateTimeUtil.getMonthDates(today.value).first,
                     DayOfWaterList(arrayListOf())
                 )
             ),
@@ -223,7 +224,7 @@ class LogViewModel
     }
 
     fun setToday() {
-        today.value = DateTimeUtils.getTodayDate()
+        today.value = DateTimeUtils.Date.getToday()
     }
 
     fun setDate(date: String) {
@@ -277,7 +278,7 @@ class LogViewModel
     //주간 데이터 리스트에서 주간 시작일(yyyy-MM-dd)과 동일한 주의 인덱스
     private fun getCurrentWeekIndex(): Int {
         val date = weekStateFlow.value
-        val startWeekDate = DateTimeUtils.getWeekDates(date).first
+        val startWeekDate = DateTimeUtil.getWeekDates(date).first
         return weekFlow.value.indexOfFirst {
             it.first == startWeekDate
         }
@@ -286,7 +287,7 @@ class LogViewModel
     //월간 데이터 리스트에서 월간 시작일(yyyy-MM-dd)과 동일한 월의 인덱스
     private fun getCurrentMonthIndex(): Int {
         val date = monthStateFlow.value
-        val startMonthDate = DateTimeUtils.getMonthDates(date).first
+        val startMonthDate = DateTimeUtil.getMonthDates(date).first
         return monthFlow.value.indexOfFirst {
             it.first == startMonthDate
         }

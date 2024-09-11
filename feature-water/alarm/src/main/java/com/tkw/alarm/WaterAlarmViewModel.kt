@@ -5,12 +5,10 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
-import com.tkw.alarmnoti.NotificationManager
 import com.tkw.base.BaseViewModel
 import com.tkw.base.launch
 import com.tkw.common.SingleLiveEvent
 import com.tkw.common.util.DateTimeUtils
-import com.tkw.common.util.DateTimeUtils.toEpochMilli
 import com.tkw.domain.AlarmRepository
 import com.tkw.domain.PrefDataRepository
 import com.tkw.domain.model.Alarm
@@ -226,7 +224,7 @@ class WaterAlarmViewModel @Inject constructor(
             while(start < end) {
                 alarmList.add(
                     Alarm(
-                        DateTimeUtils.getDateTimeInt(start),
+                        DateTimeUtils.DateTime.getFormatTrim(start),
                         start,
                         period.selectedDate,
                         true

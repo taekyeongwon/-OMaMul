@@ -3,7 +3,7 @@ package com.tkw.init
 import androidx.lifecycle.viewModelScope
 import com.tkw.base.IntentBaseViewModel
 import com.tkw.common.util.DateTimeUtils
-import com.tkw.common.util.DateTimeUtils.toEpochMilli
+import com.tkw.common.util.toEpochMilli
 import com.tkw.domain.AlarmRepository
 import com.tkw.domain.PrefDataRepository
 import com.tkw.domain.SettingRepository
@@ -47,8 +47,14 @@ class InitViewModel
             val currentModeSetting = alarmRepository.getAlarmModeSetting().first()
             alarmRepository.updateAlarmModeSetting(
                 currentModeSetting.copy(
-                    startTime = DateTimeUtils.getTimeFromFormat(wakeTime).toEpochMilli(),
-                    endTime = DateTimeUtils.getTimeFromFormat(sleepTime).toEpochMilli()
+                    startTime = DateTimeUtils.Time.getLocalTime(
+                        wakeTime,
+                        DateTimeUtils.Time.TIME_PATTERN
+                    ).toEpochMilli(),
+                    endTime = DateTimeUtils.Time.getLocalTime(
+                        sleepTime,
+                        DateTimeUtils.Time.TIME_PATTERN
+                    ).toEpochMilli()
                 )
             )
         }

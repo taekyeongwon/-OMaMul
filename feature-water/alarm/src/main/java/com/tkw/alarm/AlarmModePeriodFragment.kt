@@ -12,13 +12,11 @@ import com.tkw.alarm.dialog.AlarmPeriodDialog
 import com.tkw.alarm.dialog.AlarmTimeBottomDialog
 import com.tkw.common.autoCleared
 import com.tkw.common.util.DateTimeUtils
-import com.tkw.common.util.DateTimeUtils.toEpochMilli
+import com.tkw.common.util.toEpochMilli
 import com.tkw.domain.model.AlarmModeSetting
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.lang.StringBuilder
-import java.time.LocalTime
 
 @AndroidEntryPoint
 class AlarmModePeriodFragment : Fragment() {
@@ -58,15 +56,15 @@ class AlarmModePeriodFragment : Fragment() {
                 periodMode = period
                 viewModel.setTmpPeriodMode(period)
                 dataBinding.alarmWeek.setChecked(period.selectedDate)
-                dataBinding.tvIntervalSet.text = DateTimeUtils.getTime(
+                dataBinding.tvIntervalSet.text = DateTimeUtils.Time.getFormat(
                     period.interval.toLong(),
                     requireContext().getString(com.tkw.ui.R.string.hour),
                     requireContext().getString(com.tkw.ui.R.string.minute)
                 )
                 dataBinding.tvAlarmTime.text = period.run {
                     getTimeRange(
-                        DateTimeUtils.getFormattedTime(startTime),
-                        DateTimeUtils.getFormattedTime(endTime)
+                        DateTimeUtils.Time.getFormat(startTime),
+                        DateTimeUtils.Time.getFormat(endTime)
                     )
                 }
                 dataBinding.ivEdit.visibility = View.VISIBLE
@@ -89,14 +87,14 @@ class AlarmModePeriodFragment : Fragment() {
             }
         }
         dataBinding.clPeriod.setOnClickListener {
-            val currentPeriod = DateTimeUtils.getTimeFromLocalTime(
+            val currentPeriod = DateTimeUtils.Time.getLocalTime(
                 dataBinding.tvIntervalSet.text.toString(),
                 requireContext().getString(com.tkw.ui.R.string.hour),
                 requireContext().getString(com.tkw.ui.R.string.minute)
             )
             val dialog = AlarmPeriodDialog(currentPeriod) {
                 dataBinding.tvIntervalSet.text = it
-                val interval = DateTimeUtils.getTimeFromLocalTime(
+                val interval = DateTimeUtils.Time.getLocalTime(
                     it,
                     requireContext().getString(com.tkw.ui.R.string.hour),
                     requireContext().getString(com.tkw.ui.R.string.minute)
@@ -139,16 +137,16 @@ class AlarmModePeriodFragment : Fragment() {
     private fun showTimeDialog() {
         viewModel.tmpPeriodMode.value?.let {
             val dialog = AlarmTimeBottomDialog(
-                selectedStart = DateTimeUtils.getLocalTime(it.startTime),
-                selectedEnd = DateTimeUtils.getLocalTime(it.endTime),
+                selectedStart = DateTimeUtils.Time.getLocalTime(it.startTime),
+                selectedEnd = DateTimeUtils.Time.getLocalTime(it.endTime),
                 resultListener = { wake, sleep ->
                     viewModel.tmpPeriodMode.value?.let { setting ->
                         val newSetting = setting.copy(startTime = wake.toEpochMilli(), endTime = sleep.toEpochMilli())
                         viewModel.setTmpPeriodMode(newSetting)
                         dataBinding.tvAlarmTime.text = newSetting.run {
                             getTimeRange(
-                                DateTimeUtils.getFormattedTime(startTime),
-                                DateTimeUtils.getFormattedTime(endTime)
+                                DateTimeUtils.Time.getFormat(startTime),
+                                DateTimeUtils.Time.getFormat(endTime)
                             )
                         }
                     }

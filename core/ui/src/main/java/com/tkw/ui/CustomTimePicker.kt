@@ -59,7 +59,7 @@ class CustomTimePicker
     fun getValue(): String {
         val hour = dataBinding.hour.value
         val minute = dataBinding.minute.value
-        return DateTimeUtils.getTime(
+        return DateTimeUtils.Time.getFormat(
             hour,
             minute,
             context.getString(R.string.hour),

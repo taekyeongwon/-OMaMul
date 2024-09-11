@@ -75,18 +75,24 @@ class InitTimeFragment: Fragment() {
     }
 
     private fun setDefaultTime() {
-        dataBinding.tvWakeupTime.text = DateTimeUtils.getFormattedTime(8, 0)
-        dataBinding.tvSleepTime.text = DateTimeUtils.getFormattedTime(23, 0)
+        dataBinding.tvWakeupTime.text = DateTimeUtils.Time.getFormat(8, 0)
+        dataBinding.tvSleepTime.text = DateTimeUtils.Time.getFormat(23, 0)
     }
 
     private fun initTimePicker(buttonFlag: Boolean) {
         alarmTimeDialog = AlarmTimeBottomDialog(
             buttonFlag,
-            DateTimeUtils.getTimeFromFormat(dataBinding.tvWakeupTime.text.toString()),
-            DateTimeUtils.getTimeFromFormat(dataBinding.tvSleepTime.text.toString()),
+            DateTimeUtils.Time.getLocalTime(
+                dataBinding.tvWakeupTime.text.toString(),
+                DateTimeUtils.Time.TIME_PATTERN
+            ),
+            DateTimeUtils.Time.getLocalTime(
+                dataBinding.tvSleepTime.text.toString(),
+                DateTimeUtils.Time.TIME_PATTERN
+            ),
             resultListener = { wake, sleep ->
-                dataBinding.tvWakeupTime.text = DateTimeUtils.getFormattedTime(wake.hour, wake.minute)
-                dataBinding.tvSleepTime.text = DateTimeUtils.getFormattedTime(sleep!!.hour, sleep.minute)
+                dataBinding.tvWakeupTime.text = DateTimeUtils.Time.getFormat(wake.hour, wake.minute)
+                dataBinding.tvSleepTime.text = DateTimeUtils.Time.getFormat(sleep.hour, sleep.minute)
             }
         )
     }

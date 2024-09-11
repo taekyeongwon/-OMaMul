@@ -8,11 +8,10 @@ import androidx.core.view.isNotEmpty
 import com.tkw.alarm.databinding.DialogCustomAlarmBinding
 import com.tkw.common.autoCleared
 import com.tkw.common.util.DateTimeUtils
-import com.tkw.common.util.DateTimeUtils.toEpochMilli
+import com.tkw.common.util.toEpochMilli
 import com.tkw.domain.model.Alarm
 import com.tkw.ui.dialog.CustomBottomDialog
 import java.time.DayOfWeek
-import java.time.LocalTime
 
 class CustomAlarmBottomDialog(
     private val alarm: Alarm,
@@ -37,8 +36,8 @@ class CustomAlarmBottomDialog(
     }
 
     private fun initView() {
-        val startHour = DateTimeUtils.getLocalTime(alarm.startTime).hour
-        val startMin = DateTimeUtils.getLocalTime(alarm.startTime).minute
+        val startHour = DateTimeUtils.Time.getLocalTime(alarm.startTime).hour
+        val startMin = DateTimeUtils.Time.getLocalTime(alarm.startTime).minute
         initTimePicker(startHour, startMin)
         initWeekList(alarm.weekList)
     }
@@ -68,7 +67,7 @@ class CustomAlarmBottomDialog(
 
     private fun sendSelectTime() {
         val startTime =
-            DateTimeUtils.getLocalTime(
+            DateTimeUtils.Time.getLocalTime(
                 childBinding.tpStart.hour,
                 childBinding.tpStart.minute
             ).toEpochMilli()

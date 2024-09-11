@@ -8,7 +8,6 @@ import com.tkw.base.BaseViewModel
 import com.tkw.base.launch
 import com.tkw.common.SingleLiveEvent
 import com.tkw.common.util.DateTimeUtils
-import com.tkw.domain.AlarmRepository
 import com.tkw.domain.CupRepository
 import com.tkw.domain.PrefDataRepository
 import com.tkw.domain.SettingRepository
@@ -18,10 +17,8 @@ import com.tkw.domain.model.DayOfWater
 import com.tkw.domain.model.Water
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapLatest
 import javax.inject.Inject
@@ -41,7 +38,7 @@ class WaterViewModel
     suspend fun getInitFlag(): Boolean = initFlag.first()
 
     //현재 날짜
-    private val dateStringFlow = MutableStateFlow(DateTimeUtils.getTodayDate())
+    private val dateStringFlow = MutableStateFlow(DateTimeUtils.Date.getToday())
 
     //현재 날짜로 조회한 DayOfWater, 마지막 데이터 제거하기 위해 관찰
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -65,7 +62,7 @@ class WaterViewModel
 
     //date값 변경에 따라 flow에서 새로운 DayOfWater 객체 collect하기 위한 메서드
     fun setToday() {
-        dateStringFlow.value = DateTimeUtils.getTodayDate()
+        dateStringFlow.value = DateTimeUtils.Date.getToday()
     }
 
     fun addCount(amount: Int, date: String) {

@@ -146,7 +146,8 @@ class WaterSettingFragment : Fragment()
             if(it == -1L) {
                 dataBinding.settingInfo.tvLastSync.text = getString(com.tkw.ui.R.string.setting_last_sync_empty)
             } else {
-                dataBinding.settingInfo.tvLastSync.text = DateTimeUtils.getDateTimeString(DateTimeUtils.getDateTimeFromMillis(it))
+                dataBinding.settingInfo.tvLastSync.text = DateTimeUtils.DateTime.getFormat(
+                    DateTimeUtils.DateTime.getLocalDateTime(it))
             }
         }
     }

@@ -75,12 +75,12 @@ class AlarmTimeBottomDialog(
 
     private fun sendSelectTime() {
         val startTime =
-            DateTimeUtils.getLocalTime(
+            DateTimeUtils.Time.getLocalTime(
                 childBinding.tpStart.hour,
                 childBinding.tpStart.minute
             )
         val endTime =
-            DateTimeUtils.getLocalTime(
+            DateTimeUtils.Time.getLocalTime(
                 childBinding.tpEnd.hour,
                 childBinding.tpEnd.minute
             )

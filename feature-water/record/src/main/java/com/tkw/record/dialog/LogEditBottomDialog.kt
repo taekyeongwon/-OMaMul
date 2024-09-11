@@ -53,7 +53,7 @@ class LogEditBottomDialog(
             },
             confirmAction = {
                 val amount = childBinding.etWaterAmount.text.toString().toInt()
-                val fullDateFormat = DateTimeUtils.getFullFormatFromDateTime(
+                val fullDateFormat = DateTimeUtils.DateTime.getFormat(
                     getSelectedDateTime(),
                     childBinding.tpDate.hour,
                     childBinding.tpDate.minute
@@ -71,6 +71,6 @@ class LogEditBottomDialog(
 
     private fun getSelectedDateTime(): String {
         return selectedItem?.dateTime
-            ?: DateTimeUtils.getFullFormatFromDate(viewModel.getSelectedDate())
+            ?: DateTimeUtils.DateTime.getFormat(viewModel.getSelectedDate())
     }
 }
