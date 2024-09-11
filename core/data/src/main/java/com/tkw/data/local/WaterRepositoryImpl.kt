@@ -37,8 +37,7 @@ class WaterRepositoryImpl @Inject constructor(private val waterDao: WaterDao): W
             allDayOfWater.collect {
                 //마신 물이 있거나 없더라도 표시할 날짜를 차트에 표시하기 위해 필터링
                 val list = it.list.filter { entity ->
-                    entity.dayOfList.isNotEmpty() ||
-                            entity.date == includeDate
+                    entity.dayOfList.isNotEmpty() || entity.date == includeDate
                 }
                 val sortedList = list.sortedBy { it.date }
                 emit(sortedList.map {

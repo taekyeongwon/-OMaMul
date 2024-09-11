@@ -2,8 +2,6 @@ package com.tkw.database.local
 
 import android.util.Log
 import com.tkw.database.FileMerger
-import com.tkw.database.model.AlarmEntity
-import com.tkw.database.model.AlarmEtcSettingsEntity
 import com.tkw.database.model.AlarmModeSettingEntity
 import com.tkw.database.model.AlarmSettingsEntity
 import com.tkw.database.model.CupEntity
@@ -11,9 +9,8 @@ import com.tkw.database.model.CupListEntity
 import com.tkw.database.model.CustomAlarmListEntity
 import com.tkw.database.model.DayOfWaterEntity
 import com.tkw.database.model.PeriodAlarmListEntity
-import com.tkw.database.model.RingToneModeEntity
+import com.tkw.database.model.RealmClassSet
 import com.tkw.database.model.SettingEntity
-import com.tkw.database.model.WaterEntity
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.UpdatePolicy
@@ -22,27 +19,12 @@ import java.io.File
 import javax.inject.Inject
 
 class RealmMerger @Inject constructor(): FileMerger {
-    private val realmEntities = setOf(
-        DayOfWaterEntity::class,
-        WaterEntity::class,
-        CupListEntity::class,
-        CupEntity::class,
-        AlarmSettingsEntity::class,
-        RingToneModeEntity::class,
-        AlarmModeSettingEntity::class,
-        PeriodAlarmListEntity::class,
-        CustomAlarmListEntity::class,
-        AlarmEntity::class,
-        AlarmEtcSettingsEntity::class,
-        SettingEntity::class
-    )
-
     override suspend fun onMerge(sourceFile: File, destFile: File) {
-        val tmpRealmConfig = RealmConfiguration.Builder(realmEntities)
+        val tmpRealmConfig = RealmConfiguration.Builder(RealmClassSet.realmEntities)
             .name(sourceFile.name)
             .deleteRealmIfMigrationNeeded()
             .build()
-        val defaultRealmConfig = RealmConfiguration.Builder(realmEntities)
+        val defaultRealmConfig = RealmConfiguration.Builder(RealmClassSet.realmEntities)
             .name(destFile.name)
             .deleteRealmIfMigrationNeeded()
             .build()

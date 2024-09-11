@@ -140,6 +140,24 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
         }
     }
 
+    private suspend fun getEnabledPeriodAlarmList(): PeriodAlarmListEntity {
+        val period = getPeriodAlarmListEntity.first()
+        val enableList = period.alarmList.filter { it.enabled }
+        return copyFromRealm(period)?.apply {
+            this.alarmList.clear()
+            this.alarmList.addAll(enableList)
+        } ?: PeriodAlarmListEntity()
+    }
+
+    private suspend fun getEnabledCustomAlarmList(): CustomAlarmListEntity {
+        val custom = getCustomAlarmListEntity.first()
+        val enableList = custom.alarmList.filter { it.enabled }
+        return copyFromRealm(custom)?.apply {
+            this.alarmList.clear()
+            this.alarmList.addAll(enableList)
+        } ?: CustomAlarmListEntity()
+    }
+
     override suspend fun setAlarm(alarm: AlarmEntity, alarmMode: AlarmModeEntity) {
         Log.d("AlarmDao", "${::setAlarm.name} alarmId : ${alarm.alarmId} mode : ${alarmMode.name}")
         val alarmEntity = when(alarmMode) {
@@ -248,23 +266,5 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
                 AlarmModeEntity.CUSTOM -> delete(CustomAlarmListEntity::class)
             }
         }
-    }
-
-    private suspend fun getEnabledPeriodAlarmList(): PeriodAlarmListEntity {
-        val period = getPeriodAlarmListEntity.first()
-        val enableList = period.alarmList.filter { it.enabled }
-        return copyFromRealm(period)?.apply {
-            this.alarmList.clear()
-            this.alarmList.addAll(enableList)
-        } ?: PeriodAlarmListEntity()
-    }
-
-    private suspend fun getEnabledCustomAlarmList(): CustomAlarmListEntity {
-        val custom = getCustomAlarmListEntity.first()
-        val enableList = custom.alarmList.filter { it.enabled }
-        return copyFromRealm(custom)?.apply {
-            this.alarmList.clear()
-            this.alarmList.addAll(enableList)
-        } ?: CustomAlarmListEntity()
     }
 }

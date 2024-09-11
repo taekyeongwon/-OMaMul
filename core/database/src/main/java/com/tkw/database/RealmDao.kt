@@ -1,17 +1,6 @@
 package com.tkw.database
 
-import com.tkw.database.model.AlarmEntity
-import com.tkw.database.model.AlarmEtcSettingsEntity
-import com.tkw.database.model.AlarmModeSettingEntity
-import com.tkw.database.model.AlarmSettingsEntity
-import com.tkw.database.model.CupEntity
-import com.tkw.database.model.CupListEntity
-import com.tkw.database.model.CustomAlarmListEntity
-import com.tkw.database.model.DayOfWaterEntity
-import com.tkw.database.model.PeriodAlarmListEntity
-import com.tkw.database.model.RingToneModeEntity
-import com.tkw.database.model.SettingEntity
-import com.tkw.database.model.WaterEntity
+import com.tkw.database.model.RealmClassSet
 import io.realm.kotlin.MutableRealm
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
@@ -19,7 +8,6 @@ import io.realm.kotlin.UpdatePolicy
 import io.realm.kotlin.notifications.ResultsChange
 import io.realm.kotlin.query.RealmResults
 import io.realm.kotlin.types.RealmObject
-import io.realm.kotlin.types.TypedRealmObject
 import kotlinx.coroutines.flow.Flow
 import kotlin.reflect.KClass
 
@@ -27,20 +15,7 @@ interface RealmDao {
     val realm: Realm
 
     fun getRealmConfiguration(): RealmConfiguration {
-        return RealmConfiguration.Builder(setOf(
-            DayOfWaterEntity::class,
-            WaterEntity::class,
-            CupListEntity::class,
-            CupEntity::class,
-            AlarmSettingsEntity::class,
-            RingToneModeEntity::class,
-            AlarmModeSettingEntity::class,
-            PeriodAlarmListEntity::class,
-            CustomAlarmListEntity::class,
-            AlarmEntity::class,
-            AlarmEtcSettingsEntity::class,
-            SettingEntity::class
-        ))
+        return RealmConfiguration.Builder(RealmClassSet.realmEntities)
             .deleteRealmIfMigrationNeeded()
             .build()
     }
