@@ -25,10 +25,6 @@ class WaterAlarmManager @Inject constructor(
         }
     }
 
-    override fun cancelAlarm(alarmId: String) {
-        cancelAlarmManager(alarmId)
-    }
-
     override fun canScheduleExactAlarms(): Boolean {
         return if(Build.VERSION.SDK_INT >= 31) {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -36,9 +32,7 @@ class WaterAlarmManager @Inject constructor(
         } else true
     }
 
-    private fun setAlarmManager(
-        alarm: Alarm
-    ) {
+    private fun setAlarmManager(alarm: Alarm) {
         val pendingIntent = getAlarmPendingIntent(alarm)
 
         val alarmClock = AlarmManager.AlarmClockInfo(
@@ -52,9 +46,7 @@ class WaterAlarmManager @Inject constructor(
         )
     }
 
-    private fun setInexactAlarm(
-        alarm: Alarm
-    ) {
+    private fun setInexactAlarm(alarm: Alarm) {
         val pendingIntent = getAlarmPendingIntent(alarm)
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -74,6 +66,10 @@ class WaterAlarmManager @Inject constructor(
             intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
+    }
+
+    override fun cancelAlarm(alarmId: String) {
+        cancelAlarmManager(alarmId)
     }
 
     private fun cancelAlarmManager(alarmId: String) {

@@ -29,10 +29,6 @@ object NotificationManager {
     private lateinit var homeIntent: PendingIntent
     const val TIMEOUT: Long = 1000 * 5
 
-    fun setContentClickPendingIntent(intent: PendingIntent) {
-        homeIntent = intent
-    }
-
     fun createNotificationChannel(context: Context) {
         val importance = NotificationManager.IMPORTANCE_HIGH
         val name = context.getString(R.string.channel_name)
@@ -58,57 +54,8 @@ object NotificationManager {
         notificationManager.createNotificationChannel(defaultChannel)
     }
 
-    private fun buildNotification(
-        context: Context,
-        drawable: Int,
-        title: String,
-        text: String,
-        channelId: String
-    ): NotificationCompat.Builder {
-        val contentView = RemoteViews(context.packageName, R.layout.custom_notification)
-        contentView.setTextViewText(R.id.tv_title, title)
-        contentView.setTextViewText(R.id.tv_content, text)
-
-        val builder = NotificationCompat.Builder(context, channelId)
-        builder.setSmallIcon(drawable)
-            .setContentTitle(title)
-            .setContentText(text)
-            .setCategory(Notification.CATEGORY_ALARM)
-            .setContentIntent(homeIntent)
-            .setStyle(NotificationCompat.DecoratedCustomViewStyle())
-            .setCustomContentView(contentView)
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-
-        return builder
-    }
-
-    private fun NotificationCompat.Builder.fullScreenBuilder(
-        context: Context,
-        title: String,
-        text: String
-    ) {
-        val contentView = RemoteViews(context.packageName, R.layout.custom_notification)
-        contentView.setTextViewText(R.id.tv_title, title)
-        contentView.setTextViewText(R.id.tv_content, text)
-
-//        setCustomHeadsUpContentView(contentView)
-        setFullScreenIntent(getFullScreenIntent(context), true)
-        setTimeoutAfter(TIMEOUT)
-    }
-
-    /**
-     * 그룹으로 묶어서 알람 처리하는 경우 호출
-     */
-    fun buildSummaryNotification(
-        context: Context,
-        drawable: Int,
-        channelId: String
-    ): NotificationCompat.Builder {
-        val builder = NotificationCompat.Builder(context, channelId)
-        builder.setSmallIcon(drawable)
-            .setGroup(NOTIFICATION_GROUP_NAME)
-            .setGroupSummary(true)
-        return builder
+    fun setContentClickPendingIntent(intent: PendingIntent) {
+        homeIntent = intent
     }
 
     fun notify(context: Context, ringtoneMode: RingToneMode) {
@@ -142,19 +89,25 @@ object NotificationManager {
     }
 
     /**
-     * 알림을 직접 swipe해서 제거할 때 호출할 리시버 등록용 메서드
+     * ringtone mode
+     * 핸드폰 설정과 동일한 경우 NOTI_CH 리턴
+     * 이외 MUTE_CH 리턴
      */
-    private fun NotificationCompat.Builder.setDismissListener(context: Context, notificationId: Int) {
-        val deleteIntent = Intent(context, NotificationDismissedReceiver::class.java)
-        deleteIntent.putExtra("notification_id", notificationId)
-        setDeleteIntent(
-            PendingIntent.getBroadcast(
-                context,
-                notificationId,
-                deleteIntent,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        )
+    private fun getChannel(ringtoneMode: String): String {
+        return when(ringtoneMode) {
+            RingTone.DEVICE.name -> NOTI_CH
+            else -> MUTE_CH
+        }
+    }
+
+    private fun canUseFullScreenIntent(context: Context): Boolean {
+        return if(Build.VERSION.SDK_INT >= 34) {
+            val notificationManager: NotificationManager =
+                context.getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.canUseFullScreenIntent()
+        } else {
+            true
+        }
     }
 
     /**
@@ -194,26 +147,57 @@ object NotificationManager {
         return notification
     }
 
-    fun cancelNotify(context: Context, notificationId: Int) {
-        val notificationManager: NotificationManager =
-            context.getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.cancel(notificationId)
+    private fun buildNotification(
+        context: Context,
+        drawable: Int,
+        title: String,
+        text: String,
+        channelId: String
+    ): NotificationCompat.Builder {
+        val contentView = RemoteViews(context.packageName, R.layout.custom_notification)
+        contentView.setTextViewText(R.id.tv_title, title)
+        contentView.setTextViewText(R.id.tv_content, text)
+
+        val builder = NotificationCompat.Builder(context, channelId)
+        builder.setSmallIcon(drawable)
+            .setContentTitle(title)
+            .setContentText(text)
+            .setCategory(Notification.CATEGORY_ALARM)
+            .setContentIntent(homeIntent)
+            .setStyle(NotificationCompat.DecoratedCustomViewStyle())
+            .setCustomContentView(contentView)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+
+        return builder
     }
 
-    private fun canUseFullScreenIntent(context: Context): Boolean {
-        return if(Build.VERSION.SDK_INT >= 34) {
-            val notificationManager: NotificationManager =
-                context.getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.canUseFullScreenIntent()
-        } else {
-            true
-        }
+    /**
+     * 그룹으로 묶어서 알람 처리하는 경우 호출
+     */
+    fun buildSummaryNotification(
+        context: Context,
+        drawable: Int,
+        channelId: String
+    ): NotificationCompat.Builder {
+        val builder = NotificationCompat.Builder(context, channelId)
+        builder.setSmallIcon(drawable)
+            .setGroup(NOTIFICATION_GROUP_NAME)
+            .setGroupSummary(true)
+        return builder
     }
 
-    fun isNotificationEnabled(context: Context): Boolean {
-        return NotificationManagerCompat
-            .from(context)
-            .areNotificationsEnabled()
+    private fun NotificationCompat.Builder.fullScreenBuilder(
+        context: Context,
+        title: String,
+        text: String
+    ) {
+        val contentView = RemoteViews(context.packageName, R.layout.custom_notification)
+        contentView.setTextViewText(R.id.tv_title, title)
+        contentView.setTextViewText(R.id.tv_content, text)
+
+//        setCustomHeadsUpContentView(contentView)
+        setFullScreenIntent(getFullScreenIntent(context), true)
+        setTimeoutAfter(TIMEOUT)
     }
 
     private fun getFullScreenIntent(context: Context): PendingIntent {
@@ -225,18 +209,6 @@ object NotificationManager {
             intent,
             PendingIntent.FLAG_IMMUTABLE
         )
-    }
-
-    /**
-     * ringtone mode
-     * 핸드폰 설정과 동일한 경우 NOTI_CH 리턴
-     * 이외 MUTE_CH 리턴
-     */
-    private fun getChannel(ringtoneMode: String): String {
-        return when(ringtoneMode) {
-            RingTone.DEVICE.name -> NOTI_CH
-            else -> MUTE_CH
-        }
     }
 
     private fun play(ringtoneMode: String, context: Context) {
@@ -276,5 +248,33 @@ object NotificationManager {
                 context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
             }
         vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
+    }
+
+    fun cancelNotify(context: Context, notificationId: Int) {
+        val notificationManager: NotificationManager =
+            context.getSystemService(Application.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(notificationId)
+    }
+
+    fun isNotificationEnabled(context: Context): Boolean {
+        return NotificationManagerCompat
+            .from(context)
+            .areNotificationsEnabled()
+    }
+
+    /**
+     * 알림을 직접 swipe해서 제거할 때 호출할 리시버 등록용 메서드
+     */
+    private fun NotificationCompat.Builder.setDismissListener(context: Context, notificationId: Int) {
+        val deleteIntent = Intent(context, NotificationDismissedReceiver::class.java)
+        deleteIntent.putExtra("notification_id", notificationId)
+        setDeleteIntent(
+            PendingIntent.getBroadcast(
+                context,
+                notificationId,
+                deleteIntent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        )
     }
 }

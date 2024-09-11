@@ -36,15 +36,6 @@ class MainApplication: Application() {
         }
     }
 
-    private fun initNotification() {
-        val pendingIntent = NavDeepLinkBuilder(this)
-            .setGraph(com.tkw.home.R.navigation.home_nav_graph)
-            .setDestination(com.tkw.home.R.id.waterFragment)
-            .createPendingIntent()
-        NotificationManager.createNotificationChannel(this)
-        NotificationManager.setContentClickPendingIntent(pendingIntent)
-    }
-
     private fun getStackTrace(e: Throwable?): String {
         val result = StringWriter()
         val printWriter = PrintWriter(result)
@@ -59,5 +50,14 @@ class MainApplication: Application() {
         printWriter.close()
 
         return stackTraceAsString
+    }
+
+    private fun initNotification() {
+        val pendingIntent = NavDeepLinkBuilder(this)
+            .setGraph(com.tkw.home.R.navigation.home_nav_graph)
+            .setDestination(com.tkw.home.R.id.waterFragment)
+            .createPendingIntent()
+        NotificationManager.createNotificationChannel(this)
+        NotificationManager.setContentClickPendingIntent(pendingIntent)
     }
 }

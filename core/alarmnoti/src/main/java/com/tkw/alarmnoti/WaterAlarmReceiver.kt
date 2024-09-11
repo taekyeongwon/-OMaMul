@@ -35,10 +35,6 @@ class WaterAlarmReceiver : BroadcastReceiver() {
             } else {
                 intent.getSerializableExtra("ALARM") as Alarm
             }
-//            val alarmId = intent.getIntExtra("ALARM_ID", -1)
-//            val alarmTime = intent.getLongExtra("ALARM_TIME", -1)
-//            val alarmInterval = intent.getLongExtra("ALARM_INTERVAL", -1)
-//            val startTime = alarmTime + alarmInterval
 
             CoroutineScope(Dispatchers.Main).launch {
                 val alarmSettings = alarmRepository.getAlarmSetting().firstOrNull()

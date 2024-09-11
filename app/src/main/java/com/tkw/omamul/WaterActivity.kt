@@ -63,22 +63,16 @@ class WaterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        initLanguage()
         installSplashScreen()
+        initialize()
+    }
+
+    private fun initialize() {
+        initLanguage()
         initBinding()
         initView()
         initObserver()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        registerReceiver(broadcastReceiver, receiveFilter)
-        alarmViewModel.setNotificationEnabled(NotificationManager.isNotificationEnabled(this))
-    }
-
-    override fun onPause() {
-        super.onPause()
-        unregisterReceiver(broadcastReceiver)
+        setWorkManager()
     }
 
     //최초 설치 시 언어 선택하면 액티비티 재생성되지 않도록(configChanges 적용 안됨) 추가함.
@@ -96,39 +90,7 @@ class WaterActivity : AppCompatActivity() {
         setContentView(dataBinding.root)
         setSupportActionBar(dataBinding.toolbar)
         setNavBackListener()    //툴바 설정 후 호출
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
-            insets
-        }
-        setWorkManager()
-    }
-
-    private fun initObserver() {
-        waterViewModel.amountLiveData.observe(this) {
-            lifecycleScope.launch {
-                val prev = prevAmount
-                if(it.getTotalIntakeByDate() >= waterViewModel.getIntakeAmount()) {
-                    if(prev < waterViewModel.getIntakeAmount()) {
-                        Toast.makeText(
-                            this@WaterActivity,
-                            getString(com.tkw.ui.R.string.intake_complete),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                    alarmViewModel.saveReachedGoal(true)
-                } else {
-                    alarmViewModel.saveReachedGoal(false)
-                }
-                prevAmount = it.getTotalIntakeByDate()
-            }
-        }
-        alarmViewModel.isReachedGoal.observe(this) {
-            lifecycleScope.launch {
-                val isNotificationEnabled = alarmViewModel.isNotificationAlarmEnabled().first()
-                alarmViewModel.delayAllAlarm(it, isNotificationEnabled)
-            }
-        }
+        setWindowInsets()
     }
 
     private fun initNavigate() {
@@ -179,6 +141,41 @@ class WaterActivity : AppCompatActivity() {
         }
     }
 
+    private fun setWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
+            insets
+        }
+    }
+
+    private fun initObserver() {
+        waterViewModel.amountLiveData.observe(this) {
+            lifecycleScope.launch {
+                val prev = prevAmount
+                if(it.getTotalIntakeByDate() >= waterViewModel.getIntakeAmount()) {
+                    if(prev < waterViewModel.getIntakeAmount()) {
+                        Toast.makeText(
+                            this@WaterActivity,
+                            getString(com.tkw.ui.R.string.intake_complete),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    alarmViewModel.saveReachedGoal(true)
+                } else {
+                    alarmViewModel.saveReachedGoal(false)
+                }
+                prevAmount = it.getTotalIntakeByDate()
+            }
+        }
+        alarmViewModel.isReachedGoal.observe(this) {
+            lifecycleScope.launch {
+                val isNotificationEnabled = alarmViewModel.isNotificationAlarmEnabled().first()
+                alarmViewModel.delayAllAlarm(it, isNotificationEnabled)
+            }
+        }
+    }
+
     private fun setWorkManager() {
         val constraints = Constraints.Builder()
             .setRequiresBatteryNotLow(true)
@@ -205,5 +202,16 @@ class WaterActivity : AppCompatActivity() {
 
     private fun cancelWorkManager(alarmId: String) {
         WorkManager.getInstance(this).cancelUniqueWork(ScheduledWorkManager.WORK_NAME)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        registerReceiver(broadcastReceiver, receiveFilter)
+        alarmViewModel.setNotificationEnabled(NotificationManager.isNotificationEnabled(this))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(broadcastReceiver)
     }
 }
