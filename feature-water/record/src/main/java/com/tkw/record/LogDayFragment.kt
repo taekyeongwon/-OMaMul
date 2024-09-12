@@ -30,6 +30,16 @@ class LogDayFragment: Fragment() {
     private val viewModel: LogViewModel by activityViewModels()
     private lateinit var dayAdapter: DayListAdapter
 
+    private val dayAmountEditListener: (Int) -> Unit = { position ->
+        val item: Water = dayAdapter.currentList[position]
+        viewModel.setEvent(LogContract.Event.ShowEditDialog(item))
+    }
+
+    private val dayAmountDeleteListener: (Int) -> Unit = { position ->
+        val item: Water = dayAdapter.currentList[position]
+        viewModel.setEvent(LogContract.Event.RemoveDayAmount(item))
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -66,6 +76,17 @@ class LogDayFragment: Fragment() {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 viewModel.setEvent(LogContract.Event.DayAmountEvent(LogContract.Move.INIT))
             }
+        }
+    }
+
+    private suspend fun initChart() {
+        val amount = viewModel.getIntakeAmount()
+        with(dataBinding) {
+            barChart.setXMinMax(0f, 24f)
+            barChart.setLimit(amount)
+            barChart.setUnit(getString(com.tkw.ui.R.string.unit_hour), getString(com.tkw.ui.R.string.unit_ml))
+            barChart.setMarker(MarkerType.DAY)
+            barChart.setChartData(arrayListOf())    //최초 호출 시 차트 여백 적용해 주기 위해 빈값으로 data set
         }
     }
 
@@ -109,6 +130,27 @@ class LogDayFragment: Fragment() {
         }
     }
 
+    private fun setChartData(dayOfWater: DayOfWater) {
+        with(dataBinding) {
+            val result = dayOfWater.getAccumulatedAmount().map {
+                barChart.parsingChartData(it.key.toFloat(), it.value.toFloat())
+            }
+
+            barChart.setChartData(result)
+            tvTotalAmount.animateByMaxValue(result.lastOrNull()?.y?.toInt() ?: 0)
+        }
+    }
+
+    private fun dataChanged() {
+        if(dayAdapter.itemCount == 0) {
+            dataBinding.nvEmptyView.visibility = View.VISIBLE
+            dataBinding.rvDayList.visibility = View.GONE
+        } else {
+            dataBinding.nvEmptyView.visibility = View.GONE
+            dataBinding.rvDayList.visibility = View.VISIBLE
+        }
+    }
+
     private fun initListener() {
         dataBinding.ibDayAdd.setOnClickListener {
             viewModel.setEvent(LogContract.Event.ShowAddDialog)
@@ -133,48 +175,6 @@ class LogDayFragment: Fragment() {
                 )
             }
             dialog.show(childFragmentManager, dialog.tag)
-        }
-    }
-
-    private val dayAmountEditListener: (Int) -> Unit = { position ->
-        val item: Water = dayAdapter.currentList[position]
-        viewModel.setEvent(LogContract.Event.ShowEditDialog(item))
-    }
-
-    private val dayAmountDeleteListener: (Int) -> Unit = { position ->
-        val item: Water = dayAdapter.currentList[position]
-        viewModel.setEvent(LogContract.Event.RemoveDayAmount(item))
-    }
-
-    private suspend fun initChart() {
-        val amount = viewModel.getIntakeAmount()
-        with(dataBinding) {
-            barChart.setXMinMax(0f, 24f)
-            barChart.setLimit(amount)
-            barChart.setUnit(getString(com.tkw.ui.R.string.unit_hour), getString(com.tkw.ui.R.string.unit_ml))
-            barChart.setMarker(MarkerType.DAY)
-            barChart.setChartData(arrayListOf())    //최초 호출 시 차트 여백 적용해 주기 위해 빈값으로 data set
-        }
-    }
-
-    private fun setChartData(dayOfWater: DayOfWater) {
-        with(dataBinding) {
-            val result = dayOfWater.getAccumulatedAmount().map {
-                barChart.parsingChartData(it.key.toFloat(), it.value.toFloat())
-            }
-
-            barChart.setChartData(result)
-            tvTotalAmount.animateByMaxValue(result.lastOrNull()?.y?.toInt() ?: 0)
-        }
-    }
-
-    private fun dataChanged() {
-        if(dayAdapter.itemCount == 0) {
-            dataBinding.nvEmptyView.visibility = View.VISIBLE
-            dataBinding.rvDayList.visibility = View.GONE
-        } else {
-            dataBinding.nvEmptyView.visibility = View.GONE
-            dataBinding.rvDayList.visibility = View.VISIBLE
         }
     }
 }

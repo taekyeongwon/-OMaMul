@@ -70,6 +70,7 @@ class CupListAdapter(
 
     fun setDraggable(isDraggable: Boolean) {
         draggable = isDraggable
+        notifyDataSetChanged()
     }
 
     class CupListViewHolder(

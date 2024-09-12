@@ -199,28 +199,6 @@ class WaterSettingFragment : Fragment()
         }
     }
 
-    private fun updateUI(isLoggedIn: Boolean) {
-        if (isLoggedIn) {
-            dataBinding.settingInfo.tvSync.text = oAuth.fetchInfo()?.name ?: "-"
-            dataBinding.settingInfo.tvLastSync.visibility = View.VISIBLE
-            dataBinding.settingInfo.ivSync.visibility = View.VISIBLE
-            dataBinding.btnLogout.visibility = View.VISIBLE
-        } else {
-            dataBinding.settingInfo.tvSync.text = getString(com.tkw.ui.R.string.setting_sync)
-            dataBinding.settingInfo.tvLastSync.visibility = View.GONE
-            dataBinding.settingInfo.ivSync.visibility = View.GONE
-            dataBinding.btnLogout.visibility = View.GONE
-        }
-        Glide
-            .with(requireContext())
-            .load(oAuth.fetchInfo()?.photoUrl)
-            .placeholder(com.tkw.ui.R.drawable.account_circle)
-            .error(com.tkw.ui.R.drawable.account_circle)
-            .fallback(com.tkw.ui.R.drawable.account_circle)
-            .apply(RequestOptions().circleCrop())
-            .into(dataBinding.settingInfo.ivImage)
-    }
-
     private fun doLogin() {
         oAuth.signOut()
         oAuth.signIn {
@@ -249,6 +227,28 @@ class WaterSettingFragment : Fragment()
                 )
             }
         }
+    }
+
+    private fun updateUI(isLoggedIn: Boolean) {
+        if (isLoggedIn) {
+            dataBinding.settingInfo.tvSync.text = oAuth.fetchInfo()?.name ?: "-"
+            dataBinding.settingInfo.tvLastSync.visibility = View.VISIBLE
+            dataBinding.settingInfo.ivSync.visibility = View.VISIBLE
+            dataBinding.btnLogout.visibility = View.VISIBLE
+        } else {
+            dataBinding.settingInfo.tvSync.text = getString(com.tkw.ui.R.string.setting_sync)
+            dataBinding.settingInfo.tvLastSync.visibility = View.GONE
+            dataBinding.settingInfo.ivSync.visibility = View.GONE
+            dataBinding.btnLogout.visibility = View.GONE
+        }
+        Glide
+            .with(requireContext())
+            .load(oAuth.fetchInfo()?.photoUrl)
+            .placeholder(com.tkw.ui.R.drawable.account_circle)
+            .error(com.tkw.ui.R.drawable.account_circle)
+            .fallback(com.tkw.ui.R.drawable.account_circle)
+            .apply(RequestOptions().circleCrop())
+            .into(dataBinding.settingInfo.ivImage)
     }
 
 //    private fun cloudStorageUpload() {

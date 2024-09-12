@@ -61,6 +61,16 @@ class LogWeekFragment: Fragment() {
         }
     }
 
+    private suspend fun initChart() {
+        val amount = viewModel.getIntakeAmount()
+        with(dataBinding) {
+            barChart.setLimit(amount / 1000)
+            barChart.setYUnit(getString(com.tkw.ui.R.string.unit_liter))
+            barChart.setMarker(MarkerType.WEEK)
+            barChart.setXMinMax(1f, 7f)
+        }
+    }
+
     private fun initObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.state.collect {
@@ -79,26 +89,6 @@ class LogWeekFragment: Fragment() {
                     }
                 }
             }
-        }
-    }
-
-    private fun initListener() {
-        dataBinding.ibDayLeft.setOnClickListener {
-            viewModel.setEvent(LogContract.Event.WeekAmountEvent(LogContract.Move.LEFT))
-        }
-
-        dataBinding.ibDayRight.setOnClickListener {
-            viewModel.setEvent(LogContract.Event.WeekAmountEvent(LogContract.Move.RIGHT))
-        }
-    }
-
-    private suspend fun initChart() {
-        val amount = viewModel.getIntakeAmount()
-        with(dataBinding) {
-            barChart.setLimit(amount / 1000)
-            barChart.setYUnit(getString(com.tkw.ui.R.string.unit_liter))
-            barChart.setMarker(MarkerType.WEEK)
-            barChart.setXMinMax(1f, 7f)
         }
     }
 
@@ -128,5 +118,15 @@ class LogWeekFragment: Fragment() {
             week.add(localDate.with(DayOfWeek.of(i)).format(formatter))
         }
         return week.toArray(arrayOf())
+    }
+
+    private fun initListener() {
+        dataBinding.ibDayLeft.setOnClickListener {
+            viewModel.setEvent(LogContract.Event.WeekAmountEvent(LogContract.Move.LEFT))
+        }
+
+        dataBinding.ibDayRight.setOnClickListener {
+            viewModel.setEvent(LogContract.Event.WeekAmountEvent(LogContract.Move.RIGHT))
+        }
     }
 }

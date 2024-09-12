@@ -58,6 +58,18 @@ class LogMonthFragment: Fragment() {
         }
     }
 
+    private suspend fun initChart() {
+        val amount = viewModel.getIntakeAmount()
+        with(dataBinding) {
+            barChart.setLimit(amount / 1000)
+            barChart.setUnit(
+                getString(com.tkw.ui.R.string.unit_day),
+                getString(com.tkw.ui.R.string.unit_liter)
+            )
+            barChart.setMarker(MarkerType.MONTH)
+        }
+    }
+
     private fun initObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.state.collect {
@@ -76,28 +88,6 @@ class LogMonthFragment: Fragment() {
                     }
                 }
             }
-        }
-    }
-
-    private fun initListener() {
-        dataBinding.ibDayLeft.setOnClickListener {
-            viewModel.setEvent(LogContract.Event.MonthAmountEvent(LogContract.Move.LEFT))
-        }
-
-        dataBinding.ibDayRight.setOnClickListener {
-            viewModel.setEvent(LogContract.Event.MonthAmountEvent(LogContract.Move.RIGHT))
-        }
-    }
-
-    private suspend fun initChart() {
-        val amount = viewModel.getIntakeAmount()
-        with(dataBinding) {
-            barChart.setLimit(amount / 1000)
-            barChart.setUnit(
-                getString(com.tkw.ui.R.string.unit_day),
-                getString(com.tkw.ui.R.string.unit_liter)
-            )
-            barChart.setMarker(MarkerType.MONTH)
         }
     }
 
@@ -120,6 +110,16 @@ class LogMonthFragment: Fragment() {
 
             barChart.setChartData(result)
             tvTotalAmount.animateByMaxValue(dayOfWaterList.getTotalIntake() / 1000f)
+        }
+    }
+
+    private fun initListener() {
+        dataBinding.ibDayLeft.setOnClickListener {
+            viewModel.setEvent(LogContract.Event.MonthAmountEvent(LogContract.Move.LEFT))
+        }
+
+        dataBinding.ibDayRight.setOnClickListener {
+            viewModel.setEvent(LogContract.Event.MonthAmountEvent(LogContract.Move.RIGHT))
         }
     }
 }

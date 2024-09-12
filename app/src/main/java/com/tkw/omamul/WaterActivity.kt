@@ -66,6 +66,17 @@ class WaterActivity : AppCompatActivity() {
         initialize()
     }
 
+    override fun onResume() {
+        super.onResume()
+        registerReceiver(broadcastReceiver, receiveFilter)
+        alarmViewModel.setNotificationEnabled(NotificationManager.isNotificationEnabled(this))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(broadcastReceiver)
+    }
+
     private fun initialize() {
         initLanguage()
         initBinding()
@@ -221,16 +232,5 @@ class WaterActivity : AppCompatActivity() {
 
     private fun cancelWorkManager(alarmId: String) {
         WorkManager.getInstance(this).cancelUniqueWork(ScheduledWorkManager.WORK_NAME)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        registerReceiver(broadcastReceiver, receiveFilter)
-        alarmViewModel.setNotificationEnabled(NotificationManager.isNotificationEnabled(this))
-    }
-
-    override fun onPause() {
-        super.onPause()
-        unregisterReceiver(broadcastReceiver)
     }
 }

@@ -43,6 +43,21 @@ class WaterFragment: Fragment() {
     private var lottieHeight = 0f
     private var dayOfWater: DayOfWater? = null
 
+    private val clickScrollListener: (Int) -> Unit = { position ->
+        scrollToPosition(position, true)
+    }
+
+    private val addListener = {
+        val lastPosition = cupPagerAdapter.itemCount - 1
+        if(dataBinding.vpList.currentItem == lastPosition) {
+            //add버튼 선택했고, snap된 상태면 관리화면 이동
+            findNavController().deepLinkNavigateTo(requireContext(), DeepLinkDestination.Cup)
+        } else {
+            //snap되지 않은 상태면 맨 마지막으로 스크롤
+            scrollToPosition(lastPosition, true)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -77,52 +92,6 @@ class WaterFragment: Fragment() {
         initViewPager()
         initItemMenu()
         initLottie()
-    }
-
-    private fun initObserver() {
-        //홈 화면은 오늘 날짜의 데이터만 보여주도록 여기서 세팅
-        viewModel.setToday()
-
-        viewModel.amountLiveData.observe(viewLifecycleOwner) {
-            lifecycleScope.launch {
-                val intakeGoal = viewModel.getIntakeAmount()
-                val prevWater = dayOfWater
-                val currentAmount = minOf(it.getTotalIntakeByDate() / intakeGoal.toFloat(), 1.0f)
-                val dy = lottieHeight * (1 - currentAmount)
-                if(prevWater != null) {
-                    val prevAmount = minOf(prevWater.getTotalIntakeByDate() / intakeGoal.toFloat(), 1.0f)
-                    val prevDy = lottieHeight * (1 - prevAmount)
-                    startWaterAnimation(prevDy, dy)
-                } else {
-                    startWaterAnimation(lottieHeight, dy)
-                }
-
-                dayOfWater = it
-                countObject = it.dayOfList
-            }
-        }
-
-        viewModel.cupListLiveData.observe(viewLifecycleOwner) {
-            cupPagerAdapter.submitList(it) {
-                dataBinding.vpList.doOnLayout { snapSavedPosition() }
-            }
-        }
-    }
-
-    private fun initListener() {
-        dataBinding.btnAdd.setOnClickListener {
-            val currentPosition = dataBinding.vpList.currentItem
-            if(currentPosition < cupPagerAdapter.itemCount - 1) {
-                val currentCup = cupPagerAdapter.currentList[currentPosition]
-                viewModel.addCount(currentCup.cupAmount, DateTimeUtils.DateTime.getToday())
-            }
-        }
-
-        dataBinding.btnRemove.setOnClickListener {
-            if(!countObject.isNullOrEmpty()) {
-                viewModel.removeCount(countObject!!.last())
-            }
-        }
     }
 
     /**
@@ -179,6 +148,36 @@ class WaterFragment: Fragment() {
         lottieHeight = density * 200    //애니메이션 픽셀 높이 값 : 200
     }
 
+    private fun initObserver() {
+        //홈 화면은 오늘 날짜의 데이터만 보여주도록 여기서 세팅
+        viewModel.setToday()
+
+        viewModel.amountLiveData.observe(viewLifecycleOwner) {
+            lifecycleScope.launch {
+                val intakeGoal = viewModel.getIntakeAmount()
+                val prevWater = dayOfWater
+                val currentAmount = minOf(it.getTotalIntakeByDate() / intakeGoal.toFloat(), 1.0f)
+                val dy = lottieHeight * (1 - currentAmount)
+                if(prevWater != null) {
+                    val prevAmount = minOf(prevWater.getTotalIntakeByDate() / intakeGoal.toFloat(), 1.0f)
+                    val prevDy = lottieHeight * (1 - prevAmount)
+                    startWaterAnimation(prevDy, dy)
+                } else {
+                    startWaterAnimation(lottieHeight, dy)
+                }
+
+                dayOfWater = it
+                countObject = it.dayOfList
+            }
+        }
+
+        viewModel.cupListLiveData.observe(viewLifecycleOwner) {
+            cupPagerAdapter.submitList(it) {
+                dataBinding.vpList.doOnLayout { snapSavedPosition() }
+            }
+        }
+    }
+
     private fun startWaterAnimation(startValue: Float, endValue: Float) {
         val animator = ValueAnimator.ofFloat(startValue, endValue)
         animator.addUpdateListener {
@@ -193,18 +192,15 @@ class WaterFragment: Fragment() {
         animator.start()
     }
 
-    private val clickScrollListener: (Int) -> Unit = { position ->
-        scrollToPosition(position, true)
-    }
-
-    private val addListener = {
-        val lastPosition = cupPagerAdapter.itemCount - 1
-        if(dataBinding.vpList.currentItem == lastPosition) {
-            //add버튼 선택했고, snap된 상태면 관리화면 이동
-            findNavController().deepLinkNavigateTo(requireContext(), DeepLinkDestination.Cup)
-        } else {
-            //snap되지 않은 상태면 맨 마지막으로 스크롤
-            scrollToPosition(lastPosition, true)
+    /**
+     * PageTransformer에서 page 포지션 이동이 적용되어 있고,
+     * setCurrentItem(smoothFlag = false)를 호출하는 경우
+     * 항목이 2~3개 일 때 살짝 스크롤 하고 나면 뷰가 그려지는 현상 발생
+     */
+    private fun snapSavedPosition() {
+        if(cupPagerAdapter.itemCount > 1) {
+            val savedPosition = viewModel.cupPagerScrollPosition.value ?: 0
+            scrollToPosition(savedPosition, false)
         }
     }
 
@@ -218,15 +214,19 @@ class WaterFragment: Fragment() {
         }
     }
 
-    /**
-     * PageTransformer에서 page 포지션 이동이 적용되어 있고,
-     * setCurrentItem(smoothFlag = false)를 호출하는 경우
-     * 항목이 2~3개 일 때 살짝 스크롤 하고 나면 뷰가 그려지는 현상 발생
-     */
-    private fun snapSavedPosition() {
-        if(cupPagerAdapter.itemCount > 1) {
-            val savedPosition = viewModel.cupPagerScrollPosition.value ?: 0
-            scrollToPosition(savedPosition, false)
+    private fun initListener() {
+        dataBinding.btnAdd.setOnClickListener {
+            val currentPosition = dataBinding.vpList.currentItem
+            if(currentPosition < cupPagerAdapter.itemCount - 1) {
+                val currentCup = cupPagerAdapter.currentList[currentPosition]
+                viewModel.addCount(currentCup.cupAmount, DateTimeUtils.DateTime.getToday())
+            }
+        }
+
+        dataBinding.btnRemove.setOnClickListener {
+            if(!countObject.isNullOrEmpty()) {
+                viewModel.removeCount(countObject!!.last())
+            }
         }
     }
 }

@@ -153,25 +153,6 @@ class CupManageFragment: Fragment() {
         }
     }
 
-    private fun initListener() {
-        dataBinding.btnNext.setOnClickListener {
-            findNavController().navigate(CupManageFragmentDirections
-                .actionCupManageFragmentToCupCreateFragment(null))
-        }
-
-        dataBinding.btnReorder.setOnClickListener {
-            viewModel.setModifyMode(true)
-        }
-
-        dataBinding.btnDelete.setOnClickListener {
-            cupListAdapter.currentList
-                .filter { it.isChecked }
-                .forEach {
-                    viewModel.deleteCup(it.cupId)
-                }
-        }
-    }
-
     private fun dataChanged() {
         if(cupListAdapter.itemCount == 0) {
             dataBinding.rvCupList.visibility = View.GONE
@@ -209,6 +190,25 @@ class CupManageFragment: Fragment() {
                     if (it > 0) View.VISIBLE
                     else View.INVISIBLE
             }
+    }
+
+    private fun initListener() {
+        dataBinding.btnNext.setOnClickListener {
+            findNavController().navigate(CupManageFragmentDirections
+                .actionCupManageFragmentToCupCreateFragment(null))
+        }
+
+        dataBinding.btnReorder.setOnClickListener {
+            viewModel.setModifyMode(true)
+        }
+
+        dataBinding.btnDelete.setOnClickListener {
+            cupListAdapter.currentList
+                .filter { it.isChecked }
+                .forEach {
+                    viewModel.deleteCup(it.cupId)
+                }
+        }
     }
 
     private fun clearChecked() {
