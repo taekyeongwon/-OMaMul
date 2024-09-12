@@ -1,4 +1,4 @@
-package com.tkw.ui
+package com.tkw.ui.custom
 
 import android.content.Context
 import android.util.AttributeSet
@@ -11,7 +11,7 @@ import com.tkw.ui.databinding.CustomSwitchBinding
 /**
  * 스위치뷰 track, thumb drawable 커스텀, CheckedChangeListener 설정하기 위한 뷰
  */
-class CustomSwitchView
+class SwitchView
 @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
     ConstraintLayout(context, attrs, defStyle) {
     private val dataBinding: CustomSwitchBinding
@@ -33,7 +33,7 @@ class CustomSwitchView
     companion object {
         @JvmStatic
         @BindingAdapter("checked")
-        fun setChecked(view: CustomSwitchView, flag: Boolean) {
+        fun setChecked(view: SwitchView, flag: Boolean) {
             view.setChecked(flag)
         }
     }

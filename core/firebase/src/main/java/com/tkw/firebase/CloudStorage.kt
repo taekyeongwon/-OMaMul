@@ -18,9 +18,9 @@ class CloudStorage: BackupManager {
         val fileRef = storageRef.child(token!!).child(fileUri.lastPathSegment ?: "")
         val uploadTask = fileRef.putFile(fileUri)
         uploadTask.addOnSuccessListener {
-            Log.d("test", "upload success")
+            Log.d("CloudStorage", "upload success")
         }.addOnFailureListener {
-            Log.d("test", "upload failure")
+            Log.d("CloudStorage", "upload failure")
         }
         return ""
     }

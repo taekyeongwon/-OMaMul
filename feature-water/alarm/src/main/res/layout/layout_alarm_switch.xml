@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.tkw.ui.CustomSwitchView
+    <com.tkw.ui.custom.SwitchView
         android:id="@+id/toolbar_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

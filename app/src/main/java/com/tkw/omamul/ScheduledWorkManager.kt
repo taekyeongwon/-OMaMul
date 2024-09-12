@@ -49,14 +49,13 @@ class ScheduledWorkManager(
                 backupTime.add(Calendar.DAY_OF_MONTH, 1)
             }
             val delayTime = backupTime.timeInMillis - System.currentTimeMillis()
-            Log.d("test", delayTime.toString())
             return delayTime
         }
     }
 
     override suspend fun doWork(): Result {
         try {
-            Log.d("test", "work manager do work.")
+            Log.d("WorkManager", "work manager do work.")
             val hiltEntryPoint = EntryPointAccessors.fromApplication(
                 applicationContext,
                 DependencyProvider::class.java

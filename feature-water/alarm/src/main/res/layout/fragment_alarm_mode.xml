@@ -40,7 +40,7 @@
             android:background="@drawable/rounded_rect"
             android:layout_marginTop="4dp"
             app:layout_constraintTop_toBottomOf="@id/tv_alarm_mode_title">
-            <com.tkw.ui.CustomTextImageView
+            <com.tkw.ui.custom.TextImageView
                 android:id="@+id/tv_alarm_mode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -59,17 +59,17 @@ class AlarmRingtoneDialog: CustomBottomDialog<DialogRingtoneBinding>() {
         )
 
         with(childBinding) {
-            svRingtone.setCheckedChangeListener { compoundButton, b ->
+            svRingtone.setSwitch(false) { compoundButton, b ->
                 if(b) {
                     svPhoneSetting.setChecked(false)
                 }
             }
-            svVibe.setCheckedChangeListener { compoundButton, b ->
+            svVibe.setSwitch(false) { compoundButton, b ->
                 if(b) {
                     svPhoneSetting.setChecked(false)
                 }
             }
-            svPhoneSetting.setCheckedChangeListener { compoundButton, b ->
+            svPhoneSetting.setSwitch(false) { compoundButton, b ->
                 if(b) {
                     svRingtone.setChecked(false)
                     svVibe.setChecked(false)

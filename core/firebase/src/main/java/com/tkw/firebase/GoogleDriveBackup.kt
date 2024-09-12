@@ -85,39 +85,6 @@ class GoogleDriveBackup @Inject constructor(
         }
     }
 
-    override fun authorize(resultListener: (Result<AuthorizationResult>) -> Unit) {
-        val authorizationRequest = AuthorizationRequest.builder().setRequestedScopes(requestedScopes).build()
-        Identity.getAuthorizationClient(context)
-            .authorize(authorizationRequest)
-            .addOnSuccessListener {
-                resultListener(Result.success(it))
-            }
-            .addOnFailureListener {
-                it.printStackTrace()
-                resultListener(Result.failure(it))
-            }
-    }
-
-    private fun getDriveService(token: String?): Drive {
-        // Load pre-authorized user credentials from the environment.
-        // TODO(developer) - See https://developers.google.com/identity for
-        // guides on implementing OAuth2 for your application.
-//        GoogleCredentials credentials = GoogleCredentials.getApplicationDefault()
-        val credentials = GoogleCredentials.create(AccessToken(token, null))
-            .createScoped(scope)
-        val requestInitializer: HttpRequestInitializer = HttpCredentialsAdapter(
-            credentials
-        )
-//        Build a new authorized API client service.
-        return Drive.Builder(
-            NetHttpTransport(),
-            GsonFactory.getDefaultInstance(),
-            requestInitializer
-        )
-            .setApplicationName("OMaMul App Drive")
-            .build()
-    }
-
     private fun getFile(token: String?, fileName: String): File? {
         val list = getList(token)
         list.files.forEach {
@@ -145,5 +112,38 @@ class GoogleDriveBackup @Inject constructor(
             System.err.println("Unable to list files: " + e.details)
             throw e
         }
+    }
+
+    private fun getDriveService(token: String?): Drive {
+        // Load pre-authorized user credentials from the environment.
+        // TODO(developer) - See https://developers.google.com/identity for
+        // guides on implementing OAuth2 for your application.
+//        GoogleCredentials credentials = GoogleCredentials.getApplicationDefault()
+        val credentials = GoogleCredentials.create(AccessToken(token, null))
+            .createScoped(scope)
+        val requestInitializer: HttpRequestInitializer = HttpCredentialsAdapter(
+            credentials
+        )
+//        Build a new authorized API client service.
+        return Drive.Builder(
+            NetHttpTransport(),
+            GsonFactory.getDefaultInstance(),
+            requestInitializer
+        )
+            .setApplicationName("OMaMul App Drive")
+            .build()
+    }
+
+    override fun authorize(resultListener: (Result<AuthorizationResult>) -> Unit) {
+        val authorizationRequest = AuthorizationRequest.builder().setRequestedScopes(requestedScopes).build()
+        Identity.getAuthorizationClient(context)
+            .authorize(authorizationRequest)
+            .addOnSuccessListener {
+                resultListener(Result.success(it))
+            }
+            .addOnFailureListener {
+                it.printStackTrace()
+                resultListener(Result.failure(it))
+            }
     }
 }

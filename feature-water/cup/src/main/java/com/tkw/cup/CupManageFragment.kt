@@ -15,7 +15,7 @@ import com.tkw.common.autoCleared
 import com.tkw.cup.adapter.CupListAdapter
 import com.tkw.cup.databinding.FragmentCupManageBinding
 import com.tkw.domain.model.Cup
-import com.tkw.ui.DividerDecoration
+import com.tkw.ui.decoration.DividerDecoration
 import com.tkw.ui.ItemTouchHelperCallback
 import com.tkw.ui.OnItemDrag
 import dagger.hilt.android.AndroidEntryPoint

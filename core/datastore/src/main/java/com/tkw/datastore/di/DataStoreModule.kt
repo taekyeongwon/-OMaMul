@@ -1,4 +1,4 @@
-package com.tkw.data.di
+package com.tkw.datastore.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore

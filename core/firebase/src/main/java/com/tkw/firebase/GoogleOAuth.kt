@@ -89,11 +89,11 @@ class GoogleOAuth @Inject constructor(
                         e.printStackTrace()
                     }
                 } else {
-                    Log.e("test", "Unexpected type of credential")
+                    Log.e("GoogleOAuth", "Unexpected type of credential")
                 }
             }
             else -> {
-                Log.e("test", "Unexpected type of credential")
+                Log.e("GoogleOAuth", "Unexpected type of credential")
             }
         }
     }

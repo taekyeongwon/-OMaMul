@@ -20,7 +20,7 @@ import com.tkw.common.util.DateTimeUtils
 import com.tkw.domain.model.Alarm
 import com.tkw.ui.ItemTouchHelperCallback
 import com.tkw.ui.OnItemDrag
-import com.tkw.ui.VerticalSpaceItemDecoration
+import com.tkw.ui.decoration.VerticalSpaceItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

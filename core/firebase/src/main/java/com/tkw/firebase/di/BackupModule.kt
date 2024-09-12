@@ -1,8 +1,9 @@
-package com.tkw.firebase
+package com.tkw.firebase.di
 
 import com.google.android.gms.auth.api.identity.AuthorizationResult
 import com.tkw.domain.BackupManager
 import com.tkw.domain.DriveAuthorize
+import com.tkw.firebase.GoogleDriveBackup
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

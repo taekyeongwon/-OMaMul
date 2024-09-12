@@ -2,82 +2,45 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:padding="6dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/tv_phone_setting"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/alarm_sound_device"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"/>
-    <com.tkw.ui.CustomSwitchView
+    <com.tkw.ui.custom.TextSwitchView
         android:id="@+id/sv_phone_setting"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/tv_phone_setting"
-        app:layout_constraintBottom_toBottomOf="@id/tv_phone_setting"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:text="@string/alarm_sound_device"
+        app:textSize="20sp"
+        app:layout_constraintTop_toTopOf="parent"/>
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/gray"
-        android:layout_marginTop="12dp"
         app:layout_constraintTop_toBottomOf="@id/sv_phone_setting"/>
 
-    <TextView
-        android:id="@+id/tv_vibe"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/alarm_sound_vibe"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        android:layout_marginTop="12dp"
-        app:layout_constraintTop_toBottomOf="@id/divider"
-        app:layout_constraintLeft_toLeftOf="parent"/>
-    <com.tkw.ui.CustomSwitchView
+    <com.tkw.ui.custom.TextSwitchView
         android:id="@+id/sv_vibe"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/tv_vibe"
-        app:layout_constraintBottom_toBottomOf="@id/tv_vibe"
+        app:text="@string/alarm_sound_vibe"
+        app:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/divider"
         app:layout_constraintRight_toRightOf="parent"/>
-    <TextView
-        android:id="@+id/tv_ringtone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/alarm_sound_ringtone"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        android:layout_marginTop="12dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_vibe"
-        app:layout_constraintLeft_toLeftOf="parent"/>
-    <com.tkw.ui.CustomSwitchView
+    <com.tkw.ui.custom.TextSwitchView
         android:id="@+id/sv_ringtone"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/tv_ringtone"
-        app:layout_constraintBottom_toBottomOf="@id/tv_ringtone"
+        app:text="@string/alarm_sound_ringtone"
+        app:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/sv_vibe"
         app:layout_constraintRight_toRightOf="parent"/>
-    <TextView
-        android:id="@+id/tv_noti"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/alarm_sound_noti"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        android:layout_marginTop="12dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_ringtone"
-        app:layout_constraintLeft_toLeftOf="parent"/>
-    <com.tkw.ui.CustomSwitchView
+    <com.tkw.ui.custom.TextSwitchView
         android:id="@+id/sv_noti"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/tv_noti"
-        app:layout_constraintBottom_toBottomOf="@id/tv_noti"
+        app:text="@string/alarm_sound_noti"
+        app:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/sv_ringtone"
         app:layout_constraintRight_toRightOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

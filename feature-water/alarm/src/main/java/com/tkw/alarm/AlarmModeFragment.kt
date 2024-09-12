@@ -26,7 +26,7 @@ import com.tkw.common.PermissionHelper
 import com.tkw.common.autoCleared
 import com.tkw.domain.IAlarmManager
 import com.tkw.domain.model.AlarmMode
-import com.tkw.ui.CustomSwitchView
+import com.tkw.ui.custom.SwitchView
 import com.tkw.ui.dialog.SettingDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -38,7 +38,7 @@ class AlarmModeFragment: Fragment() {
     private val viewModel: WaterAlarmViewModel by hiltNavGraphViewModels(R.id.alarm_nav_graph)
     private var currentMode: AlarmMode? = null
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
-    private lateinit var toolbarSwitchView: CustomSwitchView
+    private lateinit var toolbarSwitchView: SwitchView
 
     @Inject
     lateinit var alarmManager: IAlarmManager

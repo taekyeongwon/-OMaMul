@@ -30,7 +30,7 @@ import com.tkw.domain.IAlarmManager
 import com.tkw.domain.model.AlarmEtcSettings
 import com.tkw.domain.model.AlarmMode
 import com.tkw.domain.model.RingTone
-import com.tkw.ui.CustomSwitchView
+import com.tkw.ui.custom.SwitchView
 import com.tkw.ui.dialog.SettingDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -41,7 +41,7 @@ class WaterAlarmFragment: Fragment() {
     private var dataBinding by autoCleared<FragmentWaterAlarmBinding>()
     private val viewModel: WaterAlarmViewModel by hiltNavGraphViewModels(R.id.alarm_nav_graph)
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
-    private lateinit var toolbarSwitchView: CustomSwitchView
+    private lateinit var toolbarSwitchView: SwitchView
 
     @Inject
     lateinit var alarmManager: IAlarmManager

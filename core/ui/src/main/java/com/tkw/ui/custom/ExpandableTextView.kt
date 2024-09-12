@@ -1,4 +1,4 @@
-package com.tkw.ui
+package com.tkw.ui.custom
 
 import android.content.Context
 import android.graphics.Color
@@ -6,12 +6,13 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.tkw.ui.R
 import com.tkw.ui.databinding.CustomTextImageBinding
 
 /**
  * 텍스트 뷰 클릭 시 아래로 뷰 펼치기 위한 커스텀 뷰
  */
-class CustomExpandTextView
+class ExpandableTextView
 @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0)
     : ConstraintLayout(context, attrs, defStyle){
     lateinit var dataBinding: CustomTextImageBinding

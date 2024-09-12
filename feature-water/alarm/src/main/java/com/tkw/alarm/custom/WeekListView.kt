@@ -5,14 +5,14 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.tkw.alarm.databinding.LayoutWeekListBinding
-import com.tkw.ui.CustomCheckBox
+import com.tkw.ui.custom.CircleTextView
 import java.time.DayOfWeek
 
 class WeekListView
 @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
     ConstraintLayout(context, attrs, defStyle) {
     private val dataBinding: LayoutWeekListBinding
-    private val weekList: ArrayList<CustomCheckBox> = arrayListOf()
+    private val weekList: ArrayList<CircleTextView> = arrayListOf()
 
     init {
         dataBinding = LayoutWeekListBinding.inflate(LayoutInflater.from(context), this, true)
@@ -22,7 +22,7 @@ class WeekListView
     private fun initWeekList() {
         for(i in 0 until dataBinding.root.childCount) {
             val view = dataBinding.root.getChildAt(i)
-            if(view is CustomCheckBox) {
+            if(view is CircleTextView) {
                 weekList.add(view)
             }
         }

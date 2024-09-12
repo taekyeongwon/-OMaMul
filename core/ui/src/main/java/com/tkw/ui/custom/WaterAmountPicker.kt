@@ -1,4 +1,4 @@
-package com.tkw.ui
+package com.tkw.ui.custom
 
 import android.content.Context
 import android.text.InputType
@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.NumberPicker
+import com.tkw.ui.R
 
 class WaterAmountPicker
     @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = android.R.attr.numberPickerStyle)

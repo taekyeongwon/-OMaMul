@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.tkw.ui.CustomCheckBox
+    <com.tkw.ui.custom.CircleTextView
         android:id="@+id/tv_sunday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/tv_monday"/>
-    <com.tkw.ui.CustomCheckBox
+    <com.tkw.ui.custom.CircleTextView
         android:id="@+id/tv_monday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/tv_sunday"
         app:layout_constraintRight_toLeftOf="@id/tv_tuesday"/>
-    <com.tkw.ui.CustomCheckBox
+    <com.tkw.ui.custom.CircleTextView
         android:id="@+id/tv_tuesday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/tv_monday"
         app:layout_constraintRight_toLeftOf="@id/tv_wednesday"/>
-    <com.tkw.ui.CustomCheckBox
+    <com.tkw.ui.custom.CircleTextView
         android:id="@+id/tv_wednesday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/tv_tuesday"
         app:layout_constraintRight_toLeftOf="@id/tv_thursday"/>
-    <com.tkw.ui.CustomCheckBox
+    <com.tkw.ui.custom.CircleTextView
         android:id="@+id/tv_thursday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -54,7 +54,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/tv_wednesday"
         app:layout_constraintRight_toLeftOf="@id/tv_friday"/>
-    <com.tkw.ui.CustomCheckBox
+    <com.tkw.ui.custom.CircleTextView
         android:id="@+id/tv_friday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/tv_thursday"
         app:layout_constraintRight_toLeftOf="@id/tv_saturday"/>
-    <com.tkw.ui.CustomCheckBox
+    <com.tkw.ui.custom.CircleTextView
         android:id="@+id/tv_saturday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

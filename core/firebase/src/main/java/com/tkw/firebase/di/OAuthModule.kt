@@ -1,6 +1,7 @@
-package com.tkw.firebase
+package com.tkw.firebase.di
 
 import com.tkw.domain.Authentication
+import com.tkw.firebase.GoogleOAuth
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

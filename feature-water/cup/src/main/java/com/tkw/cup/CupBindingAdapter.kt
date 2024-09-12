@@ -4,7 +4,7 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
-import com.tkw.ui.WaterAmountPicker
+import com.tkw.ui.custom.WaterAmountPicker
 
 object CupBindingAdapter {
     /**

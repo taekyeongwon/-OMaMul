@@ -1,4 +1,4 @@
-package com.tkw.ui
+package com.tkw.ui.custom
 
 import android.content.Context
 import android.graphics.Canvas
@@ -11,7 +11,7 @@ import com.tkw.common.util.DimenUtils
 /**
  * 텍스트 뷰 크기에 맞춰 선택 시 동그라미 표시하는 뷰
  */
-class CustomCheckBox @JvmOverloads constructor(
+class CircleTextView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0

@@ -18,8 +18,8 @@ import com.tkw.domain.model.Water
 import com.tkw.record.adapter.DayListAdapter
 import com.tkw.record.databinding.FragmentLogDayBinding
 import com.tkw.record.dialog.LogEditBottomDialog
-import com.tkw.ui.CustomDatePicker
-import com.tkw.ui.DividerDecoration
+import com.tkw.ui.custom.CustomDatePicker
+import com.tkw.ui.decoration.DividerDecoration
 import com.tkw.ui.chart.marker.MarkerType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
