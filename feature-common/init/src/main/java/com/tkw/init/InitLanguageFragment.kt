@@ -98,7 +98,7 @@ class InitLanguageFragment: Fragment() {
                 R.id.rb_cn -> Locale.CHINESE.language
                 else -> Locale.KOREAN.language
             }
-            LocaleHelper.setApplicationLocales(requireActivity(), lang)
+            LocaleHelper.setApplicationLocales(lang)
         }
 
         dataBinding.btnNext.setOnClickListener {

@@ -11,6 +11,7 @@ import android.os.LocaleList
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
+import java.lang.ref.WeakReference
 import java.util.Locale
 
 /**
@@ -24,39 +25,21 @@ object LocaleHelper {
      * 프레임워크에서 저장 처리하도록 하거나, onCreate 이전에 직접 저장한 값을 가져와 세팅해야 함.
      *
      * API 32 이하는 반드시 AppCompatActivity 컨텍스트에서 호출해야 변경이 적용된다.
-     *
-     * hilt 라이브러리 사용 시 Fragment에서 context는 FragmentContextWrapper를 통해 가져오는데,
-     * 이 context는 activity의 context가 아니므로 check에서 걸림.
-     * 따라서 Activity로 파라미터를 받도록 함.
      */
-    fun setApplicationLocales(context: Activity, storedLang: String?) {
+    fun setApplicationLocales(storedLang: String?) {
         val localeCompat = if(storedLang.isNullOrEmpty()) {
             LocaleList.getDefault()
         } else {
             LocaleList.forLanguageTags(storedLang)
         }
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.getSystemService(LocaleManager::class.java)
-                .applicationLocales = localeCompat
-        } else {
-            check(context is AppCompatActivity) { "This method must be called by AppCompatActivity." }
-            AppCompatDelegate.setApplicationLocales(
-                LocaleListCompat.wrap(localeCompat)
-            )
-        }
+        AppCompatDelegate.setApplicationLocales(
+            LocaleListCompat.wrap(localeCompat)
+        )
     }
 
-    fun getApplicationLocales(context: Activity): LocaleListCompat {
-        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            LocaleListCompat.wrap(
-                context.getSystemService(LocaleManager::class.java)
-                    .applicationLocales
-            )
-        } else {
-            check(context is AppCompatActivity) { "This method must be called by AppCompatActivity." }
-            AppCompatDelegate.getApplicationLocales()
-        }
+    fun getApplicationLocales(): LocaleListCompat {
+        return AppCompatDelegate.getApplicationLocales()
     }
 
     /**
@@ -104,7 +87,8 @@ object LocaleHelper {
         return overrideConfiguration
     }
 
-    fun <T> restartApplication(context: Context, restartActivity: Class<T>) {
+    fun <T> restartApplication(ref: WeakReference<Context>, restartActivity: Class<T>) {
+        val context = ref.get()
         if(context is Activity) {
             context.finishAffinity()        //root 액티비티까지 종료
             val intent = Intent(context, restartActivity)

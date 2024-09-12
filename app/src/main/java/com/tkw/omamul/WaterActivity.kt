@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -77,8 +76,8 @@ class WaterActivity : AppCompatActivity() {
 
     //최초 설치 시 언어 선택하면 액티비티 재생성되지 않도록(configChanges 적용 안됨) 추가함.
     private fun initLanguage() {
-        val getLanguage = AppCompatDelegate.getApplicationLocales().toLanguageTags()
-        LocaleHelper.setApplicationLocales(this, getLanguage)
+        val getLanguage = LocaleHelper.getApplicationLocales().toLanguageTags()
+        LocaleHelper.setApplicationLocales(getLanguage)
     }
 
     private fun initBinding() {
@@ -86,29 +85,18 @@ class WaterActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        initNavigate()
         setContentView(dataBinding.root)
+        setupNavigation()
         setSupportActionBar(dataBinding.toolbar)
-        setNavBackListener()    //툴바 설정 후 호출
-        setWindowInsets()
+        //툴바 설정 후 호출
+        setDestinationChangedListener()
+        setNavBackListener()
     }
 
-    private fun initNavigate() {
+    private fun setupNavigation() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment
         val navController = navHostFragment.navController
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            dataBinding.bottomNav.visibility =
-                if(mainFragmentSet.contains(destination.id)) View.VISIBLE
-                else View.GONE
-            //최초 진입 화면, 로그, 설정 화면은 타이틀 안보이게 처리
-            if(hideTitleFragmentSet.contains(destination.id)) {
-                supportActionBar?.hide()
-            } else {
-                supportActionBar?.show()
-            }
-        }
-
         val appBarConfiguration = AppBarConfiguration(mainFragmentSet.plus(com.tkw.init.R.id.initLanguageFragment))
         NavigationUI.setupWithNavController(dataBinding.toolbar, navController, appBarConfiguration)
         NavigationUI.setupWithNavController(dataBinding.bottomNav, navController)
@@ -132,20 +120,51 @@ class WaterActivity : AppCompatActivity() {
         nav.graph = navGraph
     }
 
-    private fun setNavBackListener() {
-        dataBinding.toolbar.setNavigationOnClickListener {
-            // 시스템 back key 동작과 동일하게 설정.
-            // CupManageFragment 등 특정 flag에서 백 키 또는 업 버튼 눌렀을 때 백스택 이동 제어하기 위해 설정.
-            // 다른 프래그먼트에서 onBackPressedDispatcher에 콜백을 설정함으로써 백스택 이동을 제어할 수 있음.
-            onBackPressedDispatcher.onBackPressed()
+    private fun setDestinationChangedListener() {
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment
+        val navController = navHostFragment.navController
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            dataBinding.bottomNav.visibility =
+                if(mainFragmentSet.contains(destination.id)) {
+                    setWindowInsetsExcludeBottom()
+                    View.VISIBLE
+                }
+                else {
+                    setWindowInsets()
+                    View.GONE
+                }
+            //최초 진입 화면, 로그, 설정 화면은 타이틀 안보이게 처리
+            if(hideTitleFragmentSet.contains(destination.id)) {
+                supportActionBar?.hide()
+            } else {
+                supportActionBar?.show()
+            }
         }
     }
 
     private fun setWindowInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+    }
+
+    private fun setWindowInsetsExcludeBottom() {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
             insets
+        }
+    }
+
+    private fun setNavBackListener() {
+        dataBinding.toolbar.setNavigationOnClickListener {
+            // 시스템 back key 동작과 동일하게 설정.
+            // CupManageFragment 등 특정 flag에서 백 키 또는 업 버튼 눌렀을 때 백스택 이동 제어하기 위해 설정.
+            // 다른 프래그먼트에서 onBackPressedDispatcher에 콜백을 설정함으로써 백스택 이동을 제어할 수 있음.
+            onBackPressedDispatcher.onBackPressed()
         }
     }
 

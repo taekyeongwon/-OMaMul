@@ -12,6 +12,7 @@ import com.tkw.setting.SettingViewModel
 import com.tkw.setting.databinding.DialogLanguageBinding
 import com.tkw.ui.dialog.CustomDialog
 import dagger.hilt.android.AndroidEntryPoint
+import java.lang.ref.WeakReference
 import java.util.Locale
 
 @AndroidEntryPoint
@@ -51,8 +52,8 @@ class LanguageDialog(
 
     private fun initObserver() {
         viewModel.nextEvent.observe(viewLifecycleOwner) {
-            LocaleHelper.setApplicationLocales(requireActivity(), selectedLanguage)
-            LocaleHelper.restartApplication(requireActivity(), requireActivity().javaClass)
+            LocaleHelper.setApplicationLocales(selectedLanguage)
+            LocaleHelper.restartApplication(WeakReference(requireActivity()), requireActivity().javaClass)
         }
     }
 
