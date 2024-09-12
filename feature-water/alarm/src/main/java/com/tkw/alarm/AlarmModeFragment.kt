@@ -29,7 +29,14 @@ import com.tkw.domain.model.AlarmMode
 import com.tkw.ui.custom.SwitchView
 import com.tkw.ui.dialog.SettingDialog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import java.lang.StringBuilder
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -103,6 +110,69 @@ class AlarmModeFragment: Fragment() {
                 }
             }
         }
+
+        lifecycleScope.launch(Dispatchers.Default) {
+            viewModel.timeTickerLiveData.flatMapLatest {
+                setTimeContent(it)
+            }.collect {
+                viewModel.setRemainTimeContent(it)
+            }
+        }
+    }
+
+    private fun setTimeContent(time: Long): Flow<String> {
+        var remainTime = time
+
+        return flow {
+            if(time == -1L) {
+                emit(getString(com.tkw.ui.R.string.alarm_detail_empty))
+            } else if(!viewModel.isNotificationAlarmEnabled().first()) {
+                emit(getString(com.tkw.ui.R.string.alarm_detail_switch_off))
+            } else {
+                while (remainTime > 0) {
+                    val content = getRemainTimeContent(remainTime)
+                    if(content.isEmpty()) {
+                        emit(getString(com.tkw.ui.R.string.alarm_ringing_soon))
+                    } else {
+                        emit(
+                            String.format(
+                                getString(com.tkw.ui.R.string.alarm_detail_remain),
+                                content
+                            )
+                        )
+                    }
+                    remainTime -= WaterAlarmViewModel.TIME_UNIT_SECONDS
+                    delay(WaterAlarmViewModel.TIME_UNIT_SECONDS)
+                }
+            }
+        }
+
+    }
+
+    private fun getRemainTimeContent(remainTime: Long): String {
+        val text = StringBuilder()
+
+        val days = remainTime / (1000 * 60 * 60 * 24)
+        val hour = (remainTime / (1000 * 60 * 60)) % 24
+        val minute = (remainTime / (1000 * 60)) % 60
+
+        if (days != 0L) {
+            text.append(days)
+                .append(getString(com.tkw.ui.R.string.day))
+                .append(" ")
+        }
+        if (hour != 0L) {
+            text.append(hour)
+                .append(getString(com.tkw.ui.R.string.hour))
+                .append(" ")
+        }
+        if (minute != 0L) {
+            text.append(minute)
+                .append(getString(com.tkw.ui.R.string.minute))
+                .append(" ")
+        }
+
+        return text.toString()
     }
 
     private fun initListener() {

@@ -36,7 +36,6 @@ import javax.inject.Inject
 @SuppressLint("StaticFieldLeak")
 @HiltViewModel
 class WaterAlarmViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val prefDataRepository: PrefDataRepository,
     private val alarmRepository: AlarmRepository
 ): BaseViewModel() {
@@ -117,37 +116,10 @@ class WaterAlarmViewModel @Inject constructor(
     //알람 변경에 따라 remainTime 재요청
     @OptIn(ExperimentalCoroutinesApi::class)
     val timeTickerLiveData = isNotificationAlarmEnabled()
-        .flatMapLatest { timeTickerFlow }
-        .asLiveData()
+        .flatMapLatest { alarmRepository.getRemainAlarmTime() }
 
-    //남은 시간을 텍스트 포맷으로 변경
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private val timeTickerFlow: Flow<String> = alarmRepository.getRemainAlarmTime().flatMapLatest {
-        flow {
-            var remainTime = it
-            if(it == -1L) {
-                emit(getCustomString(com.tkw.ui.R.string.alarm_detail_empty))
-            } else if(!isNotificationAlarmEnabled().first()) {
-                emit(getCustomString(com.tkw.ui.R.string.alarm_detail_switch_off))
-            } else {
-                while (remainTime > 0) {
-                    val text = getRemainTimeString(remainTime)
-                    if(text.isEmpty()) {
-                        emit(getCustomString(com.tkw.ui.R.string.alarm_ringing_soon))
-                    } else {
-                        emit(
-                            String.format(
-                                getCustomString(com.tkw.ui.R.string.alarm_detail_remain),
-                                text
-                            )
-                        )
-                    }
-                    remainTime -= TIME_UNIT_SECONDS
-                    delay(TIME_UNIT_SECONDS)
-                }
-            }
-        }
-    }
+    private val _remainTimeLiveData = MutableLiveData<String>()
+    val remainTimeLiveData: LiveData<String> = _remainTimeLiveData
 
     fun wakeAllAlarm() {
         launch {
@@ -233,6 +205,8 @@ class WaterAlarmViewModel @Inject constructor(
                 start += interval
             }
             setAlarmList(alarmList)
+        } else {
+            setAlarmList(listOf())
         }
     }
 
@@ -267,33 +241,9 @@ class WaterAlarmViewModel @Inject constructor(
         }
     }
 
-    private fun getRemainTimeString(remainTime: Long): String {
-        val text = StringBuilder()
-
-        val days = remainTime / (1000 * 60 * 60 * 24)
-        val hour = (remainTime / (1000 * 60 * 60)) % 24
-        val minute = (remainTime / (1000 * 60)) % 60
-
-        if (days != 0L) {
-            text.append(days)
-                .append(getCustomString(com.tkw.ui.R.string.day))
-                .append(" ")
+    fun setRemainTimeContent(content: String) {
+        launch {
+            _remainTimeLiveData.value = content
         }
-        if (hour != 0L) {
-            text.append(hour)
-                .append(getCustomString(com.tkw.ui.R.string.hour))
-                .append(" ")
-        }
-        if (minute != 0L) {
-            text.append(minute)
-                .append(getCustomString(com.tkw.ui.R.string.minute))
-                .append(" ")
-        }
-
-        return text.toString()
-    }
-
-    private fun getCustomString(id: Int): String {
-        return context.getString(id)
     }
 }
