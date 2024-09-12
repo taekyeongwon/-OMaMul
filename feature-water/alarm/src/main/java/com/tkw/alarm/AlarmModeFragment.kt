@@ -93,6 +93,77 @@ class AlarmModeFragment: Fragment() {
         }
     }
 
+    private fun initItemMenu() {
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object: MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.toolbar_toggle, menu)
+                val toggleItem = menu.findItem(R.id.alarm_toggle)
+                toolbarSwitchView = toggleItem.actionView!!.findViewById(R.id.toolbar_switch)
+
+                NotificationManager.isNotificationEnabled(requireContext())
+                    .also {
+                        lifecycleScope.launch {
+                            viewModel.setNotificationEnabled(it)
+                            setSwitchButtonCheckedWithEnabled(it)
+                            setSwitchButtonCheckedListener(it)
+                        }
+//                        checkApi31ExactAlarm()
+                    }
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return true
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private suspend fun setSwitchButtonCheckedWithEnabled(isNotificationEnabled: Boolean) {
+        val isEnabled = isNotificationEnabled && viewModel.getNotificationEnabled()
+        if(isEnabled) {
+            alarmOn()
+        } else {
+            alarmOff()
+        }
+        toolbarSwitchView.setChecked(isEnabled)
+        viewModel.setAlarmEnabled(isEnabled)
+    }
+
+    private fun setSwitchButtonCheckedListener(isNotificationEnabled: Boolean) {
+        toolbarSwitchView.setCheckedChangeListener { _, isChecked ->
+            lifecycleScope.launch {
+                viewModel.setAlarmEnabled(isChecked)
+            }
+            if(isChecked) {
+                if(!isNotificationEnabled) showAlert()
+                else alarmOn() //알람 설정
+            } else alarmOff() //알람 cancel
+        }
+    }
+
+    private fun alarmOn() {
+        viewModel.wakeAllAlarm()
+    }
+
+    private fun alarmOff() {
+        viewModel.sleepAllAlarm()
+    }
+
+    private fun showAlert() {
+        val dialog = SettingDialog(
+            cancelAction = {
+                toolbarSwitchView.setChecked(false)
+            },
+            confirmAction = {
+                PermissionHelper.goToNotificationSetting(
+                    requireActivity(),
+                    activityResultLauncher
+                )
+            }
+        )
+        dialog.show(childFragmentManager, dialog.tag)
+    }
+
     private fun initObserver() {
         viewModel.alarmMode.observe(viewLifecycleOwner) {
             //현재 뷰모델 setting에서 가져온 모드로 replace
@@ -117,6 +188,20 @@ class AlarmModeFragment: Fragment() {
             }.collect {
                 viewModel.setRemainTimeContent(it)
             }
+        }
+    }
+
+    private fun setAlarmModeText(mode: AlarmMode) {
+        val text = when(mode) {
+            AlarmMode.PERIOD -> getString(com.tkw.ui.R.string.alarm_mode_period)
+            AlarmMode.CUSTOM -> getString(com.tkw.ui.R.string.alarm_mode_custom)
+        }
+        dataBinding.tvAlarmMode.setText(text)
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        childFragmentManager.commit {
+            replace(dataBinding.container.id, fragment, fragment.tag)
         }
     }
 
@@ -182,100 +267,5 @@ class AlarmModeFragment: Fragment() {
             }
             dialog.show(childFragmentManager, dialog.tag)
         }
-    }
-
-    private fun initItemMenu() {
-        val menuHost: MenuHost = requireActivity()
-        menuHost.addMenuProvider(object: MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.toolbar_toggle, menu)
-                val toggleItem = menu.findItem(R.id.alarm_toggle)
-                toolbarSwitchView = toggleItem.actionView!!.findViewById(R.id.toolbar_switch)
-
-                NotificationManager.isNotificationEnabled(requireContext())
-                    .also {
-                        lifecycleScope.launch {
-                            viewModel.setNotificationEnabled(it)
-                            setSwitchButtonCheckedWithEnabled(it)
-                            setSwitchButtonCheckedListener(it)
-                        }
-//                        checkApi31ExactAlarm()
-                    }
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return true
-            }
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-    }
-
-    private suspend fun setSwitchButtonCheckedWithEnabled(isNotificationEnabled: Boolean) {
-        val isEnabled = isNotificationEnabled && viewModel.getNotificationEnabled()
-        if(isEnabled) {
-            alarmOn()
-        } else {
-            alarmOff()
-        }
-        toolbarSwitchView.setChecked(isEnabled)
-        viewModel.setAlarmEnabled(isEnabled)
-    }
-
-    private fun setSwitchButtonCheckedListener(isNotificationEnabled: Boolean) {
-        toolbarSwitchView.setCheckedChangeListener { _, isChecked ->
-            lifecycleScope.launch {
-                viewModel.setAlarmEnabled(isChecked)
-            }
-            if(isChecked) {
-                if(!isNotificationEnabled) showAlert()
-                else alarmOn() //알람 설정
-            } else alarmOff() //알람 cancel
-        }
-    }
-
-    private fun replaceFragment(fragment: Fragment) {
-        childFragmentManager.commit {
-            replace(dataBinding.container.id, fragment, fragment.tag)
-        }
-    }
-
-    private fun setAlarmModeText(mode: AlarmMode) {
-        val text = when(mode) {
-            AlarmMode.PERIOD -> getString(com.tkw.ui.R.string.alarm_mode_period)
-            AlarmMode.CUSTOM -> getString(com.tkw.ui.R.string.alarm_mode_custom)
-        }
-        dataBinding.tvAlarmMode.setText(text)
-    }
-
-    private fun checkApi31ExactAlarm() {
-        if(Build.VERSION.SDK_INT >= 31 &&
-            !alarmManager.canScheduleExactAlarms()) {
-            if(toolbarSwitchView.getChecked() /* && 다시 보지 않기 체크 여부 */) {
-                val dialog = ExactAlarmDialog()
-                dialog.show(childFragmentManager, dialog.tag)
-            }
-        }
-    }
-
-    private fun showAlert() {
-        val dialog = SettingDialog(
-            cancelAction = {
-                toolbarSwitchView.setChecked(false)
-            },
-            confirmAction = {
-                PermissionHelper.goToNotificationSetting(
-                    requireActivity(),
-                    activityResultLauncher
-                )
-            }
-        )
-        dialog.show(childFragmentManager, dialog.tag)
-    }
-
-    private fun alarmOn() {
-        viewModel.wakeAllAlarm()
-    }
-
-    private fun alarmOff() {
-        viewModel.sleepAllAlarm()
     }
 }

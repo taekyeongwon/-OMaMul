@@ -48,6 +48,12 @@ class AlarmModePeriodFragment : Fragment() {
         }
     }
 
+    private suspend fun initNotification() {
+        if(viewModel.isNotificationAlarmEnabled().first()) {
+            viewModel.wakeAllAlarm()
+        }
+    }
+
     private fun initObserver() {
         viewModel.periodModeSettingsLiveData.observe(viewLifecycleOwner) {
 
@@ -115,12 +121,6 @@ class AlarmModePeriodFragment : Fragment() {
         }
         dataBinding.clAlarmTimeEdit.setOnClickListener {
             showTimeDialog()
-        }
-    }
-
-    private suspend fun initNotification() {
-        if(viewModel.isNotificationAlarmEnabled().first()) {
-            viewModel.wakeAllAlarm()
         }
     }
 

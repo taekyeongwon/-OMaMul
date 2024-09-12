@@ -49,6 +49,20 @@ class ExactAlarmDialog(
         initResultLauncher()
     }
 
+    private fun setInvisibleCheckBox(flag: Boolean) {
+        dataBinding.clDontShowAgain.visibility =
+            if (flag) View.INVISIBLE
+            else View.VISIBLE
+    }
+
+    private fun initResultLauncher() {
+        resultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
+            confirmAction()
+            dismiss()
+        }
+    }
 
     private fun initListener() {
         setButtonListener(
@@ -71,20 +85,5 @@ class ExactAlarmDialog(
             }
         )
 
-    }
-
-    private fun setInvisibleCheckBox(flag: Boolean) {
-        dataBinding.clDontShowAgain.visibility =
-            if (flag) View.INVISIBLE
-            else View.VISIBLE
-    }
-
-    private fun initResultLauncher() {
-        resultLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) {
-            confirmAction()
-            dismiss()
-        }
     }
 }

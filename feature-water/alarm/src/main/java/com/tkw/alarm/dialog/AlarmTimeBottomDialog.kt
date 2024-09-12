@@ -21,6 +21,21 @@ class AlarmTimeBottomDialog(
     override var childBinding by autoCleared<DialogTimepickerBinding>()
     override var buttonCount: Int = 2
 
+    private val onCheckedChangeListener =
+        OnCheckedChangeListener { _, checkedId ->
+            when(checkedId) {
+                R.id.rb_start -> {
+                    childBinding.tpStart.visibility = View.VISIBLE
+                    childBinding.tpEnd.visibility = View.GONE
+                }
+
+                R.id.rb_end -> {
+                    childBinding.tpStart.visibility = View.GONE
+                    childBinding.tpEnd.visibility = View.VISIBLE
+                }
+            }
+        }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -47,18 +62,6 @@ class AlarmTimeBottomDialog(
         setRadioChecked(buttonFlag)
     }
 
-    private fun initListener() {
-        setButtonListener(
-            cancelAction = {
-                dismiss()
-            },
-            confirmAction = {
-                sendSelectTime()
-                dismiss()
-            }
-        )
-    }
-
     private fun initTimePicker(startHour: Int, startMin: Int, endHour: Int, endMin: Int) {
         childBinding.apply {
             tpStart.hour = startHour
@@ -71,6 +74,18 @@ class AlarmTimeBottomDialog(
     private fun setRadioChecked(flag: Boolean) {
         if(flag) childBinding.rgSelector.check(R.id.rb_start)
         else childBinding.rgSelector.check(R.id.rb_end)
+    }
+
+    private fun initListener() {
+        setButtonListener(
+            cancelAction = {
+                dismiss()
+            },
+            confirmAction = {
+                sendSelectTime()
+                dismiss()
+            }
+        )
     }
 
     private fun sendSelectTime() {
@@ -87,19 +102,4 @@ class AlarmTimeBottomDialog(
 
         resultListener(startTime, endTime)
     }
-
-    private val onCheckedChangeListener =
-        OnCheckedChangeListener { _, checkedId ->
-            when(checkedId) {
-                R.id.rb_start -> {
-                    childBinding.tpStart.visibility = View.VISIBLE
-                    childBinding.tpEnd.visibility = View.GONE
-                }
-
-                R.id.rb_end -> {
-                    childBinding.tpStart.visibility = View.GONE
-                    childBinding.tpEnd.visibility = View.VISIBLE
-                }
-            }
-        }
 }

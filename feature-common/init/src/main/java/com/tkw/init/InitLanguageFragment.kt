@@ -56,18 +56,26 @@ class InitLanguageFragment: Fragment() {
         initListener()
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-//        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-//        callback.remove()
-    }
-
     private fun initView() {
         requestAppPermissions()
+    }
+
+    private fun requestAppPermissions() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            PermissionHelper.requestPerms(
+                context = requireActivity(),
+                perms = arrayOf(
+                    Manifest.permission.POST_NOTIFICATIONS,
+                ),
+                permissionResultLauncher = permissionResultLauncher,
+                grantAction = {
+                    isGrantNotificationPermission = true
+                },
+                cancelAction = {
+                    isGrantNotificationPermission = false
+                }
+            )
+        }
     }
 
     private fun initObserver() {
@@ -112,30 +120,6 @@ class InitLanguageFragment: Fragment() {
                 }
                 viewModel.setEvent(InitContract.Event.SaveLanguage(lang))
             }
-        }
-    }
-
-    private val callback = object: OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-
-        }
-    }
-
-    private fun requestAppPermissions() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            PermissionHelper.requestPerms(
-                context = requireActivity(),
-                perms = arrayOf(
-                    Manifest.permission.POST_NOTIFICATIONS,
-                ),
-                permissionResultLauncher = permissionResultLauncher,
-                grantAction = {
-                    isGrantNotificationPermission = true
-                },
-                cancelAction = {
-                    isGrantNotificationPermission = false
-                }
-            )
         }
     }
 }

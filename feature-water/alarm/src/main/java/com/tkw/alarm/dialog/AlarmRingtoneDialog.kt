@@ -47,6 +47,33 @@ class AlarmRingtoneDialog: CustomBottomDialog<DialogRingtoneBinding>() {
         }
     }
 
+    private fun setRingtoneChecked(flag: Boolean) {
+        childBinding.svRingtone.setChecked(flag)
+    }
+
+    private fun setVibeChecked(flag: Boolean) {
+        childBinding.svVibe.setChecked(flag)
+    }
+
+    private fun setAllChecked() {
+        childBinding.svRingtone.setChecked(true)
+        childBinding.svVibe.setChecked(true)
+    }
+
+    private fun setIgnore() {
+        childBinding.svRingtone.setChecked(false)
+        childBinding.svVibe.setChecked(false)
+        childBinding.svPhoneSetting.setChecked(false)
+    }
+
+    private fun setDeviceChecked(flag: Boolean) {
+        childBinding.svPhoneSetting.setChecked(flag)
+    }
+
+    private fun setNotiChecked(flag: Boolean) {
+        childBinding.svNoti.setChecked(flag)
+    }
+
     private fun initListener() {
         setButtonListener(
             cancelAction = {
@@ -76,33 +103,6 @@ class AlarmRingtoneDialog: CustomBottomDialog<DialogRingtoneBinding>() {
                 }
             }
         }
-    }
-
-    private fun setRingtoneChecked(flag: Boolean) {
-        childBinding.svRingtone.setChecked(flag)
-    }
-
-    private fun setVibeChecked(flag: Boolean) {
-        childBinding.svVibe.setChecked(flag)
-    }
-
-    private fun setAllChecked() {
-        childBinding.svRingtone.setChecked(true)
-        childBinding.svVibe.setChecked(true)
-    }
-
-    private fun setIgnore() {
-        childBinding.svRingtone.setChecked(false)
-        childBinding.svVibe.setChecked(false)
-        childBinding.svPhoneSetting.setChecked(false)
-    }
-
-    private fun setDeviceChecked(flag: Boolean) {
-        childBinding.svPhoneSetting.setChecked(flag)
-    }
-
-    private fun setNotiChecked(flag: Boolean) {
-        childBinding.svNoti.setChecked(flag)
     }
 
     private fun update() {

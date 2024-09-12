@@ -42,6 +42,11 @@ class InitTimeFragment: Fragment() {
         initTimePicker(true)
     }
 
+    private fun setDefaultTime() {
+        dataBinding.tvWakeupTime.text = DateTimeUtils.Time.getFormat(8, 0)
+        dataBinding.tvSleepTime.text = DateTimeUtils.Time.getFormat(23, 0)
+    }
+
     private fun initObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.sideEffect.collect {
@@ -57,26 +62,6 @@ class InitTimeFragment: Fragment() {
             }
         }
 
-    }
-
-    private fun initListener() {
-        dataBinding.tvWakeupTime.setOnClickListener {
-            viewModel.setEvent(InitContract.Event.ClickWakeUpTimePicker)
-        }
-        dataBinding.tvSleepTime.setOnClickListener {
-            viewModel.setEvent(InitContract.Event.ClickSleepTimePicker)
-        }
-
-        dataBinding.btnNext.setOnClickListener {
-            val wakeTime = dataBinding.tvWakeupTime.text.toString()
-            val sleepTime = dataBinding.tvSleepTime.text.toString()
-            viewModel.setEvent(InitContract.Event.SaveTime(wakeTime, sleepTime))
-        }
-    }
-
-    private fun setDefaultTime() {
-        dataBinding.tvWakeupTime.text = DateTimeUtils.Time.getFormat(8, 0)
-        dataBinding.tvSleepTime.text = DateTimeUtils.Time.getFormat(23, 0)
     }
 
     private fun initTimePicker(buttonFlag: Boolean) {
@@ -99,5 +84,20 @@ class InitTimeFragment: Fragment() {
 
     private fun showTimePicker() {
         alarmTimeDialog.show(childFragmentManager, alarmTimeDialog.tag)
+    }
+
+    private fun initListener() {
+        dataBinding.tvWakeupTime.setOnClickListener {
+            viewModel.setEvent(InitContract.Event.ClickWakeUpTimePicker)
+        }
+        dataBinding.tvSleepTime.setOnClickListener {
+            viewModel.setEvent(InitContract.Event.ClickSleepTimePicker)
+        }
+
+        dataBinding.btnNext.setOnClickListener {
+            val wakeTime = dataBinding.tvWakeupTime.text.toString()
+            val sleepTime = dataBinding.tvSleepTime.text.toString()
+            viewModel.setEvent(InitContract.Event.SaveTime(wakeTime, sleepTime))
+        }
     }
 }

@@ -42,6 +42,17 @@ class CustomAlarmBottomDialog(
         initWeekList(alarm.weekList)
     }
 
+    private fun initTimePicker(startHour: Int, startMin: Int) {
+        childBinding.apply {
+            tpStart.hour = startHour
+            tpStart.minute = startMin
+        }
+    }
+
+    private fun initWeekList(list: List<DayOfWeek>) {
+        childBinding.alarmWeek.setChecked(list)
+    }
+
     private fun initListener() {
         setButtonListener(
             cancelAction = {
@@ -52,17 +63,6 @@ class CustomAlarmBottomDialog(
                 dismiss()
             }
         )
-    }
-
-    private fun initTimePicker(startHour: Int, startMin: Int) {
-        childBinding.apply {
-            tpStart.hour = startHour
-            tpStart.minute = startMin
-        }
-    }
-
-    private fun initWeekList(list: List<DayOfWeek>) {
-        childBinding.alarmWeek.setChecked(list)
     }
 
     private fun sendSelectTime() {

@@ -116,8 +116,29 @@ class AlarmModeCustomFragment: Fragment() {
     private fun initView() {
         initAdapter()
         initRecyclerView()
-        //wake all custom alarm
-//        viewModel.wakeAllAlarm()  //alarmOnOffListener에서 enabled true인 알람 켜므로 주석처리
+    }
+
+    private fun initAdapter() {
+        alarmListAdapter = AlarmListAdapter(
+            editListener = adapterEditListener,
+            deleteCheckListener = deleteCheckListener,
+            longClickListener = adapterLongClickListener,
+            dragListener = dragListener,
+            alarmOnOffListener = alarmOnOffListener
+        )
+        alarmListAdapter.registerAdapterDataObserver(positionObserver)
+
+    }
+
+    private fun initRecyclerView() {
+        itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(alarmListAdapter, false))
+        dataBinding.rvAlarm.apply {
+            adapter = alarmListAdapter
+            itemTouchHelper.attachToRecyclerView(this)
+            addItemDecoration(VerticalSpaceItemDecoration(20))
+            itemAnimator = null
+//            setHasFixedSize(true)
+        }
     }
 
     private fun initObserver() {
@@ -132,6 +153,19 @@ class AlarmModeCustomFragment: Fragment() {
         viewModel.nextEvent.observe(viewLifecycleOwner) {
             modeChanged(false)
         }
+    }
+
+    private fun dataChanged() {
+        if(alarmListAdapter.itemCount == 0) {
+            dataBinding.rvAlarm.visibility = View.GONE
+            dataBinding.tvEmptyAlarm.visibility = View.VISIBLE
+        } else {
+            dataBinding.rvAlarm.visibility = View.VISIBLE
+            dataBinding.tvEmptyAlarm.visibility = View.GONE
+        }
+        dataBinding.ivEdit.visibility =
+            if (alarmListAdapter.itemCount > 1 && !isModified) View.VISIBLE
+            else View.INVISIBLE
     }
 
     private fun initListener() {
@@ -160,40 +194,20 @@ class AlarmModeCustomFragment: Fragment() {
         }
     }
 
-    private fun initAdapter() {
-        alarmListAdapter = AlarmListAdapter(
-            editListener = adapterEditListener,
-            deleteCheckListener = deleteCheckListener,
-            longClickListener = adapterLongClickListener,
-            dragListener = dragListener,
-            alarmOnOffListener = alarmOnOffListener
+    private fun showCustomAlarmDialog(alarm: Alarm) {
+        val dialog = CustomAlarmBottomDialog(
+            alarm = alarm,
+            resultListener = { result ->
+                setAlarm(result)
+            }
         )
-        alarmListAdapter.registerAdapterDataObserver(positionObserver)
-
+        dialog.show(childFragmentManager, dialog.tag)
     }
 
-    private fun initRecyclerView() {
-        itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(alarmListAdapter, false))
-        dataBinding.rvAlarm.apply {
-            adapter = alarmListAdapter
-            itemTouchHelper.attachToRecyclerView(this)
-            addItemDecoration(VerticalSpaceItemDecoration(20))
-            itemAnimator = null
-//            setHasFixedSize(true)
+    private fun setAlarm(alarm: Alarm) {
+        lifecycleScope.launch {
+            viewModel.setCustomAlarm(alarm)
         }
-    }
-
-    private fun dataChanged() {
-        if(alarmListAdapter.itemCount == 0) {
-            dataBinding.rvAlarm.visibility = View.GONE
-            dataBinding.tvEmptyAlarm.visibility = View.VISIBLE
-        } else {
-            dataBinding.rvAlarm.visibility = View.VISIBLE
-            dataBinding.tvEmptyAlarm.visibility = View.GONE
-        }
-        dataBinding.ivEdit.visibility =
-            if (alarmListAdapter.itemCount > 1 && !isModified) View.VISIBLE
-            else View.INVISIBLE
     }
 
     private fun modeChanged(isModified: Boolean) {
@@ -227,21 +241,5 @@ class AlarmModeCustomFragment: Fragment() {
             .forEach {
                 it.isChecked = false
             }
-    }
-
-    private fun showCustomAlarmDialog(alarm: Alarm) {
-        val dialog = CustomAlarmBottomDialog(
-            alarm = alarm,
-            resultListener = { result ->
-                setAlarm(result)
-            }
-        )
-        dialog.show(childFragmentManager, dialog.tag)
-    }
-
-    private fun setAlarm(alarm: Alarm) {
-        lifecycleScope.launch {
-            viewModel.setCustomAlarm(alarm)
-        }
     }
 }

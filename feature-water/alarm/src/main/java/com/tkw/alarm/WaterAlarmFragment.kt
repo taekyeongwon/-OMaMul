@@ -76,72 +76,6 @@ class WaterAlarmFragment: Fragment() {
         initItemMenu()
     }
 
-    private fun initObserver() {
-        viewModel.alarmSettings.observe(viewLifecycleOwner) {
-            //가져온 데이터로 화면 구성
-            it?.let {
-                setRingtoneTitle(it.ringToneMode.getCurrentMode())
-                setAlarmModeTitle(it.alarmMode)
-                setEtcSetting(it.etcSetting)
-            }
-        }
-    }
-
-    private fun initListener() {
-        dataBinding.tvAlarmSound.setOnClickListener {
-            val soundDialog = AlarmRingtoneDialog()
-            soundDialog.show(childFragmentManager, soundDialog.tag)
-        }
-
-        dataBinding.clAlarmMode.setOnClickListener {
-            findNavController().navigate(WaterAlarmFragmentDirections
-                .actionWaterAlarmFragmentToAlarmModeFragment())
-        }
-        dataBinding.tvAlarmDelay.setOnClickListener {
-            lifecycleScope.launch {
-                viewModel.delayAllAlarm(true, false)    //스위치 변경하면서 wakeAllAlarm 호출하기 때문에 isNotificationEnabled false로 설정
-                toolbarSwitchView.setChecked(true)
-                it.visibility = View.GONE
-            }
-        }
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            dataBinding.tvFullscreenSetting.setOnClickListener {
-                val intent = Intent(
-                    Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT,
-                    Uri.parse("package:${requireContext().packageName}")
-                )
-                startActivity(intent)
-            }
-        } else {
-            dataBinding.divider2.visibility = View.GONE
-            dataBinding.tvFullscreenSetting.visibility = View.GONE
-        }
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            dataBinding.tvExactSetting.setOnClickListener {
-                val intent = Intent(
-                    Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
-                    Uri.parse("package:${requireContext().packageName}")
-                )
-                startActivity(intent)
-            }
-        } else {
-            dataBinding.divider3.visibility = View.GONE
-            dataBinding.tvExactSetting.visibility = View.GONE
-        }
-    }
-
-    private fun checkApi31ExactAlarm() {
-        if(Build.VERSION.SDK_INT >= 31 &&
-            !alarmManager.canScheduleExactAlarms()) {
-            if(toolbarSwitchView.getChecked() /* && 다시 보지 않기 체크 여부 */) {
-                val dialog = ExactAlarmDialog()
-                dialog.show(childFragmentManager, dialog.tag)
-            }
-        }
-    }
-
     private fun initItemMenu() {
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object: MenuProvider {
@@ -200,6 +134,14 @@ class WaterAlarmFragment: Fragment() {
         }
     }
 
+    private fun alarmOn() {
+        viewModel.wakeAllAlarm()
+    }
+
+    private fun alarmOff() {
+        viewModel.sleepAllAlarm()
+    }
+
     private fun showAlert() {
         val dialog = SettingDialog(
             cancelAction = {
@@ -215,12 +157,15 @@ class WaterAlarmFragment: Fragment() {
         dialog.show(childFragmentManager, dialog.tag)
     }
 
-    private fun alarmOn() {
-        viewModel.wakeAllAlarm()
-    }
-
-    private fun alarmOff() {
-        viewModel.sleepAllAlarm()
+    private fun initObserver() {
+        viewModel.alarmSettings.observe(viewLifecycleOwner) {
+            //가져온 데이터로 화면 구성
+            it?.let {
+                setRingtoneTitle(it.ringToneMode.getCurrentMode())
+                setAlarmModeTitle(it.alarmMode)
+                setEtcSetting(it.etcSetting)
+            }
+        }
     }
 
     private fun setRingtoneTitle(ringtone: RingTone) {
@@ -247,6 +192,51 @@ class WaterAlarmFragment: Fragment() {
             lifecycleScope.launch {
                 viewModel.updateEtcSetting(etcSettings.copy(stopReachedGoal = isChecked))
             }
+        }
+    }
+
+    private fun initListener() {
+        dataBinding.tvAlarmSound.setOnClickListener {
+            val soundDialog = AlarmRingtoneDialog()
+            soundDialog.show(childFragmentManager, soundDialog.tag)
+        }
+
+        dataBinding.clAlarmMode.setOnClickListener {
+            findNavController().navigate(WaterAlarmFragmentDirections
+                .actionWaterAlarmFragmentToAlarmModeFragment())
+        }
+        dataBinding.tvAlarmDelay.setOnClickListener {
+            lifecycleScope.launch {
+                viewModel.delayAllAlarm(true, false)    //스위치 변경하면서 wakeAllAlarm 호출하기 때문에 isNotificationEnabled false로 설정
+                toolbarSwitchView.setChecked(true)
+                it.visibility = View.GONE
+            }
+        }
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            dataBinding.tvFullscreenSetting.setOnClickListener {
+                val intent = Intent(
+                    Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT,
+                    Uri.parse("package:${requireContext().packageName}")
+                )
+                startActivity(intent)
+            }
+        } else {
+            dataBinding.divider2.visibility = View.GONE
+            dataBinding.tvFullscreenSetting.visibility = View.GONE
+        }
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            dataBinding.tvExactSetting.setOnClickListener {
+                val intent = Intent(
+                    Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                    Uri.parse("package:${requireContext().packageName}")
+                )
+                startActivity(intent)
+            }
+        } else {
+            dataBinding.divider3.visibility = View.GONE
+            dataBinding.tvExactSetting.visibility = View.GONE
         }
     }
 }

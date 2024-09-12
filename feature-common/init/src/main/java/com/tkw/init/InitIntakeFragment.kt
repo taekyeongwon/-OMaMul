@@ -61,13 +61,6 @@ class InitIntakeFragment: Fragment() {
 
     }
 
-    private fun initListener() {
-        dataBinding.btnNext.setOnClickListener {
-            val amount = dataBinding.npAmount.getCurrentValue()
-            viewModel.setEvent(InitContract.Event.SaveIntake(amount))
-        }
-    }
-
     private fun checkApi31ExactAlarm() {
         if(Build.VERSION.SDK_INT >= 31 &&
             !alarmManager.canScheduleExactAlarms() ) {
@@ -84,6 +77,13 @@ class InitIntakeFragment: Fragment() {
             dialog.isCancelable = false
         } else {
             viewModel.setEvent(InitContract.Event.SaveInitialFlag(true))
+        }
+    }
+
+    private fun initListener() {
+        dataBinding.btnNext.setOnClickListener {
+            val amount = dataBinding.npAmount.getCurrentValue()
+            viewModel.setEvent(InitContract.Event.SaveIntake(amount))
         }
     }
 }
