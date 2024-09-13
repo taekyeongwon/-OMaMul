@@ -29,30 +29,6 @@ class ScheduledWorkManager(
     params: WorkerParameters
 ): CoroutineWorker(context, params), AccessTokenManager<Nothing,
         AuthorizationResult> by GoogleAccessTokenManager() {
-
-    @InstallIn(SingletonComponent::class)
-    @EntryPoint
-    interface DependencyProvider {
-        fun getPrefRepo(): PrefDataRepository
-        fun getGoogleDrive(): BackupManager
-    }
-
-    companion object{
-        const val WORK_NAME = "Backup"
-
-        fun getRemainTime(): Long {
-            val backupTime = Calendar.getInstance()
-            backupTime.set(Calendar.HOUR_OF_DAY, 3)
-            backupTime.set(Calendar.MINUTE, 0)
-            backupTime.set(Calendar.SECOND, 0)
-            if(backupTime.before(Calendar.getInstance())) {
-                backupTime.add(Calendar.DAY_OF_MONTH, 1)
-            }
-            val delayTime = backupTime.timeInMillis - System.currentTimeMillis()
-            return delayTime
-        }
-    }
-
     override suspend fun doWork(): Result {
         try {
             Log.d("WorkManager", "work manager do work.")
@@ -107,5 +83,28 @@ class ScheduledWorkManager(
 
     private fun cancelNotify() {
         NotificationManager.cancelNotify(applicationContext, BackupForeground.FOREGROUND_ID)
+    }
+
+    @InstallIn(SingletonComponent::class)
+    @EntryPoint
+    interface DependencyProvider {
+        fun getPrefRepo(): PrefDataRepository
+        fun getGoogleDrive(): BackupManager
+    }
+
+    companion object{
+        const val WORK_NAME = "Backup"
+
+        fun getRemainTime(): Long {
+            val backupTime = Calendar.getInstance()
+            backupTime.set(Calendar.HOUR_OF_DAY, 3)
+            backupTime.set(Calendar.MINUTE, 0)
+            backupTime.set(Calendar.SECOND, 0)
+            if(backupTime.before(Calendar.getInstance())) {
+                backupTime.add(Calendar.DAY_OF_MONTH, 1)
+            }
+            val delayTime = backupTime.timeInMillis - System.currentTimeMillis()
+            return delayTime
+        }
     }
 }

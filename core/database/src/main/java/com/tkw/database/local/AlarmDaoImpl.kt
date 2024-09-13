@@ -24,9 +24,6 @@ import kotlin.reflect.KClass
 
 class AlarmDaoImpl @Inject constructor(): AlarmDao {
     override val realm: Realm = Realm.open(getRealmConfiguration())
-    companion object {
-        private const val TAG = "AlarmDao"
-    }
 
     private val alarmModeFlow =
         this.find(
@@ -266,5 +263,9 @@ class AlarmDaoImpl @Inject constructor(): AlarmDao {
                 AlarmModeEntity.CUSTOM -> delete(CustomAlarmListEntity::class)
             }
         }
+    }
+
+    companion object {
+        private const val TAG = "AlarmDao"
     }
 }

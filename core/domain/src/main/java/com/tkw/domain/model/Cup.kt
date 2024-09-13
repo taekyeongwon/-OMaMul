@@ -7,10 +7,6 @@ data class Cup(
     var cupName: String = "",
     var cupAmount: Int = DEFAULT_CUP_AMOUNT,
 ): Serializable {
-    companion object {
-        const val DEFAULT_CUP_AMOUNT = 1000
-        const val DEFAULT_CUP_ID = "default_cup_id"
-    }
 
     var createMode: Boolean = true
     var isChecked: Boolean = false
@@ -20,11 +16,10 @@ data class Cup(
         isChecked = this@Cup.isChecked
     }
 
-//    fun toMapEntity() = CupEntity().apply {
-//        cupId = this@Cup.cupId
-//        cupName = this@Cup.cupName
-//        cupAmount = this@Cup.cupAmount
-//    }
+    companion object {
+        const val DEFAULT_CUP_AMOUNT = 1000
+        const val DEFAULT_CUP_ID = "default_cup_id"
+    }
 }
 
 data class CupList(

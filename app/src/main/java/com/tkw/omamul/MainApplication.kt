@@ -14,9 +14,6 @@ import kotlin.system.exitProcess
 
 @HiltAndroidApp
 class MainApplication: Application() {
-    companion object {
-        var sharedPref: SharedPreferences? = null
-    }
 
     override fun onCreate() {
         super.onCreate()
@@ -59,5 +56,9 @@ class MainApplication: Application() {
             .createPendingIntent()
         NotificationManager.createNotificationChannel(this)
         NotificationManager.setContentClickPendingIntent(pendingIntent)
+    }
+
+    companion object {
+        var sharedPref: SharedPreferences? = null
     }
 }

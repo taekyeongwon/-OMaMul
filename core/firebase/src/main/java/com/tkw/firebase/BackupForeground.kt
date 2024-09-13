@@ -21,15 +21,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class BackupForeground: Service() {
-    companion object {
-        const val FOREGROUND_ID = 1
-        const val EXTRA_IS_UPDATE = "isUpdate"
-        const val EXTRA_ACCESS_TOKEN = "accessToken"
-        const val ACTION_SERVICE_START = "action_service_start"
-        const val ACTION_SERVICE_STOP = "action_service_stop"
-        const val BACKUP_FILE_NAME = "default.realm"
-        const val DOWNLOAD_FILE_NAME = "tmp.realm"
-    }
 
     @Inject
     lateinit var googleDrive: BackupManager
@@ -121,5 +112,15 @@ class BackupForeground: Service() {
         ) {
             alarmRepository.wakeAllAlarm()
         }
+    }
+
+    companion object {
+        const val FOREGROUND_ID = 1
+        const val EXTRA_IS_UPDATE = "isUpdate"
+        const val EXTRA_ACCESS_TOKEN = "accessToken"
+        const val ACTION_SERVICE_START = "action_service_start"
+        const val ACTION_SERVICE_STOP = "action_service_stop"
+        const val BACKUP_FILE_NAME = "default.realm"
+        const val DOWNLOAD_FILE_NAME = "tmp.realm"
     }
 }

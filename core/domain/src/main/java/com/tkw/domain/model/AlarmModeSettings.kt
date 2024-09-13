@@ -18,16 +18,16 @@ data class AlarmModeSetting(
     val selectedDate: List<DayOfWeek> = listOf(),
     val interval: Int = DEFAULT_PERIOD_INTERVAL
 ) {
-    companion object {
-        const val DEFAULT_PERIOD_INTERVAL: Int = 60 * 60    //interval의 경우 toSecondOfDay와 ofSecondOfDay 사용하므로 밀리초 단위 제거
-    }
-
     fun getTimeRange(startTime: String, endTime: String): String {
         val builder = StringBuilder()
         builder.append(startTime)
             .append("-")
             .append(endTime)
         return builder.toString()
+    }
+
+    companion object {
+        const val DEFAULT_PERIOD_INTERVAL: Int = 60 * 60    //interval의 경우 toSecondOfDay와 ofSecondOfDay 사용하므로 밀리초 단위 제거
     }
 }
 

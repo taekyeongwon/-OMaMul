@@ -39,11 +39,6 @@ class WaterAlarmViewModel @Inject constructor(
     private val prefDataRepository: PrefDataRepository,
     private val alarmRepository: AlarmRepository
 ): BaseViewModel() {
-
-    companion object {
-        const val TIME_UNIT_SECONDS: Long = 1000
-    }
-
     private val _nextEvent = SingleLiveEvent<Unit>()
     val nextEvent: LiveData<Unit> = _nextEvent
 
@@ -245,5 +240,9 @@ class WaterAlarmViewModel @Inject constructor(
         launch {
             _remainTimeLiveData.value = content
         }
+    }
+
+    companion object {
+        const val TIME_UNIT_SECONDS: Long = 1000
     }
 }
