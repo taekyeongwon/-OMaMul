@@ -60,12 +60,12 @@
                 android:id="@+id/tv_alarm_mode"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.alarmMode}"
                 android:textSize="12sp"
                 android:gravity="right"
                 app:layout_constraintTop_toTopOf="@id/tv_alarm_mode_title"
                 app:layout_constraintLeft_toRightOf="@id/guideline2"
                 app:layout_constraintRight_toRightOf="parent"
+                app:resId="@{viewModel.alarmMode}"
                 tools:text="주기"/>
             <TextView
                 android:id="@+id/tv_alarm_schedule_title"
@@ -124,12 +124,12 @@
                 android:id="@+id/tv_alarm_sound"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.alarmRingtone}"
                 android:textSize="12sp"
                 android:gravity="right"
                 app:layout_constraintTop_toTopOf="@id/tv_alarm_sound_title"
                 app:layout_constraintLeft_toRightOf="@id/guideline2"
                 app:layout_constraintRight_toRightOf="parent"
+                app:resId="@{viewModel.alarmRingtone}"
                 tools:text="벨소리"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

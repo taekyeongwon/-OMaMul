@@ -29,8 +29,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingViewModel
 @Inject constructor(
-    @ApplicationContext private val context: Context,
-//    settingRepository: SettingRepository,
     waterRepository: WaterRepository,
     alarmRepository: AlarmRepository,
     private val settingRepository: SettingRepository,
@@ -52,7 +50,7 @@ class SettingViewModel
 
     val totalAchieve = getAllDay.flatMapLatest {
         flow {
-            emit("${it.getTotalAchieve(settings.first().intake)}${getCustomString(com.tkw.ui.R.string.day)}")
+            emit("${it.getTotalAchieve(settings.first().intake)}")
         }
     }.asLiveData()
 
@@ -64,11 +62,11 @@ class SettingViewModel
     val currentLangFlow = prefDataRepository.fetchLanguage()
     val currentLang = currentLangFlow.mapLatest {
         when(it) {
-            Locale.KOREAN.language -> getCustomString(com.tkw.ui.R.string.lang_ko)
-            Locale.ENGLISH.language -> getCustomString(com.tkw.ui.R.string.lang_en)
-            Locale.JAPANESE.language -> getCustomString(com.tkw.ui.R.string.lang_jp)
-            Locale.CHINESE.language -> getCustomString(com.tkw.ui.R.string.lang_cn)
-            else -> getCustomString(com.tkw.ui.R.string.lang_ko)
+            Locale.KOREAN.language -> com.tkw.ui.R.string.lang_ko
+            Locale.ENGLISH.language -> com.tkw.ui.R.string.lang_en
+            Locale.JAPANESE.language -> com.tkw.ui.R.string.lang_jp
+            Locale.CHINESE.language -> com.tkw.ui.R.string.lang_cn
+            else -> com.tkw.ui.R.string.lang_ko
         }
     }.asLiveData()
 
@@ -92,8 +90,8 @@ class SettingViewModel
         flow {
             val mode = it.alarmMode
             when(mode) {
-                AlarmMode.PERIOD -> emit(getCustomString(com.tkw.ui.R.string.alarm_mode_period))
-                AlarmMode.CUSTOM -> emit(getCustomString(com.tkw.ui.R.string.alarm_mode_custom))
+                AlarmMode.PERIOD -> emit(com.tkw.ui.R.string.alarm_mode_period)
+                AlarmMode.CUSTOM -> emit(com.tkw.ui.R.string.alarm_mode_custom)
             }
         }
     }.asLiveData()
@@ -102,11 +100,11 @@ class SettingViewModel
         flow {
             val ringtone = it.ringToneMode.getCurrentMode()
             val soundTitle = when(ringtone) {
-                RingTone.DEVICE -> getCustomString(com.tkw.ui.R.string.alarm_sound_device)
-                RingTone.BELL -> getCustomString(com.tkw.ui.R.string.alarm_sound_ringtone)
-                RingTone.VIBE -> getCustomString(com.tkw.ui.R.string.alarm_sound_vibe)
-                RingTone.ALL -> getCustomString(com.tkw.ui.R.string.alarm_sound_all)
-                RingTone.IGNORE -> getCustomString(com.tkw.ui.R.string.alarm_sound_silence)
+                RingTone.DEVICE -> com.tkw.ui.R.string.alarm_sound_device
+                RingTone.BELL -> com.tkw.ui.R.string.alarm_sound_ringtone
+                RingTone.VIBE -> com.tkw.ui.R.string.alarm_sound_vibe
+                RingTone.ALL -> com.tkw.ui.R.string.alarm_sound_all
+                RingTone.IGNORE -> com.tkw.ui.R.string.alarm_sound_silence
             }
             emit(soundTitle)
         }
@@ -148,9 +146,5 @@ class SettingViewModel
             prefDataRepository.saveLanguage(lang)
             _nextEvent.call()
         }
-    }
-
-    private fun getCustomString(id: Int): String {
-        return context.getString(id)
     }
 }
